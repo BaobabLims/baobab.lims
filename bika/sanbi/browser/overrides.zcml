@@ -1,0 +1,27 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:zcml="http://namespaces.zope.org/browser"
+           xmlns:fss="http://namespaces.zope.org/browser"
+           xmlns:browser="http://namespaces.zope.org/browser"
+           xmlns:five="http://namespaces.zope.org/five">
+
+    <include package="z3c.unconfigure" file="meta.zcml" />
+
+    <unconfigure>
+        <browser:page
+            for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+            name="bika-frontpage"
+            class="bika.health.browser.bika-frontpage.FrontPageView"
+            permission="zope2.View"
+            layer="bika.lims.interfaces.IBikaLIMS"
+        />
+    </unconfigure>
+
+    <browser:page
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        name="bika-frontpage"
+        class="bika.sanbi.browser.bika-frontpage.FrontPageView"
+        permission="zope2.View"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+</configure>

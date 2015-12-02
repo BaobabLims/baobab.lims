@@ -1,4 +1,4 @@
-from bika.health import bikaMessageFactory as _
+from bika.sanbi import bikaMessageFactory as _
 from bika.health.browser.doctors.folder_view import DoctorsView as _dv
 
 # See ./configure.zcml

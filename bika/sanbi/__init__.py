@@ -1,4 +1,6 @@
-# -*- extra stuff goes here -*-
+import pkg_resources
+
+__version__ = pkg_resources.get_distribution("bika.sanbi").version
 
 
 def initialize(context):

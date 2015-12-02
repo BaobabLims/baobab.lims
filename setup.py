@@ -31,6 +31,7 @@ setup(name='bika.sanbi',
       ],
       entry_points="""
       # -*- Entry points: -*-
+
       [z3c.autoinclude.plugin]
       target = plone
       """,

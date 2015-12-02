@@ -5,5 +5,6 @@
            xmlns:five="http://namespaces.zope.org/five">
 
     <include file="browser/analysisrequest/overrides.zcml" />
+    <include file="browser/overrides.zcml" />
 
 </configure>
