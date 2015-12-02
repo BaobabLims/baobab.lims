@@ -1,0 +1,26 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:cmf="http://namespaces.zope.org/cmf"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="bika.sanbi">
+
+    <include package=".analysisrequest"/>
+    <include package=".doctors"/>
+
+    <!-- This registration allows additional sticker templates.
+         To enable these, just copy one or more of the *.pt files
+         from bika.lims/bika/lims/browser/templates/stickers
+         into the ./stickers folder, and edit it.
+    -->
+    <plone:static
+       directory="stickers"
+       type="stickers"
+       name="sanbi"
+     />
+
+
+</configure>

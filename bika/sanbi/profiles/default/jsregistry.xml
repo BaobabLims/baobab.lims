@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<object name="portal_javascripts" meta_type="JavaScripts Registry">
+
+  <javascript authenticated="True"
+              id="++resource++bika.sanbi.js/bika.sanbi.analysisrequest.add.js"
+              cacheable="True"
+              compression="safe"
+              conditionalcomment=""
+              cookable="True"
+              enabled="on"
+              expression=""
+              inline="False"
+              insert-after="*"/>
+
+  <!-- Add javascripts ALWAYS BEFORE this one -->
+  <javascript authenticated="True"
+              id="++resource++bika.sanbi.js/bika.sanbi.loader.js"
+              cacheable="True"
+              compression="safe"
+              conditionalcomment=""
+              cookable="True"
+              enabled="on"
+              expression=""
+              inline="False"
+              insert-after="*"/>
+
+</object>

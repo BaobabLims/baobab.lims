@@ -1,0 +1,24 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:cmf="http://namespaces.zope.org/cmf"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="bika.sanbi">
+
+    <!-- This class is a replacement for the main Doctors view of bika.health
+         with some additional columns.
+    -->
+    <!-- <browser:page
+      for="bika.health.interfaces.IDoctors"
+      name="folder_view"
+      class="bika.sanbi.browser.doctor_listing.DoctorsView"
+      permission="zope2.View"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+    -->
+
+
+</configure>
