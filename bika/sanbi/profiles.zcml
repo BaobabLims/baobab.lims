@@ -5,9 +5,9 @@
 
   <genericsetup:registerProfile
       name="default"
-      title="Customised Bika LIMS"
+      title="SANBI LIMS"
       directory="profiles/default"
-      description='Custom extension profile for Bika LIMS'
+      description='SANBI extension profile for Bika LIMS'
       provides="Products.GenericSetup.interfaces.EXTENSION"/>
 
   <genericsetup:importStep
