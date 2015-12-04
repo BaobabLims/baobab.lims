@@ -3,6 +3,8 @@
 from Products.CMFCore.utils import getToolByName
 from bika.lims import logger
 
+from bika.sanbi.permissions import AddKitTemplates
+
 
 class Empty:
     pass
@@ -43,7 +45,14 @@ class BikaCustomGenerator:
             return
         # Add indexes and metadata colums here
 
+    def setupPermissions(self, portal):
+        """ Set up some suggested role to permission mappings.
+        """
 
+        # Root permissions
+        mp = portal.manage_permission
+
+        mp(AddKitTemplates, ['Manager'], 0)
 
 def setupCustomVarious(context):
     """ Setup Bika site structure """
@@ -55,3 +64,4 @@ def setupCustomVarious(context):
 
     gen = BikaCustomGenerator()
     gen.setupCatalogs(portal)
+    gen.setupPermissions(portal)
