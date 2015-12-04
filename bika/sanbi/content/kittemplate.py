@@ -6,7 +6,7 @@ from Products.ATContentTypes.content import base
 from Products.ATContentTypes.content import schemata
 from Products.CMFCore.utils import getToolByName
 from bika.lims.interfaces import IProduct
-from bika.lims import config
+from bika.sanbi import config
 from bika.lims.content.bikaschema import BikaSchema
 from DateTime.DateTime import DateTime
 from decimal import Decimal

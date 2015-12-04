@@ -26,6 +26,7 @@ def initialize(context):
         kind = "%s: Add %s" % (PROJECTNAME, atype.portal_type)
         perm = ADD_CONTENT_PERMISSIONS.get(atype.portal_type,
                                            ADD_CONTENT_PERMISSION)
+        print("AAAAAAAAAAAAAAAAA")
         ContentInit(kind,
                     content_types      = (atype,),
                     permission         = perm,

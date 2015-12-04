@@ -6,5 +6,5 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="bika.sanbi">
 
-    <permission id="bika.sanbi.permissions.AddKitTemplate" title="SANBI: Add kit template"/>
+    <permission id="bika.sanbi.permissions.AddKitTemplates" title="SANBI: Add kit templates"/>
 </configure>
