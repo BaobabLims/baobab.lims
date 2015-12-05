@@ -5,7 +5,6 @@ from bika.lims import bikaMessageFactory as _
 from Products.ATContentTypes.content import base
 from Products.ATContentTypes.content import schemata
 from Products.CMFCore.utils import getToolByName
-from bika.lims.interfaces import IProduct
 from bika.sanbi import config
 from bika.lims.content.bikaschema import BikaSchema
 from DateTime.DateTime import DateTime

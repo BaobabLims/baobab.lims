@@ -11,6 +11,15 @@ class Empty:
 
 
 class BikaCustomGenerator:
+
+    def setupPortalContent(self, portal):
+        # remove undesired content objects
+        for obj_id in ('kittemplates',):
+            obj = portal._getOb(obj_id)
+            obj.unmarkCreationFlag()
+            obj.reindexObject()
+
+
     def setupCatalogs(self, portal):
 
         def addIndex(cat, *args):
@@ -31,19 +40,19 @@ class BikaCustomGenerator:
         if bsc is None:
             logger.warning('Could not find the bika_catalog tool.')
             return
-        # Add indexes and metadata colums here
+        # Add indexes and metadata columns here
 
         bsc = getToolByName(portal, 'bika_setup_catalog', None)
         if bsc is None:
             logger.warning('Could not find the bika_setup_catalog tool.')
             return
-        # Add indexes and metadata colums here
+        # Add indexes and metadata columns here
 
         bsc = getToolByName(portal, 'bika_analysis_catalog', None)
         if bsc is None:
             logger.warning('Could not find the bika_analysis_catalog tool.')
             return
-        # Add indexes and metadata colums here
+        # Add indexes and metadata columns here
 
     def setupPermissions(self, portal):
         """ Set up some suggested role to permission mappings.
@@ -51,8 +60,8 @@ class BikaCustomGenerator:
 
         # Root permissions
         mp = portal.manage_permission
-
         mp(AddKitTemplates, ['Manager'], 0)
+        portal.kittemplates.reindexObject()
 
 def setupCustomVarious(context):
     """ Setup Bika site structure """
@@ -64,4 +73,5 @@ def setupCustomVarious(context):
 
     gen = BikaCustomGenerator()
     gen.setupCatalogs(portal)
+    gen.setupPortalContent(portal)
     gen.setupPermissions(portal)

@@ -11,12 +11,11 @@
       provides="Products.GenericSetup.interfaces.EXTENSION"/>
 
   <genericsetup:importStep
-      name="setupCustomVarious"
-      title="Bika LIMS: Various sanbi python setup actions"
+      name="bika.sanbi.various"
+      title="bika: Various sanbi python setup actions"
       description="Final site configuration actions"
       handler="bika.sanbi.setuphandlers.setupCustomVarious">
     <depends name="content" />
-    <depends name="toolset" />
   </genericsetup:importStep>
 
 </configure>
