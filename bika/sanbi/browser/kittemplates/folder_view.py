@@ -16,11 +16,11 @@ from plone.app.folder.folder import ATFolder, ATFolderSchema
 from zope.interface.declarations import implements
 from bika.lims.interfaces import IProducts
 
-class KitTemplateView(BikaListingView):
+class KitTemplatesView(BikaListingView):
     implements(IFolderContentsView, IViewView)
 
     def __init__(self, context, request):
-        super(KitTemplateView, self).__init__(context, request)
+        super(KitTemplatesView, self).__init__(context, request)
         self.catalog = 'bika_setup_catalog'
         self.contentFilter = {'portal_type': 'Product',
                               'sort_on': 'sortable_title'}
