@@ -24,11 +24,11 @@ class ajaxGetProducts(BrowserView):
             brains = [p for p in brains if p.Title.lower().find(searchTerm) > -1]
 
         for p in brains:
-            rows.append({'Title': p.Title,
-                         'UID': p.UID,
+            rows.append({'product': p.Title,
+                         'product_uid': p.UID,
                          'Description': p.Description})
 
-        rows = sorted(rows, cmp=lambda x, y: cmp(x.lower(), y.lower()), key=itemgetter(sidx and sidx or 'Title'))
+        rows = sorted(rows, cmp=lambda x, y: cmp(x.lower(), y.lower()), key=itemgetter(sidx and sidx or 'product'))
         if sord == 'desc':
             rows.reverse()
         pages = len(rows) / int(nr_rows)

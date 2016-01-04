@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<object name="portal_workflow" meta_type="Plone Workflow Tool">
+
+<property name="title" purge="False">
+  Contains workflow definitions for your portal</property>
+
+<bindings>
+    <type type_id="KitTemplate">
+        <bound-workflow workflow_id="bika_one_state_workflow"/>
+        <bound-workflow workflow_id="bika_inactive_workflow"/>
+    </type>
+    <type type_id="KitTemplates"/>
+</bindings>
+</object>

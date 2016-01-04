@@ -11,3 +11,5 @@ AddKitTemplates = 'SANBI: Add kit template'
 ADD_CONTENT_PERMISSIONS = {
     'KitTemplates': AddKitTemplates,
 }
+
+ManageKitTemplates = "BIKA: Manage KitTemplates"

@@ -8,11 +8,12 @@ from bika.sanbi.interfaces import IKitTemplates
 
 
 schema = ATFolderSchema.copy()
+
 class KitTemplates(ATFolder):
     implements(IKitTemplates)
     displayContentsTab = False
     schema = schema
     security = ClassSecurityInfo()
 
-schemata.finalizeATCTSchema(schema, folderish = True, moveDiscussion = False)
+schemata.finalizeATCTSchema(schema, folderish=True, moveDiscussion=False)
 atapi.registerType(KitTemplates, PROJECTNAME)

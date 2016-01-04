@@ -1,3 +1,7 @@
+# import this to create messages in the bika domain.
+from zope.i18nmessageid import MessageFactory
+bikaMessageFactory = MessageFactory('bika.sanbi')
+
 from Products.Archetypes.atapi import process_types, listTypes
 from Products.CMFCore.utils import ContentInit, ToolInit, getToolByName
 

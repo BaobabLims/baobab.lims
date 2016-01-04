@@ -5,7 +5,14 @@
     i18n_domain="bika.sanbi">
 
     <browser:page
-      for="..interfaces.IKitTemplate"
+      for="...interfaces.IKitTemplate"
+      name="getproducts"
+      class=".getproducts.ajaxGetProducts"
+      permission="zope.Public"
+    />
+
+    <browser:page
+      for="...interfaces.IKitTemplates"
       name="getproducts"
       class=".getproducts.ajaxGetProducts"
       permission="zope.Public"

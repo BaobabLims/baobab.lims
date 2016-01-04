@@ -21,7 +21,7 @@ schema = BikaSchema.copy() + Schema((
         required=1,
         vocabulary='getCategories',
         allowed_types=('ProductCategory',),
-        relationship='ProductCategory',
+        relationship='KitTemplateProductCategory',
         referenceClass=HoldingReference,
         widget=ReferenceWidget(
             checkbox_bound=0,
@@ -30,24 +30,29 @@ schema = BikaSchema.copy() + Schema((
         ),
     ),
     RecordsField('ProductList',
-                 schemata="ProductList",
-                 type='productList',
-                 subfields=('product', 'quantiy'),
-                 required_subfields=(
-                 'product', 'quantity'),
-                 subfield_sizes={'product': 50,
-                                 'quantiy': 5,
+        schemata="Product List",
+        type='productList',
+        subfields=('product', 'quantity', 'product_uid'),
+        subfield_hidden = {'product_uid': True},
+        required_subfields=('product', 'quantity', 'product_uid'),
+        subfield_sizes={'product': 50, 'quantity': 5,},
+        subfield_labels={'product': _('Product'),
+                         'quantity': _('Quantity'),
+        },
+        widget=RecordsWidget(
+         label = _("Product List"),
+         description=_("Select complete list of the components required to create this kit"),
+         combogrid_options={
+                 'product': {
+                     'colModel': [{'columnName':'product', 'width':'30', 'label':_('Title')},
+                                  {'columnName':'Description', 'width':'70', 'label':_('Description')},
+                                  {'columnName': 'product_uid', 'hidden': True}],
+                     'url': 'getproducts',
+                     'showOn': True,
+                     'width': '550px'
                  },
-                 subfield_labels={'product': _('Range min'),
-                                  'quantiy': _('Range max'),
-                 },
-                 subfield_validators={'product': 'uncertainties_validator',
-                                      'quantiy': 'uncertainties_validator',
-                 },
-                 widget=RecordsWidget(
-                     label = _("Uncertainty"),
-                     description=_("Product item for this kit template"),
-                 ),
+         },
+        ),
     ),
     IntegerField('Quantity',
         widget = IntegerWidget(
@@ -63,6 +68,14 @@ schema = BikaSchema.copy() + Schema((
             label = _("Storage Conditions")),
             description=_("Requirements for storing the product."),
     ),
+    FixedPointField('Price',
+        schemata='Price',
+        default='0.00',
+        widget = DecimalWidget(
+            label=_("Price excluding VAT"),
+            description=_("This is the price will be charged for each completed kit."),
+        )
+    ),
     FixedPointField('VAT',
         schemata='Price',
         default_method='getDefaultVAT',
@@ -71,12 +84,13 @@ schema = BikaSchema.copy() + Schema((
             description=_("Enter percentage value eg. 14.0"),
         ),
     ),
-    FixedPointField('Price',
+    FixedPointField('Cost',
         schemata='Price',
-        default='0.00',
+        default_method='getCost',
         widget = DecimalWidget(
-            label=_("Price excluding VAT"),
-        )
+            label=_("Cost"),
+            description=_("This is the base cost of the components required for each completed kit."),
+        ),
     ),
     ComputedField('VATAmount',
         expression = 'context.getVATAmount()',
@@ -92,13 +106,9 @@ schema = BikaSchema.copy() + Schema((
             visible = {'edit':'hidden', }
         ),
     ),
-    FixedPointField('Cost',
-        schemata='Price',
-        default_method='getCost',
-        widget = DecimalWidget(
-            label=_("Cost"),
-            description=_("Cost to client"),
-        ),
+    ComputedField('CategoryTitle',
+        expression="context.getCategory() and context.getCategory().Title() or ''",
+        widget=ComputedWidget(visible=False),
     ),
 ))
 
@@ -157,5 +167,9 @@ class KitTemplate(BaseContent):
 
     def getSupplierTitle(self):
         return self.aq_parent.Title()
+
+    security.declarePublic('getCost')
+    def getCost(self):
+        return "0"
 
 registerType(KitTemplate, config.PROJECTNAME)
