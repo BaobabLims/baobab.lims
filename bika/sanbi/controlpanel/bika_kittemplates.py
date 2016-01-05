@@ -14,9 +14,9 @@ from bika.lims.content.bikaschema import BikaFolderSchema
 from plone.app.content.browser.interfaces import IFolderContentsView
 from plone.app.folder.folder import ATFolder, ATFolderSchema
 from zope.interface.declarations import implements
-
 from bika.sanbi.interfaces import IKitTemplates
 from bika.sanbi.permissions import AddKitTemplates, ManageKitTemplates
+
 
 class KitTemplatesView(BikaListingView):
     implements(IFolderContentsView, IViewView)
@@ -115,3 +115,15 @@ class KitTemplatesView(BikaListingView):
             self.show_select_column = stat != 'all'
 
         return super(KitTemplatesView, self).__call__()
+
+
+schema = ATFolderSchema.copy()
+
+class KitTemplates(ATFolder):
+    implements(IKitTemplates)
+    displayContentsTab = False
+    schema = schema
+    security = ClassSecurityInfo()
+
+schemata.finalizeATCTSchema(schema, folderish=True, moveDiscussion=False)
+atapi.registerType(KitTemplates, PROJECTNAME)

@@ -10,7 +10,6 @@
 
     <include package=".analysisrequest"/>
     <include package=".doctors"/>
-    <include package=".kittemplates"/>
     <include package=".ajax"/>
 
     <!-- This registration allows additional sticker templates.

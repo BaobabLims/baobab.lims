@@ -22,6 +22,11 @@ class BikaCustomGenerator:
             except:
                 pass
 
+        bika_setup = portal._getOb('bika_setup')
+        for obj_id in ('bika_kittemplates', ):
+            obj = bika_setup._getOb(obj_id)
+            obj.unmarkCreationFlag()
+            obj.reindexObject()
 
     def setupCatalogs(self, portal):
 
@@ -44,12 +49,6 @@ class BikaCustomGenerator:
             logger.warning('Could not find the bika_catalog tool.')
             return
         # Add indexes and metadata columns here
-        '''at = getToolByName(portal, 'archetype_tool')
-        at.setCatalogsByType('KitTemplate', ['bika_catalog',])
-        addIndex(bc, 'getCategory', 'FieldIndex')
-        addIndex(bc, 'getCategoryTitle', 'FieldIndex')
-        addColumn(bc, 'Title')
-        addColumn(bc, 'getCategoryTitle')'''
 
         bsc = getToolByName(portal, 'bika_setup_catalog', None)
         if bsc is None:
@@ -71,9 +70,9 @@ class BikaCustomGenerator:
         """
 
         # Root permissions
-        mp = portal.manage_permission
-        mp(AddKitTemplates, ['Manager'], 0)
-        portal.kittemplates.reindexObject()
+        #mp = portal.manage_permission
+        #mp(AddKitTemplates, ['Manager'], 0)
+        #portal.kittemplates.reindexObject()
 
 def setupCustomVarious(context):
     """ Setup Bika site structure """

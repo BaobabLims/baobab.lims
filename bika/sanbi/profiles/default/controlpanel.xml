@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!-- Here are defined the content types that should be shown on BikaLIMS Configuration (Site Setup) -->
+<object name="portal_controlpanel" meta_type="Plone Control Panel Tool"
+ xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+ i18n:domain="plone">
+
+<configlet title="Kit-Templates" action_id="bika_kittemplates"
+    appId="bika.lims" category="bika" condition_expr=""
+    icon_expr="string:++resource++bika.lims.images/samplepartition.png"
+    url_expr="string:$portal_url/bika_setup/bika_kittemplates"
+    visible="True"
+  i18n:attributes="title">
+  <permission>BIKA: Manage Bika</permission>
+</configlet>
+
+</object>

@@ -20,6 +20,7 @@
   <include package=".content"/>
   <include package=".extenders"/>
   <include package=".browser"/>
+  <include package=".controlpanel"/>
   <include package=".reports"/>
   <include package=".static"/>
   <include package=".setupdata"/>
