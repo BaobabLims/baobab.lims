@@ -5,3 +5,9 @@ class IKitTemplate(Interface):
 
 class IKitTemplates(Interface):
     """Comment"""
+
+class IKitAssembly(Interface):
+    """Package"""
+
+class IPackages(Interface):
+    """Package folder"""

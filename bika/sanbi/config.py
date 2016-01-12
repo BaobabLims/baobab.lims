@@ -1,3 +1,1 @@
-
 PROJECTNAME = "bika.sanbi"
-

@@ -7,4 +7,7 @@
     i18n_domain="bika.sanbi">
 
     <permission id="bika.sanbi.permissions.AddKitTemplates" title="SANBI: Add kit templates"/>
+    <permission id="bika.sanbi.ManageKitTemplates" title="SANBI: Manage KitTemplates"/>
+    <permission id="bika.sanbi.permissions.AddKitAssembly" title="SANBI: Add kit assembly"/>
+    <permission id="bika.sanbi.ManagePackages" title="SANBI: Manage Packages"/>
 </configure>

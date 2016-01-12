@@ -3,7 +3,7 @@
 from Products.CMFCore.utils import getToolByName
 from bika.lims import logger
 
-from bika.sanbi.permissions import AddKitTemplates
+from bika.sanbi.permissions import *
 
 
 class Empty:
@@ -14,7 +14,7 @@ class BikaCustomGenerator:
 
     def setupPortalContent(self, portal):
         # remove undesired content objects
-        for obj_id in ('kittemplates',):
+        for obj_id in ('packages',):
             try:
                 obj = portal._getOb(obj_id)
                 obj.unmarkCreationFlag()
@@ -49,6 +49,8 @@ class BikaCustomGenerator:
             logger.warning('Could not find the bika_catalog tool.')
             return
         # Add indexes and metadata columns here
+        at = getToolByName(portal, 'archetype_tool')
+        at.setCatalogsByType('KitAssembly', ['bika_catalog', 'portal_catalog'])
 
         bsc = getToolByName(portal, 'bika_setup_catalog', None)
         if bsc is None:
@@ -59,7 +61,7 @@ class BikaCustomGenerator:
         at.setCatalogsByType('KitTemplate', ['bika_setup_catalog',])
 
 
-        bsc = getToolByName(portal, 'bika_analysis_catalog', None)
+        bac = getToolByName(portal, 'bika_analysis_catalog', None)
         if bsc is None:
             logger.warning('Could not find the bika_analysis_catalog tool.')
             return
@@ -70,9 +72,10 @@ class BikaCustomGenerator:
         """
 
         # Root permissions
-        #mp = portal.manage_permission
-        #mp(AddKitTemplates, ['Manager'], 0)
-        #portal.kittemplates.reindexObject()
+        mp = portal.manage_permission
+        #mp(AddPackaging, ['Manager'], 0)
+        mp(ManagePackages, ['Manager'], 0)
+        portal.packages.reindexObject()
 
 def setupCustomVarious(context):
     """ Setup Bika site structure """

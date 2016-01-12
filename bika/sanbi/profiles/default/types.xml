@@ -2,4 +2,6 @@
 <object name="portal_types" meta_type="Plone Types Tool">
     <object name="KitTemplate" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="KitTemplates" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="KitAssembly" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="Packages" meta_type="Factory-based Type Information with dynamic views"/>
 </object>

@@ -18,6 +18,9 @@ def initialize(context):
 
     from content.kittemplate import KitTemplate
     from content.kittemplates import KitTemplates
+    from controlpanel.bika_kittemplates import KitTemplates
+    from content.kitassembly import KitAssembly
+    from content.packages import Packages
 
     content_types, constructors, ftis = process_types(
         listTypes(PROJECTNAME),

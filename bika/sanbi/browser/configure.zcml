@@ -9,7 +9,7 @@
     i18n_domain="bika.sanbi">
 
     <include package=".analysisrequest"/>
-    <include package=".doctors"/>
+    <include package=".packages"/>
     <include package=".ajax"/>
 
     <!-- This registration allows additional sticker templates.

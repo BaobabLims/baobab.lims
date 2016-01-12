@@ -11,5 +11,10 @@
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>
     <type type_id="KitTemplates"/>
+
+    <type type_id="Packages" />
+    <type type_id="KitAssembly">
+        <bound-workflow workflow_id="bika_stockitem_workflow"/>
+    </type>
 </bindings>
 </object>
