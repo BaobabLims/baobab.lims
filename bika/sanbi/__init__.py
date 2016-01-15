@@ -20,6 +20,7 @@ def initialize(context):
     from content.kittemplates import KitTemplates
     from controlpanel.bika_kittemplates import KitTemplates
     from content.kitassembly import KitAssembly
+    from content.supplyex import SupplyEx
     from content.packages import Packages
 
     content_types, constructors, ftis = process_types(

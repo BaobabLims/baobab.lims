@@ -11,3 +11,6 @@ class IKitAssembly(Interface):
 
 class IPackages(Interface):
     """Package folder"""
+
+class ISupplyEx(Interface):
+    """Package Supply"""

@@ -1,0 +1,31 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    i18n_domain="bika.sanbi">
+
+    <browser:page
+      for="bika.sanbi.interfaces.ISupplyEx"
+      name="base_edit"
+      class="bika.sanbi.browser.supplyex.EditView"
+      permission="cmf.ModifyPortalContent"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="bika.sanbi.interfaces.ISupplyEx"
+      name="base_view"
+      class="bika.sanbi.browser.supplyex.View"
+      permission="cmf.ModifyPortalContent"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="bika.sanbi.interfaces.ISupplyEx"
+      name="print"
+      class="bika.sanbi.browser.supplyex.PrintView"
+      permission="cmf.ModifyPortalContent"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+</configure>

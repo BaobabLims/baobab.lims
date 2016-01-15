@@ -12,7 +12,7 @@ class PackagesView(BikaListingView):
         
     def __init__(self, context, request):
         super(PackagesView, self).__init__(context, request)
-        self.contentFilter = {'portal_type': 'KitAssembly',
+        self.contentFilter = {'portal_type': 'SupplyEx',
                               'sort_on': 'sortable_title'}
         self.context_actions = {}
         self.title = self.context.translate(_("Packages"))
@@ -47,7 +47,7 @@ class PackagesView(BikaListingView):
         mtool = getToolByName(self.context, 'portal_membership')
         if mtool.checkPermission(AddKitAssembly, self.context):
             self.context_actions[_('Add')] = {
-                'url': 'createObject?type_name=KitAssembly',
+                'url': 'createObject?type_name=SupplyEx',
                 'icon': '++resource++bika.lims.images/add.png'
             }
         if mtool.checkPermission(ManagePackages, self.context):

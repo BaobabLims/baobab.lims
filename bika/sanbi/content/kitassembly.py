@@ -54,6 +54,8 @@ schema['title'].required = False
 schema['title'].widget.visible = False
 schema['description'].schemata = 'default'
 schema['description'].widget.visible = True
+schema.moveField('KitID', before='description')
+schema.moveField('KitTemplate', before='KitID')
 
 class KitAssembly(BaseContent):
     security = ClassSecurityInfo()

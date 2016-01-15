@@ -3,5 +3,6 @@
  <factorytypes>
   <type portal_type="KitTemplate"/>
   <type portal_type="KitAssembly"/>
+  <type portal_type="SupplyEx"/>
  </factorytypes>
 </object>

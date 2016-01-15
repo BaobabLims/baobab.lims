@@ -15,7 +15,7 @@ from plone.app.content.browser.interfaces import IFolderContentsView
 from plone.app.folder.folder import ATFolder, ATFolderSchema
 from zope.interface.declarations import implements
 from bika.sanbi.interfaces import IKitTemplates
-from bika.sanbi.permissions import AddKitTemplates, ManageKitTemplates
+from bika.sanbi.permissions import AddKitTemplate, ManageKitTemplates
 
 
 class KitTemplatesView(BikaListingView):
@@ -88,7 +88,7 @@ class KitTemplatesView(BikaListingView):
         """
         """
         mtool = getToolByName(self.context, 'portal_membership')
-        if mtool.checkPermission(AddKitTemplates, self.context):
+        if mtool.checkPermission(AddKitTemplate, self.context):
             self.context_actions[_('Add')] = {
                 'url': 'createObject?type_name=KitTemplate',
                 'icon': '++resource++bika.lims.images/add.png'
