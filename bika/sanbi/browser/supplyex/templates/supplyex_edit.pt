@@ -1,0 +1,85 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+        metal:use-macro="here/main_template/macros/master"
+        i18n:domain="bika">
+
+<head>
+    <metal:block fill-slot="javascript_head_slot"
+            tal:define="portal context/@@plone_portal_state/portal;">
+        <script type="text/javascript"
+                tal:attributes="src python:portal.absolute_url() + '/bika_widgets/datetimewidget.js'"></script>
+        <script type="text/javascript"
+                tal:attributes="src python:portal.absolute_url() + '/bika_widgets/referencewidget.js'"></script>
+    </metal:block>
+</head>
+
+<body>
+
+<metal:title fill-slot="content-title">
+</metal:title>
+
+<metal:core fill-slot="content-core" tal:define="
+    portal context/@@plone_portal_state/portal;
+    checkPermission nocall:context/portal_membership/checkPermission;
+    mtool here/portal_membership;">
+    <form id="supplyex_edit" method="post"
+          action="" tal:define="errors python:{}">
+
+        <table class="invoice-header">
+            <thead class="supplyex_add">
+                <tal:field tal:repeat="field python:view.get_fields_with_visibility('visible')">
+                    <tal:def define="
+                        fieldName python:field.getName();
+                        field_macro here/widgets/field/macros/edit;
+                        accessor python:field.getAccessor(context);
+                        widget python:field.widget;
+                        errors python:{};
+                        mode string:edit;">
+
+                        <tr tal:attributes="fieldName fieldName">
+                            <th colspan="2" style="white-space:nowrap">
+                                <label class="formQuestion">
+                                    <span tal:replace="python:view.context.translate(widget.Label(here))"/>
+                                    <span class="fieldRequired"
+                                        tal:condition="field/required"
+                                        title="Required"
+                                        i18n:attributes="title title_required;">&nbsp;</span>
+                                    <em style="display:block"
+                                        class="discreet"
+                                            tal:define="description python:view.context.translate(widget.Description(here))"
+                                            tal:content="structure description"
+                                            tal:attributes="id string:${fieldName}_help">Help </em>
+                                </label>
+
+                            </th>
+                            <tal:columns tal:repeat="arnum python:range(1)">
+                                <td class="nowrap" tal:attributes="arnum arnum">
+                                    <metal:field
+                                            use-macro="python:context.widget(fieldName, mode='edit')"/>
+                                </td>
+                            </tal:columns>
+                        </tr>
+                    </tal:def>
+                </tal:field>
+            </thead>
+        </table>
+
+        <span>
+            <!--<div style="text-align: left; padding-bottom: 10px;">
+                <input i18n:attributes="value"
+                    class="context button allowMultiSubmit"
+                    type="submit"
+                    name="save_button"
+                    value="Save"/>
+            </div>-->
+            <div class="formControls">
+                <input class="context" type="submit" name="submit" value="Save"/>
+            </div>
+        </span>
+    </form>
+</metal:core>
+
+</body>
+
+</html>

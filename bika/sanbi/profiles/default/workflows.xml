@@ -13,7 +13,7 @@
     <type type_id="KitTemplates"/>
 
     <type type_id="Packages" />
-    <type type_id="KitAssembly">
+    <type type_id="SupplyEx">
         <bound-workflow workflow_id="bika_stockitem_workflow"/>
     </type>
 </bindings>

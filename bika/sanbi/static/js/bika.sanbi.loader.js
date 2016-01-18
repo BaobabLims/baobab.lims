@@ -14,8 +14,10 @@ var _s = window.jarn.i18n.MessageFactory("bika.sanbi");
 window.bika.sanbi.controllers =  {
 
     ".template-ar_add #analysisrequest_edit_form":
-        ['CustomAnalysisRequestAddView', ]
+        ['CustomAnalysisRequestAddView'],
 
+    ".supplyex_add":
+        ['CustomSupplyExAddView'],
 };
 
 /**

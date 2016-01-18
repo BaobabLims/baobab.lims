@@ -45,7 +45,7 @@ class PackagesView(BikaListingView):
 
     def __call__(self):
         mtool = getToolByName(self.context, 'portal_membership')
-        if mtool.checkPermission(AddKitAssembly, self.context):
+        if mtool.checkPermission(AddSupplyEx, self.context):
             self.context_actions[_('Add')] = {
                 'url': 'createObject?type_name=SupplyEx',
                 'icon': '++resource++bika.lims.images/add.png'
