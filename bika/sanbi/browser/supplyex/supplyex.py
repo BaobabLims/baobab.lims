@@ -66,6 +66,9 @@ class EditView(BrowserView):
                 fields.append(field)
         return fields
 
+    def computeNumberKits(self):
+        print self.request.get('KitTemplate', '')
+
 class PrintView(View):
 
     template = ViewPageTemplateFile('templates/supplyex_print.pt')

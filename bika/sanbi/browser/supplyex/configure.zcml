@@ -28,4 +28,13 @@
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
+    <!-- Ajax signatures -->
+    <browser:page
+      for="bika.sanbi.interfaces.ISupplyEx"
+      name="computeNumberKits"
+      class="bika.sanbi.browser.supplyex.ajax.ComputeNumberKits"
+      permission="zope.Public"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
 </configure>

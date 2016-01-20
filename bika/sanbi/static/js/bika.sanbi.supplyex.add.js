@@ -29,8 +29,19 @@ function CustomSupplyExAddView() {
     // ------------------------------------------------------------------------
 
     function doSomething(){
-        //debugger
-        console.log('Salam');
+        //debugger;
+        $("#KitTemplate_uid").focus(function(){
+            $.ajax({
+                type: 'POST',
+                url: window.location.href.replace("/edit", "") + "/computeNumberKits",
+                data: {'KitTemplate': $('input[name="KitTemplate"]').val(), 'title': $(this).val(),
+                       'catalog_name': $('input[name="KitTemplate"]').attr('catalog_name')},
+                dataType: "json",
+                success: function(data, textStatus, $XHR){
+                    window.bika.lims.portalWarningMessage('Number of kits you can assemble is: <strong>' + data + '</strong>', 'warning');
+                }
+            });
+        });
     }
 
     function form_submit(){

@@ -65,6 +65,8 @@
             </thead>
         </table>
 
+        <span tal:content="view/computeNumberKits">0.00</span>
+
         <span>
             <!--<div style="text-align: left; padding-bottom: 10px;">
                 <input i18n:attributes="value"
