@@ -4,11 +4,4 @@
            xmlns:browser="http://namespaces.zope.org/browser"
            xmlns:five="http://namespaces.zope.org/five">
 
-    <browser:page
-      for="*"
-      name="getdoctors"
-      class=".getdoctors.ajaxGetDoctors"
-      permission="zope2.View"
-      layer="bika.lims.interfaces.IBikaLIMS"
-    />
 </configure>

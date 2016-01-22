@@ -16,7 +16,7 @@
 		</metal:title>
 
 		<metal:core fill-slot="content-core">
-            <h1>Salam Hocine!</h1>
+            <h1>Hi! Here view template</h1>
 		</metal:core>
 
 	</body>

@@ -8,6 +8,7 @@ from Products.Archetypes.references import HoldingReference
 import sys
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from bika.sanbi.interfaces import ISupplyEx
+from Products.CMFPlone.interfaces import IConstrainTypes
 
 from Products.CMFCore import permissions
 
@@ -41,6 +42,7 @@ schema = BikaSchema.copy() + Schema((
     ),
     IntegerField('quantity',
         mode="rw",
+        required=1,
         widget = IntegerWidget(
             label=_("Quantity"),
             render_own_label=True,
@@ -70,7 +72,7 @@ schema.moveField('KitTemplate', before='KitID')
 
 class SupplyEx(BaseContent):
     security = ClassSecurityInfo()
-    implements(ISupplyEx)
+    implements(ISupplyEx, IConstrainTypes)
     schema = schema
 
     _at_rename_after_creation = True

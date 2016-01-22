@@ -37,4 +37,12 @@
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
+    <browser:page
+      for="bika.sanbi.interfaces.ISupplyEx"
+      name="updateStockItems"
+      class="bika.sanbi.browser.supplyex.ajax.UpdateStockItems"
+      permission="zope.Public"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
 </configure>

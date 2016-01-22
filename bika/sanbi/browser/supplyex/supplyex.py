@@ -1,16 +1,10 @@
-from Products.CMFPlone.utils import _createObjectByType
-from zope import event
-
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from operator import itemgetter, methodcaller
 
 from bika.sanbi import bikaMessageFactory as _
 from bika.lims.browser import BrowserView
 
-from bika.lims.utils import t
-import json
-import plone
+from Products.ATContentTypes.lib import constraintypes
 
 class View(BrowserView):
 
@@ -44,6 +38,10 @@ class EditView(BrowserView):
         setup = portal.bika_setup
 
         if 'submit' in request:
+            #pdb.set_trace()
+            # ***** Is it a hack this line?
+            context.aq_parent.setConstrainTypesMode(constraintypes.DISABLED)
+            # *****
             portal_factory = getToolByName(context, 'portal_factory')
             context = portal_factory.doCreate(context, context.id)
             context.processForm()
@@ -67,7 +65,10 @@ class EditView(BrowserView):
         return fields
 
     def computeNumberKits(self):
-        print self.request.get('KitTemplate', '')
+        """Implement me later"""
+
+    def updateStockItems(self):
+        """Implement me later"""
 
 class PrintView(View):
 

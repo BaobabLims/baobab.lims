@@ -1,16 +1,11 @@
 from AccessControl import ClassSecurityInfo
 from Products.ATContentTypes.content import schemata
 from Products.Archetypes import atapi
-from Products.Archetypes.ArchetypeTool import registerType
-from Products.CMFCore import permissions
 from Products.CMFCore.utils import getToolByName
-from bika.lims.browser import BrowserView
 from bika.lims.browser.bika_listing import BikaListingView
-from bika.lims.config import PROJECTNAME
+from bika.sanbi.config import PROJECTNAME
 from bika.sanbi import bikaMessageFactory as _
-from bika.lims.utils import t
 from plone.app.layout.globals.interfaces import IViewView
-from bika.lims.content.bikaschema import BikaFolderSchema
 from plone.app.content.browser.interfaces import IFolderContentsView
 from plone.app.folder.folder import ATFolder, ATFolderSchema
 from zope.interface.declarations import implements
