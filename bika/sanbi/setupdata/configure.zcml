@@ -8,4 +8,10 @@
       factory="bika.sanbi.setupdata.SetupDataSetList"
       provides="bika.lims.interfaces.ISetupDataSetList"/>
 
+    <adapter
+      name="KitTemplates"
+      factory="bika.sanbi.setupdata.Kit_Templates"
+      provides="bika.lims.interfaces.ISetupDataImporter"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
+
 </configure>
