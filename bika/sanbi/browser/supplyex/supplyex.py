@@ -1,6 +1,8 @@
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
+from operator import itemgetter, methodcaller
+
 from bika.sanbi import bikaMessageFactory as _
 from bika.lims.browser import BrowserView
 
@@ -18,7 +20,31 @@ class View(BrowserView):
         # Disable the add new menu item
         context.setConstrainTypesMode(1)
         context.setLocallyAllowedTypes(())
+        # Collect general data
+        self.id = context.getId()
+        self.title = context.Title()
+        self.kittemplate_title = context.getKitTemplate().Title()
+        self.quantity = context.getQuantity()
 
+        self.subtotal = '%.2f' % context.getKitTemplate().getSubtotal()
+        self.vat = '%.2f' % context.getKitTemplate().getVATAmount()
+        self.total = '%.2f' % context.getKitTemplate().getTotal()
+
+        items = context.getKitTemplate().kittemplate_lineitems
+        self.items = []
+        for item in items:
+            prodtitle = item['Product']
+            price = float(item['Price'])
+            vat = float(item['VAT'])
+            qty = float(item['Quantity'])
+            self.items.append({
+                'title': prodtitle,
+                'price': price,
+                'vat': vat,
+                'quantity': qty,
+                'totalprice': '%.2f' % (price * qty)
+            })
+        self.items = sorted(self.items, key=itemgetter('title'))
         # Render the template
         return self.template()
 

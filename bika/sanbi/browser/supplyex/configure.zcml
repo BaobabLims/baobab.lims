@@ -45,4 +45,12 @@
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
+    <browser:page
+      for="bika.sanbi.interfaces.ISupplyEx"
+      name="objectExists"
+      class="bika.sanbi.browser.supplyex.ajax.ObjectExists"
+      permission="zope.Public"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
 </configure>

@@ -5,18 +5,86 @@
 	metal:use-macro="here/main_template/macros/master"
 	i18n:domain="bika">
 
-	<head></head>
+	<head>
+        <style>
+            table{
+                border-collapse: collapse;
+            }
+            tr{
+                padding-top: .5em;
+                padding-bottom: .5em;
+            }
+        </style>
+    </head>
 
 	<body>
 
 		<metal:title fill-slot="content-title">
 			<h1>
-				<span class="documentFirstHeading" tal:content="view/title" />
+				<span class="documentFirstHeading" tal:content="view/id" />
 			</h1>
 		</metal:title>
 
 		<metal:core fill-slot="content-core">
-            <h1>Hi! Here view template</h1>
+            <table class="invoice-header">
+                <tbody>
+                <tr>
+                    <th i18n:translate="" style="padding-bottom: .5em;">Kit Template: </th>
+                    <td tal:content="view/kittemplate_title" style="padding-bottom: .5em;"></td>
+                </tr>
+                <tr style="padding-top:.5em; padding-bottom: .5em;">
+                    <th i18n:translate="">Kit Quantity: </th>
+                    <td tal:content="view/quantity"></td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="invoice-items items">
+                <thead>
+                <tr>
+                    <th i18n:translate="">Product</th>
+                    <th i18n:translate="">Quantity</th>
+                    <th i18n:translate="">Price</th>
+                    <th class="currency" i18n:translate="">Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tal:items repeat="item view/items">
+                    <tal:item>
+                        <tr>
+                            <td tal:content="item/title"></td>
+                            <td class="number" tal:content="item/quantity"></td>
+                            <td class="currency">
+                                <span tal:content="item/price"></span>
+                            </td>
+                            <td class="currency">
+                                <span tal:content="item/totalprice"></span>
+                            </td>
+                        </tr>
+                    </tal:item>
+                </tal:items>
+                <tr class="totals">
+                    <td colspan="3" i18n:translate="">Subtotal</td>
+                    <td class="currency">
+                        <span tal:content="python:view.getPreferredCurrencyAbreviation()">$</span>
+                        <span tal:content="view/subtotal"></span>
+                    </td>
+                </tr>
+                <tr class="totals">
+                    <td colspan="3" i18n:translate="">VAT</td>
+                    <td class="currency">
+                        <span tal:content="python:view.getPreferredCurrencyAbreviation()">$</span>
+                        <span tal:content="view/vat"></span>
+                    </td>
+                </tr>
+                <tr class="totals">
+                    <td colspan="3" i18n:translate="">Total</td>
+                    <td class="currency">
+                        <span tal:content="python:view.getPreferredCurrencyAbreviation()">$</span>
+                        <span tal:content="view/total"></span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
 		</metal:core>
 
 	</body>

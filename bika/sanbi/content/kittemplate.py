@@ -14,6 +14,8 @@ from Products.Archetypes.references import HoldingReference
 import sys
 from Products.ATExtensions.ateapi import RecordField, RecordsField
 from bika.lims.browser.widgets.recordswidget import RecordsWidget
+
+from Products.CMFCore.permissions import View
 from bika.sanbi.interfaces import IKitTemplate
 
 schema = BikaSchema.copy() + Schema((
@@ -99,13 +101,6 @@ schema = BikaSchema.copy() + Schema((
             visible = {'edit':'hidden', }
         ),
     ),
-    ComputedField('TotalPrice',
-        expression = 'context.getTotalPrice()',
-        widget = ComputedWidget(
-            label=_("Total price"),
-            visible = {'edit':'hidden', }
-        ),
-    ),
     ComputedField('CategoryTitle',
         expression="context.getCategory() and context.getCategory().Title() or ''",
         widget=ComputedWidget(visible=False),
@@ -119,7 +114,8 @@ class KitTemplate(BaseContent):
     security = ClassSecurityInfo()
     implements(IKitTemplate)
     schema = schema
-    
+    kittemplate_lineitems = []
+
     _at_rename_after_creation = True
 
     def _renameAfterCreation(self, check_auto_id=False):
@@ -135,6 +131,50 @@ class KitTemplate(BaseContent):
             deps.append((d.UID, d.Title))
         return DisplayList(deps)
 
+    security.declarePublic('getDefaultVAT')
+    def getDefaultVAT(self):
+        """ return default VAT from bika_setup """
+        try:
+            vat = self.bika_setup.getVAT()
+            return vat
+        except ValueError:
+            return "0.00"
+
+    security.declareProtected(View, 'getSubtotal')
+    def getSubtotal(self):
+        """ Compute Subtotal
+        """
+        if self.kittemplate_lineitems:
+            return sum(
+                [(Decimal(obj['Quantity']) * Decimal(obj['Price'])) for obj in self.kittemplate_lineitems])
+        return 0
+
+    security.declareProtected(View, 'getTotal')
+    def getTotal(self):
+        """Compute total price
+        """
+        total = 0
+        for lineitem in self.kittemplate_lineitems:
+            total += Decimal(lineitem['Quantity']) * \
+                     Decimal(lineitem['Price']) * \
+                     ((Decimal(lineitem['VAT']) /100) + 1)
+        return total
+
+    security.declareProtected(View, 'getVATAmount')
+    def getVATAmount(self):
+        """Compute VAT
+        """
+        return Decimal(self.getTotal()) - Decimal(self.getSubtotal())
+
+    security.declarePublic('getSupplierTitle')
+    def getSupplierTitle(self):
+        return self.aq_parent.Title()
+
+    security.declarePublic('getCost')
+    def getCost(self):
+        return "0"
+
+    '''
     security.declarePublic('getTotalPrice')
     def getTotalPrice(self):
         """ compute total price """
@@ -146,15 +186,6 @@ class KitTemplate(BaseContent):
         price = price + (price * vat)
         return price.quantize(Decimal('0.00'))
 
-    security.declarePublic('getDefaultVAT')
-    def getDefaultVAT(self):
-        """ return default VAT from bika_setup """
-        try:
-            vat = self.bika_setup.getVAT()
-            return vat
-        except ValueError:
-            return "0.00"
-
     security.declarePublic('getVATAmount')
     def getVATAmount(self):
         """ Compute VATAmount
@@ -164,12 +195,7 @@ class KitTemplate(BaseContent):
         except:
             vatamount = Decimal('0.00')
         return vatamount.quantize(Decimal('0.00'))
+    '''
 
-    def getSupplierTitle(self):
-        return self.aq_parent.Title()
-
-    security.declarePublic('getCost')
-    def getCost(self):
-        return "0"
 
 registerType(KitTemplate, config.PROJECTNAME)

@@ -20,7 +20,7 @@ schema = BikaSchema.copy() + Schema((
         validators=('uniquefieldvalidator',),
         widget=StringWidget(
             label=_("Kit ID"),
-            size=30,
+            size=50,
             render_own_label=True,
             visible={'view': 'visible', 'edit': 'visible'},
         )
@@ -33,7 +33,7 @@ schema = BikaSchema.copy() + Schema((
         referenceClass=HoldingReference,
         widget=bika_ReferenceWidget(
             label = _("Kit template"),
-            size=30,
+            size=50,
             render_own_label=True,
             catalog_name='bika_setup_catalog',
             showOn=False,
@@ -43,6 +43,7 @@ schema = BikaSchema.copy() + Schema((
     IntegerField('quantity',
         mode="rw",
         required=1,
+        default=1,
         widget = IntegerWidget(
             label=_("Quantity"),
             render_own_label=True,
