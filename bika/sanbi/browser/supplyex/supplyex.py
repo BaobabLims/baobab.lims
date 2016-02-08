@@ -8,10 +8,10 @@ from bika.lims.browser import BrowserView
 
 from Products.ATContentTypes.lib import constraintypes
 
-class View(BrowserView):
+class KitView(BrowserView):
 
     template = ViewPageTemplateFile('templates/supplyex_view.pt')
-    title = _('Supply Ex')
+    title = _("Kit's components")
 
     def __call__(self):
         context = self.context
@@ -96,9 +96,30 @@ class EditView(BrowserView):
     def updateStockItems(self):
         """Implement me later"""
 
-class PrintView(View):
+class PrintView(KitView):
 
     template = ViewPageTemplateFile('templates/supplyex_print.pt')
 
     def __call__(self):
-        return View.__call__(self)
+        self.kit_name = self.context.getKitTemplate().Title()
+        self.quantity = self.context.getQuantity()
+        items = self.context.getKitTemplate().kittemplate_lineitems
+        self.items = []
+        self.items = []
+        for item in items:
+            prodtitle = item['Product']
+            price = float(item['Price'])
+            vat = float(item['VAT'])
+            qty = float(item['Quantity'])
+            self.items.append({
+                'title': prodtitle,
+                'price': price,
+                'vat': vat,
+                'quantity': qty,
+                'totalprice': '%.2f' % (price * qty)
+            })
+        self.items = sorted(self.items, key=itemgetter('title'))
+        self.subtotal = '%.2f' % self.context.getKitTemplate().getSubtotal()
+        self.vat = '%.2f' % self.context.getKitTemplate().getVATAmount()
+        self.total = '%.2f' % self.context.getKitTemplate().getTotal()
+        return self.template()

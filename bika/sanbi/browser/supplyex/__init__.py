@@ -1,3 +1,3 @@
 from supplyex import EditView
-from supplyex import View
+from supplyex import KitView
 from supplyex import PrintView

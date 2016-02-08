@@ -15,7 +15,7 @@
     <browser:page
       for="bika.sanbi.interfaces.ISupplyEx"
       name="base_view"
-      class="bika.sanbi.browser.supplyex.View"
+      class="bika.sanbi.browser.supplyex.KitView"
       permission="cmf.ModifyPortalContent"
       layer="bika.lims.interfaces.IBikaLIMS"
     />

@@ -9,7 +9,6 @@
     i18n_domain="bika.sanbi">
 
     <include package=".analysisrequest"/>
-    <include package=".kittemplate"/>
     <include package=".packages"/>
     <include package=".supplyex"/>
     <include package=".ajax"/>
