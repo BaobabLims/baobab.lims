@@ -28,6 +28,7 @@ setup(name='bika.sanbi',
           'archetypes.schemaextender',
           'plone.app.relationfield',
           'z3c.relationfield',
+          'collective.wtf',
       ],
       entry_points="""
       # -*- Entry points: -*-

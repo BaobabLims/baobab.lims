@@ -53,4 +53,12 @@
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
+    <browser:page
+      for="bika.sanbi.interfaces.ISupplyEx"
+      name="stickers"
+      class="bika.sanbi.browser.supplyex.stickers.Sticker"
+      permission="zope2.View"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
 </configure>

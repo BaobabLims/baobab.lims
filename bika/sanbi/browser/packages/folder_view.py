@@ -31,16 +31,24 @@ class PackagesView(BikaListingView):
                        'toggle': True},
             'quantity': {'title': _('Quantity'),
                        'toggle': True},
+            'expiryDate': {'title': _('Expiry Date'),
+                       'toggle': False},
         }
 
         self.review_states = [
-            {'id':'default',
-             'title': _('Valid'),
-             'contentFilter': {'review_state': 'valid'},
-             'transitions': [{'id':'discard'}, ],
-             'columns': ['kitID',
-                         'kitTemplate',
-                         'quantity']},
+            {
+                'id':'default',
+                'title': _('All'),
+                'contentFilter':{},
+                'columns': ['kitID', 'kitTemplate', 'quantity', 'expiryDate']
+            },
+            {
+                'id': 'pending',
+                'title': _('Pending'),
+                'contentFilter': {'review_state': 'pending'},
+                #'transitions': [{'id':'complete'}, ],
+                'columns': ['kitID', 'kitTemplate', 'quantity', 'expiryDate']
+            },
         ]
 
     def __call__(self):
@@ -51,22 +59,24 @@ class PackagesView(BikaListingView):
                 'icon': '++resource++bika.lims.images/add.png'
             }
         if mtool.checkPermission(ManagePackages, self.context):
-            self.review_states[0]['transitions'].append({'id':'deactivate'})
+            #self.review_states[0]['transitions'].append({'id':'deactivate'})
             self.review_states.append(
-                {'id':'discarded',
-                 'title': _('Discarded'),
-                 'contentFilter': {'review_state': 'discarded'},
-                 'transitions': [{'id':'keep'}, ],
-                 'columns': ['kitID',
-                             'kitTemplate',
-                             'quantity']})
+                {
+                    'id':'completed',
+                    'title': _('Completed'),
+                     'contentFilter': {'review_state': 'completed'},
+                     #'transitions': [{'id':'store'}, ],
+                     'columns': ['kitID', 'kitTemplate', 'quantity', 'expiryDate']
+                })
             self.review_states.append(
-                {'id':'all',
-                 'title': _('All'),
-                 'contentFilter':{},
-                 'columns': ['kitID',
-                             'kitTemplate',
-                             'quantity']})
+                {
+                    'id':'stored',
+                    'title': _('Stored'),
+                     'contentFilter': {'review_state': 'stored'},
+                     #'transitions': '',
+                     'columns': ['kitID', 'kitTemplate', 'quantity', 'expiryDate']
+                })
+            #self.review_states.append() # remove it
             stat = self.request.get("%s_review_state"%self.form_id, 'default')
             self.show_select_column = stat != 'all'
         return super(PackagesView, self).__call__()
@@ -77,6 +87,7 @@ class PackagesView(BikaListingView):
             if not items[x].has_key('obj'): continue
             obj = items[x]['obj']
             items[x]['kitTemplate'] = obj.getKitTemplateTitle()
+            items[x]['expiryDate'] = self.ulocalized_time(obj.getExpiryDate())
             items[x]['replace']['kitID'] = "<a href='%s'>%s</a>" % \
                 (items[x]['url'], obj.getKitId())
 

@@ -91,6 +91,7 @@ schema = BikaSchema.copy() + Schema((
         default_method='getCost',
         widget = DecimalWidget(
             label=_("Cost"),
+            size=10,
             description=_("This is the base cost of the components required for each completed kit."),
         ),
     ),
@@ -172,7 +173,18 @@ class KitTemplate(BaseContent):
 
     security.declarePublic('getCost')
     def getCost(self):
-        return "0"
+        price = Decimal("0.0")
+        catalog = getToolByName(self, 'bika_setup_catalog')
+        products = self.getProductList()
+        for product in products:
+            brains = catalog.searchResults({'portal_type': 'Product', 'title': product['product']})
+            quantity = Decimal(product['quantity'])
+            product_totalprice = brains[0].getObject().getTotalPrice() * quantity
+            price += product_totalprice
+
+        # TODO: Chech wich one to use here, str or decimal?
+        #return price.quantize(Decimal('0.00'))
+        return str(price)
 
     '''
     security.declarePublic('getTotalPrice')

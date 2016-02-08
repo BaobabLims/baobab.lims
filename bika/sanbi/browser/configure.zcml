@@ -9,6 +9,7 @@
     i18n_domain="bika.sanbi">
 
     <include package=".analysisrequest"/>
+    <include package=".kittemplate"/>
     <include package=".packages"/>
     <include package=".supplyex"/>
     <include package=".ajax"/>
@@ -17,11 +18,11 @@
          To enable these, just copy one or more of the *.pt files
          from bika.lims/bika/lims/browser/templates/stickers
          into the ./stickers folder, and edit it.
-    -->
+
     <plone:static
        directory="stickers"
        type="stickers"
        name="sanbi"
-     />
+     />-->
 
 </configure>

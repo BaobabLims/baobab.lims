@@ -71,4 +71,16 @@
      <permission value="BIKA: View Log Tab"/>
  </action>
 
+ <action title="Small Sticker"
+        action_id="sticker_small"
+        category="document_actions"
+        condition_expr="python: context.portal_workflow.getInfoFor(context, 'review_state') in ['stored']"
+        icon_expr="string:${object_url}/++resource++bika.lims.images/sticker_small.png"
+        link_target=""
+        url_expr="string:${object_url}/stickers"
+        i18n:attributes="title"
+        visible="True">
+   <permission value="View"/>
+</action>
+
 </object>

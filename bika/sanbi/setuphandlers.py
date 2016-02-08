@@ -51,6 +51,7 @@ class BikaCustomGenerator:
         # Add indexes and metadata columns here
         at = getToolByName(portal, 'archetype_tool')
         at.setCatalogsByType('KitAssembly', ['bika_catalog', 'portal_catalog'])
+        at.setCatalogsByType('SupplyEx', ['bika_catalog', 'portal_catalog'])
 
         bsc = getToolByName(portal, 'bika_setup_catalog', None)
         if bsc is None:

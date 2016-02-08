@@ -5,6 +5,8 @@
 <property name="title" purge="False">
   Contains workflow definitions for your portal</property>
 
+<object name="bika_kit_assembly_workflow" meta_type="Workflow"/>
+
 <bindings>
     <type type_id="KitTemplate">
         <bound-workflow workflow_id="bika_one_state_workflow"/>
@@ -14,7 +16,8 @@
 
     <type type_id="Packages" />
     <type type_id="SupplyEx">
-        <bound-workflow workflow_id="bika_stockitem_workflow"/>
+        <bound-workflow workflow_id="bika_kit_assembly_workflow"/>
+        <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>
 </bindings>
 </object>

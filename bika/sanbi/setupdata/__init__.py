@@ -5,6 +5,7 @@ from bika.lims.utils import tmpID
 from Products.CMFPlone.utils import safe_unicode, _createObjectByType
 from bika.lims.interfaces import ISetupDataSetList
 from zope.interface import implements
+from bika.lims.idserver import renameAfterCreation
 
 class SetupDataSetList(SDL):
 
@@ -32,15 +33,16 @@ class Kit_Components(WorksheetImporter):
         for row in rows:
             if self.template_name == row.get('templateName'):
                 product_name = row.get('componentName')
+
                 brains = self.catalog.searchResults({'portal_type': 'Product', 'title': product_name})
                 if brains and len(brains) == 1:
                     product_obj = brains[0].getObject()
-                self.product_list.append({
-                    'product': product_name,
-                    'product_uid': product_obj.UID(),
-                    'value': '',
-                    'quantity': row.get('quantity')
-                })
+                    self.product_list.append({
+                        'product': product_name,
+                        'product_uid': product_obj.UID(),
+                        'value': '',
+                        'quantity': row.get('quantity')
+                    })
 
     def get_product_list(self):
         """ This method is called after Import to get computed product_list
@@ -68,3 +70,6 @@ class Kit_Templates(WorksheetImporter):
                 Quantity=row.get('quantity')
             )
             obj.setCategory(category)
+
+            obj.unmarkCreationFlag()
+            renameAfterCreation(obj)
