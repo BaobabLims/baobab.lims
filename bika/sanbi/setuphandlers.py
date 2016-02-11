@@ -74,8 +74,8 @@ class BikaCustomGenerator:
 
         # Root permissions
         mp = portal.manage_permission
-        #mp(AddKit, ['Manager'], 0)
-        mp(ManagePackages, ['Manager'], 0)
+        mp(AddSupplyEx, ['Manager', 'Owner'], 1)
+        mp(ManagePackages, ['Manager', 'Owner'], 1)
         portal.packages.reindexObject()
 
 def setupCustomVarious(context):

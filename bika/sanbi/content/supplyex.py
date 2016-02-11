@@ -183,9 +183,16 @@ class SupplyEx(BaseContent):
     def workflow_script_deactivate(self):
         """DEACTIVATE ACTION"""
         # TODO: DO WE HAVE TO REMOVE QUANTITY FROM KIT-STOCKITEM WHEN THIS OBJECT IS DEACTIVATED?
-
+        # TODO: MAY BE THIS WILL BE USEFUL TO GET THE STATUS OF AN OBJECT TOO:
+        # context.portal_workflow.getInfoFor(context, 'review_state')
         workflowTool = getToolByName(self, "portal_workflow")
         status = workflowTool.getStatusOf("bika_kit_assembly_workflow", self)
         print status
+
+    def getDocuments(self):
+        """
+        Return all the multifile objects related with kit
+        """
+        return self.objectValues('Multifile')
 
 registerType(SupplyEx, config.PROJECTNAME)

@@ -28,6 +28,14 @@
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
+    <browser:page
+      for="bika.sanbi.interfaces.ISupplyEx"
+      name="multifile"
+      class="bika.sanbi.browser.supplyex.files.SupplyExMultifileView"
+      permission="zope2.View"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
     <!-- Ajax signatures -->
     <browser:page
       for="bika.sanbi.interfaces.ISupplyEx"
