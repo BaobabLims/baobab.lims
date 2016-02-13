@@ -25,7 +25,19 @@
 			</h1>
 		</metal:title>
 
-		<metal:core fill-slot="content-core">
+		<metal:core fill-slot="content-core"
+            tal:define="
+                    portal context/@@plone_portal_state/portal;
+                    attachments python:view.getAttachments();
+                    review_state python: context.portal_workflow.getInfoFor(context, 'review_state');
+                    attachments_allowed here/bika_setup/getAttachmentsPermitted;
+                    delete_attachments python:True;
+                    update_attachments python:True;">
+
+            <div tal:condition="attachments_allowed">
+                <metal:block use-macro="here/kitattachments/macros/attachments"/>
+            </div>
+
             <table class="invoice-header">
                 <tbody>
                 <tr>
@@ -85,6 +97,14 @@
                 </tr>
                 </tbody>
             </table>
+
+            <tal:remarks define="
+                field python:context.Schema()['Remarks'];
+                errors python:{};">
+                <p style="margin-top:2em;"/>
+                 <metal:widget use-macro="python:context.widget('Remarks', mode='edit')" />
+            </tal:remarks>
+
 		</metal:core>
 
 	</body>

@@ -38,7 +38,7 @@
                         mode string:edit;">
 
                         <tr tal:attributes="fieldName fieldName">
-                            <th colspan="2" style="white-space:nowrap; background-color: lightblue;">
+                            <th tal:condition="python: fieldName != 'Remarks'" colspan="2" style="white-space:nowrap; background-color: lightblue;">
                                 <label class="formQuestion">
                                     <span tal:replace="python:view.context.translate(widget.Label(here))"/>
                                     <span class="fieldRequired"
@@ -53,7 +53,7 @@
                                 </label>
 
                             </th>
-                            <tal:columns tal:repeat="arnum python:range(1)">
+                            <tal:columns tal:condition="python: fieldName != 'Remarks'" tal:repeat="arnum python:range(1)">
                                 <td class="nowrap" tal:attributes="arnum arnum" style="padding: 10px; background-color: #eee;">
                                     <metal:field
                                             use-macro="python:context.widget(fieldName, mode='edit')" />
@@ -82,6 +82,12 @@
             </div>-->
         </span>
     </form>
+    <tal:remarks define="
+        field python:context.Schema()['Remarks'];
+        errors python:{};">
+        <p style="margin-top:2em;"/>
+         <metal:widget use-macro="python:context.widget('Remarks', mode='edit')" />
+    </tal:remarks>
 </metal:core>
 
 </body>

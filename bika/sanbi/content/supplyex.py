@@ -76,6 +76,33 @@ schema = BikaSchema.copy() + Schema((
         default=False,
         widget=BooleanWidget(visible=False),
     ),
+    ReferenceField(
+        'Attachment',
+        multiValued=1,
+        allowed_types=('Attachment',),
+        referenceClass=HoldingReference,
+        relationship='SupplyExAttachment',
+        mode="rw",
+        read_permission=permissions.View,
+        write_permission=permissions.ModifyPortalContent,
+        widget=ComputedWidget(
+            visible={'edit': 'invisible',
+                     'view': 'invisible',
+                     },
+        )
+    ),
+    TextField('Remarks',
+        searchable=True,
+        default_content_type='text/x-web-intelligent',
+        allowable_content_types = ('text/plain', ),
+        default_output_type="text/plain",
+        mode="rw",
+        widget=TextAreaWidget(
+            macro="bika_widgets/remarks",
+            label=_("Remarks"),
+            append_only=True,
+        ),
+    ),
 ))
 schema['title'].required = False
 schema['title'].widget.visible = False
@@ -187,5 +214,6 @@ class SupplyEx(BaseContent):
         workflowTool = getToolByName(self, "portal_workflow")
         status = workflowTool.getStatusOf("bika_kit_assembly_workflow", self)
         print status
+
 
 registerType(SupplyEx, config.PROJECTNAME)

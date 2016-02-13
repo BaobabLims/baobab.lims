@@ -7,6 +7,9 @@ from bika.sanbi import bikaMessageFactory as _
 from bika.lims.browser import BrowserView
 
 from Products.ATContentTypes.lib import constraintypes
+from Products.CMFPlone.utils import _createObjectByType
+
+from Products.Archetypes.public import BaseFolder
 
 class KitView(BrowserView):
 
@@ -14,8 +17,11 @@ class KitView(BrowserView):
     title = _("Kit's components")
 
     def __call__(self):
+
         context = self.context
         portal = self.portal
+
+        self.absolute_url = context.absolute_url()
         setup = portal.bika_setup
         # Disable the add new menu item
         context.setConstrainTypesMode(1)
@@ -45,11 +51,77 @@ class KitView(BrowserView):
                 'totalprice': '%.2f' % (price * qty)
             })
         self.items = sorted(self.items, key=itemgetter('title'))
+
+        if 'form.action.addKitAttachment' in self.request:
+            self.addKitAttachment()
+        elif 'form.action.delARAttachment' in self.request:
+            self.delARAttachment()
+
         # Render the template
         return self.template()
 
+    def delARAttachment(self):
+        """ delete the attachment """
+        tool = getToolByName(self, "reference_catalog")
+        if 'Attachment' in self.request.form:
+            attachment_uid = self.request.form['Attachment']
+            attachment = tool.lookupObject(attachment_uid)
+
+        others = self.context.getAttachment()
+        attachments = []
+        for other in others:
+            if not other.UID() == attachment_uid:
+                attachments.append(other.UID())
+        self.context.setAttachment(attachments)
+        kits = attachment.aq_parent
+        ids = [attachment.getId(), ]
+        BaseFolder.manage_delObjects(kits, ids, self.request)
+
     def getPreferredCurrencyAbreviation(self):
         return self.context.bika_setup.getCurrency()
+
+    def addKitAttachment(self, REQUEST=None, RESPONSE=None):
+        workflow = getToolByName(self, 'portal_workflow')
+        this_file = self.request.form['AttachmentFile_file']
+        attachmentid = self.context.generateUniqueId('Attachment')
+        attachment = _createObjectByType("Attachment", self.context.aq_parent,
+                                         attachmentid)
+        attachment.edit(
+            AttachmentFile=this_file,
+            AttachmentType=self.request.form.get('AttachmentType', ''),
+            AttachmentKeys=self.request.form['AttachmentKeys'])
+        attachment.processForm()
+        attachment.reindexObject()
+
+        other_attachs = self.context.getAttachment()
+        attachments = []
+        for other in other_attachs:
+            attachments.append(other.UID())
+        attachments.append(attachment.UID())
+
+        self.context.setAttachment(attachments)
+
+    def getAttachments(self):
+        attachments = []
+        kit_atts = self.context.getAttachment()
+        for att in kit_atts:
+            file = att.getAttachmentFile()
+            fsize = file.getSize() if file else 0
+            if fsize < 1024:
+                fsize = '%s b' % fsize
+            else:
+                fsize = '%s Kb' % (fsize / 1024)
+            attachments.append({
+                'keywords': att.getAttachmentKeys(),
+                'analysis': '',
+                'size': fsize,
+                'name': file.filename,
+                'Icon': file.getBestIcon(),
+                'type': att.getAttachmentType().Title() if att.getAttachmentType() else '',
+                'absolute_url': att.absolute_url(),
+                'UID': att.UID(),
+            })
+        return attachments
 
 
 class EditView(BrowserView):
