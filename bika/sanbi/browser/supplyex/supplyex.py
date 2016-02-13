@@ -137,7 +137,7 @@ class EditView(BrowserView):
 
         if 'submit' in request:
             #pdb.set_trace()
-            # ***** Is it a hack this line?
+            # ***** Is this line a hack?
             context.aq_parent.setConstrainTypesMode(constraintypes.DISABLED)
             # *****
             portal_factory = getToolByName(context, 'portal_factory')
