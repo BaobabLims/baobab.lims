@@ -6,13 +6,13 @@ The two files must be kept in sync.
 from bika.lims.permissions import ADD_CONTENT_PERMISSION
 
 AddKitTemplate = 'SANBI: Add kit template'
-AddSupplyEx = 'SANBI: Add SupplyEx'
+AddKit = 'SANBI: Add Kit'
 
 # Add Permissions for specific types, if required
 ADD_CONTENT_PERMISSIONS = {
     'KitTemplate': AddKitTemplate,
-    'SupplyEx': AddSupplyEx,
+    'Kit': AddKit,
 }
 
-ManagePackages = "SANBI: Manage Packages"
+ManageKits = "SANBI: Manage Kits"
 ManageKitTemplates = "SANBI: Manage KitTemplates"

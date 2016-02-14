@@ -1,7 +1,7 @@
 /**
  * Controller class for AnalysisRequest add view
  */
-function CustomSupplyExAddView() {
+function CustomKitAddView() {
 
     var that = this;
 
@@ -135,7 +135,7 @@ function CustomSupplyExAddView() {
             });
         });
 
-        $("#supplyex_edit").submit(function(event){
+        $("#kit_edit").submit(function(event){
             if (ok) {
                 var path = window.location.href.split("/edit")[0] + "/updateStockItems";
                 $.ajax({

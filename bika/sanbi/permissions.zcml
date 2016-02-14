@@ -8,6 +8,6 @@
 
     <permission id="bika.sanbi.permissions.AddKitTemplate" title="SANBI: Add kit template"/>
     <permission id="bika.sanbi.ManageKitTemplates" title="SANBI: Manage KitTemplates"/>
-    <permission id="bika.sanbi.permissions.AddSupplyEx" title="SANBI: Add SupplyEx"/>
-    <permission id="bika.sanbi.ManagePackages" title="SANBI: Manage Packages"/>
+    <permission id="bika.sanbi.permissions.AddKit" title="SANBI: Add Kit"/>
+    <permission id="bika.sanbi.ManageKits" title="SANBI: Manage Kits"/>
 </configure>

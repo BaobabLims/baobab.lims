@@ -9,8 +9,8 @@ class IKitTemplates(Interface):
 class IKitAssembly(Interface):
     """Package"""
 
-class IPackages(Interface):
+class IKits(Interface):
     """Package folder"""
 
-class ISupplyEx(Interface):
+class IKit(Interface):
     """Package Supply"""

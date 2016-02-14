@@ -7,15 +7,15 @@ from bika.lims.browser.bika_listing import BikaListingView
 from plone.app.layout.globals.interfaces import IViewView
 from plone.app.content.browser.interfaces import IFolderContentsView
 
-class PackagesView(BikaListingView):
+class KitsView(BikaListingView):
     implements(IFolderContentsView, IViewView)
         
     def __init__(self, context, request):
-        super(PackagesView, self).__init__(context, request)
-        self.contentFilter = {'portal_type': 'SupplyEx',
+        super(KitsView, self).__init__(context, request)
+        self.contentFilter = {'portal_type': 'Kit',
                               'sort_on': 'sortable_title'}
         self.context_actions = {}
-        self.title = self.context.translate(_("Packages"))
+        self.title = self.context.translate(_("Kits"))
         self.icon = self.portal_url + "/++resource++bika.lims.images/container_big.png"
         self.description = ""
         self.show_sort_column = False
@@ -53,12 +53,12 @@ class PackagesView(BikaListingView):
 
     def __call__(self):
         mtool = getToolByName(self.context, 'portal_membership')
-        if mtool.checkPermission(AddSupplyEx, self.context):
+        if mtool.checkPermission(AddKit, self.context):
             self.context_actions[_('Add')] = {
-                'url': 'createObject?type_name=SupplyEx',
+                'url': 'createObject?type_name=Kit',
                 'icon': '++resource++bika.lims.images/add.png'
             }
-        if mtool.checkPermission(ManagePackages, self.context):
+        if mtool.checkPermission(ManageKits, self.context):
             #self.review_states[0]['transitions'].append({'id':'deactivate'})
             self.review_states.append(
                 {
@@ -79,10 +79,10 @@ class PackagesView(BikaListingView):
             #self.review_states.append() # remove it
             stat = self.request.get("%s_review_state"%self.form_id, 'default')
             self.show_select_column = stat != 'all'
-        return super(PackagesView, self).__call__()
+        return super(KitsView, self).__call__()
 
     def folderitems(self):
-        items = super(PackagesView, self).folderitems()
+        items = super(KitsView, self).folderitems()
         for x in range(len(items)):
             if not items[x].has_key('obj'): continue
             obj = items[x]['obj']

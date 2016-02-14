@@ -5,9 +5,9 @@
     i18n_domain="bika.sanbi">
 
     <browser:page
-      for="bika.sanbi.interfaces.IPackages"
+      for="bika.sanbi.interfaces.IKits"
       name="folder_view"
-      class=".folder_view.PackagesView"
+      class=".folder_view.KitsView"
       permission="zope2.View"
       layer="bika.lims.interfaces.IBikaLIMS"
     />

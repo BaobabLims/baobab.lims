@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
-<object name="SupplyEx"
+<object name="Kit"
         meta_type="Factory-based Type Information with dynamic views"
         xmlns:i18n="http://xml.zope.org/namespaces/i18n"
         i18n:domain="plone">
- <property name="title" i18n:translate="">Supply Ex</property>
+ <property name="title" i18n:translate="">Kit Assembly</property>
  <property name="description"></property>
  <property name="content_icon">++resource++bika.lims.images/supplyorder.png</property>
- <property name="content_meta_type">SupplyEx</property>
+ <property name="content_meta_type">Kit</property>
  <property name="product">bika.sanbi</property>
- <property name="factory">addSupplyEx</property>
+ <property name="factory">addKit</property>
  <property name="add_view_expr"></property>
  <property name="link_target"></property>
  <property name="global_allow">False</property>

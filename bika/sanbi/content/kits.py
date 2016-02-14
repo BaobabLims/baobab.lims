@@ -3,15 +3,15 @@ from Products.Archetypes import atapi
 from bika.sanbi.config import PROJECTNAME
 from plone.app.folder.folder import ATFolder, ATFolderSchema
 from zope.interface.declarations import implements
-from bika.sanbi.interfaces import IPackages
+from bika.sanbi.interfaces import IKits
 
 schema = ATFolderSchema.copy()
 
 
-class Packages(ATFolder):
-    implements(IPackages)
+class Kits(ATFolder):
+    implements(IKits)
     displayContentsTab = False
     schema = schema
 
 schemata.finalizeATCTSchema(schema, folderish=True, moveDiscussion=False)
-atapi.registerType(Packages, PROJECTNAME)
+atapi.registerType(Kits, PROJECTNAME)

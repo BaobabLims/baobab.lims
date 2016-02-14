@@ -14,8 +14,8 @@
     </type>
     <type type_id="KitTemplates"/>
 
-    <type type_id="Packages" />
-    <type type_id="SupplyEx">
+    <type type_id="Kits" />
+    <type type_id="Kit">
         <bound-workflow workflow_id="bika_kit_assembly_workflow"/>
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>

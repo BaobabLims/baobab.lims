@@ -13,7 +13,7 @@
               insert-after="*"/>
 
   <javascript authenticated="True"
-              id="++resource++bika.sanbi.js/bika.sanbi.supplyex.add.js"
+              id="++resource++bika.sanbi.js/bika.sanbi.kit.add.js"
               cacheable="True"
               compression="safe"
               conditionalcomment=""

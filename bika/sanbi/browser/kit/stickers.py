@@ -16,7 +16,7 @@ class Sticker(BrowserView):
 
         new_items = []
         for i in self.items:
-            if i.portal_type == "SupplyEx":
+            if i.portal_type == "Kit":
                 catalog = bsc(portal_type="StockItem")
                 brains = bsc.searchResults({'portal_type': 'Product', 'title': i.getKitTemplate().Title()})
 

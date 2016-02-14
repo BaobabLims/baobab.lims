@@ -13,7 +13,7 @@ from Products.Archetypes.public import BaseFolder
 
 class KitView(BrowserView):
 
-    template = ViewPageTemplateFile('templates/supplyex_view.pt')
+    template = ViewPageTemplateFile('templates/kit_view.pt')
     title = _("Kit's components")
 
     def __call__(self):
@@ -77,6 +77,9 @@ class KitView(BrowserView):
         ids = [attachment.getId(), ]
         BaseFolder.manage_delObjects(kits, ids, self.request)
 
+        #self.request.RESPONSE.redirect(self.context.absolute_url())
+        self.request.RESPONSE.redirect(self.request.REQUEST.get_header('referer'))
+
     def getPreferredCurrencyAbreviation(self):
         return self.context.bika_setup.getCurrency()
 
@@ -100,6 +103,8 @@ class KitView(BrowserView):
         attachments.append(attachment.UID())
 
         self.context.setAttachment(attachments)
+
+        self.request.RESPONSE.redirect(self.context.absolute_url())
 
     def getAttachments(self):
         attachments = []
@@ -126,7 +131,7 @@ class KitView(BrowserView):
 
 class EditView(BrowserView):
 
-    template = ViewPageTemplateFile('templates/supplyex_edit.pt')
+    template = ViewPageTemplateFile('templates/kit_edit.pt')
     field = ViewPageTemplateFile('templates/row_field.pt')
 
     def __call__(self):
@@ -170,7 +175,7 @@ class EditView(BrowserView):
 
 class PrintView(KitView):
 
-    template = ViewPageTemplateFile('templates/supplyex_print.pt')
+    template = ViewPageTemplateFile('templates/kit_print.pt')
 
     def __call__(self):
         self.kit_name = self.context.getKitTemplate().Title()

@@ -7,7 +7,7 @@ from Products.Archetypes.public import *
 from Products.Archetypes.references import HoldingReference
 import sys
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
-from bika.sanbi.interfaces import ISupplyEx
+from bika.sanbi.interfaces import IKit
 from Products.CMFPlone.interfaces import IConstrainTypes
 from Products.CMFPlone.utils import _createObjectByType
 from bika.lims.utils import tmpID
@@ -81,7 +81,7 @@ schema = BikaSchema.copy() + Schema((
         multiValued=1,
         allowed_types=('Attachment',),
         referenceClass=HoldingReference,
-        relationship='SupplyExAttachment',
+        relationship='KitAttachment',
         mode="rw",
         read_permission=permissions.View,
         write_permission=permissions.ModifyPortalContent,
@@ -112,9 +112,9 @@ schema['description'].widget.render_own_label = True
 schema.moveField('KitID', before='description')
 schema.moveField('KitTemplate', before='KitID')
 
-class SupplyEx(BaseContent):
+class Kit(BaseContent):
     security = ClassSecurityInfo()
-    implements(ISupplyEx, IConstrainTypes)
+    implements(IKit, IConstrainTypes)
     schema = schema
 
     _at_rename_after_creation = True
@@ -216,4 +216,4 @@ class SupplyEx(BaseContent):
         status = workflowTool.getStatusOf("bika_kit_assembly_workflow", self)
         print status
 
-registerType(SupplyEx, config.PROJECTNAME)
+registerType(Kit, config.PROJECTNAME)

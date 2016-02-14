@@ -23,11 +23,11 @@
     portal context/@@plone_portal_state/portal;
     checkPermission nocall:context/portal_membership/checkPermission;
     mtool here/portal_membership;">
-    <form id="supplyex_edit" method="post"
+    <form id="kit_edit" method="post"
           action="" tal:define="errors python:{}">
 
         <table class="invoice-header">
-            <thead class="supplyex_add">
+            <thead class="kit_add">
                 <tal:field tal:repeat="field python:view.get_fields_with_visibility('visible')">
                     <tal:def define="
                         fieldName python:field.getName();

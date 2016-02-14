@@ -5,58 +5,58 @@
     i18n_domain="bika.sanbi">
 
     <browser:page
-      for="bika.sanbi.interfaces.ISupplyEx"
+      for="bika.sanbi.interfaces.IKit"
       name="base_edit"
-      class="bika.sanbi.browser.supplyex.EditView"
+      class="bika.sanbi.browser.kit.EditView"
       permission="cmf.ModifyPortalContent"
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
     <browser:page
-      for="bika.sanbi.interfaces.ISupplyEx"
+      for="bika.sanbi.interfaces.IKit"
       name="base_view"
-      class="bika.sanbi.browser.supplyex.KitView"
+      class="bika.sanbi.browser.kit.KitView"
       permission="cmf.ModifyPortalContent"
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
     <browser:page
-      for="bika.sanbi.interfaces.ISupplyEx"
+      for="bika.sanbi.interfaces.IKit"
       name="print"
-      class="bika.sanbi.browser.supplyex.PrintView"
+      class="bika.sanbi.browser.kit.PrintView"
       permission="cmf.ModifyPortalContent"
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
     <!-- Ajax signatures -->
     <browser:page
-      for="bika.sanbi.interfaces.ISupplyEx"
+      for="bika.sanbi.interfaces.IKit"
       name="computeNumberKits"
-      class="bika.sanbi.browser.supplyex.ajax.ComputeNumberKits"
+      class="bika.sanbi.browser.kit.ajax.ComputeNumberKits"
       permission="zope.Public"
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
     <browser:page
-      for="bika.sanbi.interfaces.ISupplyEx"
+      for="bika.sanbi.interfaces.IKit"
       name="updateStockItems"
-      class="bika.sanbi.browser.supplyex.ajax.UpdateStockItems"
+      class="bika.sanbi.browser.kit.ajax.UpdateStockItems"
       permission="zope.Public"
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
     <browser:page
-      for="bika.sanbi.interfaces.ISupplyEx"
+      for="bika.sanbi.interfaces.IKit"
       name="objectExists"
-      class="bika.sanbi.browser.supplyex.ajax.ObjectExists"
+      class="bika.sanbi.browser.kit.ajax.ObjectExists"
       permission="zope.Public"
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
     <browser:page
-      for="bika.sanbi.interfaces.ISupplyEx"
+      for="bika.sanbi.interfaces.IKit"
       name="stickers"
-      class="bika.sanbi.browser.supplyex.stickers.Sticker"
+      class="bika.sanbi.browser.kit.stickers.Sticker"
       permission="zope2.View"
       layer="bika.lims.interfaces.IBikaLIMS"
     />

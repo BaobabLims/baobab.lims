@@ -9,8 +9,8 @@
     i18n_domain="bika.sanbi">
 
     <include package=".analysisrequest"/>
-    <include package=".packages"/>
-    <include package=".supplyex"/>
+    <include package=".kits"/>
+    <include package=".kit"/>
     <include package=".ajax"/>
 
     <!-- This registration allows additional sticker templates.

@@ -14,7 +14,7 @@
   <property name="title">NavigationTree properties</property>
   <property name="idsNotToList" type="lines"/>
   <property name="metaTypesNotToList" type="lines" purge="False">
-    <element value="SupplyEx"/>
+    <element value="Kit"/>
   </property>
 </object>
 

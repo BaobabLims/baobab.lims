@@ -16,8 +16,8 @@ window.bika.sanbi.controllers =  {
     ".template-ar_add #analysisrequest_edit_form":
         ['CustomAnalysisRequestAddView'],
 
-    ".supplyex_add":
-        ['CustomSupplyExAddView'],
+    ".kit_add":
+        ['CustomKitAddView'],
 };
 
 /**
