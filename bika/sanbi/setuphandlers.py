@@ -23,7 +23,8 @@ class BikaCustomGenerator:
                 pass
 
         bika_setup = portal._getOb('bika_setup')
-        for obj_id in ('bika_kittemplates', ):
+        for obj_id in ('bika_kittemplates',
+                       'bika_storageorders'):
             obj = bika_setup._getOb(obj_id)
             obj.unmarkCreationFlag()
             obj.reindexObject()
@@ -60,7 +61,7 @@ class BikaCustomGenerator:
         # Add indexes and metadata columns here
         at = getToolByName(portal, 'archetype_tool')
         at.setCatalogsByType('KitTemplate', ['bika_setup_catalog',])
-
+        at.setCatalogsByType('StorageOrder', ['bika_setup_catalog', 'portal_catalog', ])
 
         bac = getToolByName(portal, 'bika_analysis_catalog', None)
         if bsc is None:

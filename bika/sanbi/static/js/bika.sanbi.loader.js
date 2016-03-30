@@ -15,9 +15,10 @@ window.bika.sanbi.controllers =  {
 
     ".template-ar_add #analysisrequest_edit_form":
         ['CustomAnalysisRequestAddView'],
-
-    ".kit_add":
+    ".template-base_edit #kit_edit_form":
         ['CustomKitAddView'],
+    ".template-base_edit #storage_edit_form":
+        ['CustomStorageOrderAddView'],
 };
 
 /**

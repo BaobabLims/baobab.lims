@@ -1,0 +1,31 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    i18n_domain="bika">
+
+
+    <browser:page
+      for="bika.sanbi.interfaces.IStorageOrder"
+      name="base_edit"
+      class="bika.sanbi.browser.storageorder.StorageOrderEdit"
+      permission="cmf.ModifyPortalContent"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="bika.sanbi.interfaces.IStorageOrder"
+      name="base_view"
+      class="bika.sanbi.browser.storageorder.StorageOrderView"
+      permission="cmf.ModifyPortalContent"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="*"
+      name="storageorder_submit"
+      class="bika.sanbi.browser.storageorder.StorageOrderSubmit"
+      permission="zope.Public"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+</configure>

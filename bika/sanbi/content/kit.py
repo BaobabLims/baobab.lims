@@ -42,7 +42,7 @@ schema = BikaSchema.copy() + Schema((
             size=50,
             render_own_label=True,
             catalog_name='bika_setup_catalog',
-            showOn=False,
+            showOn=True,
             description=_("Start typing to filter the list of available kit templates."),
         ),
     ),

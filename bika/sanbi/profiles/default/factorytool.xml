@@ -4,5 +4,6 @@
   <type portal_type="KitTemplate"/>
   <type portal_type="KitAssembly"/>
   <type portal_type="Kit"/>
+  <type portal_type="StorageOrder"/>
  </factorytypes>
 </object>

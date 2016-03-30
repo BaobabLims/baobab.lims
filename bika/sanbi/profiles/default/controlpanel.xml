@@ -5,12 +5,21 @@
  i18n:domain="plone">
 
 <configlet title="Kit-Templates" action_id="bika_kittemplates"
-    appId="bika.lims" category="bika" condition_expr=""
+    appId="bika.sanbi" category="bika" condition_expr=""
     icon_expr="string:++resource++bika.lims.images/samplepartition.png"
     url_expr="string:$portal_url/bika_setup/bika_kittemplates"
     visible="True"
   i18n:attributes="title">
   <permission>BIKA: Manage Bika</permission>
 </configlet>
+
+<configlet title="Storage Orders" action_id="bika_storageorders"
+    appId="bika.sanbi" category="bika" condition_expr=""
+    icon_expr="string:++resource++bika.lims.images/department.png"
+    url_expr="string:$portal_url/bika_setup/bika_storageorders"
+    visible="True"
+    i18n:attributes="title">
+  <permission>BIKA: Manage Bika</permission>
+ </configlet>
 
 </object>

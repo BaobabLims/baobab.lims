@@ -15,6 +15,7 @@
   <property name="idsNotToList" type="lines"/>
   <property name="metaTypesNotToList" type="lines" purge="False">
     <element value="Kit"/>
+    <element value="StorageOrder"/>
   </property>
 </object>
 

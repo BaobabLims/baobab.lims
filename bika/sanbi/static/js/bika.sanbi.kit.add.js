@@ -1,5 +1,5 @@
 /**
- * Controller class for AnalysisRequest add view
+ * Controller class for kit add view
  */
 function CustomKitAddView() {
 
@@ -77,11 +77,11 @@ function CustomKitAddView() {
                 }
             }
         });
-        doSomething();
+        numberKits();
         form_submit();
     }
 
-    function doSomething(){
+    function numberKits(){
         //debugger;
         $("#KitTemplate_uid").on("focus", function(){
             var path = window.location.href.split("/edit")[0] + "/computeNumberKits";
@@ -135,7 +135,7 @@ function CustomKitAddView() {
             });
         });
 
-        $("#kit_edit").submit(function(event){
+        $("#kit_edit_form").submit(function(event){
             if (ok) {
                 var path = window.location.href.split("/edit")[0] + "/updateStockItems";
                 $.ajax({

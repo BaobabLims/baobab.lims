@@ -17,11 +17,14 @@ def initialize(context):
     """Initializer called when used as a Zope 2 product."""
 
     from content.kittemplate import KitTemplate
-    from content.kittemplates import KitTemplates
-    from controlpanel.bika_kittemplates import KitTemplates
+    #from content.kittemplates import KitTemplates
     from content.kitassembly import KitAssembly
     from content.kit import Kit
     from content.kits import Kits
+    from content.storageorder import StorageOrder
+
+    from controlpanel.bika_kittemplates import KitTemplates
+    from controlpanel.bika_storageorders import StorageOrders
 
     content_types, constructors, ftis = process_types(
         listTypes(PROJECTNAME),

@@ -12,6 +12,7 @@
     <include package=".kits"/>
     <include package=".kit"/>
     <include package=".ajax"/>
+    <include package=".storageorder"/>
 
     <!-- This registration allows additional sticker templates.
          To enable these, just copy one or more of the *.pt files

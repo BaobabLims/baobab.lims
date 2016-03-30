@@ -5,4 +5,6 @@
     <object name="KitAssembly" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Kits" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Kit" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="StorageOrder" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="StorageOrders" meta_type="Factory-based Type Information with dynamic views"/>
 </object>
