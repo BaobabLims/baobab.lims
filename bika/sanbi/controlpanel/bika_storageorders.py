@@ -18,11 +18,11 @@ class StorageOrdersView(BikaListingView):
         super(StorageOrdersView, self).__init__(context, request)
         self.catalog = 'bika_setup_catalog'
         self.contentFilter = {'portal_type': 'StorageOrder',
-                              'sort_on': 'sortable_title'}
+                              'sort_on': 'created'}
         self.context_actions = {_('Add'):
                                 {'url': 'createObject?type_name=StorageOrder',
                                  'icon': '++resource++bika.lims.images/add.png'}}
-        self.title = self.context.translate(_("Storage Orders"))
+        self.title = self.context.translate(_("Storage Managment"))
         self.icon = self.portal_url + "/++resource++bika.lims.images/department_big.png"
         self.description = ""
         self.show_sort_column = False
@@ -47,41 +47,46 @@ class StorageOrdersView(BikaListingView):
             'Description': {'title': _('Description'),
                             'index': 'description',
                             'toggle': True},
-            'getStorageUnit': {'title': _('Storage Level'),
+            'getStorageUnit': {'title': _('Parent'),
                                'toggle': True},
             'getNumber': {'title': _('Number Items'),
                           'toggle': True},
-            'getParent': {'title': _('Parent'),
-                          'toggle': True},
+            'getHierarchy': {'title': _('Hierarchy'),
+                             'toggle': True},
         }
 
         self.review_states = [
             {'id':'default',
              'title': _('Active'),
-             'contentFilter': {'inactive_state': 'active'},
+             'contentFilter': {'inactive_state': 'active',
+                               'sort_on':'created',
+                               'sort_order':'ascending'},
              'transitions': [{'id':'deactivate'}, ],
              'columns': ['Title',
                          'Description',
                          'getStorageUnit',
                          'getNumber',
-                         'getParent']},
+                         'getHierarchy']},
             {'id':'inactive',
              'title': _('Dormant'),
-             'contentFilter': {'inactive_state': 'inactive'},
+             'contentFilter': {'inactive_state': 'inactive',
+                               'sort_on':'created',
+                               'sort_order':'ascending'},
              'transitions': [{'id':'activate'}, ],
              'columns': ['Title',
                          'Description',
                          'getStorageUnit',
                          'getNumber',
-                         'getParent']},
+                         'getHierarchy']},
             {'id':'all',
              'title': _('All'),
-             'contentFilter':{},
+             'contentFilter':{'sort_on':'created',
+                              'sort_order': 'ascending'},
              'columns': ['Title',
                          'Description',
                          'getStorageUnit',
                          'getNumber',
-                         'getParent']},
+                         'getHierarchy']},
         ]
 
     def parentLevel(self, uid):
@@ -95,6 +100,7 @@ class StorageOrdersView(BikaListingView):
 
     def folderitems(self):
         items = BikaListingView.folderitems(self)
+
         for x in range(len(items)):
             if not items[x].has_key('obj'): continue
             obj = items[x]['obj']
@@ -106,8 +112,8 @@ class StorageOrdersView(BikaListingView):
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                  (items[x]['url'], items[x]['Title'])
             items[x]['getStorageUnit'] = obj.getStorageUnit().Title()
-            items[x]['getNumber'] = int(obj.getNumber())
-            items[x]['getParent'] = self.parentLevel(obj.getParent())
+            items[x]['getNumber'] = obj.getNumber() and int(obj.getNumber()) or 0
+            items[x]['getHierarchy'] = obj.getHierarchy()
 
         return items
 

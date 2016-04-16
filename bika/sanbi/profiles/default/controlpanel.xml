@@ -20,6 +20,15 @@
     visible="True"
     i18n:attributes="title">
   <permission>BIKA: Manage Bika</permission>
- </configlet>
+</configlet>
+
+<configlet title="Storage Managements" action_id="bika_storagemanagements"
+    appId="bika.sanbi" category="bika" condition_expr=""
+    icon_expr="string:++resource++bika.lims.images/department.png"
+    url_expr="string:$portal_url/bika_setup/bika_storagemanagements"
+    visible="True"
+    i18n:attributes="title">
+  <permission>BIKA: Manage Bika</permission>
+</configlet>
 
 </object>

@@ -16,6 +16,7 @@
   <property name="metaTypesNotToList" type="lines" purge="False">
     <element value="Kit"/>
     <element value="StorageOrder"/>
+      <element value="StorageManagement"/>
   </property>
 </object>
 

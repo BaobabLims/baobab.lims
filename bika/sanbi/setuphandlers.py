@@ -24,7 +24,8 @@ class BikaCustomGenerator:
 
         bika_setup = portal._getOb('bika_setup')
         for obj_id in ('bika_kittemplates',
-                       'bika_storageorders'):
+                       'bika_storageorders',
+                       'bika_storagemanagements'):
             obj = bika_setup._getOb(obj_id)
             obj.unmarkCreationFlag()
             obj.reindexObject()
@@ -44,16 +45,20 @@ class BikaCustomGenerator:
             except:
                 logger.warning("Could not create metadata %s in catalog %s" %
                                (col, cat))
-
+        # _______________________________#
+        #          BIKA_CATALOG          #
+        # _______________________________#
         bc = getToolByName(portal, 'bika_catalog', None)
         if bc is None:
             logger.warning('Could not find the bika_catalog tool.')
             return
         # Add indexes and metadata columns here
         at = getToolByName(portal, 'archetype_tool')
-        at.setCatalogsByType('KitAssembly', ['bika_catalog', 'portal_catalog'])
         at.setCatalogsByType('Kit', ['bika_catalog', 'portal_catalog'])
 
+        # _______________________________#
+        #      BIKA_SETUP_CATALOG        #
+        # _______________________________#
         bsc = getToolByName(portal, 'bika_setup_catalog', None)
         if bsc is None:
             logger.warning('Could not find the bika_setup_catalog tool.')
@@ -62,6 +67,7 @@ class BikaCustomGenerator:
         at = getToolByName(portal, 'archetype_tool')
         at.setCatalogsByType('KitTemplate', ['bika_setup_catalog',])
         at.setCatalogsByType('StorageOrder', ['bika_setup_catalog', 'portal_catalog', ])
+        at.setCatalogsByType('StorageManagement', ['bika_setup_catalog', 'portal_catalog', ])
 
         bac = getToolByName(portal, 'bika_analysis_catalog', None)
         if bsc is None:

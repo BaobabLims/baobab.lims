@@ -1,10 +1,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:tal="http://xml.zope.org/namespaces/tal"
-      xmlns:metal="http://xml.zope.org/namespaces/metal"
-        metal:use-macro="here/main_template/macros/master"
-        i18n:domain="bika">
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:metal="http://xml.zope.org/namespaces/metal"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    metal:use-macro="here/main_template/macros/master"
+    i18n:domain="bika">
 
 <head>
+    <title></title>
     <metal:block fill-slot="javascript_head_slot"
             tal:define="portal context/@@plone_portal_state/portal;">
         <script type="text/javascript"
@@ -15,66 +17,102 @@
                 tal:attributes="href string:${portal/absolute_url}/bika_widgets/referencewidget.css"/>
     </metal:block>
 </head>
-<body>
 
-<metal:title fill-slot="content-title">
+<metal:content-title fill-slot="content-title">
     <h1>
-        <img tal:condition="view/icon | nothing" tal:attributes="src view/icon | nothing"/>
-        <tal:new i18n:translate="">Add New Storage Level</tal:new>
+        <img tal:condition="view/icon | nothing"
+            src="" tal:attributes="src view/icon"/>
+        <span tal:condition="context/Title"
+              class="documentFirstHeading"
+              tal:content="python:'Edit' + ' ' + context.Title()"></span>
+        <span tal:condition="python:not context.Title()"
+              class="documentFistHeading">Add New Storage</span>
     </h1>
-</metal:title>
+</metal:content-title>
 
-<div metal:fill-slot="content-core"
-     tal:define="
-        portal              context/@@plone_portal_state/portal;
-        plone_view          context/@@plone;
-        plone_state         context/@@plone_portal_state;
-        checkPermission     nocall: context/portal_membership/checkPermission">
+<metal:content-description fill-slot="content-description"></metal:content-description>
 
-    <form id="storage_edit_form" name="storage_edit_form" method="POST">
+<metal:content-core fill-slot="content-core"
+        tal:define="
+            portal context/@@plone_portal_state/portal;
+            dummy python:view.sublists();
+            prominent python:dummy[0];
+            sublists python:dummy[1]"
+        tal:condition="sublists">
 
-        <input type="hidden" name="submitted" value="1"/>
-        <span tal:replace="structure context/@@authenticator/authenticator"/>
-
-        <table summary="Add Storage Level" style="width: 100%; background-color: #fff; ">
-            <thead class="storageorder_add">
-                <tal:field tal:repeat="field python:view.get_fields_with_visibility('visible')">
-                    <tal:def define="
-                        fieldName python:field.getName();
-                        field_macro here/widgets/field/macros/edit;
-                        accessor python:field.getAccessor(context);
-                        widget python:field.widget;
-                        errors python:{};
-                        mode string:edit;">
-                        <tr tal:attributes="fieldName fieldName">
-                            <tal:columns>
-                                <td class="nowrap" style="padding: 1px 15px 0 10px;">
-                                    <metal:field
-                                            use-macro="python:context.widget(fieldName, mode='edit')" />
-                                </td>
-                            </tal:columns>
-                        </tr>
-
+    <form method="post" id="storage_edit_form" name="header_form">
+        <input type="hidden" name="submitted" value="1" />
+        <table class="header_table">
+            <table class="header_table">
+                <tr tal:repeat="action prominent">
+                    <tal:def define="mode python:action['mode'];
+                                     fieldName python:action['fieldName'];
+                                     field python:context.Schema()[fieldName];
+                                     field_macro here/widgets/field/macros/edit;
+                                     widget python:field.widget;
+                                     accessor python:field.getAccessor(context);
+                                     errors python:{};">
+                        <td>
+                            <span tal:replace="python:widget.label"/>&nbsp;
+                            <span class="fieldRequired"
+                                  tal:condition="python:field.required and mode == 'edit'"
+                                  title="Required"
+                                  i18n:attributes="title title_required;"></span>
+                        </td>
+                        <td colspan="5">
+                            <tal:x condition="python:mode!='structure'">
+                                <metal:field
+                                    use-macro="python:context.widget(fieldName, mode=mode)"/>
+                            </tal:x>
+                        </td>
                     </tal:def>
-                </tal:field>
-            </thead>
+                </tr>
+                <tr tal:repeat="row_nr python:range(len(sublists[0]))">
+                    <tal:repeat repeat="col_nr python:range(2)">
+                        <tal:print_blanks condition="python:len(sublists[col_nr]) <= row_nr">
+                            <td tal:attributes="class python:row_nr%2 and 'key odd' or 'key even'">&nbsp;</td>
+                            <td tal:attributes="class python:row_nr%2 and 'value odd' or 'value even'">&nbsp;</td>
+                        </tal:print_blanks>
+                        <tal:skip_blanks condition="python:len(sublists[col_nr]) > row_nr">
+                            <tal:def define="action python:sublists[col_nr][row_nr];
+                                mode python:action['mode'];
+                                fieldName python:action['fieldName'];
+                                field python:fieldName and context.Schema()[fieldName] or '';
+                                field_macro here/widgets/field/macros/edit;
+                                widget python:field and field.widget or '';
+                                accessor python:field and field.getAccessor(context) or '';
+                                errors python:{};">
+
+                                <td tal:attributes="class python:row_nr%2 and 'key odd' or 'key even';
+                                                    id python:'label-'+fieldName">
+                                    <span tal:replace="python:field and widget.label or ''"/>&nbsp;
+                                    <span class="fieldRequired"
+                                        tal:condition="python:field and field.required or False and mode == 'edit'"
+                                        title="Required"
+                                        i18n:attributes="title title_required;"> </span>
+                                </td>
+                                <td tal:attributes="class python:row_nr%2 and 'value odd' or 'value even'">
+                                    <tal:x condition="python:mode!='structure' and field">
+                                        <metal:field
+                                          use-macro="python:context.widget(fieldName, mode=mode)"/>
+                                    </tal:x>
+                                </td>
+                            </tal:def>
+                        </tal:skip_blanks>
+                    </tal:repeat>
+                </tr>
+            </table>
+            <span>
+                <div style="text-align: left; padding-bottom: 10px;">
+                    <input i18n:attributes="value"
+                        class="context button allowMultiSubmit"
+                        type="submit"
+                        name="submit"
+                        value="Save"/>
+                </div>
+            </span>
         </table>
-
-        <span>
-            <div style="text-align: left; padding-bottom: 10px;">
-                <input i18n:attributes="value"
-                    class="context button allowMultiSubmit"
-                    type="submit"
-                    name="submit"
-                    value="Save"/>
-            </div>
-            <!--<div class="formControls">
-                <input class="context" type="submit" name="submit" value="Save"/>
-            </div>-->
-        </span>
-
     </form>
-</div>
 
-</body>
+</metal:content-core>
 </html>

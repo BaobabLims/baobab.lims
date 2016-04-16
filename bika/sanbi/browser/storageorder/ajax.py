@@ -2,25 +2,15 @@ import plone
 import json
 from Products.CMFCore.utils import getToolByName
 from Products.Archetypes import PloneMessageFactory as PMF
-from Products.CMFPlone.utils import _createObjectByType
+from Products.CMFPlone.utils import _createObjectByType, safe_unicode
 from bika.lims.utils import t, tmpID
 from bika.lims.idserver import renameAfterCreation
 from bika.sanbi.content.storageorder import schema as StorageOrderSchema
 from bika.sanbi import bikaMessageFactory as _
-
 from Products.CMFCore import permissions
 
 import math
 import string
-
-def ajax_form_error(errors, field=None, message=None):
-    if not message:
-        message = t(PMF('Input is required but no input given.'))
-    if field:
-        error_key = '%s' % field
-    else:
-        error_key = 'Form error'
-    errors[error_key] = message
 
 class StorageOrderSubmit():
     def __init__(self, context, request):
@@ -54,15 +44,30 @@ class StorageOrderSubmit():
             else:
                 valid_states[field] = value
 
-        if self.errors:
-            return json.dumps({'errors': self.errors})
-
-        storgeorder = create_storageorder(
+        storageorder, self.errors = create_storageorder(
             self.context,
             self.request,
             valid_states
         )
-        return json.dumps({'success': 'salam1'})
+
+        if self.errors:
+            return json.dumps({'errors': self.errors})
+
+        message = _('Analysis request ${STO} was successfully created.',
+                        mapping={'STO': safe_unicode(storageorder)})
+
+        obj_url = storageorder.absolute_url_path()
+
+        return json.dumps({'success': message, 'objURL': obj_url})
+
+def ajax_form_error(errors, field=None, message=None):
+    if not message:
+        message = t(PMF('Input is required but no input given.'))
+    if field:
+        error_key = '%s' % field
+    else:
+        error_key = 'Form error'
+    errors[error_key] = message
 
 def create_object(portal, context, values, l='', i=0):
     """
@@ -80,7 +85,7 @@ def create_object(portal, context, values, l='', i=0):
     obj.edit(
         title=title,
         description="Child of " + context.Title(),
-        StorageOrderID=indice,
+        Prefix=indice,
         StorageUnit=context,
         Number=0,
     )
@@ -91,9 +96,11 @@ def number_items_add_sub(context, values):
     """
     """
     old_num_items = context.getNumber() and context.getNumber() or 0
-    new_num_items = int(values.get('Number', 0))
-    if old_num_items and not new_num_items:
+    new_num_items = values.get('Number') and int(values['Number']) or 0
+
+    if 'Number' not in values.keys():
         return 0, 0
+
     num_items_add = 0
     num_items_sub = 0
     if new_num_items > old_num_items:
@@ -119,8 +126,10 @@ def child_update_ref(context):
         child.reindexObject()
 
 def rename_childs(context):
+    """Comments Please!
+    """
     title = context.getChildTitle()
-    dim = context.getXAxis()
+    errors = {}
     for child in context.getChildren():
         new_title = ''
         lt = child.Title().split(' ')
@@ -134,7 +143,8 @@ def rename_childs(context):
             new_title = lt[0]
         else:
             # TODO: show this error message in the html page.
-            print('error: title and the old title should be defined!')
+            errors[context.Title()] = "title and the old title should be defined!"
+            break
         if new_title:
             child.edit(
                 title = new_title
@@ -142,17 +152,22 @@ def rename_childs(context):
             child.reindexObject()
             child_update_ref(child)
 
+    return errors
+
 def rename_child_indices(context, l='', i=0):
+    """Comments Please!
+    """
     old_title = context.Title().split(' ')
     indice = l + str(i) if l else str(i)
     new_title = ''
+    errors = {}
     if len(old_title) >=1:
         new_title = old_title[0] + ' ' + indice
     elif len(old_title) == 1:
         new_title = indice
     else:
         # TODO: show this error message in the html page.
-        print('error: title and the old title should be defined!')
+        errors[context.Title()] = "title and the old title should be defined!"
 
     context.edit(
         title=new_title
@@ -160,12 +175,15 @@ def rename_child_indices(context, l='', i=0):
     context.reindexObject()
     child_update_ref(context)
 
+    return errors
+
 def dimension_representation(num_items_add, num_rows, old_num_items, context, values, create=False):
     """Comments please!
     """
     num_cols = int(math.ceil(float(num_items_add) / float(num_rows))) if num_rows else 0
     alphabet = string.uppercase[:26]
     children = []
+    errors = {}
     if not create:
         children = context.getChildren()
     if num_cols:
@@ -175,80 +193,88 @@ def dimension_representation(num_items_add, num_rows, old_num_items, context, va
                     if create:
                         create_object('StorageOrder', context, values, l=alphabet[i], i=j+old_num_items+1)
                     else:
-                        rename_child_indices(children[(i * num_cols) + j], alphabet[i], j+1)
+                        errors = rename_child_indices(children[(i * num_cols) + j], alphabet[i], j+1)
     else:
         for i in range(num_items_add):
             if create:
                 create_object('StorageOrder', context, values, l='', i=i+old_num_items+1)
             else:
-                rename_child_indices(children[i], '', i+1)
+                errors = rename_child_indices(children[i], '', i+1)
+
+    return errors
 
 def create_storageorder(context, request, values):
     """This function create storageorder
     """
-    storageorder = context
-    uc = getToolByName(storageorder, 'uid_catalog')
-    obj_exist = storageorder.aq_parent.hasObject(storageorder.getId())
-    num_items = int(values.get('Number', 0))
-    num_rows = values.has_key('XAxis') and int(values.get('XAxis', 0)) or 0
-    num_items_add, num_items_sub = number_items_add_sub(storageorder, values)
+    uc = getToolByName(context, 'uid_catalog')
+    obj_exist = context.aq_parent.hasObject(context.getId())
+    num_rows = values.has_key('XAxis') and values.get('XAxis') and int(values['XAxis']) or 0
+    num_items_add, num_items_sub = number_items_add_sub(context, values)
     old_num_items = 0
-    old_title = ''
-    old_child_title = ''
     two_d = False
     x_dim = False
+    errors = {}
     if not obj_exist:
         # 'StorageUnit' here could be also 'StorageOrder'! This is just a key appellation.
         brains = uc(UID=values['StorageUnit'])
         if len(brains):
             context = brains[0].getObject()
         # Create the current context in ZODB
-        storageorder = _createObjectByType('StorageOrder', context, tmpID())
-        storageorder.processForm(REQUEST=request, values=values)
+        parent = context
+        context = _createObjectByType('StorageOrder', context, tmpID())
+        context.processForm(REQUEST=request, values=values)
         # Increase by 1 the number of items of context.
         # At this point, context is the parent of storageorder.
-        if context.portal_type == "StorageOrder":
-            context.setNumber(context.getNumber() + 1)
+        if parent.portal_type == "StorageOrder":
+            parent.setNumber(parent.getNumber() + 1)
     else:
-        old_num_items = context.getNumber()
+        old_num_items = context.getNumber() and context.getNumber() or 0
         old_title = context.Title()
         old_child_title = context.getChildTitle()
-        two_d = context.getTwoDimension() != values.get('TwoDimension<', False)
+        two_d = context.getTwoDimension() != values.get('TwoDimension', False)
         x_dim = num_rows != context.getXAxis()
         # In case of edit, when "StorageUnit", which is a referencefield, not changed
         # "values" will not contain "StorageUnit". This will cause it's value to be
         # replaced by None. For this reason we added this line to avoid this.
         # For more info check processForm() in referencewidget.py line 75.
         if not values.get('StorageUnit', ''):
-            values['StorageUnit'] = storageorder.aq_parent.UID()
-        storageorder.processForm(REQUEST=request, values=values)
+            values['StorageUnit'] = context.aq_parent.UID()
+        context.processForm(REQUEST=request, values=values)
 
-    # if we change the title we've to make sure that the change is also done on the childs
-    if old_title and old_title != values.get('Title', ''):
-        child_update_ref(storageorder)
+        # if we change the title we've to make sure that the change is also done on the childs
+        if old_title and old_title != values.get('Title', ''):
+            child_update_ref(context)
 
-    if old_child_title and old_child_title != values.get('ChildTitle', ''):
-        rename_childs(storageorder)
+        if old_child_title != values.get('ChildTitle', ''):
+            errors = rename_childs(context)
+            if errors:
+                for k, v in errors.iteritems():
+                    message = "Error on %s: %s" %(k, v)
+                return None, errors
 
     if num_items_add:
-        dimension_representation(num_items_add, num_rows, old_num_items, storageorder, values, create=True)
+        dimension_representation(num_items_add, num_rows, old_num_items, context, values, create=True)
 
     if two_d:
-        num_items_add = len(storageorder.getChildren())
+        num_items_add = len(context.getChildren())
         if values.get('TwoDimension', False) or x_dim:
-            dimension_representation(num_items_add, num_rows, 0, storageorder, values)
+            errors = dimension_representation(num_items_add, num_rows, 0, context, values)
+            if errors:
+                for k, v in errors.iteritems():
+                    message = "Error on %s: %s" %(k, v)
+                return None, errors
 
     if num_items_sub:
-        bsc = getToolByName(storageorder, 'bika_setup_catalog')
+        bsc = getToolByName(context, 'bika_setup_catalog')
         objects = bsc.searchResults(portal_type='StorageOrder')
         delete_objects = []
-        children = storageorder.getChildren()
+        children = context.getChildren()
         if len(children) >= num_items_sub:
             delete_objects = children[len(children)-num_items_sub:]
         else:
             #TODO: print it as a message on the front page.
             print('Error: Number of items to delete is greater than the objects found on DB')
 
-        delete_childs(storageorder, delete_objects)
+        delete_childs(context, delete_objects)
 
-    return storageorder
+    return context, errors

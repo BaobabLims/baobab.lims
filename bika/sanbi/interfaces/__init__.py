@@ -6,9 +6,6 @@ class IKitTemplate(Interface):
 class IKitTemplates(Interface):
     """Comment"""
 
-class IKitAssembly(Interface):
-    """Package"""
-
 class IKits(Interface):
     """Package folder"""
 
@@ -20,3 +17,9 @@ class IStorageOrder(Interface):
 
 class IStorageOrders(Interface):
     "Interface for Storage orders"
+
+class IStorageManagement(Interface):
+    "Interface for Storage management"
+
+class IStorageManagements(Interface):
+    "Interface for Storage managements"

@@ -2,8 +2,8 @@
 <object name="portal_factory" meta_type="Plone Factory Tool">
  <factorytypes>
   <type portal_type="KitTemplate"/>
-  <type portal_type="KitAssembly"/>
   <type portal_type="Kit"/>
   <type portal_type="StorageOrder"/>
+  <type portal_type="StorageManagement"/>
  </factorytypes>
 </object>

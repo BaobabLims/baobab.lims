@@ -2,6 +2,9 @@ from bika.sanbi import bikaMessageFactory as _
 from bika.lims.browser import BrowserView
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from zope.component.interfaces import ComponentLookupError
+from bika.lims.interfaces import IHeaderTableFieldRenderer
+from zope.component import getAdapter
 
 class StorageOrderEdit(BrowserView):
 
@@ -17,16 +20,7 @@ class StorageOrderEdit(BrowserView):
         request = self.request
         setup = portal.bika_setup
 
-        if "submit" in request:
-            '''
-            portal_factory = getToolByName(context, 'portal_factory')
-            context = portal_factory.doCreate(context, context.id)
-            context.processForm()
-
-            obj_url = context.absolute_url_path()
-            request.response.redirect(obj_url)
-            '''
-            return
+        if "submit" in request: return
 
         return self.template()
 
@@ -40,6 +34,43 @@ class StorageOrderEdit(BrowserView):
             if v == visibility:
                 fields.append(field)
         return fields
+
+    def three_column_list(self, input_list):
+        list_len = len(input_list)
+        sublist_len = (list_len % 2 == 0 and list_len / 2 or list_len / 2 + 1)
+
+        def _list_end(num):
+            return num == 1 and list_len or (num + 1) * sublist_len
+        final = []
+        for i in range(2):
+            column = input_list[i * sublist_len:_list_end(i)]
+
+            #this create empty row. Compare with analysisrequest_view.pt
+            for j in range(2*len(column)):
+                if j % 2 == 1:
+                    column.insert(j, {'fieldName': '', 'mode': 'edit'})
+
+            if len(column) > 0:
+                final.append(column)
+
+        return final
+
+    def sublists(self):
+        ret = []
+        prominent = []
+        for field in self.context.Schema().fields():
+            field_name = field.getName()
+            state = field.widget.isVisible(self.context, 'header_table', default='invisible', field=field)
+            if state == 'invisible':
+                continue
+            elif state == 'prominent':
+                if field.widget.isVisible(self.context, 'edit', default='invisible', field=field) == 'visible':
+                    prominent.append({'fieldName': field_name, 'mode': 'edit'})
+            elif state == 'visible':
+                if field.widget.isVisible(self.context, 'edit', default='invisible', field=field) == 'visible':
+                    ret.append({'fieldName': field_name, 'mode': 'edit'})
+
+        return prominent, self.three_column_list(ret)
 
 class StorageOrderView(BrowserView):
 

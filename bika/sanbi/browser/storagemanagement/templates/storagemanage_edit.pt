@@ -1,0 +1,182 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:metal="http://xml.zope.org/namespaces/metal"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    metal:use-macro="here/main_template/macros/master"
+    i18n:domain="bika">
+
+<head>
+    <title></title>
+    <metal:block fill-slot="javascript_head_slot"
+            tal:define="portal context/@@plone_portal_state/portal;">
+        <script type="text/javascript"
+                tal:attributes="src python:portal.absolute_url() + '/bika_widgets/datetimewidget.js'"></script>
+        <script type="text/javascript"
+                tal:attributes="src python:portal.absolute_url() + '/bika_widgets/referencewidget.js'"></script>
+        <link rel="stylesheet" type="text/css" media="all" href=""
+                tal:attributes="href string:${portal/absolute_url}/bika_widgets/referencewidget.css"/>
+    </metal:block>
+
+</head>
+<metal:content-title fill-slot="content-title">
+    <h1>
+        <img tal:condition="view/icon | nothing"
+            src="" tal:attributes="src view/icon"/>
+        <span tal:condition="context/Title"
+              class="documentFirstHeading"
+              tal:content="python:'Edit' + ' ' + context.Title()"></span>
+        <span tal:condition="python:not context.Title()"
+              class="documentFistHeading">Add New Storage</span>
+    </h1>
+    <hr/>
+</metal:content-title>
+
+<metal:content-description fill-slot="content-description">
+</metal:content-description>
+
+<metal:content-core fill-slot="content-core"
+        tal:define="portal context/@@plone_portal_state/portal;">
+
+    <form method="post" id="storagemanage_edit" name="storagemanage_form">
+        <input type="hidden" name="submit" value="1" />
+        <table class="header_table">
+            <thead class="manage_storage_fileds">
+            <tal:field repeat="field python:view.get_fields_with_visibility('visible')">
+                <tr tal:define="
+                        fieldName python:field.getName();
+                        fieldMacro here/widgets/field/macros/edit;
+                        accessor python:field.getAccessor(context);
+                        widget python:field.widget;
+                        errors python:{};
+                        mode string:edit;"
+                    tal:condition="python: fieldName != 'Remarks'">
+
+                    <td colspan="5">
+                        <tal:x condition="python:mode!='structure'">
+                            <metal:field
+                                use-macro="python:context.widget(fieldName, mode=mode)"/>
+                        </tal:x>
+                    </td>
+
+                </tr>
+                <tr tal:define="fieldName python:field.getName();"
+                    tal:condition="python: fieldName == 'title'">
+                    <td>
+                    <div data-fieldname="StorageType" id="storage_type">
+                        <div>
+                            <span style="font-weight: bold;">Type</span>
+                            <span class="fieldRequired" title="Required">"&nbsp;"</span><br/>
+                            <span class="formHelp" id="storagetype_help">Select a Storage Type.</span>
+                        </div>
+
+                        <select style="width: 300px;
+                                       height: 34px;
+                                       overflow: hidden;
+                                       border: 1px solid #ccc;">
+                            <option value="Freeze" selected
+                                        tal:condition="python:context.getType()=='Freeze'">Chest Freezer</option>
+                            <option value="Freeze"
+                                    tal:condition="python:context.getType()!='Freeze'">Chest Freezer</option>
+                            <option value="VFreeze" selected
+                                        tal:condition="python:context.getType()=='VFreeze'">Vertical Freezer</option>
+                            <option value="VFreeze"
+                                    tal:condition="python:context.getType()!='VFreeze'">Vertical Freezer</option>
+                            <option value="Tank" selected
+                                    tal:condition="python:context.getType()=='Tank'">LN Tank</option>
+                            <option value="Tank"
+                                    tal:condition="python:context.getType()!='Tank'">LN Tank</option>
+                            <option value="Other" selected
+                                    tal:condition="python:context.getType()=='Tank'">Other</option>
+                            <option value="Other"
+                                    tal:condition="python:context.getType()!='Tank'">Other</option>
+                        </select>
+                    </div>
+                    </td>
+                </tr>
+
+                <tr tal:define="fieldName python:field.getName();"
+                    tal:condition="python: fieldName == 'ChildrenTitle'">
+
+                    <td>
+                    <div class="graphical_representation">
+                        <div>
+                            <span style="font-weight: bold;">Graphical representation</span>
+                            <span class="fieldRequired" title="Required">"&nbsp;"</span><br/>
+                            <span class="formHelp" id="storagetype_help">Select a dimension. In first dimension, level ids will be
+                                a serie of numbers eg: 1, 2, 3, ... In second dimension, ids are coded by concatenating a letter, row,
+                                with a number, column, eg: A1, A2, B1, B2, ...In third dimension the ids are represented with a concatenation
+                                of letter and two digits. The letter here represent the layer and the two digits the row and the column
+                                respectively eg: A11, A12,...
+                                </span>
+                        </div>
+                        <div data-fieldname="Dimension" id="dimension" style="display: inline-block;">
+                            <select style="width: 300px;
+                                           height: 34px;
+                                           overflow: hidden;
+                                           border: 1px solid #ccc;">
+                                <option value="First" selected
+                                        tal:condition="python:context.getDimension()=='First'">First Dimension</option>
+                                <option value="First"
+                                        tal:condition="python:context.getDimension()!='First'">First Dimension</option>
+                                <option value="Second" selected
+                                        tal:condition="python:context.getDimension()=='Second'">Second Dimension</option>
+                                <option value="Second"
+                                        tal:condition="python:context.getDimension()!='Second'">Second Dimension</option>
+                                <option value="Third" selected
+                                        tal:condition="python:context.getDimension()=='Third'">Third Dimension</option>
+                                <option value="Third"
+                                        tal:condition="python:context.getDimension()!='Third'">Third Dimension</option>
+                            </select>
+                        </div>
+                        <div style="display: inline-block;padding-left:10px; border: 1px solid #837aff; padding: 5px; width: auto;">
+                            <div data-fieldname="XAxis" id="XAxis" style="display: inline-block;">
+                                <span style="font-weight: bold; padding-right: 5px;">X-Axis:</span>
+                                <input id="xaxis_num" type="number" style="background-color: #FDFDFD;
+                                                                                     border:1px solid #cdcdcd;
+                                                                                     height: 20px;
+                                                                                     width: 121px;"
+                                       tal:attributes="value python:context.getXAxis() and context.getXAxis() or 1"/>
+                            </div>
+                            <div data-fieldname="YAxis" id="YAxis" style="display: inline-block;">
+                                <span style="font-weight: bold; padding-right: 5px;">Y-Axis:</span>
+                                <input id="yaxis_num"  type="number"  style="background-color: #FDFDFD;
+                                                                                        border: 1px solid #cdcdcd;
+                                                                                        height: 20px;
+                                                                                        width: 121px;"
+                                       tal:attributes="value python:context.getYAxis() and context.getYAxis() or 1"/>
+                            </div>
+                            <div data-fieldname="ZAxis" id="ZAxis" style="display: inline-block;">
+                                <span style="font-weight: bold; padding-right: 5px;">Z-Axis:</span>
+                                <input id="zaxis_num"  type="number" style="background-color: #FDFDFD;
+                                                                                        border:1px solid #cdcdcd;
+                                                                                        height: 20px;
+                                                                                        width: 121px;"
+                                       tal:attributes="value python:context.getZAxis() and context.getZAxis() or 1"/>
+                            </div>
+                        </div>
+                    </div>
+                    </td>
+                </tr>
+
+            </tal:field>
+            </thead>
+        </table>
+        <span>
+            <div style="text-align: left; padding-bottom: 10px;">
+                <input i18n:attributes="value"
+                    class="context button allowMultiSubmit"
+                    type="submit"
+                    name="submit"
+                    value="Save"/>
+            </div>
+        </span>
+    </form>
+    <tal:remarks define="
+        field python:context.Schema()['Remarks'];
+        errors python:{};">
+        <p style="margin-top:2em;"/>
+         <metal:widget use-macro="python:context.widget('Remarks', mode='edit')" />
+    </tal:remarks>
+</metal:content-core>
+
+</html>

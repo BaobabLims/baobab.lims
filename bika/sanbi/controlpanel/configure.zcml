@@ -20,4 +20,12 @@
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
+    <browser:page
+      for="bika.sanbi.interfaces.IStorageManagements"
+      name="folder_view"
+      class=".bika_storagemanagements.StorageManagementsView"
+      permission="bika.lims.ManageBika"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
 </configure>

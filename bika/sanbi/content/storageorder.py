@@ -2,7 +2,6 @@ from bika.sanbi import bikaMessageFactory as _
 from bika.lims.content.bikaschema import BikaSchema
 from Products.Archetypes.public import *
 from Products.CMFCore import permissions
-from bika.lims.browser.widgets.datetimewidget import DateTimeWidget
 from bika.lims.browser.widgets import ReferenceWidget
 from AccessControl import ClassSecurityInfo
 from bika.sanbi.config import PROJECTNAME
@@ -15,13 +14,19 @@ from Acquisition import aq_chain
 import sys
 
 schema = BikaSchema.copy() + Schema((
-    StringField('StorageOrderID',
+    StringField('Prefix',
         required = 1,
         searchable = True,
         validators = ('uniquefieldvalidator', 'standard_id_validator'),
         widget = StringWidget(
-            label=_("Storage ID"),
-            placeholder='eg: FZ001, ...',
+            label=_("Prefix"),
+            placeholder='eg: FZ, LN, ...',
+            render_own_label=True,
+            visible={
+                'edit': 'visible',
+                'view': 'visibible',
+                'header_table': 'visible',
+            }
         ),
     ),
     ReferenceField(
@@ -34,11 +39,16 @@ schema = BikaSchema.copy() + Schema((
         referenceClass=HoldingReference,
         widget=ReferenceWidget(
             checkbox_bound=0,
-            label=_("Level"),
+            label=_("Parent"),
             description=_("The Parent level"),
             size=50,
             showOn=True,
-            visible={'view': 'visible', 'edit': 'visible'},
+            render_own_label=True,
+            visible={
+                'edit': 'visible',
+                'view': 'visible',
+                'header_table': 'visible',
+            }
         ),
     ),
     IntegerField('Number',
@@ -47,7 +57,12 @@ schema = BikaSchema.copy() + Schema((
             default=0,
             size=15,
             description=_("The number of storage items to create"),
-            visible={'view': 'visible', 'edit': 'visible'},
+            render_own_label=True,
+            visible={
+                'edit': 'visible',
+                'view': 'visible',
+                'header_table': 'visible',
+            }
         ),
     ),
     StringField(
@@ -60,6 +75,12 @@ schema = BikaSchema.copy() + Schema((
             label = _("Children Title"),
             description=_("The common title shared by automatically created childs."),
             size=50,
+            render_own_label=True,
+            visible={
+                'edit': 'visible',
+                'view': 'visible',
+                'header_table': 'visible',
+            }
         ),
     ),
     BooleanField(
@@ -68,6 +89,12 @@ schema = BikaSchema.copy() + Schema((
          widget=BooleanWidget(
              label=_("Characters [A..Z]"),
              description=_("Differentiate child's title by adding a letter at the end, e.g Box A, Box B, etc."),
+             render_own_label=True,
+             visible={
+                'edit': 'visible',
+                'view': 'visible',
+                'header_table': 'visible',
+            }
          ),
     ),
     BooleanField(
@@ -76,6 +103,12 @@ schema = BikaSchema.copy() + Schema((
         widget=BooleanWidget(
             label=_("Two Dimension"),
             description=_("2D storage representation like a 2D Grid."),
+            render_own_label=True,
+            visible={
+                'edit': 'visible',
+                'view': 'visible',
+                'header_table': 'visible',
+            }
         ),
     ),
     IntegerField(
@@ -85,7 +118,12 @@ schema = BikaSchema.copy() + Schema((
             default=0,
             size=15,
             description=_("The number of rows. Number of cols be computed automatically."),
-            visible={'view': 'visible', 'edit': 'visible'},
+            render_own_label=True,
+            visible={
+                'edit': 'visible',
+                'view': 'visbible',
+                'header_table': 'visible',
+            }
         ),
     ),
     ComputedField(
@@ -109,8 +147,10 @@ schema = BikaSchema.copy() + Schema((
 ))
 
 schema['title'].required = True
-schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
-schema['description'].widget.visible = {'view': 'visible', 'edit': 'visible'}
+schema['title'].widget.render_own_label = True
+schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible', 'header_table': 'prominent'}
+schema['description'].widget.render_own_label = True
+schema['description'].widget.visible = {'view': 'visible', 'edit': 'visible', 'header_table': 'prominent'}
 #schema['description'].schemata = 'default'
 
 class StorageOrder(BaseFolder):

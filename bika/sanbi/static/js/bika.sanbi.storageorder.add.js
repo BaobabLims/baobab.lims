@@ -15,31 +15,33 @@ function CustomStorageOrderAddView(){
     }
 
     function showChildElements(){
-        $('#archetypes-fieldname-ChildTitle').parent("td").show();
-        $('#archetypes-fieldname-Characters').parent("td").show();
-        $('#archetypes-fieldname-TwoDimension').parent("td").show();
-        if($('input[type="checkbox"]#TwoDimension').prop('checked') == true) {
-            $('div#archetypes-fieldname-XAxis').parent("td").show();
+        $('#ChildTitle').prop("disabled", false);
+        $('#Characters').prop("disabled", false);
+        $('#TwoDimension').prop("disabled", false);
+        if($('#TwoDimension').prop('checked') == true) {
+            $('#XAxis').prop("disabled", false);
         }else{
-            $('div#archetypes-fieldname-XAxis').parent("td").hide();
+            $('#XAxis').prop("disabled", true);
         }
     }
 
     function hideChildElements(){
-        $('#archetypes-fieldname-ChildTitle').parent("td").hide();
-        $('#archetypes-fieldname-Characters').parent("td").hide();
-        $('#archetypes-fieldname-TwoDimension').parent("td").hide();
-        if($('input[type="checkbox"]#TwoDimension').prop('checked') == true){
-            $('#archetypes-fieldname-XAxis > label > span[class="required"]').remove();
-            //$('input[type="checkbox"]#TwoDimension').attr('checked', false);
-            //$('#archetypes-fieldname-XAxis').val(0);
+        $('#ChildTitle').prop('disabled', true);
+        $('#ChildTitle').val('');
+        $('#ChildTitle').trigger('change');
+        $('#Characters').prop('disabled', true);
+        $('#TwoDimension').prop('disabled', true);
+        if($('#TwoDimension').prop('checked') == true){
+            //$('#label-XAxis > span[class="fieldRequired"]').remove();
+            $('#TwoDimension').prop('checked', false);
+            $('#TwoDimension').trigger('change');
         }
-        $('#archetypes-fieldname-XAxis').parent("td").hide();
+        $('#XAxis').prop('disabled', true);
     }
 
     function init(){
-        bikaSanbiState = {}
-        console.log($('input#Number').val());
+        bikaSanbiState = {};
+
         if($('input#Number').val() > 0){
             showChildElements();
         }else{
@@ -65,7 +67,18 @@ function CustomStorageOrderAddView(){
                 url: path,
                 data: requestData,
                 success: function(data){
-                    console.log(data['success']);
+                    if (data['errors']) {
+                        for (var error in data.errors) {
+                            msg =  data.errors[error] + "<br/>";
+                        }
+                        window.bika.lims.portalMessage(msg);
+                        window.scroll(0, 0);
+                    }
+                    else {
+                        var destination = window.location.href.split("/")[0] + data['objURL'];
+                        console.log(destination);
+                        window.location.replace(destination);
+                    }
                 }
             });
         });
@@ -78,7 +91,7 @@ function CustomStorageOrderAddView(){
     }
 
     function referencewidgetChangeHandler(element, item){
-        var fieldname = $(element).parents('[fieldname]').attr('fieldname');
+        var fieldname = $(element).parents('[data-fieldname]').attr('data-fieldname');
         var multivalued = $(element).attr("multivalued") == "1"
         if(multivalued){
             console.debug("Not yet inplemented");
@@ -88,14 +101,14 @@ function CustomStorageOrderAddView(){
     }
 
     function referencewidgetChange(){
-        $('tr[fieldname] input.referencewidget')
+        $('div[data-fieldname] input.referencewidget')
             .on('selected', function(event, item){
                 referencewidgetChangeHandler(this, item);
             });
     }
 
     function textinputChangeHandler(element){
-        var fieldname = $(element).parents('[fieldname]').attr('fieldname');
+        var fieldname = $(element).parents('[data-fieldname]').attr('data-fieldname');
         var value = $(element).val();
         var id = $(element).attr("id");
         if(id == "Number" && value > 0) showChildElements();
@@ -104,7 +117,7 @@ function CustomStorageOrderAddView(){
     }
 
     function textinputChange(){
-        $('tr[fieldname] input[type="text"]')
+        $('div[data-fieldname] input[type="text"]')
             .not(".referencewidget")
             .on('change', function(event){
                 textinputChangeHandler(this);
@@ -112,41 +125,43 @@ function CustomStorageOrderAddView(){
     }
 
     function textareaChangeHandler(element){
-        var fieldname = $(element).parents('[fieldname]').attr('fieldname');
+        var fieldname = $(element).parents('[data-fieldname]').attr('data-fieldname');
         var value = $(element).val();
         stateSet(fieldname, value);
     }
 
     function textareaChange(){
-        $('tr[fieldname] textarea')
+        $('div[data-fieldname] textarea')
             .on('change', function(event){
                 textareaChangeHandler(this);
             });
     }
 
     function XAxisRequired(){
-        var label = "<span class='required' title='required'>" +
+        var label = "<span class='fieldRequired' title='Required'>" +
                         "\&nbsp;" + "</span>";
-        $(label).insertBefore($('#archetypes-fieldname-XAxis > label > span'));
+        $("#label-XAxis").append(label);
     }
 
     function checkboxChangeHandler(element){
-        var fieldname = $(element).parents('[fieldname]').attr('fieldname');
+        var fieldname = $(element).parents('[data-fieldname]').attr('data-fieldname');
         var value = $(element).prop("checked");
         var id = $(element).attr("id");
         if(id == "TwoDimension" && value == true){
-            $('#archetypes-fieldname-XAxis').parent("td").show();
+            $('#XAxis').prop("disabled", false);
             XAxisRequired();
         }
         else if(id == "TwoDimension" && value == false){
-            $('#archetypes-fieldname-XAxis > label > span[class="required"]').remove();
-            $('#archetypes-fieldname-XAxis').parent("td").hide();
+            $('#label-XAxis > span[class="fieldRequired"]').remove();
+            $('#XAxis').val('');
+            $('#XAxis').trigger('change');
+            $('#XAxis').prop("disabled", true);
         }
         stateSet(fieldname, value);
     }
 
     function checkboxChange(){
-        $('tr[fieldname] input[type="checkbox"]')
+        $('div[data-fieldname] input[type="checkbox"]')
             .on('change', function(event){
                 checkboxChangeHandler(this);
             });

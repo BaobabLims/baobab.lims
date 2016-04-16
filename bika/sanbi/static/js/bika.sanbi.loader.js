@@ -19,6 +19,8 @@ window.bika.sanbi.controllers =  {
         ['CustomKitAddView'],
     ".template-base_edit #storage_edit_form":
         ['CustomStorageOrderAddView'],
+    ".template-base_edit #storagemanage_edit":
+        ['CustomStorageManageAddView'],
 };
 
 /**

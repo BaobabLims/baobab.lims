@@ -142,9 +142,9 @@ class EditView(BrowserView):
 
         if 'submit' in request:
             #pdb.set_trace()
-            # ***** Is this line a hack?
-            context.aq_parent.setConstrainTypesMode(constraintypes.DISABLED)
-            # *****
+            context.setConstrainTypesMode(constraintypes.DISABLED)
+            # This following line does the same as precedent which one is the best?
+            #context.aq_parent.setConstrainTypesMode(constraintypes.DISABLED)
             portal_factory = getToolByName(context, 'portal_factory')
             context = portal_factory.doCreate(context, context.id)
             context.processForm()
@@ -152,9 +152,8 @@ class EditView(BrowserView):
             obj_url = context.absolute_url_path()
             request.response.redirect(obj_url)
             return
-        else:
-            # Render the template
-            return self.template()
+
+        return self.template()
 
     def get_fields_with_visibility(self, visibility, mode=None):
         mode = mode if mode else 'edit'

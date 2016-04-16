@@ -1,36 +1,39 @@
 <?xml version="1.0"?>
-<object name="KitAssembly"
+<object name="StorageManagement"
         meta_type="Factory-based Type Information with dynamic views"
         xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-        i18n:domain="plone"
-        purge="True">
- <property name="title" i18n:translate=""></property>
+        i18n:domain="plone">
+ <property name="title" i18n:translate="">Storage Management</property>
  <property name="description"></property>
- <property name="content_icon">++resource++bika.lims.images/product.png</property>
- <property name="content_meta_type">KitAssembly</property>
+ <property name="content_icon">++resource++bika.lims.images/department.png</property>
+ <property name="content_meta_type">StorageManagement</property>
  <property name="product">bika.sanbi</property>
- <property name="factory">addKitAssembly</property>
+ <property name="factory">addStorageManagement</property>
  <property name="add_view_expr"></property>
  <property name="link_target"></property>
  <property name="global_allow">False</property>
- <property name="filter_content_types">False</property>
- <property name="allowed_content_types"/>
+ <property name="filter_content_types">True</property>
+ <property name="allowed_content_types">
+  <element value="StorageManagement"/>
+ </property>
  <property name="allow_discussion">False</property>
  <property name="default_view_fallback">False</property>
 
- <alias from="(Default)" to="base_edit"/>
- <alias from="view" to="base_edit"/>
- <alias from="edit" to="base_edit"/>
+ <alias from="(Default)" to="base_view"/>
+ <alias from="view" to="base_view"/>
+ <alias from="edit" to="@@base_edit"/>
 
  <action title="View"
          action_id="view"
          category="object"
          condition_expr=""
-         url_expr="string:${object_url}"
+         icon_expr=""
+         link_target=""
+         url_expr="string:${object_url}/base_view"
          i18n:attributes="title"
          i18n:domain="plone"
-         visible="False">
-    <permission value="View"/>
+         visible="True">
+  <permission value="View"/>
  </action>
 
  <action title="Edit"
@@ -40,8 +43,8 @@
          url_expr="string:${object_url}/edit"
          i18n:attributes="title"
          i18n:domain="plone"
-         visible="False">
-    <permission value="Modify portal content"/>
+         visible="True">
+  <permission value="Modify portal content"/>
  </action>
 
 </object>

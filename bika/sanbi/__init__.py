@@ -18,13 +18,14 @@ def initialize(context):
 
     from content.kittemplate import KitTemplate
     #from content.kittemplates import KitTemplates
-    from content.kitassembly import KitAssembly
     from content.kit import Kit
     from content.kits import Kits
     from content.storageorder import StorageOrder
+    from content.storagemanagement import StorageManagement
 
     from controlpanel.bika_kittemplates import KitTemplates
     from controlpanel.bika_storageorders import StorageOrders
+    from controlpanel.bika_storagemanagements import StorageManagements
 
     content_types, constructors, ftis = process_types(
         listTypes(PROJECTNAME),
