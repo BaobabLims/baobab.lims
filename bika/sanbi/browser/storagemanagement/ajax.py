@@ -56,7 +56,7 @@ class StorageManageSubmit:
         return json.dumps({"success": message})
 
     # TODO: CHECK jsonapi/__init__.py LINE 59 TO FIND AN EXAMPLE HOW TO GET VALUES FOR FIELDS OF AN OBJECT
-    # TODO: THIS IS VERY IMPORTANT. CHECH THAT THEY IGNORE VALUES IF FIELD TYPE IS FILE
+    # TODO: THIS IS VERY IMPORTANT. CHECK THAT THEY IGNORE VALUES IF FIELD TYPE IS FILE
     def context_to_dict(self):
         context_dict = {}
         for field in self.context.Schema().fields():
@@ -91,8 +91,8 @@ class StorageManageSubmit:
         """
         """
         title = self.context.getChildrenTitle() and self.context.getChildrenTitle() + ' ' + index or index
-        position = _createObjectByType(portal, self.context, tmpID())
-        position.edit(
+        child = _createObjectByType(portal, self.context, tmpID())
+        child.edit(
             title=title,
             Type="Other",
             description="Child of " + self.context.Title(),
@@ -104,8 +104,19 @@ class StorageManageSubmit:
             YAxis=1,
             ZAxis=1
         )
-        position.unmarkCreationFlag()
-        renameAfterCreation(position)
+        child.unmarkCreationFlag()
+        renameAfterCreation(child)
+
+    def create_child_as_location(self, portal, values, index):
+        """
+        """
+        title = self.context.getHierarchy('.') + '.' + index
+        location = _createObjectByType(portal, self.context, tmpID())
+        location.edit(
+            title=title
+        )
+        location.unmarkCreationFlag()
+        renameAfterCreation(location)
 
     def dimension_representation(self, num_children_add, old_num_items, values, num_rows=1, num_cols=1,
                                  num_layers=1, create=False):
@@ -136,7 +147,10 @@ class StorageManageSubmit:
                 index = alphabet[z] + str(x+1) + str(y+1)
 
             if create:
-                self.create_child('StorageManagement', values, index)
+                if not self.context.getStorageLocation():
+                    self.create_child('StorageManagement', values, index)
+                else:
+                    self.create_child_as_location('StorageLocation', values, index)
             else:
                 self.rename_children(children[num], values, index)
 
@@ -200,12 +214,12 @@ class StorageManageSubmit:
             if context_b['title'] != self.context.Title():
                 self.update_children_parent_ref(self.context)
 
-            if context_b['Dimension'] != self.context.getDimension() or \
-               context_b['ChildrenTitle'] != self.context.getChildrenTitle():
+            if not num_add and (context_b['Dimension'] != self.context.getDimension() or \
+               context_b['ChildrenTitle'] != self.context.getChildrenTitle()):
                 self.dimension_representation(len(self.context.getChildren()), old_num_items, values, num_rows=num_rows,
                                              num_cols=num_cols, num_layers=num_layers, create=False)
 
-            # In the form edit the type is a normal input element and processForm then will not update Type field
+            # In the form edit the type is a normal input element and processForm will not update Type field
             # for this reason we use here values instead of self.context.
             type = values.get('StorageType') and values['StorageType'] or ''
             if type and context_b['Type'] != type:

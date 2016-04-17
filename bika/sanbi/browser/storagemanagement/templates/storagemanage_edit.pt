@@ -96,6 +96,25 @@
 
                 <tr tal:define="fieldName python:field.getName();"
                     tal:condition="python: fieldName == 'ChildrenTitle'">
+                    <td>
+                        <div data-fieldname="StorageLocation" id="storagelocation" style="display: inline-block;">
+                            <input type="checkbox" id="storageposition" style="width: 17px; height: 17px;
+                                                                               position: absolute;
+                                                                               border: 1px solid #aaa;
+                                                                               background: #f8f8f8;
+                                                                               border-radius: 3px;"/>
+                            <label style="font-weight: bold; margin-left: 20px;">Storage Location</label>
+                        </div>
+                        <div>
+                            <span class="formHelp" id="storagelocation_help">
+                                If checked, the children of this current storage will be created as storage locations in
+                                StorageLocation content type.
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                <tr tal:define="fieldName python:field.getName();"
+                    tal:condition="python: fieldName == 'ChildrenTitle'">
 
                     <td>
                     <div class="graphical_representation">

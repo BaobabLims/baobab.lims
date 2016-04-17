@@ -7,6 +7,7 @@ function CustomStorageManageAddView(){
         referencewidgetChange();
         textinputChange();
         textareaChange();
+        checkboxChange();
     }
 
     function init(){
@@ -85,6 +86,17 @@ function CustomStorageManageAddView(){
         $("#dimension select").on("change", function(e){
             dimensionCustomization();
             selectChangeHandler(this);
+        });
+    }
+
+    function checkboxChangeHandler(element){
+        var fieldname = $(element).parents('[data-fieldname]').attr('data-fieldname');
+        var value = $(element).prop("checked");
+        setState(fieldname, value);
+    }
+    function checkboxChange(){
+        $("#storageposition").on("change", function(e){
+            checkboxChangeHandler(this);
         });
     }
 

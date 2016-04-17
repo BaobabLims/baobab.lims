@@ -55,8 +55,16 @@ schema = BikaSchema.copy() + Schema((
                           "followed by its id, eg. 'Shelf 1'"),
             size=50,
             visible={'edit': 'visible', 'view': 'visible'}
-        ),
-    ),
+        )),
+
+    BooleanField(
+        'StorageLocation',
+        default=False,
+        widget=BooleanWidget(
+            label='Storage Location',
+            visible=False,
+        )),
+
     # ____Shelves representation____ #
     StringField('Dimension',
                 widget=StringWidget(
@@ -104,12 +112,14 @@ schema['title'].widget.size = 100
 schema['description'].widget.visible = {'edit': 'visible', 'view': 'visible'}
 schema.moveField('ChildrenTitle', before="Dimension")
 
+
 class StorageManagement(BaseFolder):
     security = ClassSecurityInfo()
     implements(IStorageManagement, IConstrainTypes)
     schema = schema
 
     '''
+    # The call to the renameAfterCreation() is in ajax.py
     _at_rename_after_creation = True
     def _renameAfterCreation(self, check_auto_id=False):
         from bika.lims.idserver import renameAfterCreation
@@ -127,14 +137,14 @@ class StorageManagement(BaseFolder):
 
         return children
 
-    def getHierarchy(self):
+    def getHierarchy(self, char='>'):
         ancestors = []
         ancestor = self
         for obj in ancestor.aq_chain:
-            ancestors.append(obj.Title())
+            ancestors.append(obj.getId())
             if obj.portal_type == 'StorageUnit':
                 break
 
-        return '>'.join(reversed(ancestors))
+        return char.join(reversed(ancestors))
 
 registerType(StorageManagement, PROJECTNAME)

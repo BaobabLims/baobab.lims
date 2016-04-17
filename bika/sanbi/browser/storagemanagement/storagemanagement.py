@@ -57,10 +57,10 @@ class StorageManagementView(BrowserView):
         self.shelves = context.getShelves()
         self.dimension = context.getDimension()
 
-        storages_view = StoragesView(context, request)
-        storages_view()
-        storages_view.show_column_toggles = False
-        self.table = storages_view.contents_table()
+        storage_view = StorageView(context, request)
+        storage_view()
+        storage_view.show_column_toggles = False
+        self.table = storage_view.contents_table()
 
         # storage_view = StorageManagementsView(context, request)
         # TODO: THIS LINE IS VERY IMPORTANT IT ALLOWS TO CALL __call__ IN bika_storagemanagements.py
@@ -72,6 +72,7 @@ class StorageManagementView(BrowserView):
         # self.table = storage_view.contents_table()
 
         return self.template()
+
 
 class StorageManagementEdit(BrowserView):
     """
@@ -105,6 +106,7 @@ class StorageManagementEdit(BrowserView):
 
         return fields
 
+    @staticmethod
     def number_childs_add_sub(self, context, values):
         old_num_items = context.getShelves() and context.getShelves() or 0
         new_num_items = values.get('Shelves') and int(values['Shelves']) or 0
