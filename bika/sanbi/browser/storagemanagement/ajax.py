@@ -112,8 +112,19 @@ class StorageManageSubmit:
         """
         title = self.context.getHierarchy('.') + '.' + index
         location = _createObjectByType(portal, self.context, tmpID())
+        # TODO: THINKS LATER TO IMPROVE THIS. 5 BECAUSE WE HAVE THIS HIERARCHY:
+        # TODO: room > freezer > shelf > box > position
+        assert len(location.getChain()) == 5
+        position, box, shelf, freezer, room = [o.Title() for o in location.getChain()]
+        if not position:
+            position = index
         location.edit(
-            title=title
+            title=title,
+            Room=room,
+            StorageType=freezer,
+            Shelf=shelf,
+            Box=box,
+            Position=position
         )
         location.unmarkCreationFlag()
         renameAfterCreation(location)
