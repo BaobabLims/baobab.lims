@@ -6,23 +6,39 @@
 	i18n:domain="bika">
 
 	<head>
-        <style>
-            table{
-                border-collapse: collapse;
-            }
-            tr{
-                padding-top: .5em;
-                padding-bottom: .5em;
-            }
-        </style>
+        <metal:css fill-slot="style_slot">
+            <tal:css>
+                <style type="text/css"
+                       media="all">
+                    table{
+                        border-collapse: collapse;
+                    }
+                    tr{
+                        padding-top: .5em;
+                        padding-bottom: .5em;
+                    }
+                    div.print_document{
+                        display: inline-block;
+                        margin-right: 20px;
+                        margin-top: 5px;
+                        float:right;
+                    }
+                </style>
+            </tal:css>
+        </metal:css>
     </head>
 
 	<body>
 
 		<metal:title fill-slot="content-title">
+            <div style="display:inline-block;">
 			<h1>
 				<span class="documentFirstHeading" tal:content="view/id" />
 			</h1>
+            </div>
+            <div class="print_document">
+                <a tal:attributes="href python:context.absolute_url()+'/print';" i18n:translate="" class="print_button">Print</a>
+            </div>
 		</metal:title>
 
 		<metal:core fill-slot="content-core"

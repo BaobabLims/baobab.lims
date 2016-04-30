@@ -1,15 +1,15 @@
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-
 from operator import itemgetter, methodcaller
-
 from bika.sanbi import bikaMessageFactory as _
 from bika.lims.browser import BrowserView
-
 from Products.ATContentTypes.lib import constraintypes
 from Products.CMFPlone.utils import _createObjectByType
-
 from Products.Archetypes.public import BaseFolder
+from DateTime import DateTime
+from bika.lims.utils import to_utf8
+import os
+import traceback
 
 class KitView(BrowserView):
 
@@ -140,7 +140,7 @@ class EditView(BrowserView):
         context = self.context
         setup = portal.bika_setup
 
-        if 'submit' in request:
+        if 'submitted' in request:
             #pdb.set_trace()
             context.setConstrainTypesMode(constraintypes.DISABLED)
             # This following line does the same as precedent which one is the best?
@@ -174,7 +174,8 @@ class EditView(BrowserView):
 
 class PrintView(KitView):
 
-    template = ViewPageTemplateFile('templates/kit_print.pt')
+    template = ViewPageTemplateFile('templates/print.pt')
+    _TEMPLATES_DIR = 'templates/print'
 
     def __call__(self):
         self.kit_name = self.context.getKitTemplate().Title()
@@ -199,3 +200,98 @@ class PrintView(KitView):
         self.vat = '%.2f' % self.context.getKitTemplate().getVATAmount()
         self.total = '%.2f' % self.context.getKitTemplate().getTotal()
         return self.template()
+
+    def getCSS(self):
+        template_name = 'kit_print.pt'
+        this_dir = os.path.dirname(os.path.abspath(__file__))
+        templates_dir = os.path.join(this_dir, self._TEMPLATES_DIR)
+        path = '%s/%s.css' % (templates_dir, template_name[:-3])
+        with open(path, 'r') as content_file:
+            content = content_file.read()
+
+        return content
+
+    def renderKTemplate(self):
+        templates_dir = self._TEMPLATES_DIR
+        template_name = 'kit_print.pt'
+
+        embed = ViewPageTemplateFile(os.path.join(templates_dir, template_name))
+        reptemplate = ""
+        try:
+            reptemplate = embed(self)
+        except:
+            tbex = traceback.format_exc()
+            ktid = self.context.id
+            reptemplate = "<div class='error-print'>%s - %s '%s':<pre>%s</pre></div>" % (
+            ktid, _("Unable to load the template"), template_name, tbex)
+
+        return reptemplate
+
+    def _createdby_data(self):
+        """ Returns a dict that represents the user who created the ws
+            Keys: username, fullmame, email
+        """
+        username = self.context.getOwner().getUserName()
+        return {'username': username,
+                'fullname': to_utf8(self.user_fullname(username)),
+                'email': to_utf8(self.user_email(username))}
+
+    def _printedby_data(self):
+        """ Returns a dict that represents the user who prints the ws
+            Keys: username, fullname, email
+        """
+        data = {}
+        member = self.context.portal_membership.getAuthenticatedMember()
+        if member:
+            username = member.getUserName()
+            data['username'] = username
+            data['fullname'] = to_utf8(self.user_fullname(username))
+            data['email'] = to_utf8(self.user_email(username))
+
+            c = [x for x in self.bika_setup_catalog(portal_type='LabContact')
+                 if x.getObject().getUsername() == username]
+            if c:
+                sf = c[0].getObject().getSignature()
+                if sf:
+                    data['signature'] = sf.absolute_url() + "/Signature"
+
+        return data
+
+    def _lab_data(self):
+        """ Returns a dictionary that represents the lab object
+            Keys: obj, title, url, address, confidence, accredited,
+                  accreditation_body, accreditation_logo, logo
+        """
+        portal = self.context.portal_url.getPortalObject()
+        lab = self.context.bika_setup.laboratory
+        lab_address = lab.getPostalAddress() \
+                      or lab.getBillingAddress() \
+                      or lab.getPhysicalAddress()
+        if lab_address:
+            _keys = ['address', 'city', 'state', 'zip', 'country']
+            _list = ["<div>%s</div>" % lab_address.get(v) for v in _keys
+                     if lab_address.get(v)]
+            lab_address = "".join(_list)
+        else:
+            lab_address = ''
+
+        return {'obj': lab,
+                'title': to_utf8(lab.Title()),
+                'url': to_utf8(lab.getLabURL()),
+                'address': to_utf8(lab_address),
+                'confidence': lab.getConfidence(),
+                'accredited': lab.getLaboratoryAccredited(),
+                'accreditation_body': to_utf8(lab.getAccreditationBody()),
+                'accreditation_logo': lab.getAccreditationBodyLogo(),
+                'logo': "%s/logo_print.png" % portal.absolute_url()}
+
+    def getKitInfo(self):
+        data = {
+            'date_printed': self.ulocalized_time(DateTime(), long_format=1),
+            'date_created': self.ulocalized_time(self.context.created(), long_format=1),
+        }
+        data['createdby'] = self._createdby_data()
+        data['printedby'] = self._printedby_data()
+        data['laboratory'] = self._lab_data()
+
+        return data

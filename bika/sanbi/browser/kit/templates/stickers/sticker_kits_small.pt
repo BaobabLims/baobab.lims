@@ -5,74 +5,124 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:metal="http://xml.zope.org/namespaces/metal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-      tal:attributes="lang default_language|default;
-                      xml:lang default_language|default;"
+      tal:attributes="lang default_language|default; xml:lang default_language|default;"
       i18n:domain="bika"
       tal:define="portal_state context/@@plone_portal_state;
                   portal_url portal_state/portal_url;
-                  plone_view context/@@plone;">
+                  plone_view context/@@plone;
+                  portal portal_state/portal;
+                  portal_type python:context.portal_type;">
 
 <head>
-    <div tal:replace="structure provider:plone.resourceregistries.scripts" />
-    <style type="text/css">
-        table {
-            border-collapse:collapse;
-            margin: 1px 1px 1px 1px;
-            font-size: 6pt;
+<div tal:replace="structure provider:plone.resourceregistries.scripts" />
+<style type="text/css">
+body {
+    background-color: #efefef;
+    margin: 0;
+    padding: 0;
+}
+.page-break {
+    background-color: #CDCDCD;
+    margin: 60px -10px 30px -20px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+#sticker-preview-header {
+    font-family:Helvetica, Arial;
+    font-size:0.9em;
+    background-color: #dcdcdc;
+    box-shadow: 1px 1px 1px #ccc;
+    margin: 0 0 40px;
+    padding: 10px;
+    text-align: center;
+}
+#sticker-preview-header #buttons {
+    text-align:center;
+    padding-left:10px;
+    padding-top:10px;
+}
+#sticker-preview-header #buttons input {
+    padding:4px 15px;
+    border:none;
+    color:#fff;
+    cursor:pointer;
+}
+#sticker-preview-header #buttons input:hover {
+    opacity:0.8;
+    moz-opacity:0.8;
+    filter:alpha(opacity=80);
+    -webkit-transition: opacity 250ms ease-in-out;
+    -moz-transition: opacity 250ms ease-in-out;
+    -o-transition: opacity 250ms ease-in-out;
+    -ms-transition: opacity 250ms ease-in-out;
+    transition: opacity 250ms ease-in-out;
+}
+#sticker-preview-header #buttons #print_button {
+    background-color:#0B486B;
+}
+#sticker-preview-header #buttons #cancel_button {
+    background-color:#666;
+}
+
+.sticker {
+    margin:0 auto;
+    background-color:#fff;
+    border-bottom: 1px dotted #cdcdcd;
+    box-shadow: 1px 2px 5px #cdcdcd;
+}
+@media print {
+    body {background-color:#fff;}
+    #sticker-preview-header {display:none !important;}
+    #stickers-wrapper { margin:0;}
+    .sticker {
+      margin:0;
+      border:none;
+      box-shadow:none;
+      border-bottom:none;
+    }
+}
+</style>
+    
+<script type="text/javascript">
+    $(function () {
+        // Store referrer in cookie in case it is lost due to a page reload
+        var backurl = document.referrer;
+        if (backurl) {
+            createCookie("ws.print.urlback", backurl);
+        } else {
+            backurl = readCookie("ws.print.urlback");
+            if (!backurl) {
+                backurl = portal_url;
+            }
         }
-        td {
-            border: none;
-        }
-        @media print {
-            .noPrint {display:none !important;}
-        }
-    </style>
+        $('#print_button').click(function(e) {
+
+            e.preventDefault();
+            window.print();
+        });
+
+        $('#cancel_button').click(function(e) {
+            e.preventDefault();
+            location.href = backurl;
+        });
+    })
+</script>
 </head>
 
-<body style="margin: 0; padding: 0" onload="this.print();">
-
-<metal:block tal:repeat="stockitem view/items">
-
-<table cellpadding="0" cellspacing="0" tal:define="
-    portal_url   nocall:context/portal_url;
-    ItemID       python:stockitem.getId();
-    Product      python:stockitem.getProductTitle();
-    ExpiryDate   python:stockitem.getExpiryDate() and stockitem.getExpiryDate().Date();
-    ">
-<tr>
-    <td>
-        <strong tal:content="string:${ItemID}"/>
-        <img tal:condition="python:stockitem.getProduct().getHazardous()"
-             tal:attributes="src string:${portal_url}/++resource++bika.lims.images/hazardous.png"/>
-    </td>
-    <td class='barcode' colspan="2">
-        <div tal:attributes="id string:barcode_${ItemID}"></div>
-    </td>
-</tr>
-
-<script
-    type='text/javascript'
-    tal:content="python:'$(\'#barcode_%s\').barcode(\'%s\', \'code128\', {\'barHeight\':12, addQuietZone:true, showHRI: false })'%(ItemID,ItemID)">
-</script>
-
-<tr>
-    <td tal:content="Product"/>
-</tr>
-
-<tr>
-    <td i18n:translate="">Expiry date</td>
-    <td style="text-align:center" tal:content="python: ExpiryDate"/>
-</tr>
-
-</table>
-<p style="page-break-after: always"/>
-</metal:block>
-
-<p class="noPrint">
-    <a tal:attributes="href python:context.absolute_url()" id='goback'
-        i18n:translate="">Go back</a>
-</p>
-
+<body>
+<div id="sticker-preview-wrapper">
+    <div id="sticker-preview-header">
+        <div id="buttons">
+            <input type="button" id='cancel_button' i18n:translate="value" value="Cancel"/>&nbsp;&nbsp;
+            <input type="button" id='print_button' i18n:translate="value" value="Print"/>
+        </div>
+    </div>
+    <div id="stickers-wrapper">
+    <style id='report-style' tal:content='structure python:view.getCSS()'></style>
+    <div id='sticker-printview' class="sticker"
+         tal:content="structure python:view.renderSTemplate()">
+    </div>
+    </div>
+</div>
 </body>
-
 </html>

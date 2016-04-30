@@ -12,11 +12,13 @@ var _s = window.jarn.i18n.MessageFactory("bika.sanbi");
  * following the order of the dictionary.
  */
 window.bika.sanbi.controllers =  {
-
+    
     ".template-ar_add #analysisrequest_edit_form":
         ['CustomAnalysisRequestAddView'],
-    ".template-base_edit #kit_edit_form":
+    ".template-base_edit #kitassembly_edit_form":
         ['CustomKitAddView'],
+    "#kit-printview-wrapper":
+        ['KitPrintView'],
     ".template-base_edit #storage_edit_form":
         ['CustomStorageOrderAddView'],
     ".template-base_edit #storagemanage_edit":

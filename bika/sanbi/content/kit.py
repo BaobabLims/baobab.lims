@@ -20,15 +20,17 @@ from Products.CMFCore import permissions
 
 schema = BikaSchema.copy() + Schema((
     StringField(
-        'KitID',
+        'Prefix',
         searchable=True,
         mode="rw",
         validators=('uniquefieldvalidator',),
         widget=StringWidget(
-            label=_("Kit ID"),
-            size=50,
+            label=_("Prefix"),
+            description=_("Provide a prefix for the ids. The default is KIT-."),
+            size=30,
             render_own_label=True,
             visible={'view': 'visible', 'edit': 'visible'},
+            placeholder="KIT-",
         )
     ),
     ReferenceField('KitTemplate',
@@ -39,7 +41,7 @@ schema = BikaSchema.copy() + Schema((
         referenceClass=HoldingReference,
         widget=bika_ReferenceWidget(
             label = _("Kit template"),
-            size=50,
+            size=30,
             render_own_label=True,
             catalog_name='bika_setup_catalog',
             showOn=True,
@@ -60,7 +62,7 @@ schema = BikaSchema.copy() + Schema((
     StringField('location',
         widget = StringWidget(
             label=_("Location"),
-            size=50,
+            size=30,
             render_own_label=True
         )
     ),
@@ -68,7 +70,9 @@ schema = BikaSchema.copy() + Schema((
         searchable=1,
         widget=bika_DateTimeWidget(
             label='Expiry Date',
-            render_own_label=True
+            description=_("Provide the expected expiry date of the kit product."),
+            render_own_label=True,
+            size=20
         ),
     ),
     BooleanField(
@@ -109,8 +113,11 @@ schema['title'].widget.visible = False
 schema['description'].schemata = 'default'
 schema['description'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 schema['description'].widget.render_own_label = True
-schema.moveField('KitID', before='description')
-schema.moveField('KitTemplate', before='KitID')
+schema.moveField('Prefix', before='description')
+schema.moveField('location', before='description')
+schema.moveField('quantity', before='description')
+schema.moveField('expiryDate', before='description')
+schema.moveField('KitTemplate', before='Prefix')
 
 class Kit(BaseContent):
     security = ClassSecurityInfo()

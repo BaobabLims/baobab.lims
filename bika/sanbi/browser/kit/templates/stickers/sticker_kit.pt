@@ -1,0 +1,40 @@
+<tal:sticker define="
+     portal_state      context/@@plone_portal_state;
+     portal_url        portal_state/portal_url;
+     itemID            python: view.items and view.items[0].getId() or '';
+     product           python: view.items and view.items[0].getProduct().getId();
+     expiryDate        python: view.items and view.items[0].getExpiryDate().Date();">
+
+    <table cellpadding="0" cellspacing="0">
+        <thead>
+        <tr>
+            <th i18n:translate="">Template</th>
+            <td tal:content="python: context.getKitTemplate().Title()"></td>
+        </tr>
+        <tr>
+            <th i18n:translate="">Stock Item</th>
+            <td tal:content="string:${itemID}"></td>
+        </tr>
+        <tr>
+            <th i18n:translate="">Product</th>
+            <td tal:content="string:${product}"></td>
+        </tr>
+        <tr>
+            <th i18n:translate="">Expiry date</th>
+            <td tal:content="python: expiryDate"></td>
+        </tr>
+        <tr>
+            <td colspan="4" class='barcode-container'>
+                <!-- Barcode -->
+                <div class="barcode"
+                    tal:attributes="data-id python:context.getId()"
+                    data-code="code128"
+                    data-addQuietZone="true"
+                    data-barHeight='15'
+                    data-showHRI="false">
+                </div>
+        </td>
+        </tr>
+        </thead>
+    </table>
+</tal:sticker>

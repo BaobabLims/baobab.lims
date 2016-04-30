@@ -108,7 +108,7 @@ schema = BikaSchema.copy() + Schema((
 
 schema['title'].required = True
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
-schema['title'].widget.size = 100
+#schema['title'].widget.size = 100
 schema['description'].widget.visible = {'edit': 'visible', 'view': 'visible'}
 schema.moveField('ChildrenTitle', before="Dimension")
 

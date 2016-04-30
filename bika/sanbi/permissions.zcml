@@ -10,4 +10,6 @@
     <permission id="bika.sanbi.ManageKitTemplates" title="SANBI: Manage KitTemplates"/>
     <permission id="bika.sanbi.permissions.AddKit" title="SANBI: Add Kit"/>
     <permission id="bika.sanbi.ManageKits" title="SANBI: Manage Kits"/>
+    <permission id="bika.sanbi.permissions.AddStorageManagement" title="SANBI: Add Storage Management"/>
+    <permission id="bika.sanbi.ManageStoragePositions" title="SANBI: Manage Storage Positions"/>
 </configure>

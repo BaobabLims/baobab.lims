@@ -46,7 +46,7 @@
   <permission value="Modify portal content"/>
  </action>
 
- <action title="Print"
+ <!--<action title="Print"
          action_id="print"
          category="document_actions"
          condition_expr=""
@@ -56,7 +56,7 @@
          i18n:attributes="title"
          visible="True">
   <permission value="View"/>
- </action>
+ </action>-->
 
  <action title="Log"
          action_id="log"
@@ -74,7 +74,7 @@
         action_id="sticker_small"
         category="document_actions"
         condition_expr="python: context.portal_workflow.getInfoFor(context, 'review_state') in ['stored']"
-        icon_expr="string:${object_url}/++resource++bika.lims.images/sticker_small.png"
+        icon_expr="string:${object_url}/++resource++bika.lims.images/sticker_preview.png"
         link_target=""
         url_expr="string:${object_url}/stickers"
         i18n:attributes="title"

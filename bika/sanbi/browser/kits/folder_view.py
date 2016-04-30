@@ -24,7 +24,7 @@ class KitsView(BikaListingView):
         self.pagesize = 50
 
         self.columns = {
-            'kitID': {'title': _('Kit ID'),
+            'Prefix': {'title': _('Kit ID'),
                       'index': 'sortable_title',
                       'toggle': True},
             'kitTemplate': {'title': _('Kit template'),
@@ -40,14 +40,14 @@ class KitsView(BikaListingView):
                 'id':'default',
                 'title': _('All'),
                 'contentFilter':{},
-                'columns': ['kitID', 'kitTemplate', 'quantity', 'expiryDate']
+                'columns': ['Prefix', 'kitTemplate', 'quantity', 'expiryDate']
             },
             {
                 'id': 'pending',
                 'title': _('Pending'),
                 'contentFilter': {'review_state': 'pending'},
                 #'transitions': [{'id':'complete'}, ],
-                'columns': ['kitID', 'kitTemplate', 'quantity', 'expiryDate']
+                'columns': ['Prefix', 'kitTemplate', 'quantity', 'expiryDate']
             },
         ]
 
@@ -66,7 +66,7 @@ class KitsView(BikaListingView):
                     'title': _('Completed'),
                      'contentFilter': {'review_state': 'completed'},
                      #'transitions': [{'id':'store'}, ],
-                     'columns': ['kitID', 'kitTemplate', 'quantity', 'expiryDate']
+                     'columns': ['Prefix', 'kitTemplate', 'quantity', 'expiryDate']
                 })
             self.review_states.append(
                 {
@@ -74,7 +74,7 @@ class KitsView(BikaListingView):
                     'title': _('Stored'),
                      'contentFilter': {'review_state': 'stored'},
                      #'transitions': '',
-                     'columns': ['kitID', 'kitTemplate', 'quantity', 'expiryDate']
+                     'columns': ['Prefix', 'kitTemplate', 'quantity', 'expiryDate']
                 })
             #self.review_states.append() # remove it
             stat = self.request.get("%s_review_state"%self.form_id, 'default')
@@ -88,7 +88,7 @@ class KitsView(BikaListingView):
             obj = items[x]['obj']
             items[x]['kitTemplate'] = obj.getKitTemplateTitle()
             items[x]['expiryDate'] = self.ulocalized_time(obj.getExpiryDate())
-            items[x]['replace']['kitID'] = "<a href='%s'>%s</a>" % \
+            items[x]['replace']['Prefix'] = "<a href='%s'>%s</a>" % \
                 (items[x]['url'], obj.getKitId())
 
         return items

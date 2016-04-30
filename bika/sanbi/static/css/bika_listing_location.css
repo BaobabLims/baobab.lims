@@ -1,0 +1,8 @@
+.bika-listing-table .state-position_occupied {
+    background-color: #fff2dd; !important;
+    color: #000; !important;
+}
+.bika-listing-table .state-position_reserved {
+    background-color: #e5f8ff; !important;
+    color: #000; !important;
+}
