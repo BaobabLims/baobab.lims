@@ -132,7 +132,6 @@ schema = BikaSchema.copy() + Schema((
         searchable=1,
         widget=bika_DateTimeWidget(
             label='Date Dispatched',
-
             size=20
         ),
     ),
@@ -142,7 +141,6 @@ schema = BikaSchema.copy() + Schema((
         widget=bika_DateTimeWidget(
             label='Date Delivered',
             description=_("Provide the expected expiry date of the kit product."),
-
             size=20
         ),
     ),
@@ -164,7 +162,6 @@ schema = BikaSchema.copy() + Schema((
         widget = StringWidget(
             label=_("Tracking URL"),
             size=30,
-            render_own_label=True
         )
     ),
     FixedPointField('ShippingCost',

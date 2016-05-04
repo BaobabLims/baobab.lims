@@ -86,9 +86,9 @@ class BikaCustomGenerator:
         mp(ManageKits, ['Manager', 'Owner'], 1)
         portal.kits.reindexObject()
 
-        sp = portal.shipments.manage_permission
-        sp(AddShipment, ['Manager', 'Owner'], 1)
-        sp(ManageShipments, ['Manager', 'Owner'], 1)
+        mp = portal.shipments.manage_permission
+        mp(AddShipment, ['Manager', 'Owner'], 1)
+        mp(ManageShipments, ['Manager', 'Owner'], 1)
         portal.shipments.reindexObject()
 
 def setupCustomVarious(context):

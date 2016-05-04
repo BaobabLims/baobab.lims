@@ -17,7 +17,7 @@ class ShipmentsView(BikaListingView):
                               'sort_on': 'sortable_title'}
         self.context_actions = {}
         self.title = self.context.translate(_("Shipments"))
-        self.icon = self.portal_url + "/++resource++bika.sanbi.images/shipment_icon_big.png"
+        self.icon = self.portal_url + "/++resource++bika.lims.images/shipment_icon_big.png"
         self.description = ""
         self.show_sort_column = False
         self.show_select_row = False
@@ -58,27 +58,9 @@ class ShipmentsView(BikaListingView):
         if mtool.checkPermission(AddShipment, self.context):
             self.context_actions[_('Add')] = {
                 'url': 'createObject?type_name=Shipment',
-                'icon': '++resource++bika.sanbi.images/add.png'
+                'icon': '++resource++bika.lims.images/add.png'
             }
         if mtool.checkPermission(ManageShipments, self.context):
-            #self.review_states[0]['transitions'].append({'id':'deactivate'})
-            self.review_states.append(
-                {
-                    'id':'completed',
-                    'title': _('Completed'),
-                     'contentFilter': {'review_state': 'completed'},
-                     #'transitions': [{'id':'store'}, ],
-                     'columns': ['ShipmentID', 'Courier', 'TrackingURL', 'ShippingDate']
-                })
-            self.review_states.append(
-                {
-                    'id':'stored',
-                    'title': _('Stored'),
-                     'contentFilter': {'review_state': 'stored'},
-                     #'transitions': '',
-                     'columns': ['ShipmentID', 'Courier', 'TrackingURL', 'ShippingDate']
-                })
-            #self.review_states.append() # remove it
             stat = self.request.get("%s_review_state"%self.form_id, 'default')
             self.show_select_column = stat != 'all'
         return super(ShipmentsView, self).__call__()

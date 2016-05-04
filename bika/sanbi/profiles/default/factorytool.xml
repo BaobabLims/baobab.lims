@@ -3,6 +3,7 @@
  <factorytypes>
   <type portal_type="KitTemplate"/>
   <type portal_type="Kit"/>
+  <type portal_type="Shipment"/>
   <type portal_type="StorageOrder"/>
   <type portal_type="StorageManagement"/>
  </factorytypes>
