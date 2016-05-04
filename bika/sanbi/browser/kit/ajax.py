@@ -77,7 +77,7 @@ class ComputeNumberKits():
         for product in products:
             product_obj, error_msg = getProductObject(product, catalog)
             product_dict[product_obj.Title()] = {
-                'quantity': product['quantity'] * int(self.request.get('kit_quantity', 1)),
+                'quantity': int(product['quantity']) * int(self.request.get('kit_quantity', 1)),
                 'price': product_obj.getPrice()
             }
             kittemplate_obj.kittemplate_lineitems.append(

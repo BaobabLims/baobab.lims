@@ -142,6 +142,7 @@ function CustomStorageManageAddView(){
 
     function createStorage(){
         $("#storagemanage_edit").submit(function(e){
+            e.preventDefault();
             var requestData = {
                 _authenticator: $("input[name='_authenticator']").val(),
                 state: $.toJSON(bika.sanbi.state)
@@ -152,7 +153,15 @@ function CustomStorageManageAddView(){
                 dataType: 'json',
                 url: path,
                 data: requestData,
-                success: function(data){}
+                success: function(data){
+                    destination = window.location.origin + data['url'];
+                    window.location.replace(destination)
+                },
+                error: function(xhr, status, error) {
+                    console.log("salam " + xhr.responseText);
+                    console.log(status);
+                    console.log(error);
+                }
             });
         });
     }

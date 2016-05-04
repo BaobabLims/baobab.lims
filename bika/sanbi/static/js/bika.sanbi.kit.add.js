@@ -78,7 +78,6 @@ function CustomKitAddView() {
                             "<tbody>" ;
             var tbody = "";
             $.each(products, function(key, value){
-
                 var tr = "<tr>" +
                            "<td tal:content='key'>"+ key  +"</td>" +
                            "<td class='number' tal:content='value[\'quantity\']'>"+ value['quantity'] +"</td>" +

@@ -62,14 +62,14 @@ class Kit_Templates(WorksheetImporter):
             template_name = row.get('templateName')
             kit_component = Kit_Components(self, self.workbook, self.dataset_project, self.dataset_name, template_name, catalog)
             product_list = kit_component.get_product_list()
-            category = self.get_object(catalog, 'ProductCategory', title=row.get('category'))
+            #category = self.get_object(catalog, 'ProductCategory', title=row.get('category'))
             obj = _createObjectByType("KitTemplate", folder, tmpID())
             obj.edit(
                 title=template_name,
                 ProductList=product_list,
                 Quantity=row.get('quantity')
             )
-            obj.setCategory(category)
+            #obj.setCategory(category)
 
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)

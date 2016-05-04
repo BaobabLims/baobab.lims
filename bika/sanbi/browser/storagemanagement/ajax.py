@@ -53,7 +53,7 @@ class StorageManageSubmit:
         storage_url = storage.absolute_url_path()
         message = _('Storage ${STO} was successfully created/updated.', mapping={'STO': safe_unicode(storage)})
 
-        return json.dumps({"success": message})
+        return json.dumps({'success': message, 'url': storage_url})
 
     # TODO: CHECK jsonapi/__init__.py LINE 59 TO FIND AN EXAMPLE HOW TO GET VALUES FOR FIELDS OF AN OBJECT
     # TODO: THIS IS VERY IMPORTANT. CHECK THAT THEY IGNORE VALUES IF FIELD TYPE IS FILE

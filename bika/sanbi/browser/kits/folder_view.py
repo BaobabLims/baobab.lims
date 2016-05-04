@@ -7,6 +7,7 @@ from bika.lims.browser.bika_listing import BikaListingView
 from plone.app.layout.globals.interfaces import IViewView
 from plone.app.content.browser.interfaces import IFolderContentsView
 
+
 class KitsView(BikaListingView):
     implements(IFolderContentsView, IViewView)
         
@@ -55,7 +56,7 @@ class KitsView(BikaListingView):
         mtool = getToolByName(self.context, 'portal_membership')
         if mtool.checkPermission(AddKit, self.context):
             self.context_actions[_('Add')] = {
-                'url': 'createObject?type_name=Kit',
+                'url': 'createObject?type_name=Project',
                 'icon': '++resource++bika.lims.images/add.png'
             }
         if mtool.checkPermission(ManageKits, self.context):

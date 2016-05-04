@@ -14,6 +14,7 @@
     <include package=".ajax"/>
     <include package=".storageorder"/>
     <include package=".storagemanagement"/>
+    <include package=".projects"/>
 
     <!-- This registration allows additional sticker templates.
          To enable these, just copy one or more of the *.pt files

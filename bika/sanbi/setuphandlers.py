@@ -14,7 +14,8 @@ class BikaCustomGenerator:
 
     def setupPortalContent(self, portal):
         # remove undesired content objects
-        for obj_id in ('kits',):
+        for obj_id in ('kits',
+                       'projects'):
             try:
                 obj = portal._getOb(obj_id)
                 obj.unmarkCreationFlag()
@@ -55,6 +56,7 @@ class BikaCustomGenerator:
         # Add indexes and metadata columns here
         at = getToolByName(portal, 'archetype_tool')
         at.setCatalogsByType('Kit', ['bika_catalog', 'portal_catalog'])
+        at.setCatalogsByType('Project', ['bika_catalog', 'portal_catalog'])
 
         # _______________________________#
         #      BIKA_SETUP_CATALOG        #
@@ -81,9 +83,14 @@ class BikaCustomGenerator:
 
         # Root permissions
         mp = portal.kits.manage_permission
-        mp(AddKit, ['Manager', 'Owner'], 1)
-        mp(ManageKits, ['Manager', 'Owner'], 1)
+        mp(AddKit, ['Manager', 'Owner', 'LabManager', 'LabClerk',], 1)
+        mp(ManageKits, ['Manager', 'Owner', 'LabManager', 'LabClerk',], 1)
         portal.kits.reindexObject()
+        mp = portal.projects.manage_permission
+        mp(AddProject, ['Manager', 'Owner', 'LabManager', 'LabClerk',], 1)
+        mp(ManageProjects, ['Manager', 'Owner', 'LabManager', 'LabClerk',], 1)
+        portal.projects.reindexObject()
+
 
 def setupCustomVarious(context):
     """ Setup Bika site structure """

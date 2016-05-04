@@ -12,4 +12,6 @@
     <permission id="bika.sanbi.ManageKits" title="SANBI: Manage Kits"/>
     <permission id="bika.sanbi.permissions.AddStorageManagement" title="SANBI: Add Storage Management"/>
     <permission id="bika.sanbi.ManageStoragePositions" title="SANBI: Manage Storage Positions"/>
+    <permission id="bika.sanbi.permissions.AddProject" title="SANBI: Add Project"/>
+    <permission id="bika.sanbi.ManageProjects" title="SANBI: Manage Projects"/>
 </configure>

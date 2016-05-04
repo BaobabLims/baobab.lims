@@ -1,17 +1,11 @@
 from AccessControl import ClassSecurityInfo
 from zope.interface import implements
-from Products.Archetypes import atapi
 from bika.lims import bikaMessageFactory as _
-from Products.ATContentTypes.content import base
-from Products.ATContentTypes.content import schemata
 from Products.CMFCore.utils import getToolByName
 from bika.sanbi import config
 from bika.lims.content.bikaschema import BikaSchema
-from DateTime.DateTime import DateTime
 from decimal import Decimal
 from Products.Archetypes.public import *
-from Products.Archetypes.references import HoldingReference
-import sys
 from Products.ATExtensions.ateapi import RecordField, RecordsField
 from bika.lims.browser.widgets.recordswidget import RecordsWidget
 
@@ -19,18 +13,6 @@ from Products.CMFCore.permissions import View
 from bika.sanbi.interfaces import IKitTemplate
 
 schema = BikaSchema.copy() + Schema((
-    ReferenceField('Category',
-        required=1,
-        vocabulary='getCategories',
-        allowed_types=('ProductCategory',),
-        relationship='KitTemplateProductCategory',
-        referenceClass=HoldingReference,
-        widget=ReferenceWidget(
-            checkbox_bound=0,
-            label = _("Product Category"),
-            description = _(""),
-        ),
-    ),
     RecordsField('ProductList',
         schemata="Product List",
         type='productList',
@@ -55,20 +37,6 @@ schema = BikaSchema.copy() + Schema((
                  },
          },
         ),
-    ),
-    IntegerField('Quantity',
-        widget = IntegerWidget(
-            label=_("Quantity"),
-            description=_("The number of items of this product already in "
-                          "storage. eg. 15, 100"),
-        ),
-    ),
-    TextField('StorageConditions',
-        default_output_type = 'text/plain',
-        allowable_content_types = ('text/plain',),
-        widget=TextAreaWidget (
-            label = _("Storage Conditions")),
-            description=_("Requirements for storing the product."),
     ),
     FixedPointField('Price',
         schemata='Price',
@@ -101,10 +69,6 @@ schema = BikaSchema.copy() + Schema((
             label=_("VAT"),
             visible = {'edit':'hidden', }
         ),
-    ),
-    ComputedField('CategoryTitle',
-        expression="context.getCategory() and context.getCategory().Title() or ''",
-        widget=ComputedWidget(visible=False),
     ),
 ))
 

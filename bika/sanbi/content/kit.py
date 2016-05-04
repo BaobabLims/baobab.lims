@@ -95,18 +95,6 @@ schema = BikaSchema.copy() + Schema((
                      },
         )
     ),
-    TextField('Remarks',
-        searchable=True,
-        default_content_type='text/x-web-intelligent',
-        allowable_content_types = ('text/plain', ),
-        default_output_type="text/plain",
-        mode="rw",
-        widget=TextAreaWidget(
-            macro="bika_widgets/remarks",
-            label=_("Remarks"),
-            append_only=True,
-        ),
-    ),
 ))
 schema['title'].required = False
 schema['title'].widget.visible = False
@@ -204,6 +192,7 @@ class Kit(BaseContent):
                 IsStored=True,
                 dateManufactured=DateTime(),
                 expiryDate=expiry_date,
+                title=product.Title()
             )
             obj.setProduct(product)
             obj.setDateReceived(DateTime())

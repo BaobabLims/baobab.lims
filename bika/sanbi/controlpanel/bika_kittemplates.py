@@ -51,8 +51,6 @@ class KitTemplatesView(BikaListingView):
 
         self.columns = {
             'Title': {'title': _('Title')},
-            'getCategory': {'title': _('Product Category'),
-                                'toggle': True},
         }
         self.review_states = [
             {'id': 'default',
@@ -62,7 +60,6 @@ class KitTemplatesView(BikaListingView):
              'transitions': [{'id':'deactivate'}, ],
              'columns': [
                  'Title',
-                 'getCategory'
              ]},
         ]
 
@@ -73,7 +70,6 @@ class KitTemplatesView(BikaListingView):
         for x in range(len(items)):
             if not items[x].has_key('obj'): continue
             obj = items[x]['obj']
-            items[x]['getCategory'] = obj.getCategoryTitle()
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                  (items[x]['url'], items[x]['Title'])
 
@@ -95,8 +91,7 @@ class KitTemplatesView(BikaListingView):
                  'title': _('Dormant'),
                  'contentFilter': {'inactive_state': 'inactive'},
                  'transitions': [{'id':'activate'}, ],
-                 'columns': ['Title',
-                             'getCategory']})
+                 'columns': ['Title',]})
             self.review_states.append(
                 {'id': 'All',
                  'title': _('All'),
@@ -104,7 +99,6 @@ class KitTemplatesView(BikaListingView):
                  'transitions':[{'id':'empty'}],
                  'columns': [
                      'Title',
-                     'getCategory'
                  ]})
             stat = self.request.get("%s_review_state"%self.form_id, 'default')
             self.show_select_column = stat != 'all'
