@@ -16,6 +16,9 @@ __version__ = pkg_resources.get_distribution("bika.sanbi").version
 def initialize(context):
     """Initializer called when used as a Zope 2 product."""
 
+    from content.shipment import Shipment
+    from content.shipments import Shipments
+
     from content.kittemplate import KitTemplate
     #from content.kittemplates import KitTemplates
     from content.kit import Kit

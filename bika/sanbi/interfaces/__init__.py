@@ -23,3 +23,11 @@ class IStorageManagement(Interface):
 
 class IStorageManagements(Interface):
     "Interface for Storage managements"
+
+
+class IShipments(Interface):
+    """Interface for shipments"""
+
+
+class IShipment(Interface):
+    """Interface for a shipment"""

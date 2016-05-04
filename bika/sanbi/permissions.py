@@ -19,3 +19,7 @@ ADD_CONTENT_PERMISSIONS = {
 ManageStoragePositions = "SANBI: Manage Storage Positions"
 ManageKits = "SANBI: Manage Kits"
 ManageKitTemplates = "SANBI: Manage KitTemplates"
+
+
+ManageShipments= "SANBI: Manage Shipments"
+AddShipment= 'SANBI: Add Shipment'
