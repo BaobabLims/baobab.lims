@@ -136,6 +136,11 @@ class Kit(BaseContent):
     def getKitTemplateTitle(self):
         return self.getKitTemplate().Title()
 
+    def at_post_create_script(self):
+        """Execute once the object is created
+        """
+        self.title = self.id
+
     def workflow_script_complete(self):
         """Complete kit assembly
         """

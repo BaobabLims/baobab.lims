@@ -2,22 +2,16 @@ from AccessControl import ClassSecurityInfo
 from zope.interface import implements
 from bika.sanbi import bikaMessageFactory as _
 from bika.sanbi import config
-
-from bika.lims import ManageAnalysisRequests
 from bika.lims.content.bikaschema import BikaSchema
 from Products.Archetypes.public import *
 from Products.Archetypes.references import HoldingReference
 import sys
-from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget, AddressWidget
+from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from bika.sanbi.interfaces import IShipment
 from Products.CMFPlone.interfaces import IConstrainTypes
-from Products.CMFPlone.utils import _createObjectByType
-from bika.lims.utils import tmpID
-from bika.lims.idserver import renameAfterCreation
-from Products.CMFCore.utils import getToolByName
-from DateTime import DateTime
+
 from bika.lims.browser.widgets import DateTimeWidget as bika_DateTimeWidget
-from bika.lims.browser.fields import AddressField
+
 
 from Products.CMFCore import permissions
 
@@ -158,6 +152,22 @@ schema = BikaSchema.copy() + Schema((
             description=_("Start typing to filter the list of available couriers."),
         ),
     ),
+
+    ReferenceField('Kit',
+       allowed_types=('Kit',),
+       relationship='ShipmentKit',
+       required=False,
+       widget=bika_ReferenceWidget(
+            label = _("Kit"),
+            size=30,
+            showOn=True,
+            description=_("Start typing to filter the list of available kits to ship."),
+            colModel=[{'columnName': 'UID', 'hidden': True},
+                      {'columnName': 'id', 'width': '20', 'label': _('Kit ID'), 'align': 'left'},
+                      {'columnName': 'location', 'width': '20', 'label': _('Location'), 'align': 'left'},
+                      ],
+        ),
+    ),
     StringField('TrackingURL',
         widget = StringWidget(
             label=_("Tracking URL"),
@@ -187,11 +197,9 @@ schema = BikaSchema.copy() + Schema((
 ))
 schema['title'].required = False
 schema['title'].widget.visible = False
-schema['description'].schemata = 'default'
-schema['description'].widget.visible = {'view': 'visible', 'edit': 'visible'}
-schema['description'].widget.render_own_label = True
 schema.moveField('ShipmentID', before='description')
 schema.moveField('Courier', before='description')
+schema.moveField('Kit', after='Courier')
 schema.moveField('TrackingURL', before='description')
 schema.moveField('ShippingDate', before='description')
 
@@ -203,17 +211,10 @@ class Shipment(BaseContent):
 
     _at_rename_after_creation = True
 
+    def getOwnShippingId(self):
+        return self.ShipmentID
+
     def getShipmentId(self):
         return self.getId()
-
-    def get_suppliers(self):
-        bc = getToolByName(self, 'bika_setup_catalog')
-        suppliers = bc(portal_type='Supplier')
-        suppliers_list = []
-        for supplier in suppliers:
-            suppliers_list.append((supplier.UID(), supplier.Title))
-            print suppliers
-        return DisplayList(suppliers)
-
 
 registerType(Shipment, config.PROJECTNAME)
