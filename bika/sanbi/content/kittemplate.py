@@ -150,28 +150,5 @@ class KitTemplate(BaseContent):
         #return price.quantize(Decimal('0.00'))
         return str(price)
 
-    '''
-    security.declarePublic('getTotalPrice')
-    def getTotalPrice(self):
-        """ compute total price """
-        price = self.getPrice()
-        price = Decimal(price or '0.00')
-        vat = Decimal(self.getVAT())
-        price = price and price or 0
-        vat = vat and vat / 100 or 0
-        price = price + (price * vat)
-        return price.quantize(Decimal('0.00'))
-
-    security.declarePublic('getVATAmount')
-    def getVATAmount(self):
-        """ Compute VATAmount
-        """
-        try:
-            vatamount = self.getTotalPrice() - Decimal(self.getPrice())
-        except:
-            vatamount = Decimal('0.00')
-        return vatamount.quantize(Decimal('0.00'))
-    '''
-
 
 registerType(KitTemplate, config.PROJECTNAME)

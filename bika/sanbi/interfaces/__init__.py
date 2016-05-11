@@ -12,12 +12,6 @@ class IKits(Interface):
 class IKit(Interface):
     """Package Supply"""
 
-class IStorageOrder(Interface):
-    """Interface for Storage order"""
-
-class IStorageOrders(Interface):
-    """Interface for Storage orders"""
-
 class IStorageManagement(Interface):
     """Interface for Storage management"""
 
@@ -28,4 +22,16 @@ class IProject(Interface):
     """Interface for Project"""
 
 class IProjects(Interface):
+    """Interface for Projects"""
+
+class IBioSpecimen(Interface):
+    """Interface for Project"""
+
+class IBioSpecimens(Interface):
+    """Interface for Projects"""
+
+class ILabAnalysis(Interface):
+    """Interface for Project"""
+
+class ILabAnalyses(Interface):
     """Interface for Projects"""

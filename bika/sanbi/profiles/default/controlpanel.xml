@@ -13,19 +13,28 @@
   <permission>BIKA: Manage Bika</permission>
 </configlet>
 
-<configlet title="Storage Orders" action_id="bika_storageorders"
+<configlet title="Storage Managements" action_id="bika_storagemanagements"
     appId="bika.sanbi" category="bika" condition_expr=""
     icon_expr="string:++resource++bika.lims.images/department.png"
-    url_expr="string:$portal_url/bika_setup/bika_storageorders"
+    url_expr="string:$portal_url/bika_setup/bika_storagemanagements"
     visible="True"
     i18n:attributes="title">
   <permission>BIKA: Manage Bika</permission>
 </configlet>
 
-<configlet title="Storage Managements" action_id="bika_storagemanagements"
+<configlet title="Biospecimens" action_id="bika_biospecimens"
     appId="bika.sanbi" category="bika" condition_expr=""
-    icon_expr="string:++resource++bika.lims.images/department.png"
-    url_expr="string:$portal_url/bika_setup/bika_storagemanagements"
+    icon_expr="string:++resource++bika.sanbi.images/biospecimen.png"
+    url_expr="string:$portal_url/bika_setup/bika_biospecimens"
+    visible="True"
+    i18n:attributes="title">
+  <permission>BIKA: Manage Bika</permission>
+</configlet>
+
+<configlet title="Lab Analysis" action_id="bika_labanalyses"
+    appId="bika.sanbi" category="bika" condition_expr=""
+    icon_expr="string:++resource++bika.sanbi.images/lab.png"
+    url_expr="string:$portal_url/bika_setup/bika_labanalyses"
     visible="True"
     i18n:attributes="title">
   <permission>BIKA: Manage Bika</permission>

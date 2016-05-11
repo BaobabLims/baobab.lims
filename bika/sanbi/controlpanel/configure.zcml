@@ -13,17 +13,25 @@
     />
 
     <browser:page
-      for="bika.sanbi.interfaces.IStorageOrders"
+      for="bika.sanbi.interfaces.IStorageManagements"
       name="folder_view"
-      class=".bika_storageorders.StorageOrdersView"
+      class=".bika_storagemanagements.StorageManagementsView"
       permission="bika.lims.ManageBika"
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
     <browser:page
-      for="bika.sanbi.interfaces.IStorageManagements"
+      for="bika.sanbi.interfaces.IBioSpecimens"
       name="folder_view"
-      class=".bika_storagemanagements.StorageManagementsView"
+      class=".bika_biospecimens.BioSpecimensView"
+      permission="bika.lims.ManageBika"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="bika.sanbi.interfaces.ILabAnalyses"
+      name="folder_view"
+      class=".bika_labanalyses.LabAnalysesView"
       permission="bika.lims.ManageBika"
       layer="bika.lims.interfaces.IBikaLIMS"
     />

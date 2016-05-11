@@ -56,7 +56,7 @@ class KitsView(BikaListingView):
         mtool = getToolByName(self.context, 'portal_membership')
         if mtool.checkPermission(AddKit, self.context):
             self.context_actions[_('Add')] = {
-                'url': 'createObject?type_name=Project',
+                'url': 'createObject?type_name=Kit',
                 'icon': '++resource++bika.lims.images/add.png'
             }
         if mtool.checkPermission(ManageKits, self.context):

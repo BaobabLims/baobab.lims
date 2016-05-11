@@ -3,8 +3,9 @@
  <factorytypes>
   <type portal_type="KitTemplate"/>
   <type portal_type="Kit"/>
-  <type portal_type="StorageOrder"/>
   <type portal_type="StorageManagement"/>
   <type portal_type="Project"/>
+  <type portal_type="BioSpecimen"/>
+  <type portal_type="LabAnalysis"/>
  </factorytypes>
 </object>

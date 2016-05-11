@@ -132,7 +132,7 @@ class KitView(BrowserView):
 class EditView(BrowserView):
 
     template = ViewPageTemplateFile('templates/kit_edit.pt')
-    field = ViewPageTemplateFile('templates/row_field.pt')
+    #field = ViewPageTemplateFile('templates/row_field.pt')
 
     def __call__(self):
         portal = self.portal
@@ -143,7 +143,7 @@ class EditView(BrowserView):
         if 'submitted' in request:
             #pdb.set_trace()
             context.setConstrainTypesMode(constraintypes.DISABLED)
-            # This following line does the same as precedent which one is the best?
+            # This following line does the same as the precedent. Which one is the best?
             #context.aq_parent.setConstrainTypesMode(constraintypes.DISABLED)
             portal_factory = getToolByName(context, 'portal_factory')
             context = portal_factory.doCreate(context, context.id)

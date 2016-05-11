@@ -21,17 +21,28 @@
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>
 
-    <type type_id="StorageOrders"/>
-    <type type_id="StorageOrder">
-        <bound-workflow workflow_id="bika_one_state_workflow"/>
-        <bound-workflow workflow_id="bika_inactive_workflow"/>
-    </type>
-
     <type type_id="StorageManagements"/>
     <type type_id="StorageManagement">
         <bound-workflow workflow_id="bika_one_state_workflow"/>
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>
 
+    <type type_id="Projects"/>
+    <type type_id="Project">
+        <bound-workflow workflow_id="bika_one_state_workflow"/>
+        <bound-workflow workflow_id="bika_inactive_workflow"/>
+    </type>
+
+    <type type_id="BioSpecimens"/>
+    <type type_id="BioSpecimen">
+        <bound-workflow workflow_id="bika_one_state_workflow"/>
+        <bound-workflow workflow_id="bika_inactive_workflow"/>
+    </type>
+
+    <type type_id="LabAnalyses"/>
+    <type type_id="LabAnalysis">
+        <bound-workflow workflow_id="bika_one_state_workflow"/>
+        <bound-workflow workflow_id="bika_inactive_workflow"/>
+    </type>
 </bindings>
 </object>

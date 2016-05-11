@@ -4,10 +4,12 @@
     <object name="KitTemplates" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Kits" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Kit" meta_type="Factory-based Type Information with dynamic views"/>
-    <object name="StorageOrder" meta_type="Factory-based Type Information with dynamic views"/>
-    <object name="StorageOrders" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="StorageManagement" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="StorageManagements" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Project" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Projects" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="BioSpecimen" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="BioSpecimens" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="LabAnalysis" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="LabAnalyses" meta_type="Factory-based Type Information with dynamic views"/>
 </object>

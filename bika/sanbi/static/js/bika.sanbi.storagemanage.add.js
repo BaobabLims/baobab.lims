@@ -25,7 +25,7 @@ function CustomStorageManageAddView(){
 
     function referencewidgetChangeHandler(element, item){
         var fieldname = $(element).parents('[data-fieldname]').attr('data-fieldname');
-        var multivalued = $(element).attr("multivalued") == "1"
+        var multivalued = $(element).attr("multivalued") == "1";
         if(multivalued){
             console.debug("Not yet inplemented");
         }
