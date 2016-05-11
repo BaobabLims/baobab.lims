@@ -139,7 +139,8 @@ class Kit(BaseContent):
     def at_post_create_script(self):
         """Execute once the object is created
         """
-        self.title = self.id
+        self.title = self.getId()
+        self.reindexObject()
 
     def workflow_script_complete(self):
         """Complete kit assembly
