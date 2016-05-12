@@ -35,3 +35,10 @@ class ILabAnalysis(Interface):
 
 class ILabAnalyses(Interface):
     """Interface for Projects"""
+
+class IShipments(Interface):
+    """Interface for shipments"""
+
+
+class IShipment(Interface):
+    """Interface for a shipment"""

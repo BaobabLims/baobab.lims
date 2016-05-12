@@ -4,6 +4,8 @@
     <object name="KitTemplates" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Kits" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Kit" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="Shipment" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="Shipments" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="StorageManagement" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="StorageManagements" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Project" meta_type="Factory-based Type Information with dynamic views"/>

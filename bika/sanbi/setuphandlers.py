@@ -14,7 +14,7 @@ class BikaCustomGenerator:
 
     def setupPortalContent(self, portal):
         # remove undesired content objects
-        for obj_id in ('kits','projectreg'):
+        for obj_id in ('kits','projectreg', 'shipments'):
             try:
                 obj = portal._getOb(obj_id)
                 obj.unmarkCreationFlag()
@@ -57,6 +57,7 @@ class BikaCustomGenerator:
         at = getToolByName(portal, 'archetype_tool')
         at.setCatalogsByType('Kit', ['bika_catalog', 'portal_catalog'])
         at.setCatalogsByType('Project', ['bika_catalog', 'portal_catalog'])
+        at.setCatalogsByType('Shipment', ['bika_catalog', 'portal_catalog'])
 
         # _______________________________#
         #      BIKA_SETUP_CATALOG        #
@@ -87,6 +88,11 @@ class BikaCustomGenerator:
         mp(AddKit, ['Manager', 'Owner'], 1)
         mp(ManageKits, ['Manager', 'Owner'], 1)
         portal.kits.reindexObject()
+
+        mp = portal.shipments.manage_permission
+        mp(AddShipment, ['Manager', 'Owner'], 1)
+        mp(ManageShipments, ['Manager', 'Owner'], 1)
+        portal.shipments.reindexObject()
 
 def setupCustomVarious(context):
     """ Setup Bika site structure """

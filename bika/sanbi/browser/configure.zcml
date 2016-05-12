@@ -11,6 +11,8 @@
     <include package=".analysisrequest"/>
     <include package=".kits"/>
     <include package=".kit"/>
+    <include package=".shipments"/>
+    <include package=".shipment"/>
     <include package=".ajax"/>
     <include package=".storagemanagement"/>
     <include package=".projects"/>

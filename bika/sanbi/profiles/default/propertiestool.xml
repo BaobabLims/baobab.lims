@@ -19,6 +19,8 @@
     <element value="Project"/>
     <element value="BioSpecimen"/>
     <element value="LabAnalysis"/>
+    <element value="StorageManagement"/>
+    <element value="Shipment"/>
   </property>
 </object>
 
