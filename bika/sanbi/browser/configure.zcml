@@ -12,6 +12,7 @@
     <include package=".kits"/>
     <include package=".kit"/>
     <include package=".shipments"/>
+    <include package=".shipment"/>
     <include package=".ajax"/>
     <include package=".storageorder"/>
     <include package=".storagemanagement"/>

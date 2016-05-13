@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<metal:block use-macro="context/global_defines/macros/defines" />
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      tal:attributes="lang default_language|default; xml:lang default_language|default;"
+      i18n:domain="bika"
+      tal:define="portal_state context/@@plone_portal_state;
+                  portal_url portal_state/portal_url;
+                  plone_view context/@@plone;
+                  portal portal_state/portal;
+                  portal_type python:context.portal_type;">
+
+<head>
+<div tal:replace="structure provider:plone.resourceregistries.scripts" />
+<style type="text/css">
+body {
+    background-color: #efefef;
+    margin: 0;
+    padding: 0;
+}
+.page-break {
+    background-color: #CDCDCD;
+    margin: 60px -10px 30px -20px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+#sticker-preview-header {
+    font-family:Helvetica, Arial;
+    font-size:0.9em;
+    background-color: #dcdcdc;
+    box-shadow: 1px 1px 1px #ccc;
+    margin: 0 0 40px;
+    padding: 10px;
+    text-align: center;
+}
+#sticker-preview-header #buttons {
+    text-align:center;
+    padding-left:10px;
+    padding-top:10px;
+}
+#sticker-preview-header #buttons input {
+    padding:4px 15px;
+    border:none;
+    color:#fff;
+    cursor:pointer;
+}
+#sticker-preview-header #buttons input:hover {
+    opacity:0.8;
+    moz-opacity:0.8;
+    filter:alpha(opacity=80);
+    -webkit-transition: opacity 250ms ease-in-out;
+    -moz-transition: opacity 250ms ease-in-out;
+    -o-transition: opacity 250ms ease-in-out;
+    -ms-transition: opacity 250ms ease-in-out;
+    transition: opacity 250ms ease-in-out;
+}
+#sticker-preview-header #buttons #print_button {
+    background-color:#0B486B;
+}
+#sticker-preview-header #buttons #cancel_button {
+    background-color:#666;
+}
+
+.sticker {
+    margin:0 auto;
+    background-color:#fff;
+    border-bottom: 1px dotted #cdcdcd;
+    box-shadow: 1px 2px 5px #cdcdcd;
+}
+@media print {
+    body {background-color:#fff;}
+    #sticker-preview-header {display:none !important;}
+    #stickers-wrapper { margin:0;}
+    .sticker {
+      margin:0;
+      border:none;
+      box-shadow:none;
+      border-bottom:none;
+    }
+}
+</style>
+    
+<script type="text/javascript">
+    $(function () {
+        // Store referrer in cookie in case it is lost due to a page reload
+        var backurl = document.referrer;
+        if (backurl) {
+            createCookie("ws.print.urlback", backurl);
+        } else {
+            backurl = readCookie("ws.print.urlback");
+            if (!backurl) {
+                backurl = portal_url;
+            }
+        }
+        $('#print_button').click(function(e) {
+
+            e.preventDefault();
+            window.print();
+        });
+
+        $('#cancel_button').click(function(e) {
+            e.preventDefault();
+            location.href = backurl;
+        });
+    })
+</script>
+</head>
+
+<body>
+<div id="sticker-preview-wrapper">
+    <div id="sticker-preview-header">
+        <div id="buttons">
+            <input type="button" id='cancel_button' i18n:translate="value" value="Cancel"/>&nbsp;&nbsp;
+            <input type="button" id='print_button' i18n:translate="value" value="Print"/>
+        </div>
+    </div>
+    <div id="stickers-wrapper">
+    <style id='report-style' tal:content='structure python:view.getCSS()'></style>
+    <div id='sticker-printview' class="sticker"
+         tal:content="structure python:view.renderSTemplate()">
+    </div>
+    </div>
+</div>
+</body>
+</html>

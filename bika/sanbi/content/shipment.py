@@ -30,6 +30,48 @@ schema = BikaSchema.copy() + Schema((
 
     ),
 
+    #Temporary fields for data to be collected/obtained from the project
+    StringField(
+        'FromContact',
+        searchable=True,
+        mode='rw',
+        required=1,
+        widget=StringWidget(
+            label=_("From Contact"),
+            size=30,
+            visible={'view': 'visible', 'edit': 'visible'},
+        )
+
+    ),
+
+    StringField(
+        'ToContact',
+        searchable=True,
+        mode='rw',
+        required=1,
+        widget=StringWidget(
+            label=_("To Contact"),
+            size=30,
+            visible={'view': 'visible', 'edit': 'visible'},
+        )
+
+    ),
+
+    StringField(
+        'ProjectID',
+        searchable=True,
+        mode='rw',
+        required=1,
+        widget=StringWidget(
+            label=_("ProjectID"),
+            size=30,
+            visible={'view': 'visible', 'edit': 'visible'},
+        )
+
+    ),
+
+    #End of project data
+
     TextField('DeliveryAddress',
         required=1,
         searchable=True,
@@ -43,7 +85,7 @@ schema = BikaSchema.copy() + Schema((
             append_only=True,
         ),
     ),
-    TextField('Shipping Address',
+    TextField('ShippingAddress',
         searchable=True,
         default_content_type='text/x-web-intelligent',
         allowable_content_types = ('text/plain', ),
@@ -117,7 +159,7 @@ schema = BikaSchema.copy() + Schema((
         searchable=1,
         widget=bika_DateTimeWidget(
             label='Date Assembled',
-            description=_("Provide the expected expiry date of the kit product."),
+            description=_("Provide the date for when the kit was assembled."),
             size=20
         ),
     ),
@@ -153,10 +195,36 @@ schema = BikaSchema.copy() + Schema((
         ),
     ),
 
+
+    # ReferenceField(
+    #     'FromContact',
+    #     required=0,
+    #     default_method='getContactUIDForUser',
+    #     vocabulary_display_path_bound=sys.maxsize,
+    #     allowed_types=('Contact',),
+    #     referenceClass=HoldingReference,
+    #     relationship='ShipmentFromContact',
+    #     mode="rw",
+    #     read_permission=permissions.View,
+    #     #write_permission=EditARContact,
+    #     widget=ReferenceWidget(
+    #         label = _("Contact"),
+    #         render_own_label=True,
+    #         size=20,
+    #         helper_js=("bika_widgets/referencewidget.js", "++resource++bika.lims.js/contact.js"),
+    #         showOn=True,
+    #         popup_width='400px',
+    #         colModel=[{'columnName': 'UID', 'hidden': True},
+    #                   {'columnName': 'Fullname', 'width': '50', 'label': _('Name')},
+    #                   {'columnName': 'EmailAddress', 'width': '50', 'label': _('Email Address')},
+    #                  ],
+    #     ),
+    # ),
+
     ReferenceField('Kit',
        allowed_types=('Kit',),
        relationship='ShipmentKit',
-       required=False,
+       required=True,
        widget=bika_ReferenceWidget(
             label = _("Kit"),
             size=30,
