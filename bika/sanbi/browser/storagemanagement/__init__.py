@@ -1,3 +1,5 @@
 from storagemanagement import StorageManagementEdit
 from storagemanagement import StorageManagementView
+from storagemanagement import StorageGraph
 from ajax import StorageManageSubmit
+from ajax import PositionsInfo

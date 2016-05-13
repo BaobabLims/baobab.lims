@@ -5,7 +5,7 @@
         i18n:domain="plone">
  <property name="title" i18n:translate="">Shipments</property>
  <property name="description"></property>
- <property name="content_icon">++resource++bika.lims.images/shipments_icon.png</property>
+ <property name="content_icon">++resource++bika.sanbi.images/shipments_icon.png</property>
  <property name="content_meta_type">Shipments</property>
  <property name="product">bika.sanbi</property>
  <property name="factory">addShipments</property>

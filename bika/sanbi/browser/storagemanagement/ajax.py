@@ -246,3 +246,31 @@ class StorageManageSubmit:
 
 
         return self.context, {}
+
+class PositionsInfo:
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+        self.errors = {}
+
+    def __call__(self):
+        if self.context.getStorageLocation():
+            workflow = getToolByName(self.context, 'portal_workflow')
+            positions = []
+            response = {'x': self.context.getXAxis(),
+                        'y': self.context.getYAxis(),
+                        'n': self.context.getShelves()}
+
+            children = self.context.getPositions()
+            for c in children:
+                positions.append({
+                    'occupied': c.getIsOccupied(),
+                    'id': c.getId(),
+                    'address': c.Title(),
+                    'state': workflow.getInfoFor(c, 'review_state')
+                })
+                response['positions'] = positions
+
+            print response
+
+        return json.dumps(response)

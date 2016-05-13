@@ -1,0 +1,230 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+            metal:use-macro="here/main_template/macros/master"
+      i18n:domain="bika">
+
+<head>
+
+    <metal:javascript_head_slot fill-slot="javascript_head_slot">
+        <!--?<script type="text/javascript" charset="utf-8"-->
+                <!--?tal:define="navroot context/@@plone_portal_state/navigation_root_url"-->
+                <!--?tal:attributes="href string:${navroot}/++resource++bika.sanbi.js/d3.v3.js"></script>-->
+
+        <script type="text/javascript" charset="utf-8">
+            (function($) {
+              $(function() {
+                  // Get Positions info
+                  var path = window.location.href.split('/graphic')[0] + '/positions_info';
+                  $.getJSON(path, function(data){
+                      if (data['positions'].length > 0){
+                          createGraphic(data);
+                      }
+                  });
+                  function createGraphic(data){
+
+                      var totalPositions = data["positions"].length;
+                      var freePositions = 0, reservedPositions = 0, occupiedPositions = 0;
+                      for(var i = 0; i < totalPositions; i++){
+                          switch(data["positions"][i]["state"]){
+                              case 'position_free':
+                                  freePositions += 1;
+                                  break;
+                              case 'position_reserved':
+                                  reservedPositions += 1;
+                                  break;
+                              case 'position_occupied':
+                                  occupiedPositions += 1;
+                                  break;
+                              default: break;
+                          }
+                      }
+                      var html = "<table class='analyses'>" +
+                        "<tbody>" +
+                        "<tr><td> Total Positions </td>" +
+                        "<td>" + data['positions'].length + "</td><tr>" +
+                        "<tr><td> Available Positions </td>" +
+                        "<td>" + freePositions + "</td><tr>" +
+                        "<tr><td> Reserved Positions </td>"  +
+                        "<td>" + reservedPositions + "</td></tr>" +
+                        "<tr><td> Occupied Positions</td>"   +
+                        "<td>" + occupiedPositions + "</td></tr>" +
+                        "</tbody></table>";
+
+                      $("#stats").append(html);
+                      var w = 500;
+                      var h = 500;
+                      var padding = 3;
+                      // Create SVG element
+
+                      var graph = d3.select("#content-core")
+                              .append("div")
+                              .attr("id", "graphic")
+                              .attr("class", "graphic");
+
+
+                      var svg = d3.select("#graphic")
+                                  .append("svg")
+                                  .attr("width", w)
+                                  .attr("height", h);
+
+                      svg.selectAll("rect")
+                          .data(data['positions'])
+                          .enter()
+                          .append("rect")
+                          .attr("x", function(d, i){
+                              return i % data["x"] * Math.floor(w / data["y"]);
+                          })
+                          .attr("y", function(d, i){
+                              return Math.floor(i / data["y"]) * h / data["x"];
+                          })
+                          .attr("width", function(d) {
+                              return w / data["y"] - padding;
+                          })
+                          .attr("height", function(d){
+                              return h / data["x"] - padding;
+                          })
+                          .attr("fill", function(d){
+                              return "blue";
+                          })
+                          .style("stroke", "red")
+                          .style("fill-opacity", .2);
+
+
+                      svg.selectAll("circle")
+                              .data(data["positions"])
+                              .enter()
+                              .append("circle")
+                              .attr("cx", function(d, i){
+                                  var x = i % data["x"] * Math.floor(w / data["y"]);
+                                  var width = w / data["y"] - padding;
+                                  return x + width / 2;
+                              })
+                              .attr("cy", function(d, i){
+                                  var y = Math.floor(i / data["y"]) * h / data["x"];
+                                  var height = h / data["x"] - padding;
+                                  return y + height / 2;
+                              })
+                              .attr("r", function(d, i){
+                                  var width = w / data["y"] - padding;
+                                  var height = h / data["x"] - padding;
+                                  return d3.max([width / 2 - 2*padding, height / 2 - 2*padding])
+                              })
+                              .attr("fill", function(d){
+                                  if(d["occupied"])
+                                      return "red";
+                                  else
+                                      return "green";
+                              })
+                              .style("fill-opacity", .4)
+                              .on('click', function(d){
+                                  console.log(d3.parentNode())
+                              });
+
+                      svg.selectAll("text")
+                              .data(data["positions"])
+                              .enter()
+                              .append("text")
+                              .text(function(d, i){
+                                  chain = d["id"].split(".");
+                                  return chain[chain.length - 1];
+                              })
+                              .attr("x", function(d, i){
+                                  var x = i % data["x"] * Math.floor(w / data["y"]);
+                                  var width = w / data["y"] - padding;
+                                  return x + width / 2;
+                              })
+                              .attr("y", function(d, i){
+                                  var y = Math.floor(i / data["y"]) * h / data["x"];
+                                  var height = h / data["x"] - padding;
+                                  return y + height / 2;
+                              })
+                              .style("font-family", "sans-serif")
+                              .style("font-size", "11px")
+                              .style("fill", "white");
+                  }
+              });
+            })(jQuery);
+        </script>
+    </metal:javascript_head_slot>
+    <metal:block fill-slot="style_slot">
+        <tal:css>
+        <style type="text/css">
+            rect:hover{
+                fill: orange;
+            }
+            rect {
+                -moz-transition: all 0.3s;
+                -o-transition: all 0.3s;
+                -webkit-transition: all 0.3s;
+                transition: all 0.3s;
+            }
+            circle:hover{
+                fill: black;
+            }
+            #content-core > div:first-of-type{
+                float: left;
+                clear: none;
+                margin: 20px 0;
+                width: 30%;
+            }
+            div.stats{
+                border-left-style: groove;
+                border-left-color: green;
+                border-left-width: 15px;
+                border-bottom-style: ridge;
+                border-bottom-color: yellow;
+                border-bottom-width: 25px;
+            }
+            span.head_text{
+                font-family: sans-serif;
+                font-size: 14px;
+                font-weight: bold;
+            }
+            #stats table {
+                border: solid 1px #DDEEEE;
+                border-collapse: collapse;
+                border-spacing: 0;
+                font: normal 13px Arial, sans-serif;
+                width:100%;
+            }
+            #stats table tbody td {
+                border: solid 1px #DDEEEE;
+                color: #333;
+                padding: 10px;
+                text-shadow: 1px 1px 1px #fff;
+            }
+
+            div#graphic{
+                margin: 20px 30px;
+                float: left;
+                width: 50%;
+            }
+        </style>
+        </tal:css>
+    </metal:block>
+
+</head>
+
+<body>
+
+<metal:title fill-slot="content-title">
+</metal:title>
+
+<metal:content-description fill-slot="content-description">
+</metal:content-description>
+
+<div metal:fill-slot="content-core"
+     tal:define="
+        portal context/@@plone_portal_state/portal;">
+    <div id="stats" class="stats">
+        <img tal:attributes='src python:portal.absolute_url()+"/++resource++bika.sanbi.images/graph_big.png";'/>
+        <span class="head_text">Statistics</span>
+    </div>
+    <div>Salam</div>
+</div>
+
+
+</body>
+
+</html>

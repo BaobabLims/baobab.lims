@@ -158,7 +158,7 @@ function CustomStorageManageAddView(){
                     window.location.replace(destination)
                 },
                 error: function(xhr, status, error) {
-                    console.log("salam " + xhr.responseText);
+                    console.log("HTML Page: " + xhr.responseText);
                     console.log(status);
                     console.log(error);
                 }
