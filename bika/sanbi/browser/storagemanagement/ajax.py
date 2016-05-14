@@ -265,12 +265,10 @@ class PositionsInfo:
             for c in children:
                 positions.append({
                     'occupied': c.getIsOccupied(),
-                    'id': c.getId(),
+                    'chain': [o.Title() for o in reversed(c.getChain())],
                     'address': c.Title(),
                     'state': workflow.getInfoFor(c, 'review_state')
                 })
                 response['positions'] = positions
-
-            print response
 
         return json.dumps(response)
