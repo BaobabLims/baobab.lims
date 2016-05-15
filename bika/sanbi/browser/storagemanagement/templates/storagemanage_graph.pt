@@ -30,15 +30,15 @@
                       switch(d["state"]){
                           case "position_free":
                               state = "Available";
-                              color = "green";
+                              color = "#32ce16";
                               break;
                           case "position_reserved":
                               state = "Reserved";
-                              color = "yellow";
+                              color = "#39cccc";
                               break;
                           case "position_occupied":
                               state = "Occupied";
-                              color = "red";
+                              color = "#fc7871";
                               break;
                           default:
                               break;
@@ -64,7 +64,7 @@
 
                   }
 
-                  function createGraphic(data){
+                  function tableStats(data){
                       // TODO: THIS PART SHOULD BE IN DIFFERENT FUNCTION
                       var totalPositions = data["positions"].length;
                       var freePositions = 0, reservedPositions = 0, occupiedPositions = 0;
@@ -95,14 +95,19 @@
                         "</tbody></table>";
 
                       $("#stats").append(html);
+                  }
 
-
-                      var w = 500;
-                      var h = 500;
+                  function createGraphic(data){
+                      tableStats(data);
+                      var width = 700;
+                      var height = 500;
                       var padding = 3;
                       var marginTop = 30;
                       var marginLeft = 30;
-                      var sub = data["x"] + data["y"];
+                      var marginRight = 200;
+                      var widthPos = width - marginRight - marginLeft;
+                      var heightPos = height - marginTop;
+                      var rowCol = data["x"] + data["y"];
                       var letters = ["A", "B", "C", "D", "E", "F", "G", "H",
                                      "I", "J", "K", "L", "M", "N", "O", "P",
                                      "Q", "R", "S", "T", "U", "V", "W", "X",
@@ -116,10 +121,10 @@
 
                       var svg = d3.select("#graphic")
                                   .append("svg")
-                                  .attr("width", w)
-                                  .attr("height", h);
+                                  .attr("width", width)
+                                  .attr("height", height);
 
-                      var totalg = parseInt(sub + data["positions"].length);
+                      var totalg = parseInt(rowCol + data["positions"].length);
 
                       var gp = svg.selectAll("g")
                               .data(d3.range(totalg))
@@ -131,7 +136,7 @@
                               .attr("class", function (d) {
                                    if (d < data["x"])
                                        return "x-labels";
-                                   else if (d >= data["x"] && d < parseInt(data["x"] + data["y"])) {
+                                   else if (d >= data["x"] && d < parseInt(rowCol)) {
                                        return "y-labels";
                                    }else return "graph-svg";
                               })
@@ -156,9 +161,9 @@
                               })
                               .attr("x", function(d){
                                   var i = d3.select(this.parentNode).attr("i");
-                                  var x = i % data["x"] * Math.floor((w - marginLeft) / data["x"]) + marginLeft;
-                                  var width = (w - marginLeft) / data["x"] - padding;
-                                  return x + width / 2;
+                                  var x = i % data["x"] * Math.floor(widthPos / data["x"]) + marginLeft;
+                                  var w = widthPos / data["x"] - padding;
+                                  return x + w / 2;
                               })
                               .attr("y", function(d, i){
                                   return marginTop - 10;
@@ -178,9 +183,9 @@
                               })
                               .attr("y", function(d){
                                   var i = d3.select(this.parentNode).attr("i");
-                                  var y = (i - data["y"]) % data["y"] * Math.floor((h - marginTop) / data["y"]) + marginTop;
-                                  var width = (h - marginTop) / data["y"] - padding;
-                                  return y + width / 2;
+                                  var y = (i - data["y"]) % data["y"] * Math.floor(heightPos / data["y"]) + marginTop;
+                                  var w = heightPos / data["y"] - padding;
+                                  return y + w / 2;
                               });
 
 
@@ -192,17 +197,17 @@
                               .append("rect")
                               .attr("x", function(d){
                                   var i = d3.select(this.parentNode).attr("i");
-                                  return (i - sub) % data["x"] * Math.floor((w - marginLeft) / data["x"]) + marginLeft;
+                                  return (i - rowCol) % data["x"] * Math.floor(widthPos / data["x"]) + marginLeft;
                               })
                               .attr("y", function(d){
                                   var i = d3.select(this.parentNode).attr("i");
-                                  return Math.floor((i - sub) / data["y"]) * (h - marginTop) / data["y"] + marginTop;
+                                  return Math.floor((i - rowCol) / data["y"]) * heightPos / data["y"] + marginTop;
                               })
                               .attr("width", function(d) {
-                                  return (w - marginLeft) / data["y"] - padding;
+                                  return widthPos / data["y"] - padding;
                               })
                               .attr("height", function(d){
-                                  return (h - marginTop) / data["x"] - padding;
+                                  return heightPos / data["x"] - padding;
                               })
                               .attr("fill", function(d){
                                   return "#dadada";
@@ -218,20 +223,20 @@
                               .append("circle")
                               .attr("cx", function(d){
                                   var i = d3.select(this.parentNode).attr("i");
-                                  var x = (i - sub) % data["x"] * Math.floor((w - marginLeft) / data["x"]) + marginLeft;
-                                  var width = (w - marginLeft) / data["x"] - padding;
-                                  return x + width / 2;
+                                  var x = (i - rowCol) % data["x"] * Math.floor(widthPos / data["x"]) + marginLeft;
+                                  var w = widthPos / data["x"] - padding;
+                                  return x + w / 2;
                               })
                               .attr("cy", function(d){
                                   var i = d3.select(this.parentNode).attr("i");
-                                  var y = Math.floor((i - sub) / data["y"]) * (h - marginTop) / data["x"] + marginTop;
-                                  var height = (h - marginTop) / data["y"] - padding;
-                                  return y + height / 2;
+                                  var y = Math.floor((i - rowCol) / data["y"]) * heightPos / data["x"] + marginTop;
+                                  var h = heightPos / data["y"] - padding;
+                                  return y + h / 2;
                               })
                               .attr("r", function(d){
-                                  var width = (w - marginLeft) / data["x"] - padding;
-                                  var height = (h - marginTop) / data["y"] - padding;
-                                  return d3.max([width / 2 - 2*padding, height / 2 - 2*padding])
+                                  var w = widthPos / data["x"] - padding;
+                                  var h = heightPos / data["y"] - padding;
+                                  return d3.max([w / 2 - 2*padding, h / 2 - 2*padding])
                               })
                               .attr("fill", function(d){
                                   switch (d["state"]){
@@ -253,84 +258,45 @@
                                   positionInfo(this, d);
                               });
 
+                      var positionState = [["Free", "#32ce16"],
+                                           ["Reserved", "#39cccc"],
+                                           ["Occupied", "#fc7871"]];
 
-/*
-                      gp.selectAll("rect")
-                          .data(data['positions'])
-                          .enter()
-                          .append("rect")
-                          .attr("x", function(d, i){
-                              return i % data["x"] * Math.floor(w / data["y"]);
-                          })
-                          .attr("y", function(d, i){
-                              return Math.floor(i / data["y"]) * h / data["x"];
-                          })
-                          .attr("width", function(d) {
-                              return w / data["y"] - padding;
-                          })
-                          .attr("height", function(d){
-                              return h / data["x"] - padding;
-                          })
-                          .attr("fill", function(d){
-                              return "blue";
-                          })
-                          .style("stroke", "red")
-                          .style("fill-opacity", .2);
+                      var legend = svg.append("g")
+                          .attr("class", "legend")
+                          .attr("x", width - 150)
+                          .attr("y", 25 + marginTop)
+                          .attr("height", 100)
+                          .attr("width", 100);
 
-
-                      gp.selectAll("circle")
-                              .data(data["positions"])
+                      legend.selectAll('circle')
+                              .data(positionState)
                               .enter()
                               .append("circle")
-                              .attr("cx", function(d, i){
-                                  var x = i % data["x"] * Math.floor(w / data["y"]);
-                                  var width = w / data["y"] - padding;
-                                  return x + width / 2;
-                              })
+                              .attr("cx", width - 150)
                               .attr("cy", function(d, i){
-                                  var y = Math.floor(i / data["y"]) * h / data["x"];
-                                  var height = h / data["x"] - padding;
-                                  return y + height / 2;
+                                  return i*25 + marginTop + 5;
                               })
-                              .attr("r", function(d, i){
-                                  var width = w / data["y"] - padding;
-                                  var height = h / data["x"] - padding;
-                                  return d3.max([width / 2 - 2*padding, height / 2 - 2*padding])
-                              })
-                              .attr("fill", function(d){
-                                  if(d["occupied"])
-                                      return "red";
-                                  else
-                                      return "green";
-                              })
-                              .style("fill-opacity", .4)
-                              .on('click', function(d){
-                                  //TODO: CHECK HOW TO GET PARENTNODE TO STYLE IT IN CASE IT GET FOCUS
-                                  //TODO: WHEN CLICKED.
-                                  positionInfo(this, d);
+                              .attr("r", 6)
+                              .style("fill", function(d,i){
+                                  return d[1];
                               });
 
-                      gp.selectAll("text")
-                              .data(data["positions"])
+                      legend.selectAll("text")
+                              .data(positionState)
                               .enter()
                               .append("text")
-                              .text(function(d, i){
-                                  var chain = d["id"].split(".");
-                                  return chain[chain.length - 1];
-                              })
-                              .attr("x", function(d, i){
-                                  var x = i % data["x"] * Math.floor(w / data["y"]);
-                                  var width = w / data["y"] - padding;
-                                  return x + width / 2;
-                              })
+                              .attr("x", width - 128)
                               .attr("y", function(d, i){
-                                  var y = Math.floor(i / data["y"]) * h / data["x"];
-                                  var height = h / data["x"] - padding;
-                                  return y + height / 2;
+                                  return i * 25 + marginTop + 8;
+                              })
+                              .attr("height",30)
+                              .attr("width",100)
+                              .text(function(d, i){
+                                  return d[0];
                               })
                               .style("font-family", "sans-serif")
-                              .style("font-size", "11px")
-                              .style("fill", "white");*/
+                              .style("font-weight", "bold");
                   }
               });
             })(jQuery);
@@ -353,6 +319,12 @@
             }
             g.on > rect{
                 fill:orange;
+            }
+            .legend {
+	            padding: 5px;
+	            font: 10px sans-serif;
+	            background: yellow;
+	            box-shadow: 2px 2px 1px #888;
             }
             #content-core > div:first-of-type{
                 float: left;
