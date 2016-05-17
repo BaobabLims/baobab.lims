@@ -9,6 +9,7 @@ from bika.sanbi.interfaces import IProject
 from bika.sanbi import config
 import sys
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
+from bika.sanbi.browser.widgets import ProjectAnalysesWidget
 
 schema = BikaSchema.copy() + Schema((
     ReferenceField('ClientID',
@@ -56,20 +57,6 @@ schema = BikaSchema.copy() + Schema((
             size=10,
             visible={'edit': 'visible', 'view': 'visible'},
         )),
-    # ReferenceField('Biospecimen',
-    #     required=1,
-    #     multiValued=1,
-    #     vocabulary_display_path_bound=sys.maxint,
-    #     vocabulary='_getBiospecimensDisplayList',
-    #     allowed_types=('BioSpecimen',),
-    #     relationship='BioSpecimenProject',
-    #     referenceClass=HoldingReference,
-    #     widget=MultiSelectionWidget(
-    #        label=_("Biospecimen Type"),
-    #        description=_("Select one or more of Biospecimen types. " + \
-    #                      "The kit assembly process depends on the types " + \
-    #                      "selected here."),
-    #     )),
 
     LinesField('Biospecimens',
         vocabulary='_getBiospecimensDisplayList',
@@ -91,6 +78,16 @@ schema = BikaSchema.copy() + Schema((
                "Multi-widget. Use to select more than one Analyses."),
            visible={'edit': False, 'view': False},
         )),
+
+    ReferenceField('Service',
+                   required=1,
+                   multiValued=1,
+                   allowed_types=('AnalysisService',),
+                   relationship='BiospecimenAnalysisService',
+                   widget=ProjectAnalysesWidget(
+                       label=_("Analyse Services"),
+                       description=_("Select Analyse services for this biospecimen."),
+                   )),
 ))
 schema['title'].required = True
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}

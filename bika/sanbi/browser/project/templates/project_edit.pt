@@ -67,18 +67,13 @@
             </thead>
         </table>
 
-        <!--<span id="lab" tal:define="services python:view.services_widget_content('lab', ar_count=1)">
-            <h3 tal:condition="services" i18n:translate="">Lab Analyses</h3>
-            <span tal:replace="structure services"></span>
-        </span>-->
-        <h3 style="margin-top:1em;">
+        <!--?   <h3 style="margin-top:1em;">
         <img title="storages"
              tal:attributes="src string:${view/portal_url}/++resource++bika.lims.images/referencesample.png">
         <span i18n:translate="">Laboratory Analysis</span>
         </h3>
-        <div id="labanalyses-uids">
+        <div id="labanalyses-uids"></div>-->
 
-        </div>
         <span>
             <div style="text-align: left; padding-bottom: 10px;">
                 <input i18n:attributes="value"

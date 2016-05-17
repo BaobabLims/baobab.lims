@@ -8,8 +8,20 @@ from bika.lims.content.bikaschema import BikaSchema
 from bika.sanbi.interfaces import IBioSpecimen
 from Products.Archetypes.public import *
 from zope.interface import implements
+from bika.sanbi.browser.widgets import ProjectAnalysesWidget
+from bika.sanbi import bikaMessageFactory as _
 
-schema = BikaSchema.copy()
+schema = BikaSchema.copy() + Schema((
+    ReferenceField('Service',
+                   required=1,
+                   multiValued=1,
+                   allowed_types=('AnalysisService',),
+                   relationship='BiospecimenAnalysisService',
+                   widget=ProjectAnalysesWidget(
+                       label=_("Analyse Services"),
+                       description=_("Select Analyse services for this biospecimen."),
+                   )),
+))
 schema['description'].widget.visible = True
 schema['description'].schemata = 'default'
 

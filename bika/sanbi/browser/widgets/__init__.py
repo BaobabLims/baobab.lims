@@ -1,0 +1,2 @@
+from projectanalyseswidget import ProjectAnalysesWidget
+from projectanalyseswidget import ProjectAnalysesView

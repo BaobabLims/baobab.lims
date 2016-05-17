@@ -17,6 +17,7 @@
     <include package=".storagemanagement"/>
     <include package=".projects"/>
     <include package=".project"/>
+    <include package=".biospecimen"/>
 
     <!-- This registration allows additional sticker templates.
          To enable these, just copy one or more of the *.pt files

@@ -5,6 +5,7 @@ from bika.sanbi import bikaMessageFactory as _
 from bika.sanbi.controlpanel.bika_labanalyses import LabAnalysesView
 from bika.sanbi.controlpanel.bika_biospecimens import BioSpecimensView
 from bika.lims.browser import BrowserView
+from bika.lims.controlpanel.bika_analysisservices import AnalysisServicesView
 import json
 
 
@@ -55,6 +56,46 @@ class ProjectEdit(BrowserView):
                 fields.append(field)
         return fields
 
+class ProjectAnalysisServicesView(AnalysisServicesView):
+    def __init__(self, context, request, uids):
+        self.uids = uids
+        super(ProjectAnalysisServicesView, self).__init__(context, request)
+        self.show_sort_column = False
+        self.show_select_row = False
+        self.show_select_column = False
+        self.show_column_toggles = False
+        self.context_actions = {}
+        self.allow_edit = False
+        self.pagesize = 999999
+        self.contentFilter['UID'] = self.uids
+
+        self.columns = {
+            'Title': {'title': _('Service'),
+                      'index': 'sortable_title'},
+            'Price': {'title': _('Price')},
+        }
+
+        self.review_states = [
+            {'id': 'default',
+             'title': _('All'),
+             'contentFilter': {},
+             'columns': ['Title',
+                         'Price']
+             }]
+
+    def folderitems(self):
+        items = AnalysisServicesView.folderitems(self)
+        out_items = []
+        for x in range(len(items)):
+            if not items[x].has_key('obj'): continue
+            obj = items[x]['obj']
+            items[x]['Price'] = "%s.%02d" % obj.Price
+            items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % (
+                                            items[x]['url'], items[x]['Title'])
+            out_items.append(items[x])
+
+        return out_items
+
 
 class ProjectAnalysesView(LabAnalysesView):
     def __init__(self, context, request, uids):
@@ -94,11 +135,33 @@ class ProjectAnalysesView(LabAnalysesView):
 
 class ProjectBiospecView(BioSpecimensView):
     def __init__(self, context, request, uids):
-        self.context = context
-        self.request = request
-        self.uids = uids
-
         super(ProjectBiospecView, self).__init__(context, request)
+        self.uids = uids
+        self.show_sort_column = False
+        self.show_select_row = False
+        self.show_select_column = False
+        self.show_column_toggles = False
+        self.context_actions = {}
+        self.allow_edit = False
+        self.pagesize = 999999
+        self.contentFilter['UID'] = self.uids
+
+        self.columns = {
+            'Title': {'title': _('Name'),
+                      'index': 'sortable_title'},
+            'Description': {'title': _('Description'),
+                            'index': 'description',
+                            'toggle': True},
+        }
+
+        self.review_states = [
+            {'id': 'default',
+             'title': _('All'),
+             'contentFilter': {},
+             'columns': ['Title',
+                         'Description']
+             },
+        ]
 
     def folderitems(self):
         items = BioSpecimensView.folderitems(self)
@@ -106,12 +169,10 @@ class ProjectBiospecView(BioSpecimensView):
         for x in range(len(items)):
             if not items[x].has_key('obj'): continue
             obj = items[x]['obj']
-
-            if obj.UID() in self.uids:
-                items[x]['Description'] = obj.Description()
-                items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
-                                               (items[x]['url'], items[x]['Title'])
-                out_items.append(items[x])
+            items[x]['Description'] = obj.Description()
+            items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
+                                           (items[x]['url'], items[x]['Title'])
+            out_items.append(items[x])
 
         return out_items
 
@@ -143,19 +204,12 @@ class ProjectView(BrowserView):
         self.age_interval = str(context.getAgeLow()) + ' - ' + str(context.getAgeHigh())
 
         biospecimens = ProjectBiospecView(context, request, context.getBiospecimens())
-        biospecimens()
-        biospecimens.show_column_toggles = False
-        biospecimens.allow_edit = False
-        #biospecimens.show_workflow_action_buttons = False
-
         self.bio_table = biospecimens.contents_table()
 
-        analyses = ProjectAnalysesView(context, request, context.getAnalyses())
-        analyses()
-        analyses.show_column_toggles = False
-        #analyses.show_workflow_action_buttons = False
-        self.analyses_table = analyses.contents_table()
+        uids = [o.UID() for o in context.getService()]
+        view = ProjectAnalysisServicesView(context, request, uids)
 
+        self.analyses_table = view.contents_table()
         return self.template()
 
 
