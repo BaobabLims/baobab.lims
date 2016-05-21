@@ -1,4 +1,4 @@
 bika_kittemplates,KitTemplates
 bika_storagemanagements,StorageManagements
-bika_biospecimens,BioSpecimens
-bika_labanalyses,LabAnalyses
+bika_biospectypes,BiospecTypes
+bika_biospecimens,Biospecimens

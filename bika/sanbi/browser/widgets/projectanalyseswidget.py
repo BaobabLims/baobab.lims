@@ -126,7 +126,7 @@ class ProjectAnalysesWidget(TypesWidget):
 
         service_uids = form.get('uids', None)
 
-        # if instance.portal_type == 'BioSpecimen':
+        # if instance.portal_type == 'BiospecType':
         #     pass
         return service_uids, {}
 

@@ -23,8 +23,6 @@ window.bika.sanbi.controllers =  {
         ['CustomStorageManageAddView'],
     ".template-base_edit #project_registration_edit":
         ['CustomProjectAddView'],
-    ".portaltype-labanalysis.template-base_edit":
-        ['CustomLabAnalysisAddView'],
 };
 
 /**

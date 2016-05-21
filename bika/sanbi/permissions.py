@@ -10,6 +10,7 @@ AddKit = 'SANBI: Add Kit'
 AddStorageManagement = 'SANBI: Add Storage Management'
 AddProject = 'SANBI: Add Project'
 AddShipment = 'SANBI: Add Shipment'
+AddMultimage = 'BIKA: Add Multimage'
 
 # Add Permissions for specific types, if required
 ADD_CONTENT_PERMISSIONS = {
@@ -18,6 +19,7 @@ ADD_CONTENT_PERMISSIONS = {
     'StorageManagement': AddStorageManagement,
     'Project': AddProject,
     'Shipment': AddShipment,
+    'Multimage': AddMultimage,
 }
 
 ManageStoragePositions = "SANBI: Manage Storage Positions"

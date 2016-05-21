@@ -17,8 +17,8 @@
     <element value="Kit"/>
     <element value="StorageManagement"/>
     <element value="Project"/>
-    <element value="BioSpecimen"/>
-    <element value="LabAnalysis"/>
+    <element value="BiospecType"/>
+    <element value="Biospecimen"/>
     <element value="StorageManagement"/>
     <element value="Shipment"/>
   </property>

@@ -1,6 +1,6 @@
 function CustomProjectAddView(){
-    var biospecFd = '#archetypes-fieldname-Biospecimens';
-    var biospecSel = '#archetypes-fieldname-Biospecimens #Biospecimens';
+    var biospecFd = '#archetypes-fieldname-Biospectypes';
+    var biospecSel = '#archetypes-fieldname-Biospectypes #Biospectypes';
     this.load = function(){
         // disable browser auto-complete
         $('input[type=text]').prop('autocomplete', 'off');
@@ -26,7 +26,7 @@ function CustomProjectAddView(){
         var d = $.Deferred();
         var requestData = {
             catalog_name: "bika_setup_catalog",
-            portal_type: "BioSpecimen",
+            portal_type: "BiospecType",
             UID: uid
         };
         bika.lims.jsonapi_read(requestData, function (data) {
@@ -80,7 +80,7 @@ function CustomProjectAddView(){
     function analysis_cb_uncheck() {
         /* Called to un-check an Analysis' checkbox as though it were clicked.
          */
-        var cb = $("tr input[type='checkbox']")
+        var cb = $("tr input[type='checkbox']");
         $(cb).removeAttr("checked");
     }
 

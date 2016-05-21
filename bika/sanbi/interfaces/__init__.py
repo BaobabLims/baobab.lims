@@ -24,21 +24,23 @@ class IProject(Interface):
 class IProjects(Interface):
     """Interface for Projects"""
 
-class IBioSpecimen(Interface):
+class IBiospecType(Interface):
     """Interface for Project"""
 
-class IBioSpecimens(Interface):
-    """Interface for Projects"""
-
-class ILabAnalysis(Interface):
-    """Interface for Project"""
-
-class ILabAnalyses(Interface):
+class IBiospecTypes(Interface):
     """Interface for Projects"""
 
 class IShipments(Interface):
     """Interface for shipments"""
 
-
 class IShipment(Interface):
+    """Interface for a shipment"""
+
+class IBiospecimen(Interface):
+    """Interface for a shipment"""
+
+class IBiospecimens(Interface):
+    """Interface for a shipment"""
+
+class IMultimage(Interface):
     """Interface for a shipment"""

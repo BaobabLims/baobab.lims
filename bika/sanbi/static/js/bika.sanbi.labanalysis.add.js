@@ -1,5 +1,5 @@
 function CustomLabAnalysisAddView(){
-    var biospecimensFd = '#archetypes-fieldname-Biospecimens';
+    var biospecimensFd = '#archetypes-fieldname-Biospecimentypes';
 
     this.load = function(){
         console.log('salam');

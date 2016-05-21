@@ -20,9 +20,10 @@ def initialize(context):
     from content.shipments import Shipments
 
     from content.kittemplate import KitTemplate
-    from content.biospecimen import BioSpecimen
+    from content.biospectype import BiospecType
+    from content.biospecimen import Biospecimen
+    from content.multimage import Multimage
     from content.storagemanagement import StorageManagement
-    from content.labanalysis import LabAnalysis
     from content.kit import Kit
     from content.kits import Kits
     from content.project import Project
@@ -30,8 +31,8 @@ def initialize(context):
 
     from controlpanel.bika_kittemplates import KitTemplates
     from controlpanel.bika_storagemanagements import StorageManagements
-    from controlpanel.bika_biospecimens import BioSpecimens
-    from controlpanel.bika_labanalyses import LabAnalyses
+    from controlpanel.bika_biospectypes import BiospecTypes
+    from controlpanel.bika_biospecimens import Biospecimens
 
     content_types, constructors, ftis = process_types(
         listTypes(PROJECTNAME),

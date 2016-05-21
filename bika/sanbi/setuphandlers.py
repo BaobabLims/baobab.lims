@@ -14,7 +14,7 @@ class BikaCustomGenerator:
 
     def setupPortalContent(self, portal):
         # remove undesired content objects
-        for obj_id in ('kits','projectreg', 'shipments'):
+        for obj_id in ('kits','projects', 'shipments'):
             try:
                 obj = portal._getOb(obj_id)
                 obj.unmarkCreationFlag()
@@ -25,8 +25,8 @@ class BikaCustomGenerator:
         bika_setup = portal._getOb('bika_setup')
         for obj_id in ('bika_kittemplates',
                        'bika_storagemanagements',
-                       'bika_biospecimens',
-                       'bika_labanalyses',):
+                       'bika_biospectypes',
+                       'bika_biospecimens'):
             obj = bika_setup._getOb(obj_id)
             obj.unmarkCreationFlag()
             obj.reindexObject()
@@ -70,8 +70,9 @@ class BikaCustomGenerator:
         at = getToolByName(portal, 'archetype_tool')
         at.setCatalogsByType('KitTemplate', ['bika_setup_catalog',])
         at.setCatalogsByType('StorageManagement', ['bika_setup_catalog', 'portal_catalog', ])
-        at.setCatalogsByType('BioSpecimen', ['bika_setup_catalog', 'portal_catalog', ])
-        at.setCatalogsByType('LabAnalysis', ['bika_setup_catalog', 'portal_catalog', ])
+        at.setCatalogsByType('BiospecType', ['bika_setup_catalog', 'portal_catalog', ])
+        at.setCatalogsByType('Biospecimen', ['bika_setup_catalog', 'portal_catalog', ])
+        at.setCatalogsByType('Multimage', ['bika_setup_catalog'])
 
         bac = getToolByName(portal, 'bika_analysis_catalog', None)
         if bsc is None:
@@ -84,6 +85,8 @@ class BikaCustomGenerator:
         """
 
         # Root permissions
+        mp = portal.manage_permission
+        mp(AddMultimage, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp = portal.kits.manage_permission
         mp(AddKit, ['Manager', 'Owner'], 1)
         mp(ManageKits, ['Manager', 'Owner'], 1)

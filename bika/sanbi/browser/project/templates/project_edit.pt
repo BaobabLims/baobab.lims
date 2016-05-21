@@ -67,13 +67,6 @@
             </thead>
         </table>
 
-        <!--?   <h3 style="margin-top:1em;">
-        <img title="storages"
-             tal:attributes="src string:${view/portal_url}/++resource++bika.lims.images/referencesample.png">
-        <span i18n:translate="">Laboratory Analysis</span>
-        </h3>
-        <div id="labanalyses-uids"></div>-->
-
         <span>
             <div style="text-align: left; padding-bottom: 10px;">
                 <input i18n:attributes="value"

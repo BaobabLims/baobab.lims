@@ -4,10 +4,15 @@
     xmlns:i18n="http://namespaces.zope.org/i18n"
     i18n_domain="bika">
 
+    <adapter
+      factory="bika.sanbi.browser.biospectype.JSONReadExtender"
+      provides="bika.lims.interfaces.IJSONReadExtender"
+    />
+
     <browser:page
-      for="bika.sanbi.interfaces.IBiospecimen"
-      name="multimage"
-      class="bika.sanbi.browser.biospecimen.BiospecimenMultimageView"
+      for="bika.sanbi.interfaces.IBiospecType"
+      name="biospectype_analysesview"
+      class="bika.sanbi.browser.widgets.ProjectAnalysesWidget"
       permission="zope.Public"
       layer="bika.lims.interfaces.IBikaLIMS"
     />

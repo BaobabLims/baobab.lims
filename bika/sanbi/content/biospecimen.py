@@ -1,33 +1,74 @@
-"""Product Category
-Category of the product, for example, sampling containers and sampling
-kits.
-"""
 from AccessControl import ClassSecurityInfo
-from bika.sanbi.config import PROJECTNAME
-from bika.lims.content.bikaschema import BikaSchema
-from bika.sanbi.interfaces import IBioSpecimen
-from Products.Archetypes.public import *
+from Products.ATContentTypes.content import schemata
+from Products.Archetypes.atapi import *
 from zope.interface import implements
-from bika.sanbi.browser.widgets import ProjectAnalysesWidget
+from bika.lims.content.bikaschema import BikaSchema, BikaFolderSchema
+from bika.lims.browser.widgets import DateTimeWidget as bika_DateTimeWidget
+from plone.app.folder.folder import ATFolder
 from bika.sanbi import bikaMessageFactory as _
+from bika.sanbi.interfaces import IBiospecimen
+from bika.sanbi.config import PROJECTNAME
+from Products.CMFCore.utils import getToolByName
+from DateTime import DateTime
+from plone.formwidget.datetime.at import DatetimeWidget
 
-schema = BikaSchema.copy() + Schema((
-    ReferenceField('Service',
-                   required=1,
-                   multiValued=1,
-                   allowed_types=('AnalysisService',),
-                   relationship='BiospecimenAnalysisService',
-                   widget=ProjectAnalysesWidget(
-                       label=_("Analyse Services"),
-                       description=_("Select Analyse services for this biospecimen."),
-                   )),
+schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
+    ReferenceField('Type',
+        vocabulary='getBiospecTypes',
+        allowed_types=('BiospecType',),
+        relationship='BiospecimenBiospecType',
+        required=1,
+        widget=SelectionWidget(
+           format='select',
+           label=_("Biospecimen type"),
+           visible={'view': 'invisible', 'edit': 'visible'}
+        )),
+
+    StringField('Condition',
+        searchable=True,
+        widget=StringWidget(
+            label=_("Specimen condition"),
+            description=_("A specimen condition is a 3-letter code that indicates the status of a specimen. "
+                          "Eg, SAT for satisfactory.")
+        )),
+
+    StringField('SubjectID',
+        searchable=True,
+        widget=StringWidget(
+            label=_("Subject ID"),
+            description=_("Human-subject ID the specimen is taken from.")
+        )),
+
+    StringField('Volume',
+        widget=StringWidget(
+            label=_("Volume"),
+        )),
+
+    StringField('Unit',
+        widget=StringWidget(
+            label=_("Unit"),
+        )),
+
+    # DateTimeField('dateReceived',
+    #     searchable=1,
+    #     widget=bika_DateTimeWidget(
+    #         label='Date Received'
+    #     )),
+
+    DateTimeField('datetimeReceived',
+          default_method=DateTime,
+          widget=CalendarWidget(
+              label='Date and Time Received',
+              description='Select the date and time the biospecimen is received.',
+              ampm=1,
+          )),
 ))
+
 schema['description'].widget.visible = True
 schema['description'].schemata = 'default'
 
-
-class BioSpecimen(BaseContent):
-    implements(IBioSpecimen)
+class Biospecimen(ATFolder):
+    implements(IBiospecimen)
     security = ClassSecurityInfo()
     displayContentsTab = False
     schema = schema
@@ -38,4 +79,19 @@ class BioSpecimen(BaseContent):
         from bika.lims.idserver import renameAfterCreation
         renameAfterCreation(self)
 
-registerType(BioSpecimen, PROJECTNAME)
+    def getBiospecTypes(self):
+        bsc = getToolByName(self, 'bika_setup_catalog')
+        items = [(c.UID, c.Title) \
+                 for c in bsc(portal_type='BiospecType',
+                              inactive_state='active')]
+        items.sort(lambda x, y: cmp(x[1], y[1]))
+        return DisplayList(items)
+
+    def getDocuments(self):
+        """
+        Return all the multifile objects related with the instrument
+        """
+        return self.objectValues('Multimage')
+
+schemata.finalizeATCTSchema(schema, folderish = True, moveDiscussion = False)
+registerType(Biospecimen, PROJECTNAME)

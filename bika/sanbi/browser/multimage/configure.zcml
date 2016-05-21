@@ -5,10 +5,10 @@
     i18n_domain="bika">
 
     <browser:page
-      for="bika.sanbi.interfaces.IBiospecimen"
-      name="multimage"
-      class="bika.sanbi.browser.biospecimen.BiospecimenMultimageView"
-      permission="zope.Public"
+      for="bika.sanbi.interfaces.IMultimage"
+      name="base_view"
+      class="bika.sanbi.browser.multimage.MultimageView"
+      permission="cmf.ModifyPortalContent"
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 

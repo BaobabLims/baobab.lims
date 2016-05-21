@@ -1,14 +1,15 @@
 <?xml version="1.0"?>
-<object name="LabAnalysis"
+<object name="BiospecType"
         meta_type="Factory-based Type Information with dynamic views"
         xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-        i18n:domain="plone">
- <property name="title" i18n:translate="">Lab Analysis</property>
+        i18n:domain="plone"
+        purge="True">
+ <property name="title" i18n:translate="">Biospecimen Type</property>
  <property name="description"></property>
- <property name="content_icon">++resource++bika.sanbi.images/lab.png</property>
- <property name="content_meta_type">LabAnalysis</property>
+ <property name="content_icon">++resource++bika.sanbi.images/biospectype.png</property>
+ <property name="content_meta_type">BiospecType</property>
  <property name="product">bika.sanbi</property>
- <property name="factory">addLabAnalysis</property>
+ <property name="factory">addBiospecType</property>
  <property name="add_view_expr"></property>
  <property name="link_target"></property>
  <property name="global_allow">False</property>
@@ -29,7 +30,7 @@
          i18n:attributes="title"
          i18n:domain="plone"
          visible="False">
-    <permission value="View"/>
+  <permission value="View"/>
  </action>
 
  <action title="Edit"
@@ -40,7 +41,7 @@
          i18n:attributes="title"
          i18n:domain="plone"
          visible="False">
-    <permission value="Modify portal content"/>
+  <permission value="Modify portal content"/>
  </action>
 
 </object>

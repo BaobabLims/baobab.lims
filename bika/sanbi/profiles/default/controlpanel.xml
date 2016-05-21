@@ -22,19 +22,19 @@
   <permission>BIKA: Manage Bika</permission>
 </configlet>
 
-<configlet title="Biospecimens" action_id="bika_biospecimens"
+<configlet title="Biospecimen types" action_id="bika_biospectypes"
     appId="bika.sanbi" category="bika" condition_expr=""
-    icon_expr="string:++resource++bika.sanbi.images/biospecimen.png"
-    url_expr="string:$portal_url/bika_setup/bika_biospecimens"
+    icon_expr="string:++resource++bika.sanbi.images/biospectype.png"
+    url_expr="string:$portal_url/bika_setup/bika_biospectypes"
     visible="True"
     i18n:attributes="title">
   <permission>BIKA: Manage Bika</permission>
 </configlet>
 
-<configlet title="Lab Analysis" action_id="bika_labanalyses"
+<configlet title="Biospecimens" action_id="bika_biospecimens"
     appId="bika.sanbi" category="bika" condition_expr=""
-    icon_expr="string:++resource++bika.sanbi.images/lab.png"
-    url_expr="string:$portal_url/bika_setup/bika_labanalyses"
+    icon_expr="string:++resource++bika.sanbi.images/biospecimen.png"
+    url_expr="string:$portal_url/bika_setup/bika_biospecimens"
     visible="True"
     i18n:attributes="title">
   <permission>BIKA: Manage Bika</permission>

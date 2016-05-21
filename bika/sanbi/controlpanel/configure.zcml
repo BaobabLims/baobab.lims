@@ -21,17 +21,17 @@
     />
 
     <browser:page
-      for="bika.sanbi.interfaces.IBioSpecimens"
+      for="bika.sanbi.interfaces.IBiospecTypes"
       name="folder_view"
-      class=".bika_biospecimens.BioSpecimensView"
+      class=".bika_biospectypes.BiospecTypesView"
       permission="bika.lims.ManageBika"
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
     <browser:page
-      for="bika.sanbi.interfaces.ILabAnalyses"
+      for="bika.sanbi.interfaces.IBiospecimens"
       name="folder_view"
-      class=".bika_labanalyses.LabAnalysesView"
+      class=".bika_biospecimens.BiospecimensView"
       permission="bika.lims.ManageBika"
       layer="bika.lims.interfaces.IBikaLIMS"
     />

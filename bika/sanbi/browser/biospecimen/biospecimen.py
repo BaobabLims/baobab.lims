@@ -1,32 +1,15 @@
-from bika.lims.jsonapi import load_field_values
-from bika.lims.interfaces import IJSONReadExtender
-from bika.sanbi.interfaces import IBioSpecimen
-from zope.component import adapts
+from Products.CMFPlone.utils import safe_unicode
+from bika.lims import bikaMessageFactory as _
+from plone.app.content.browser.interfaces import IFolderContentsView
+from plone.app.layout.globals.interfaces import IViewView
 from zope.interface import implements
+from bika.sanbi.browser.multimage import MultimagesView
 
+class BiospecimenMultimageView(MultimagesView):
+    implements(IFolderContentsView, IViewView)
 
-class JSONReadExtender(object):
-    """- Place additional information about profile services
-    into the returned records.
-    Used in AR Add to prevent extra requests
-    """
-
-    implements(IJSONReadExtender)
-    adapts(IBioSpecimen)
-
-    def __init__(self, context):
-        self.context = context
-
-    def __call__(self, request, data):
-        service_data = []
-        for service in self.context.getService():
-            this_service = {'UID': service.UID(),
-                            'Title': service.Title(),
-                            'Keyword': service.getKeyword(),
-                            'Price': service.getPrice(),
-                            'VAT': service.getVAT(),
-                            'PointOfCapture': service.getPointOfCapture(),
-                            'CategoryTitle': service.getCategory().Title()}
-            service_data.append(this_service)
-        data['service_data'] = service_data
-
+    def __init__(self, context, request):
+        super(BiospecimenMultimageView, self).__init__(context, request)
+        self.show_workflow_action_buttons = False
+        self.title = self.context.translate(_("Biospecimen Files"))
+        self.description = "Different interesting documents, files and images to be attached to the biospecimen."

@@ -66,9 +66,9 @@
         </tbody>
     </table>
     <h3 style="margin-top:1em;">
-        <img title="Project Biospecimens"
+        <img title="Project biospecimen types"
              tal:attributes="src string:${view/portal_url}/++resource++bika.sanbi.images/biospecimen.png">
-        <span i18n:translate="">Biospecimens:</span>
+        <span i18n:translate="">Biospecimen Types:</span>
     </h3>
     <tal:parts replace="structure view/bio_table"/>
 

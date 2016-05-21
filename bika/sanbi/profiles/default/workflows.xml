@@ -39,14 +39,14 @@
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>
 
-    <type type_id="BioSpecimens"/>
-    <type type_id="BioSpecimen">
+    <type type_id="BiospecTypes"/>
+    <type type_id="BiospecType">
         <bound-workflow workflow_id="bika_one_state_workflow"/>
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>
 
-    <type type_id="LabAnalyses"/>
-    <type type_id="LabAnalysis">
+    <type type_id="Biospecimens"/>
+    <type type_id="Biospecimen">
         <bound-workflow workflow_id="bika_one_state_workflow"/>
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>

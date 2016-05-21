@@ -1,1 +1,1 @@
-from biospecimen import JSONReadExtender
+from biospecimen import BiospecimenMultimageView

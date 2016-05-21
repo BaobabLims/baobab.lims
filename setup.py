@@ -29,6 +29,7 @@ setup(name='bika.sanbi',
           'plone.app.relationfield',
           'z3c.relationfield',
           'collective.wtf',
+          'plone.formwidget.datetime',
       ],
       entry_points="""
       # -*- Entry points: -*-

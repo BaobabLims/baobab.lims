@@ -6,7 +6,7 @@
   <type portal_type="Shipment"/>
   <type portal_type="StorageManagement"/>
   <type portal_type="Project"/>
-  <type portal_type="BioSpecimen"/>
-  <type portal_type="LabAnalysis"/>
+  <type portal_type="BiospecType"/>
+  <type portal_type="Biospecimen"/>
  </factorytypes>
 </object>

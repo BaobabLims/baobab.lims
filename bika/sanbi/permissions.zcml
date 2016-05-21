@@ -16,4 +16,5 @@
     <permission id="bika.sanbi.ManageProjects" title="SANBI: Manage Projects"/>
     <permission id="bika.sanbi.permissions.AddShipment" title="SANBI: Add Shipment"/>
     <permission id="bika.sanbi.ManageShipments" title="SANBI: Manage Shipments"/>
+    <permission id="bika.sanbi.permissions.AddMultimage" title="BIKA: Add Multimage"/>
 </configure>

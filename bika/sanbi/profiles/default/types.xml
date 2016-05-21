@@ -10,8 +10,9 @@
     <object name="StorageManagements" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Project" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Projects" meta_type="Factory-based Type Information with dynamic views"/>
-    <object name="BioSpecimen" meta_type="Factory-based Type Information with dynamic views"/>
-    <object name="BioSpecimens" meta_type="Factory-based Type Information with dynamic views"/>
-    <object name="LabAnalysis" meta_type="Factory-based Type Information with dynamic views"/>
-    <object name="LabAnalyses" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="BiospecType" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="BiospecTypes" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="Biospecimen" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="Biospecimens" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="Multimage" meta_type="Factory-based Type Information with dynamic views"/>
 </object>

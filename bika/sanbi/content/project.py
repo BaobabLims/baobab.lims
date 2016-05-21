@@ -37,7 +37,7 @@ schema = BikaSchema.copy() + Schema((
     IntegerField('AgeHigh',
         widget=IntegerWidget(
             label=_("Age High"),
-            description=_("The max age in the participants."),
+            description=_("Maximum age of the participants."),
             size=10,
             visible={'edit': 'visible', 'view': 'visible'},
         )),
@@ -45,27 +45,27 @@ schema = BikaSchema.copy() + Schema((
     IntegerField('AgeLow',
         widget=IntegerWidget(
             label=_("Age low"),
-            description=_("The min age in the participants."),
+            description=_("Minimum age of the participants."),
             size=10,
             visible={'edit': 'visible', 'view': 'visible'},
         )),
 
     IntegerField('NumParticipants',
         widget=IntegerWidget(
-            label=_("Number Participants"),
-            description=_("The number of participants in this study."),
+            label=_("Number of Participants"),
+            description=_("Number of participants in the study."),
             size=10,
             visible={'edit': 'visible', 'view': 'visible'},
         )),
 
-    LinesField('Biospecimens',
+    LinesField('Biospectypes',
         vocabulary='_getBiospecimensDisplayList',
         widget=MultiSelectionWidget(
            modes=('edit',),
-           label=_("Biospecimens"),
+           label=_("Biospecimen types"),
            description=_(
-               "Multi-widget. Use to select more than one biospecimens. Selecting a biospecimen import "
-               "the analyses related."),
+               "Multi-select widget. Use to select more than one biospecimen type. Selecting a biospecimen type import "
+               "the corresponding analysis services."),
            visible={'edit': 'visible', 'view': 'visible'},
         )),
 
@@ -75,19 +75,22 @@ schema = BikaSchema.copy() + Schema((
            modes=('edit',),
            label=_("Analyses"),
            description=_(
-               "Multi-widget. Use to select more than one Analyses."),
+               "Multi-select widget. Select manually or use biospecimen-type widget to select Analysis services. "
+               "The services chosen here will be use in Analysis requests."),
            visible={'edit': False, 'view': False},
         )),
 
     ReferenceField('Service',
-                   required=1,
-                   multiValued=1,
-                   allowed_types=('AnalysisService',),
-                   relationship='BiospecimenAnalysisService',
-                   widget=ProjectAnalysesWidget(
-                       label=_("Analyse Services"),
-                       description=_("Select Analyse services for this biospecimen."),
-                   )),
+           required=1,
+           multiValued=1,
+           allowed_types=('AnalysisService',),
+           relationship='BiospecimenAnalysisService',
+           widget=ProjectAnalysesWidget(
+               label=_("Analyse Services"),
+               description=_(
+                   "Multi-checkboxes table. Select manually or use biospecimen-type widget to select Analysis services. "
+                   "The services chosen here will be used in Analysis requests."),
+           )),
 ))
 schema['title'].required = True
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
@@ -108,7 +111,7 @@ class Project(BaseContent):
     def _getBiospecimensDisplayList(self):
         bsc = getToolByName(self, 'bika_setup_catalog')
         items = [(i.UID, i.Title) \
-                 for i in bsc(portal_type='BioSpecimen',
+                 for i in bsc(portal_type='BiospecType',
                               inactive_state='active')]
         items.sort(lambda x, y: cmp(x[1], y[1]))
         items.insert(0, ('', _("None")))

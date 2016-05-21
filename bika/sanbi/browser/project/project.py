@@ -2,8 +2,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.CMFCore.utils import getToolByName
 from Products.ATContentTypes.lib import constraintypes
 from bika.sanbi import bikaMessageFactory as _
-from bika.sanbi.controlpanel.bika_labanalyses import LabAnalysesView
-from bika.sanbi.controlpanel.bika_biospecimens import BioSpecimensView
+from bika.sanbi.controlpanel.bika_biospectypes import BiospecTypesView
 from bika.lims.browser import BrowserView
 from bika.lims.controlpanel.bika_analysisservices import AnalysisServicesView
 import json
@@ -97,43 +96,7 @@ class ProjectAnalysisServicesView(AnalysisServicesView):
         return out_items
 
 
-class ProjectAnalysesView(LabAnalysesView):
-    def __init__(self, context, request, uids):
-        self.context = context
-        self.request = request
-        self.uids = uids
-
-        super(ProjectAnalysesView, self).__init__(context, request)
-
-    def folderitems(self):
-        items = LabAnalysesView.folderitems(self)
-        out_items = []
-        catalog = getToolByName(self.context, 'bika_setup_catalog')
-        for x in range(len(items)):
-            if not items[x].has_key('obj'): continue
-            obj = items[x]['obj']
-
-            if obj.UID() in self.uids:
-                items[x]['Description'] = obj.Description()
-                biospecs = []
-                for uid in obj.getBiospecimens():
-                    biospec = catalog({'portal_type': 'BioSpecimen', 'UID': uid})
-                    if biospec:
-                        biospecs.append(biospec[0].title)
-
-                if biospecs:
-                    items[x]['Biospecimens'] = ', '.join(biospecs)
-                items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
-                                               (items[x]['url'], items[x]['Title'])
-                out_items.append(items[x])
-
-        return out_items
-
-    def __call__(self):
-        return super(ProjectAnalysesView, self).__call__()
-
-
-class ProjectBiospecView(BioSpecimensView):
+class ProjectBiospecView(BiospecTypesView):
     def __init__(self, context, request, uids):
         super(ProjectBiospecView, self).__init__(context, request)
         self.uids = uids
@@ -164,7 +127,7 @@ class ProjectBiospecView(BioSpecimensView):
         ]
 
     def folderitems(self):
-        items = BioSpecimensView.folderitems(self)
+        items = BiospecTypesView.folderitems(self)
         out_items = []
         for x in range(len(items)):
             if not items[x].has_key('obj'): continue
@@ -203,8 +166,8 @@ class ProjectView(BrowserView):
         self.participants = context.getNumParticipants()
         self.age_interval = str(context.getAgeLow()) + ' - ' + str(context.getAgeHigh())
 
-        biospecimens = ProjectBiospecView(context, request, context.getBiospecimens())
-        self.bio_table = biospecimens.contents_table()
+        biospec_types = ProjectBiospecView(context, request, context.Biospectypes())
+        self.bio_table = biospec_types.contents_table()
 
         uids = [o.UID() for o in context.getService()]
         view = ProjectAnalysisServicesView(context, request, uids)
@@ -215,6 +178,10 @@ class ProjectView(BrowserView):
 
 
 class AjaxGetAnalyses:
+    """This class is not referenced anywhere. We used it before to get the analyses
+       from LabAnalyses content type. The latter should be also removed and this
+       class too.
+    """
     def __init__(self, context, request):
         self.context = context
         self.request = request
@@ -228,12 +195,12 @@ class AjaxGetAnalyses:
         bs_catalog = getToolByName(self.context, 'bika_setup_catalog')
         if uids:
             for uid in uids:
-                brains = bs_catalog.searchResults({'portal_type':'BioSpecimen',
+                brains = bs_catalog.searchResults({'portal_type':'BiospecType',
                                                 'UID':uid})
                 bio_title = brains[0].title
                 brains = bs_catalog.searchResults({'portal_type':'LabAnalysis'})
                 for brain in brains:
-                    if uid in brain.getObject().getBiospecimens():
+                    if uid in brain.getObject().Biospectypes():
                         if not any(d['uid'] == brain.UID for d in biospecimens):
                             biospecimens.append({'uid': brain.UID,
                                                  'title': brain.title,
@@ -244,15 +211,15 @@ class AjaxGetAnalyses:
                                     d['bio_title'] = d['bio_title'] + ', ' + bio_title
         else:
             analyses = self.context.getAnalyses()
-            b_selected = self.context.getBiospecimens()
+            b_selected = self.context.Biospectypes()
             for a in analyses:
                 brains_a = bs_catalog.searchResults(portal_type='LabAnalysis',
                                                     UID=a)
-                biospecs = brains_a[0].getObject().getBiospecimens()
+                biospecs = brains_a[0].getObject().getBiospectypes()
                 bio_title = ''
                 for b in biospecs:
                     if b in b_selected:
-                        brains_b = bs_catalog.searchResults(portal_type='BioSpecimen',
+                        brains_b = bs_catalog.searchResults(portal_type='BiospecType',
                                                             UID=b)
                         if bio_title:
                             bio_title = bio_title + ', ' + brains_b[0].title

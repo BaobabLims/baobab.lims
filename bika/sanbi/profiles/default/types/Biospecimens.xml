@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
-<object name="LabAnalyses"
+<object name="Biospecimens"
         meta_type="Factory-based Type Information with dynamic views"
         xmlns:i18n="http://xml.zope.org/namespaces/i18n"
         i18n:domain="plone"
         purge="True">
- <property name="title" i18n:translate="">Laboratory Analyses</property>
+ <property name="title" i18n:translate="">Biospecimens</property>
  <property name="description"></property>
- <property name="content_icon">++resource++bika.sanbi.images/lab.png</property>
- <property name="content_meta_type">LabAnalyses</property>
+ <property name="content_icon">++resource++bika.sanbi.images/biospecimen.png</property>
+ <property name="content_meta_type">Biospecimens</property>
  <property name="product">bika.sanbi</property>
- <property name="factory">addLabAnalyses</property>
+ <property name="factory">addBiospecimens</property>
  <property name="global_allow">False</property>
  <property name="filter_content_types">True</property>
  <property name="allowed_content_types">
-  <element value="LabAnalysis"/>
+  <element value="Biospecimen"/>
  </property>
  <property name="allow_discussion">False</property>
  <property name="default_view_fallback">False</property>
