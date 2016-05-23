@@ -130,6 +130,17 @@ function CustomKitAddView() {
         form_submit();
     }
 
+    function setInfoFromKitTemplate(date, description) {
+        console.log('salam');
+        if(! $("#expiryDate").val()){
+            $("#expiryDate").val(date);
+        }
+
+        if(! $("#description").val()){
+            $("#description").val(description);
+        }
+    }
+
     function numberKits(){
         //debugger;
         $("#KitTemplate_uid").on("focus", function(){
@@ -146,6 +157,7 @@ function CustomKitAddView() {
                         window.bika.lims.portalMessage(data['error_msg']);
                     }else{
                         window.bika.lims.portalWarningMessage('Number of kits you can assemble is: <strong>' + data['qtt'] + '</strong>', 'warning');
+                        setInfoFromKitTemplate(data['expiry_date'], data['description']);
                         listingProducts(data['products'], data['currency'], data['subtotal'], data['vat'], data['total']);
                     }
                 },

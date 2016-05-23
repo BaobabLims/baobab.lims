@@ -100,14 +100,41 @@ class ComputeNumberKits():
         vat = '%.2f' % kittemplate_obj.getVATAmount()
         total = '%.2f' % kittemplate_obj.getTotal()
 
+        # Tasks we define in the jamboree are get date expiry from kit-template components and
+        # set kit description with kit-template description.
+        kit_description = kittemplate_obj.Description()
+        min_expiry_date = self.minimum_expiry_date(kittemplate_obj.getProductList())
         if quantity_ratios:
             return json.dumps({'qtt':min(quantity_ratios), 'products': product_dict, 'error_msg': error_msg,
                                'currency': self.context.bika_setup.getCurrency(), 'subtotal': subtotal,
-                               'vat': vat, 'total': total})
+                               'vat': vat, 'total': total, 'expiry_date': min_expiry_date,
+                               'description': kit_description})
         else:
             return json.dumps({'qtt':0, 'products': product_dict, 'error_msg': error_msg,
                                'currency': self.context.bika_setup.getCurrency(), 'subtotal': subtotal,
-                               'vat': vat, 'total': total})
+                               'vat': vat, 'total': total, 'expiry_date': min_expiry_date,
+                               'description': kit_description})
+
+    def minimum_expiry_date(self, kit_template_products):
+        """
+        Get the minimum expiry date from the kit-template's components.
+        This minimum date will be used as kit expiry date.
+        """
+        bsc = getToolByName(self.context, "bika_setup_catalog")
+        dates = []
+        uids = [p['product_uid'] for p in kit_template_products]
+        brains = bsc.searchResults(portal_type='StockItem', Product=uids)
+        for brain in brains:
+            date = brain.getObject().getExpiryDate()
+            if date:
+                dates.append(date)
+
+        if dates:
+            date = min(dates)
+            return "%s-%2.2d-%2.2d" % (date.year(), date.month(), date.day())
+
+        return ''
+
 
 def deductStockItemQuantities(references, product, no_kits, old_no_kits):
     """Substract product quantities from stockitems
@@ -116,7 +143,7 @@ def deductStockItemQuantities(references, product, no_kits, old_no_kits):
     ok_msg = ''
     total_qtt = computeRefTotalQtt(references)
     if int(total_qtt) < int(product['quantity']) * (int(no_kits) - int(old_no_kits)):
-        error_msg = 'Quantity asked is higher than the existant in stock!'
+        error_msg = 'Quantity asked is higher than what exists in stock!'
     else:
         product_qtt = int(product['quantity']) * (int(no_kits) - int(old_no_kits))
         for ref in references:

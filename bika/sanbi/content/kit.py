@@ -19,6 +19,22 @@ from bika.lims.browser.widgets import DateTimeWidget as bika_DateTimeWidget
 from Products.CMFCore import permissions
 
 schema = BikaSchema.copy() + Schema((
+    ReferenceField(
+        'Project',
+        required=1,
+        vocabulary_display_path_bound=sys.maxint,
+        allowed_types=('Project',),
+        relationship='KitProject',
+        referenceClass=HoldingReference,
+        widget=bika_ReferenceWidget(
+           label=_("Project"),
+           size=30,
+           render_own_label=True,
+           showOn=True,
+           description=_("Click and select project for the kit."),
+        )
+    ),
+
     StringField(
         'Prefix',
         searchable=True,
@@ -95,6 +111,18 @@ schema = BikaSchema.copy() + Schema((
                      },
         )
     ),
+    BooleanField(
+        'FormsThere',
+        required=1,
+        default=False,
+        widget=BooleanWidget(
+            label="Form Added to Kit",
+            description="It is necessary to add all forms describing the content of the kit.",
+            render_own_label=True,
+            visible={'edit': 'visible',
+                     'view': 'visible'}
+        )
+    ),
 ))
 schema['title'].required = False
 schema['title'].widget.visible = False
@@ -106,6 +134,7 @@ schema.moveField('location', before='description')
 schema.moveField('quantity', before='description')
 schema.moveField('expiryDate', before='description')
 schema.moveField('KitTemplate', before='Prefix')
+schema.moveField('Project', before='KitTemplate')
 
 class Kit(BaseContent):
     security = ClassSecurityInfo()

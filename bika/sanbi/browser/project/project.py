@@ -166,7 +166,7 @@ class ProjectView(BrowserView):
         self.participants = context.getNumParticipants()
         self.age_interval = str(context.getAgeLow()) + ' - ' + str(context.getAgeHigh())
 
-        biospec_types = ProjectBiospecView(context, request, context.Biospectypes())
+        biospec_types = ProjectBiospecView(context, request, context.getBiospectypes())
         self.bio_table = biospec_types.contents_table()
 
         uids = [o.UID() for o in context.getService()]

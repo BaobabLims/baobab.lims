@@ -166,11 +166,6 @@ class EditView(BrowserView):
                 fields.append(field)
         return fields
 
-    def computeNumberKits(self):
-        """Implement me later"""
-
-    def updateStockItems(self):
-        """Implement me later"""
 
 class PrintView(KitView):
 
