@@ -40,7 +40,7 @@ schema = BikaSchema.copy() + Schema((
     ),
     FixedPointField('Price',
         schemata='Price',
-        default='0.00',
+        default= "0.0",
         widget = DecimalWidget(
             label=_("Price excluding VAT"),
             description=_("This is the price will be charged for each completed kit."),
@@ -56,7 +56,7 @@ schema = BikaSchema.copy() + Schema((
     ),
     FixedPointField('Cost',
         schemata='Price',
-        default_method='getCost',
+        default_method='getTotal',
         widget = DecimalWidget(
             label=_("Cost"),
             size=10,
@@ -123,7 +123,7 @@ class KitTemplate(BaseContent):
             total += Decimal(lineitem['Quantity']) * \
                      Decimal(lineitem['Price']) * \
                      ((Decimal(lineitem['VAT']) /100) + 1)
-        return total
+        return str(total)
 
     security.declareProtected(View, 'getVATAmount')
     def getVATAmount(self):
@@ -146,9 +146,8 @@ class KitTemplate(BaseContent):
             product_totalprice = brains[0].getObject().getTotalPrice() * quantity
             price += product_totalprice
 
-        # TODO: Chech wich one to use here, str or decimal?
+        # TODO: Wich one to use here, str or decimal?
         #return price.quantize(Decimal('0.00'))
         return str(price)
-
 
 registerType(KitTemplate, config.PROJECTNAME)

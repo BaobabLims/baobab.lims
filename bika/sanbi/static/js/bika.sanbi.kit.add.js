@@ -131,7 +131,6 @@ function CustomKitAddView() {
     }
 
     function setInfoFromKitTemplate(date, description) {
-        console.log('salam');
         if(! $("#expiryDate").val()){
             $("#expiryDate").val(date);
         }
@@ -174,10 +173,11 @@ function CustomKitAddView() {
             if(! ok) {
                 ok = true;
             }
-            if(!$('input[name="quantity"]').val() || $('input[name="quantity"]').val() == 0){
+            if(! $('input[name="quantity"]').val() || $('input[name="quantity"]').val() == 0){
                 window.bika.lims.portalMessage('Quantity should be specified');
                 ok = false;
             }
+
             var path = window.location.href.split("/edit")[0] + "/computeNumberKits";
             $.ajax({
                 type: 'POST',
@@ -197,8 +197,16 @@ function CustomKitAddView() {
         });
 
         $("#kitassembly_edit_form").submit(function(event){
-            
+
+            if(! $('#FormsThere').is(':checked')){
+                window.bika.lims.portalMessage('Check Forms are joined to this kit.');
+                ok = false;
+            }else{
+                ok = true;
+            }
+
             if (ok) {
+
                 var path = window.location.href.split("/edit")[0] + "/updateStockItems";
                 $.ajax({
                     type: 'POST',
