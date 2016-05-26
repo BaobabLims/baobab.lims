@@ -6,6 +6,7 @@ from bika.lims.idserver import renameAfterCreation
 from bika.sanbi import bikaMessageFactory as _
 from Products.Archetypes import public as atapi
 
+from bika.sanbi.permissions import AddStorageManagement
 import plone
 import json
 import string
@@ -129,7 +130,7 @@ class StorageManageSubmit:
         location.unmarkCreationFlag()
         renameAfterCreation(location)
 
-    def dimension_representation(self, num_children_add, old_num_items, values, num_rows=1, num_cols=1,
+    def dimension_representation(self, num_children_add, context_b, values, num_rows=1, num_cols=1,
                                  num_layers=1, create=False):
 
         alphabet = string.uppercase[:26]
@@ -137,6 +138,8 @@ class StorageManageSubmit:
         # TODO: THIS IS A REMARK. THE total_positions SHOULD BE EQUAL TO num_childs_add!
         # total_positions = num_rows * num_cols * num_layers
         total_positions = num_children_add
+        print total_positions, num_rows, num_layers
+        print '--------'
         num_pos_by_row = total_positions / (num_layers * num_rows)
         num_pos_by_col = total_positions / num_pos_by_row
         num_pos_by_layer = total_positions / num_layers
@@ -149,11 +152,13 @@ class StorageManageSubmit:
             z = num / num_pos_by_layer
 
             if self.context.getDimension() == "First":
-                x, z = '', ''
-                index = str(y+1)
+                if values.get('LetterID', False):
+                    index = alphabet[num+context_b.get("Shelves", 0)]
+                else:
+                    index = str(y+context_b.get("Shelves", 0)+1)
             elif self.context.getDimension() == "Second":
                 z = ''
-                index = alphabet[x] + str(y+1)
+                index = alphabet[x+context_b.get("XAxis", 0)] + str(y+context_b.get("YAxis", 0)+1)
             elif self.context.getDimension() == "Third":
                 index = alphabet[z] + str(x+1) + str(y+1)
 
@@ -189,7 +194,7 @@ class StorageManageSubmit:
         num_rows = values.has_key('XAxis') and values.get('XAxis') and int(values['XAxis']) or 1
         num_cols = values.has_key('YAxis') and values.get('YAxis') and int(values['YAxis']) or 1
         num_layers = values.has_key('ZAxis') and values.get('ZAxis') and int(values['ZAxis']) or 1
-        old_num_items = 0
+        context_b = {}
         if not obj_exist:
             num_add, num_sub = self.number_children_add_sub(values)
             brains = uid_catalog(UID=values['StorageUnit'])
@@ -212,7 +217,7 @@ class StorageManageSubmit:
                 parent_unit.setShelves(parent_unit.getShelves() + 1)
 
             if num_add:
-                self.dimension_representation(num_add, old_num_items, values, num_rows=num_rows,
+                self.dimension_representation(num_add, context_b, values, num_rows=num_rows,
                                               num_cols=num_cols, num_layers=num_layers, create=True)
         else:
             if not values.get('StorageUnit', ''):
@@ -227,7 +232,7 @@ class StorageManageSubmit:
 
             if not num_add and (context_b['Dimension'] != self.context.getDimension() or \
                context_b['ChildrenTitle'] != self.context.getChildrenTitle()):
-                self.dimension_representation(len(self.context.getChildren()), old_num_items, values, num_rows=num_rows,
+                self.dimension_representation(len(self.context.getChildren()), context_b, values, num_rows=num_rows,
                                              num_cols=num_cols, num_layers=num_layers, create=False)
 
             # In the form edit the type is a normal input element and processForm will not update Type field
@@ -239,13 +244,36 @@ class StorageManageSubmit:
                 )
                 renameAfterCreation(self.context)
 
-            # Create children for child. The case where the number of items to create pass from 0 to value > 0
+            # Create children. The case where the number of items to create pass from 0 to value > 0
             if num_add and context_b['Shelves'] != self.context.getShelves():
-                self.dimension_representation(num_add, 0, values, num_rows=num_rows, num_cols=num_cols,
-                                              num_layers=num_layers, create=True)
+                self.dimension_representation(num_add, context_b, values, num_rows=num_rows,
+                                              num_cols=num_cols, num_layers=num_layers, create=True)
 
+            if num_sub and context_b['Shelves'] != self.context.getShelves():
+                self.delete_children(num_sub, context_b)
 
         return self.context, {}
+
+    def delete_children(self, num_sub, context_b):
+        """Used in case we drop the number of shelves."""
+        children = self.context.getPositions()
+        children = children[len(children)-num_sub:]
+        free = True
+        workflow = getToolByName(self.context, 'portal_workflow')
+        for child in children:
+            state = workflow.getInfoFor(child, 'review_state')
+            if state != 'position_free':
+                free = False
+                break
+        if free:
+            mt = getToolByName(self.context, 'portal_membership')
+            has_perm = mt.checkPermission(AddStorageManagement, self.context)
+
+            if has_perm:
+                self.context.manage_delObjects([c.getId() for c in children])
+
+        return ''
+
 
 class PositionsInfo:
     def __init__(self, context, request):
@@ -254,6 +282,7 @@ class PositionsInfo:
         self.errors = {}
 
     def __call__(self):
+        response = {}
         if self.context.getStorageLocation():
             workflow = getToolByName(self.context, 'portal_workflow')
             positions = []

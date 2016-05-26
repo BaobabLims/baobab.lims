@@ -65,6 +65,14 @@ schema = BikaSchema.copy() + Schema((
             visible=False,
         )),
 
+    BooleanField(
+        'LetterID',
+        default=False,
+        widget=BooleanWidget(
+            label='Use letters for IDs',
+            visible=False,
+        )),
+
     # ____Shelves representation____ #
     StringField('Dimension',
                 widget=StringWidget(
