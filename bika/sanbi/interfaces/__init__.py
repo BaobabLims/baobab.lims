@@ -44,3 +44,9 @@ class IBiospecimens(Interface):
 
 class IMultimage(Interface):
     """Interface for a shipment"""
+
+class ISampletemp(Interface):
+    """Interface for a shipment"""
+
+class ISampletemps(Interface):
+    """Interface for a shipment"""

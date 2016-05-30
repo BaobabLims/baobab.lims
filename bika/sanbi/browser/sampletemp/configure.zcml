@@ -1,0 +1,47 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    i18n_domain="bika.sanbi">
+
+    <browser:page
+      for="bika.sanbi.interfaces.ISampletemp"
+      name="base_edit"
+      class="bika.sanbi.browser.sampletemp.SampletempEdit"
+      permission="cmf.ModifyPortalContent"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="bika.sanbi.interfaces.ISampletemp"
+      name="get_freezers"
+      class="bika.sanbi.browser.sampletemp.AjaxGetFreezers"
+      permission="cmf.ModifyPortalContent"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="bika.sanbi.interfaces.ISampletemp"
+      name="get_shelves"
+      class="bika.sanbi.browser.sampletemp.AjaxGetShelves"
+      permission="cmf.ModifyPortalContent"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="bika.sanbi.interfaces.ISampletemp"
+      name="get_boxes"
+      class="bika.sanbi.browser.sampletemp.AjaxGetBoxes"
+      permission="cmf.ModifyPortalContent"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="bika.sanbi.interfaces.ISampletemp"
+      name="get_positions"
+      class="bika.sanbi.browser.sampletemp.AjaxGetPositions"
+      permission="cmf.ModifyPortalContent"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+</configure>

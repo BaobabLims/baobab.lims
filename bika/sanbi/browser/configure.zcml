@@ -19,6 +19,8 @@
     <include package=".project"/>
     <include package=".biospectype"/>
     <include package=".biospecimen"/>
+    <include package=".sampletemps"/>
+    <include package=".sampletemp"/>
     <include package=".multimage"/>
 
     <!-- This registration allows additional sticker templates.

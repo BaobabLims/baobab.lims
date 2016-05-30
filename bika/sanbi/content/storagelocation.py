@@ -71,9 +71,12 @@ class StorageLocation(BaseLocation):
         return char.join(reversed(ancestors))
 
     def guard_occupy_transition(self):
+        """
+        """
         wftool = self.portal_workflow
         review_state = wftool.getInfoFor(self, 'review_state')
-        if self.getProduct() and review_state == 'position_free':
+        if self.getSampletemp() and (review_state == 'position_free' or
+                                     review_state == 'position_reserved'):
             return True
 
         return False
@@ -87,7 +90,7 @@ class StorageLocation(BaseLocation):
         wftool = self.portal_workflow
         review_state = wftool.getInfoFor(self, 'review_state')
 
-        if not self.getProduct() and review_state == 'position_occupied':
+        if not self.getSampletemp() and review_state in ('position_occupied', 'position_reserved'):
             return True
 
         return False

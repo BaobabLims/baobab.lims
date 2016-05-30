@@ -28,6 +28,8 @@ def initialize(context):
     from content.kits import Kits
     from content.project import Project
     from content.projects import Projects
+    from content.sampletemp import Sampletemp
+    from content.sampletemps import Sampletemps
 
     from controlpanel.bika_kittemplates import KitTemplates
     from controlpanel.bika_storagemanagements import StorageManagements

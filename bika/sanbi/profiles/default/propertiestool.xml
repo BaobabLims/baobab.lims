@@ -21,6 +21,7 @@
     <element value="Biospecimen"/>
     <element value="StorageManagement"/>
     <element value="Shipment"/>
+    <element value="Sampletemp"/>
   </property>
 </object>
 

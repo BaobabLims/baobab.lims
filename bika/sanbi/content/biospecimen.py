@@ -39,9 +39,18 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
             description=_("Human-subject ID the specimen is taken from.")
         )),
 
-    StringField('Volume',
-        widget=StringWidget(
+    # StringField('Volume',
+    #     widget=StringWidget(
+    #         label=_("Volume"),
+    #     )),
+
+    FixedPointField('Volume',
+        required=1,
+        default="0.00",
+        widget=DecimalWidget(
             label=_("Volume"),
+            size=15,
+            description=_("The The volume of the biospecimen taken from the subject."),
         )),
 
     StringField('Unit',

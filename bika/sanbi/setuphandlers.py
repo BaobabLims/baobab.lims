@@ -14,7 +14,10 @@ class BikaCustomGenerator:
 
     def setupPortalContent(self, portal):
         # remove undesired content objects
-        for obj_id in ('kits','projects', 'shipments'):
+        for obj_id in ('kits',
+                       'projects',
+                       'shipments',
+                       'sampletemps'):
             try:
                 obj = portal._getOb(obj_id)
                 obj.unmarkCreationFlag()
@@ -58,6 +61,7 @@ class BikaCustomGenerator:
         at.setCatalogsByType('Kit', ['bika_catalog', 'portal_catalog'])
         at.setCatalogsByType('Project', ['bika_catalog', 'portal_catalog'])
         at.setCatalogsByType('Shipment', ['bika_catalog', 'portal_catalog'])
+        at.setCatalogsByType('Sampletemp', ['bika_catalog', 'portal_catalog'])
 
         # _______________________________#
         #      BIKA_SETUP_CATALOG        #
@@ -74,11 +78,18 @@ class BikaCustomGenerator:
         at.setCatalogsByType('Biospecimen', ['bika_setup_catalog', 'portal_catalog', ])
         at.setCatalogsByType('Multimage', ['bika_setup_catalog'])
 
+        addIndex(bsc, 'getStorageUnit', 'FieldIndex')
+        addColumn(bsc, 'getStorageUnit')
+        addIndex(bsc, 'getParentBox', 'FieldIndex')
+        addColumn(bsc, 'getParentBox')
+
         bac = getToolByName(portal, 'bika_analysis_catalog', None)
         if bsc is None:
             logger.warning('Could not find the bika_analysis_catalog tool.')
             return
         # Add indexes and metadata columns here
+
+
 
     def setupPermissions(self, portal):
         """ Set up some suggested role to permission mappings.

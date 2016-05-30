@@ -97,7 +97,6 @@ class StorageManageSubmit:
             title=title,
             Type="Other",
             description="Child of " + self.context.Title(),
-            StorageUnit=self.context,
             Shelves=0,
             Dimension="First",
             # TODO: MAY BE IS MORE TRUE TO PUT THE *Axis = 1?
@@ -105,8 +104,10 @@ class StorageManageSubmit:
             YAxis=1,
             ZAxis=1
         )
+        child.setStorageUnit(self.context)
         child.unmarkCreationFlag()
         renameAfterCreation(child)
+        child.reindexObject()
 
     def create_child_as_location(self, portal, values, index):
         """
@@ -125,10 +126,12 @@ class StorageManageSubmit:
             StorageType=freezer,
             Shelf=shelf,
             Box=box,
-            Position=position
+            Position=position,
+            ParentBox=self.context,
         )
         location.unmarkCreationFlag()
         renameAfterCreation(location)
+        # location.reindexObject()
 
     def dimension_representation(self, num_children_add, context_b, values, num_rows=1, num_cols=1,
                                  num_layers=1, create=False):
@@ -138,8 +141,6 @@ class StorageManageSubmit:
         # TODO: THIS IS A REMARK. THE total_positions SHOULD BE EQUAL TO num_childs_add!
         # total_positions = num_rows * num_cols * num_layers
         total_positions = num_children_add
-        print total_positions, num_rows, num_layers
-        print '--------'
         num_pos_by_row = total_positions / (num_layers * num_rows)
         num_pos_by_col = total_positions / num_pos_by_row
         num_pos_by_layer = total_positions / num_layers
@@ -170,6 +171,7 @@ class StorageManageSubmit:
             else:
                 self.rename_children(children[num], values, index)
 
+        return self.context
         return self.context
 
     def number_children_add_sub(self, values):

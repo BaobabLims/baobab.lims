@@ -14,5 +14,7 @@
     <object name="BiospecTypes" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Biospecimen" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Biospecimens" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="Sampletemp" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="Sampletemps" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Multimage" meta_type="Factory-based Type Information with dynamic views"/>
 </object>

@@ -98,7 +98,7 @@ class ComputeNumberKits():
         #self.context.plone_utils.addPortalMessage('Test: ' + str(min(quantity_ratios)), 'warning')
         subtotal = '%.2f' % kittemplate_obj.getSubtotal()
         vat = '%.2f' % kittemplate_obj.getVATAmount()
-        total = '%.2f' % kittemplate_obj.getTotal()
+        total = '%.2f' % float(kittemplate_obj.getTotal())
 
         # Tasks we define in the jamboree are get date expiry from kit-template components and
         # set kit description with kit-template description.
