@@ -148,7 +148,7 @@ class StorageManagement(BaseFolder):
     def getPositions(self):
         children = []
         bsc = getToolByName(self, 'bika_setup_catalog')
-        all_objects = bsc.searchResults(portal_type='StorageLocation')
+        all_objects = bsc.searchResults(portal_type='StorageLocation', sort_on='sortable_title')
         for obj in all_objects:
             obj = obj.getObject()
             if obj.aq_parent == self:

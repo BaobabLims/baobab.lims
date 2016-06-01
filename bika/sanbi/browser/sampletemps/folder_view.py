@@ -12,7 +12,7 @@ class SampletempsView(BikaListingView):
 
         self.context_actions = {}
         self.title = self.context.translate(_("Samples"))
-        self.icon = self.portal_url + "/++resource++bika.sanbi.images/project_big.png"
+        self.icon = self.portal_url + "/++resource++bika.sanbi.images/sample_big.png"
         self.description = ""
         self.show_sort_column = False
         self.show_select_row = False
@@ -28,6 +28,12 @@ class SampletempsView(BikaListingView):
                           'toggle': True},
             'SampleType': {'title': _('Sample Type'),
                            'toggle': True},
+            'Volume': {'title': _('Volume'),
+                           'toggle': True},
+            'Quantity': {'title': _('Quantity'),
+                           'toggle': True},
+            'Location': {'title': _('Location'),
+                           'toggle': True},
         }
 
         self.review_states = [
@@ -41,7 +47,10 @@ class SampletempsView(BikaListingView):
              'columns': ['Title',
                          'Biospecimen',
                          'SubjectID',
-                         'SampleType']},
+                         'SampleType',
+                         'Quantiy',
+                         'Volume',
+                         'Location']},
         ]
 
     def __call__(self):
@@ -63,18 +72,9 @@ class SampletempsView(BikaListingView):
                              'Biospecimen',
                              'SubjectID',
                              'SampleType',
-                             'Quantity']})
-
-            self.review_states.append(
-                {'id': 'all',
-                 'title': _('All'),
-                 'contentFilter': {},
-                 'transitions': [{'id': 'empty'}],
-                 'columns': ['Title',
-                             'Biospecimen',
-                             'SubjectID',
-                             'SampleType',
-                             'Quantity']})
+                             'Quantity',
+                             'Volume',
+                             'Location']})
 
             self.review_states.append(
                 {'id': 'stored',
@@ -88,7 +88,22 @@ class SampletempsView(BikaListingView):
                              'Biospecimen',
                              'SubjectID',
                              'SampleType',
-                             'Quantity']})
+                             'Quantity',
+                             'Volume',
+                             'Location']})
+
+            self.review_states.append(
+                {'id': 'all',
+                 'title': _('All'),
+                 'contentFilter': {},
+                 'transitions': [{'id': 'empty'}],
+                 'columns': ['Title',
+                             'Biospecimen',
+                             'SubjectID',
+                             'SampleType',
+                             'Quantity',
+                             'Volume',
+                             'Location']})
 
             stat = self.request.get("%s_review_state" % self.form_id, 'default')
             self.show_select_column = stat != 'all'
@@ -103,6 +118,8 @@ class SampletempsView(BikaListingView):
             items[x]['SubjectID'] = obj.getSubjectID()
             items[x]['SampleType'] = obj.getSampleType().Title()
             items[x]['Quantity'] = obj.getQuantity()
+            items[x]['Volume'] = obj.getVolume()
+            items[x]['Location'] = obj.getStorageLocation().Title()
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                            (items[x]['url'], items[x]['Title'])
 

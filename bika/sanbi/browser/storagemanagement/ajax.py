@@ -140,26 +140,35 @@ class StorageManageSubmit:
 
         # TODO: THIS IS A REMARK. THE total_positions SHOULD BE EQUAL TO num_childs_add!
         # total_positions = num_rows * num_cols * num_layers
-        total_positions = num_children_add
+        total_positions = num_children_add + context_b.get('Shelves', 0)
         num_pos_by_row = total_positions / (num_layers * num_rows)
         num_pos_by_col = total_positions / num_pos_by_row
         num_pos_by_layer = total_positions / num_layers
-        children = self.context.getChildren()
+        children = []
+        if self.context.getStorageLocation():
+            children = self.context.getPositions()
+        else:
+            children = self.context.getChildren()
 
         # TODO: THIS IS A REMARK. THE num_pos_by_row == num_cols AND num_pos_by_col == num_rows!
         for num in range(total_positions):
             x = num / num_pos_by_row % num_pos_by_col
             y = num % num_pos_by_row
             z = num / num_pos_by_layer
-
             if self.context.getDimension() == "First":
-                if values.get('LetterID', False):
-                    index = alphabet[num+context_b.get("Shelves", 0)]
+                if children and num < context_b.get("Shelves", 0):
+                    continue
+                if values.get('LetterID', False) or context_b.get('LetterID', False):
+                    index = alphabet[num]
                 else:
-                    index = str(y+context_b.get("Shelves", 0)+1)
+                    index = str(y + 1)
+
             elif self.context.getDimension() == "Second":
-                z = ''
-                index = alphabet[x+context_b.get("XAxis", 0)] + str(y+context_b.get("YAxis", 0)+1)
+                if children and x < context_b.get("XAxis", 0) and y < context_b.get("YAxis", 0):
+                    continue
+
+                index = alphabet[x] + str(y+1)
+
             elif self.context.getDimension() == "Third":
                 index = alphabet[z] + str(x+1) + str(y+1)
 
@@ -171,7 +180,7 @@ class StorageManageSubmit:
             else:
                 self.rename_children(children[num], values, index)
 
-        return self.context
+        # raise AssertionError('salam')
         return self.context
 
     def number_children_add_sub(self, values):
@@ -252,21 +261,49 @@ class StorageManageSubmit:
                                               num_cols=num_cols, num_layers=num_layers, create=True)
 
             if num_sub and context_b['Shelves'] != self.context.getShelves():
-                self.delete_children(num_sub, context_b)
+                self.delete_children(num_sub, context_b, values)
 
         return self.context, {}
 
-    def delete_children(self, num_sub, context_b):
+    def delete_children(self, num_sub, context_b, values):
         """Used in case we drop the number of shelves."""
-        children = self.context.getPositions()
-        children = children[len(children)-num_sub:]
+        is_position = self.context.getStorageLocation()
+        if is_position:
+            children = self.context.getPositions()
+        else:
+            children = self.context.getChildren()
+
         free = True
-        workflow = getToolByName(self.context, 'portal_workflow')
-        for child in children:
-            state = workflow.getInfoFor(child, 'review_state')
-            if state != 'position_free':
-                free = False
-                break
+        if is_position:
+            nx = values.get("XAxis", 0)
+            ny = values.get("YAxis", 0)
+            x = context_b.get("XAxis", 0)
+            indices = []
+            for i in range(nx):
+                for j in range(ny):
+                    indices.append(i*x + j)
+
+            positions = []
+            for i in range(len(children)):
+                if i in indices:
+                    continue
+                positions.append(children[i])
+
+            children = positions
+
+            workflow = getToolByName(self.context, 'portal_workflow')
+            for i, child in enumerate(children):
+                state = workflow.getInfoFor(child, 'review_state')
+                if state != 'position_free':
+                    free = False
+                    break
+        else:
+            children = children[len(children) - num_sub:]
+            for child in children:
+                if child.getChildren():
+                    free = False
+                    break
+
         if free:
             mt = getToolByName(self.context, 'portal_membership')
             has_perm = mt.checkPermission(AddStorageManagement, self.context)

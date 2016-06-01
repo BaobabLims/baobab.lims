@@ -1,0 +1,10 @@
+div#archetypes-fieldname-Quantity.info-volume{
+    border: 1px solid red;
+    background-color: #fdc;
+    padding: 0.5em;
+    margin: 1em 0;
+}
+
+div.err-vol{
+    color: #893939;
+}

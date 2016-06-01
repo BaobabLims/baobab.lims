@@ -81,6 +81,7 @@ schema = BikaSchema.copy() + Schema((
             visible={'edit': 'visible', 'view': 'visible'},
             catalog_name='bika_setup_catalog',
             showOn=True,
+            base_query={'inactive_state': 'active', 'review_state': 'position_free'},
             colModel=[{'columnName': 'UID', 'hidden': True},
                       {'columnName': 'Room', 'width': '15', 'label': _('Room')},
                       {'columnName': 'StorageType', 'width': '15', 'label': _('Type')},

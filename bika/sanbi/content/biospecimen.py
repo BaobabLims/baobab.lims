@@ -71,6 +71,13 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
               description='Select the date and time the biospecimen is received.',
               ampm=1,
           )),
+
+    ComputedField('VolumeUsed',
+          expression='context.getVolumeUsed()',
+          widget=ComputedWidget(
+              label=_("VAT"),
+              visible={'edit': 'hidden',}
+          ))
 ))
 
 schema['description'].widget.visible = True
@@ -101,6 +108,20 @@ class Biospecimen(ATFolder):
         Return all the multifile objects related with the instrument
         """
         return self.objectValues('Multimage')
+
+    def getVolumeUsed(self):
+        catalog = getToolByName(self, 'bika_catalog')
+        # TODO: WE ARE USING AN INDEX WE CREATED, getBiospecimen. AS WE EXPERIENCED, SOMETIMES THIS NOT
+        # TODO: WORKING. THEN BECARFUL.
+        brains = catalog.searchResults(portal_type='Sampletemp', getBiospecimen=self)
+        total_volume = 0
+        for brain in brains:
+            obj = brain.getObject()
+            quantity = int(obj.getQuantity()) if obj.getQuantity() else 0
+            volume = float(obj.getVolume()) if obj.getVolume() else 0
+            total_volume += float(quantity * volume)
+
+        return total_volume
 
 schemata.finalizeATCTSchema(schema, folderish = True, moveDiscussion = False)
 registerType(Biospecimen, PROJECTNAME)

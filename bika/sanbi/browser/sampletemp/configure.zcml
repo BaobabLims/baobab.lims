@@ -44,4 +44,12 @@
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
+    <browser:page
+      for="bika.sanbi.interfaces.ISampletemp"
+      name="biospecimen_volume"
+      class="bika.sanbi.browser.sampletemp.AjaxGetBiospecimenVolume"
+      permission="cmf.ModifyPortalContent"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
 </configure>

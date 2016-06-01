@@ -15,7 +15,7 @@ class SampletempEdit(BrowserView):
         self.request = request
 
         super(SampletempEdit, self).__init__(context, request)
-        self.icon = self.portal_url + "/++resource++bika.sanbi.images/project_big.png"
+        self.icon = self.portal_url + "/++resource++bika.sanbi.images/sample_big.png"
 
     def __call__(self):
         portal = self.portal
@@ -95,7 +95,9 @@ class AjaxGetFreezers:
         #TODO: WE SHOULD USE IN THIS QUERY, getStorageUnit, AS A PARAMETER OF RESEARCH, BUT UNFORTUNATLY
         #TODO: I DON'T KNOW WHY IT'S NOT WORKING??? KEEP SEARCHING ON THIS OR ASK QUESTION.
         #brains = catalog.searchResults(portal_type='StorageManagement', getStorageUnit=storage_unit, sort_on='created')
-        brains = catalog.searchResults(portal_type='StorageManagement', sort_on='created')
+        brains = catalog.searchResults(portal_type='StorageManagement',
+                                       inactive_state='active',
+                                       sort_on='created')
         storages = []
         for brain in brains:
             if brain.getStorageUnit == storage_unit:
@@ -124,7 +126,9 @@ class AjaxGetShelves:
         # TODO: WE SHOULD USE IN THIS QUERY, getStorageUnit, AS A PARAMETER OF RESEARCH, BUT UNFORTUNATELY
         # TODO: I DON'T KNOW WHY IT'S NOT WORKING??? KEEP SEARCHING ON THIS OR ASK QUESTION.
         # brains = catalog.searchResults(portal_type='StorageManagement', getStorageUnit=storage_unit, sort_on='created')
-        brains = catalog.searchResults(portal_type='StorageManagement', sort_on='created')
+        brains = catalog.searchResults(portal_type='StorageManagement',
+                                       inactive_state='active',
+                                       sort_on='created')
         storages = []
         for brain in brains:
             if brain.getStorageUnit == storage_unit:
@@ -154,7 +158,9 @@ class AjaxGetBoxes:
         # TODO: WE SHOULD USE IN THIS QUERY, getStorageUnit, AS A PARAMETER OF RESEARCH, BUT UNFORTUNATLY
         # TODO: I DON'T KNOW WHY IT'S NOT WORKING??? KEEP SEARCHING ON THIS OR ASK QUESTION.
         # brains = catalog.searchResults(portal_type='StorageManagement', getStorageUnit=storage_unit, sort_on='created')
-        brains = catalog.searchResults(portal_type='StorageManagement', sort_on='created')
+        brains = catalog.searchResults(portal_type='StorageManagement',
+                                       inactive_state='active',
+                                       sort_on='created')
         storages = []
         for brain in brains:
             if brain.getStorageUnit == storage_unit:
@@ -182,10 +188,49 @@ class AjaxGetPositions:
         storage_unit = brains[0].getObject() if brains else None
         catalog = getToolByName(self.context, 'bika_setup_catalog')
         brains = catalog.searchResults(portal_type='StorageLocation',
-                                       getParentBox=storage_unit, sort_on='created')
+                                       inactive_state='active',
+                                       review_state='position_free',
+                                       sort_on='created')
+        storages = []
+        for brain in brains:
+            if brain.getParentBox == storage_unit:
+                storages.append(brain)
 
         ret = []
-        for brain in brains:
+        for brain in storages:
             ret.append({'uid': brain.UID, 'title': brain.title})
 
+        return json.dumps(ret)
+
+
+class AjaxGetBiospecimenVolume:
+    """
+    """
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+        self.errors = {}
+
+    def __call__(self):
+        form = self.request.form
+        ret = {}
+        catalog = getToolByName(self.context, 'bika_setup_catalog')
+        brains = catalog.searchResults(portal_type="Biospecimen", UID=form['uid'])
+        biospecimen = brains[0].getObject() if brains else None
+        volume = biospecimen.getVolume() if biospecimen else 0
+        ret['volume'] = float(volume)
+
+        # catalog = getToolByName(self.context, 'bika_catalog')
+        # #TODO: WE ARE USING AN INDEX WE CREATED, getBiospecimen. AS WE EXPERIENCED, SOMETIMES THIS NOT
+        # #TODO: WORKING. THEN BECARFUL.
+        # brains = catalog.searchResults(portal_type='Sampletemp', getBiospecimen=biospecimen)
+        # total_volume = 0
+        # for brain in brains:
+        #     obj = brain.getObject()
+        #     quantity = int(obj.getQuantity()) if obj.getQuantity() else 0
+        #     volume = float(obj.getVolume()) if obj.getVolume() else 0
+        #     total_volume += float(quantity * volume)
+        total_volume = biospecimen.getVolumeUsed()
+        ret['total_volume'] = total_volume
+        print ret
         return json.dumps(ret)

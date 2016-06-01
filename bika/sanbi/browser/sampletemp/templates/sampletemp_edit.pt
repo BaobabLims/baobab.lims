@@ -16,7 +16,9 @@
         <script type="text/javascript" charset="utf-8">
           (function($) {
               $(function() {
-
+                  var biospecVolume = 0;
+                  var totalVolume = 0;
+                  var errorInForm = false;
                   /*____________________________________________*
 
                    *     ADVANCED STORAGE LOCATION SEARCH       *
@@ -119,13 +121,40 @@
                           data:{'uid': value},
                           dataType:"json"
                       }).done(function (data) {
-                              data = $.parseJSON(data);
+                          biospecVolume = data["volume"];
+                          totalVolume = data["total_volume"];
                       });
                   });
 
                   $("input#Volume").on("change", function(event){
-                      var value = $(this).val();
+                      $("input#Quantity").trigger("change");
                   });
+
+                  $("input#Quantity").on("change", function(event){
+                      var quantity = parseFloat($(this).val());
+                      var volume = parseFloat($("input#Volume").val());
+                      var element = $("#archetypes-fieldname-Quantity");
+                      var html = "<div class=\"err-vol\" id=\"error-volume\"></div>";
+                      if((quantity * volume + totalVolume) > biospecVolume){
+                          element.addClass("info-volume");
+                          $(html).insertBefore($("div#archetypes-fieldname-Quantity > div.fieldErrorBox"));
+                          var text = "Total biospecimen samples volume is " + totalVolume + "ml. " +
+                                     "Biospecimen volume is " + biospecVolume + "ml. The remaining volume " +
+                                     "to use is " + parseFloat(biospecVolume - totalVolume) + "ml";
+                          $("#error-volume").text(text);
+                          errorInForm = true;
+                      }else{
+                          $("#error-volume").remove();
+                          element.removeClass("info-volume");
+                          errorInForm = false;
+                      }
+                  });
+
+                  $("input[type='submit']").on("click", function (event) {
+                      if(errorInForm){
+                          event.preventDefault();
+                      }
+                  })
 
               });
           })(jQuery);

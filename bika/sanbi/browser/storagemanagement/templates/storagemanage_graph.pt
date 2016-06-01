@@ -17,6 +17,7 @@
                   // Get Positions info
                   var path = window.location.href.split('/graphic')[0] + '/positions_info';
                   $.getJSON(path, function(data){
+                      console.log(data);
                       if (data['positions'].length > 0){
                           createGraphic(data);
                       }
@@ -65,7 +66,6 @@
                   }
 
                   function tableStats(data){
-                      // TODO: THIS PART SHOULD BE IN DIFFERENT FUNCTION
                       var totalPositions = data["positions"].length;
                       var freePositions = 0, reservedPositions = 0, occupiedPositions = 0;
                       for(var i = 0; i < totalPositions; i++){

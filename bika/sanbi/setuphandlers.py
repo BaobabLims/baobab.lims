@@ -62,6 +62,8 @@ class BikaCustomGenerator:
         at.setCatalogsByType('Project', ['bika_catalog', 'portal_catalog'])
         at.setCatalogsByType('Shipment', ['bika_catalog', 'portal_catalog'])
         at.setCatalogsByType('Sampletemp', ['bika_catalog', 'portal_catalog'])
+        addIndex(bc, 'getBiospecimen', 'FieldIndex')
+        addColumn(bc, 'getBiospecimen')
 
         # _______________________________#
         #      BIKA_SETUP_CATALOG        #
