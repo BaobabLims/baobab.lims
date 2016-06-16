@@ -204,34 +204,6 @@ function CustomKitAddView() {
             }else{
                 ok = true;
             }
-
-            if (ok) {
-
-                var path = window.location.href.split("/edit")[0] + "/updateStockItems";
-                $.ajax({
-                    type: 'POST',
-                    url: path,
-                    data: {
-                        'KitTemplate': $('input[name="KitTemplate"]').val(), 'title': $(this).val(),
-                        'quantity': $('input[name="quantity"]').val(),
-                        'catalog_name': $('input[name="KitTemplate"]').attr('catalog_name')
-                    },
-                    dataType: "json",
-                    async: false,
-                    success: function (data, textStatus, $XHR) {
-                        if (data['error_msg']) {
-                            window.bika.lims.portalMessage(data['error_msg']);
-                            ok = false;
-                        } else {
-                            window.bika.lims.portalInfoMessage(data['ok_msg']);
-                        }
-                    },
-                    error: function(){
-                        console.log('Errors here! Check please.');
-                        event.preventDefault();
-                    }
-                });
-            }
             if(! ok){
                 event.preventDefault();
             }

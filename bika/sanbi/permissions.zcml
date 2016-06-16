@@ -19,4 +19,5 @@
     <permission id="bika.sanbi.permissions.AddSampletemp" title="SANBI: Add Sampletemp"/>
     <permission id="bika.sanbi.ManageSampletemps" title="SANBI: Manage Sampletemps"/>
     <permission id="bika.sanbi.permissions.AddMultimage" title="BIKA: Add Multimage"/>
+    <permission id="bika.sanbi.permissions.AddStorageInventory" title="SANBI: Add Storage Inventory"/>
 </configure>

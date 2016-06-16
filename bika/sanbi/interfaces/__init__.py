@@ -50,3 +50,13 @@ class ISampletemp(Interface):
 
 class ISampletemps(Interface):
     """Interface for a shipment"""
+
+class IStorageInventory(Interface):
+    """Interface for StorageInventory"""
+
+class IStorageInventories(Interface):
+    """Interface for StorageInventories"""
+
+class IInventoryAssignable(Interface):
+    """Interface for StorageInventories"""
+

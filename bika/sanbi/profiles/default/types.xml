@@ -17,4 +17,6 @@
     <object name="Sampletemp" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Sampletemps" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Multimage" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="StorageInventory" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="StorageInventories" meta_type="Factory-based Type Information with dynamic views"/>
 </object>

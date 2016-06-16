@@ -75,12 +75,23 @@ schema = BikaSchema.copy() + Schema((
             visible={'view': 'visible', 'edit': 'visible'},
         ),
     ),
-    StringField('location',
-        widget = StringWidget(
+
+    ReferenceField('Location',
+        required=1,
+        vocabulary_display_path_bound=sys.maxint,
+        allowed_types=('StorageInventory',),
+        relationship='KitInventory',
+        referenceClass=HoldingReference,
+        widget=bika_ReferenceWidget(
             label=_("Location"),
             size=30,
-            render_own_label=True
-        )
+            render_own_label=True,
+            catalog_name='bika_setup_catalog',
+            showOn=True,
+            description=_("Start typing to filter the list of available Storage Inventories."),
+            base_query={'inactive_state': 'active', 'object_provides': 'bika.sanbi.interfaces.IInventoryAssignable'},
+            visible={'view': 'visible', 'edit': 'visible'}
+        ),
     ),
     DateTimeField('expiryDate',
         searchable=1,
@@ -123,6 +134,14 @@ schema = BikaSchema.copy() + Schema((
                      'view': 'visible'}
         )
     ),
+
+    StringField(
+        'KitPrdID',
+        widget=StringWidget(
+            description=_("The id of the corresponding produt of this kit."),
+            visible={'view': 'invisible', 'edit': 'invisible'},
+        )
+    ),
 ))
 schema['title'].required = False
 schema['title'].widget.visible = False
@@ -130,7 +149,7 @@ schema['description'].schemata = 'default'
 schema['description'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 schema['description'].widget.render_own_label = True
 schema.moveField('Prefix', before='description')
-schema.moveField('location', before='description')
+schema.moveField('Location', before='description')
 schema.moveField('quantity', before='description')
 schema.moveField('expiryDate', before='description')
 schema.moveField('KitTemplate', before='Prefix')
@@ -140,7 +159,6 @@ class Kit(BaseContent):
     security = ClassSecurityInfo()
     implements(IKit, IConstrainTypes)
     schema = schema
-
     _at_rename_after_creation = True
 
     def _renameAfterCreation(self, check_auto_id=False):
@@ -162,65 +180,98 @@ class Kit(BaseContent):
         kit_description = self.Description()
         # for product category we will use the one in kit template
         product_category = kittemplate.getCategory()
-        kit_quantity = self.getQuantity()
-        storage_conditions = kittemplate.getStorageConditions()
+        kit_qty = self.getQuantity()
+        #storage_conditions = kittemplate.getStorageConditions()
         kit_price = kittemplate.getPrice()
         kit_vat = kittemplate.getVAT()
 
+        # update products quantities
+        bsc = getToolByName(self, 'bika_setup_catalog')
+        uids = [p['product_uid'] for p in kittemplate.getProductList()]
+        qtties = [int(p['quantity']) for p in kittemplate.getProductList()]
+        products = [brain.getObject() for brain in bsc.searchResults(portal_type='Product', UID=uids)]
+        stockitems = []
+        remain_quantities = []
+        message = ''
+        for i, product in enumerate(products):
+            qty = product.getQuantity() - kit_qty * qtties[i]
+            if qty < 0:
+                message = 'No sufficient quantities in stock!'
+                break
+            remain_quantities.append(qty)
+
+            brains = bsc.searchResults(portal_type='StockItem', getProductTitle=product.Title(), review_state='valid')
+            # TODO: WORK WITH ONLY STOCKITEMS STORED, IS IT RIGHT?
+            stockitems.append([brain.getObject() for brain in brains if brain.getObject().getIsStored()])
+
+        if message:
+            self.context.plone_utils.addPortalMessage(_(message), 'error')
+            raise AssertionError('No sufficient quantities in stock.')
+
+        for i, product in enumerate(products):
+            product.setQuantity(remain_quantities[i])
+
+        # TODO: deactivate stockitems equivalent to the products
+        wf = getToolByName(self, 'portal_workflow')
+        for i, pi in enumerate(stockitems):
+            qty = qtties[i] * kit_qty
+            for j in xrange(len(pi)-1, -1, -1):
+                pi[j].setQuantity(0)
+                wf.doActionFor(pi[j], 'discard')
+                qty -= 1
+                brains = bsc.searchResults(portal_type='StorageInventory', id=pi[j].getStorageLevelID())
+                position = brains[0].getObject() if len(brains) else None
+                position.liberatePosition()
+                pi[j].setStorageLevelID('')
+                if qty == 0:
+                    break
+
         # create kit assembly as product
         catalog = getToolByName(self, 'bika_setup_catalog')
+        # TODO: WHY I ADDED THIS LINE?
         brains = catalog.searchResults({'portal_type': 'Product', 'title': kit_name})
         if len(brains) == 0:
             folder = self.bika_setup.bika_products
-            obj = _createObjectByType('Product', folder, tmpID())
-            obj.edit(
+            product = _createObjectByType('Product', folder, tmpID())
+            product.edit(
                 title=kit_name,
                 description=kit_description,
                 Hazardous=True,
-                Quantity=kit_quantity,
+                Quantity=kit_qty,
                 Price=kit_price,
                 VAT=kit_vat,
-                StorageConditions=storage_conditions,
+                # StorageConditions=storage_conditions,
             )
-            obj.setCategory(product_category)
-            obj.unmarkCreationFlag()
-            renameAfterCreation(obj)
+            product.setCategory(product_category)
+            product.unmarkCreationFlag()
+            renameAfterCreation(product)
         else:
-            obj = brains[0].getObject()
-            new_qty = obj.getQuantity() + kit_quantity
-            obj.edit(
+            product = brains[0].getObject()
+            new_qty = product.getQuantity() + kit_qty
+            product.edit(
                 description=kit_description,
                 Quantity=new_qty,
                 Price=kit_price,
                 VAT=kit_vat,
-                StorageConditions=storage_conditions,
+                # StorageConditions=storage_conditions,
             )
-            # TODO: Check if self or obj to be reindexed
-            obj.reindexObject()
+            product.reindexObject()
 
-    def workflow_script_store(self):
-        """Store kit assembled
-        """
-        kittemplate = self.getKitTemplate()
-        kit_name = kittemplate.Title()
-        expiry_date = self.getExpiryDate()
-        catalog = getToolByName(self, 'bika_setup_catalog')
-        brains = catalog.searchResults({'portal_type': 'Product', 'title': kit_name})
-        if len(brains) == 1:
-            product = brains[0].getObject()
-            folder = self.bika_setup.bika_stockitems
-            # TODO: BEFORE CREATE THE STOCKITEM WE'VE TO CHECK IF EXISTS BEFORE. IF SO THEN WE'VE JUST
-            # TODO: TO ADJUST THE STOCK QUANTITY
+        self.setKitPrdID(product.getId())
+
+        # create kit quantity as stockitems
+        folder = self.bika_setup.bika_stockitems
+        for i in range(kit_qty):
             obj = _createObjectByType("StockItem", folder, tmpID())
             obj.edit(
                 StockItemID='',
                 description=product.Description(),
                 location='',
-                Quantity=product.getQuantity(),
+                Quantity=1,
                 orderId='',
                 IsStored=True,
                 dateManufactured=DateTime(),
-                expiryDate=expiry_date,
+                expiryDate=self.getExpiryDate(),
                 title=product.Title()
             )
             obj.setProduct(product)
@@ -228,9 +279,44 @@ class Kit(BaseContent):
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
             self.bika_setup_catalog.reindexObject(obj)
-        else:
-            # TODO: if len(brains) == 0 we have to raise an error. It should be 1.
-            print "Error: Number of products with {} name should be 1".format(kit_name)
+
+    def workflow_script_store(self):
+        """Store kit assembled
+        """
+        kittemplate = self.getKitTemplate()
+        kit_name = kittemplate.Title()
+        quantity = self.getQuantity()
+        expiry_date = self.getExpiryDate()
+        catalog = getToolByName(self, 'bika_setup_catalog')
+        brains = catalog.searchResults({'portal_type': 'StockItem', 'getProductID': self.getKitPrdID()})
+        stockitems = [brain.getObject() for brain in brains]
+
+        container = self.getLocation()
+        bsc = getToolByName(self, 'bika_setup_catalog')
+        child_container = [cc.getObject() for cc in bsc(portal_type='StorageInventory',
+                                                        getUnitID=container.getId())
+                                                 if not cc.getObject().getIsOccupied()]
+        message = ''
+        if not child_container:
+            message = 'Storage level is required. Please correct.'
+        if quantity > len(child_container):
+            message = 'The number entered for %s is %d but the ' \
+                      'storage inventory only has %d spaces.' % (
+                          kit_name, quantity, len(child_container))
+        if message:
+            self.context.plone_utils.addPortalMessage(_(message), 'error')
+            raise AssertionError(message)
+
+        # Store stock items in available levels
+        for i, pi in enumerate(stockitems):
+            position = child_container[i]
+            pi.setStorageLevelID(position.getId())
+            pi.setIsStored(True)
+            position.setStockItemID(pi.getId())
+            position.setIsOccupied(True)
+            # Decrement number of available children of parent
+            nac = position.aq_parent.getNumberOfAvailableChildren()
+            position.aq_parent.setNumberOfAvailableChildren(nac - 1)
 
     def workflow_script_deactivate(self):
         """DEACTIVATE ACTION"""

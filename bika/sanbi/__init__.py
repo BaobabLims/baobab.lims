@@ -22,6 +22,7 @@ def initialize(context):
     from content.kittemplate import KitTemplate
     from content.biospectype import BiospecType
     from content.biospecimen import Biospecimen
+    from content.storageinventory import StorageInventory
     from content.multimage import Multimage
     from content.storagemanagement import StorageManagement
     from content.kit import Kit
@@ -35,6 +36,7 @@ def initialize(context):
     from controlpanel.bika_storagemanagements import StorageManagements
     from controlpanel.bika_biospectypes import BiospecTypes
     from controlpanel.bika_biospecimens import Biospecimens
+    from controlpanel.bika_storageinventories import StorageInventories
 
     content_types, constructors, ftis = process_types(
         listTypes(PROJECTNAME),

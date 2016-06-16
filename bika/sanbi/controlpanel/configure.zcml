@@ -36,4 +36,12 @@
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
+    <browser:page
+      for="bika.sanbi.interfaces.IStorageInventories"
+      name="folder_view"
+      class=".bika_storageinventories.StorageInventoriesView"
+      permission="bika.lims.ManageBika"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
 </configure>

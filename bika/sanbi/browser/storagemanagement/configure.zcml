@@ -45,4 +45,12 @@
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
+    <browser:page
+      for="*"
+      name="sample_info"
+      class="bika.sanbi.browser.storagemanagement.SampleInfo"
+      permission="zope.Public"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
 </configure>

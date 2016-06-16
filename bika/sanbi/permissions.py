@@ -12,6 +12,7 @@ AddProject = 'SANBI: Add Project'
 AddShipment = 'SANBI: Add Shipment'
 AddMultimage = 'BIKA: Add Multimage'
 AddSampletemp = "BIKA: Add Sampletemp"
+AddStorageInventory = "BIKA: Add Storage Inventory"
 
 # Add Permissions for specific types, if required
 ADD_CONTENT_PERMISSIONS = {
@@ -22,6 +23,7 @@ ADD_CONTENT_PERMISSIONS = {
     'Shipment': AddShipment,
     'Multimage': AddMultimage,
     'Sample': AddSampletemp,
+    'StorageInventory': AddStorageInventory,
 }
 
 ManageStoragePositions = "SANBI: Manage Storage Positions"

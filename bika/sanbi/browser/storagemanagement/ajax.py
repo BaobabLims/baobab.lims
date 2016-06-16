@@ -131,11 +131,12 @@ class StorageManageSubmit:
         )
         location.unmarkCreationFlag()
         renameAfterCreation(location)
-        # location.reindexObject()
+        location.reindexObject()
 
     def dimension_representation(self, num_children_add, context_b, values, num_rows=1, num_cols=1,
                                  num_layers=1, create=False):
-
+        """Compute ids and create children objects.
+        """
         alphabet = string.uppercase[:26]
 
         # TODO: THIS IS A REMARK. THE total_positions SHOULD BE EQUAL TO num_childs_add!
@@ -144,7 +145,6 @@ class StorageManageSubmit:
         num_pos_by_row = total_positions / (num_layers * num_rows)
         num_pos_by_col = total_positions / num_pos_by_row
         num_pos_by_layer = total_positions / num_layers
-        children = []
         if self.context.getStorageLocation():
             children = self.context.getPositions()
         else:
@@ -180,7 +180,6 @@ class StorageManageSubmit:
             else:
                 self.rename_children(children[num], values, index)
 
-        # raise AssertionError('salam')
         return self.context
 
     def number_children_add_sub(self, values):
@@ -200,6 +199,11 @@ class StorageManageSubmit:
         return num_children_add, num_children_sub
 
     def create_storage(self, values):
+        """
+        Create StorageManagement object or update an existed one.
+        :param values: form submit values
+        :return: the object created/edited and eventually errors if exist
+        """
         uid_catalog = getToolByName(self.context, 'uid_catalog')
         obj_exist = self.context.aq_parent.hasObject(self.context.getId())
         num_rows = values.has_key('XAxis') and values.get('XAxis') and int(values['XAxis']) or 1
@@ -223,7 +227,7 @@ class StorageManageSubmit:
                 ZAxis=values.get('ZAxis') and values['ZAxis'] or 1
             )
             renameAfterCreation(self.context)
-            # Increase by 1 the number of children for the parent.
+            # Increase by 1 the number of children of the parent.
             if parent_unit.portal_type == "StorageManagement":
                 parent_unit.setShelves(parent_unit.getShelves() + 1)
 
@@ -241,7 +245,7 @@ class StorageManageSubmit:
             if context_b['title'] != self.context.Title():
                 self.update_children_parent_ref(self.context)
 
-            if not num_add and (context_b['Dimension'] != self.context.getDimension() or \
+            if not num_add and (context_b['Dimension'] != self.context.getDimension() or
                context_b['ChildrenTitle'] != self.context.getChildrenTitle()):
                 self.dimension_representation(len(self.context.getChildren()), context_b, values, num_rows=num_rows,
                                              num_cols=num_cols, num_layers=num_layers, create=False)
@@ -340,3 +344,27 @@ class PositionsInfo:
                 response['positions'] = positions
 
         return json.dumps(response)
+
+
+class SampleInfo:
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+        self.errors = {}
+
+    def __call__(self):
+        form = self.request.form
+        id = form['position']
+        catalog = getToolByName(self.context, 'bika_setup_catalog')
+        brains = catalog.searchResults(portal_type="StorageLocation", id=id)
+        sample = brains[0].getObject().getSampletemp()
+
+        ret = {
+            'id': sample.getId(),
+            'name': sample.Title(),
+            'quantity': sample.getQuantity(),
+            'volume': sample.getVolume(),
+            'path': sample.absolute_url_path()
+        }
+
+        return json.dumps(ret)

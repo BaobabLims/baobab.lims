@@ -34,7 +34,7 @@ class KitView(BrowserView):
 
         self.subtotal = '%.2f' % context.getKitTemplate().getSubtotal()
         self.vat = '%.2f' % context.getKitTemplate().getVATAmount()
-        self.total = '%.2f' % context.getKitTemplate().getTotal()
+        self.total = '%.2f' % float(context.getKitTemplate().getTotal())
 
         items = context.getKitTemplate().kittemplate_lineitems
         self.items = []
@@ -193,7 +193,7 @@ class PrintView(KitView):
         self.items = sorted(self.items, key=itemgetter('title'))
         self.subtotal = '%.2f' % self.context.getKitTemplate().getSubtotal()
         self.vat = '%.2f' % self.context.getKitTemplate().getVATAmount()
-        self.total = '%.2f' % self.context.getKitTemplate().getTotal()
+        self.total = '%.2f' % float(self.context.getKitTemplate().getTotal())
         return self.template()
 
     def getCSS(self):

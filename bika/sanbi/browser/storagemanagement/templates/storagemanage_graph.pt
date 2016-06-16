@@ -17,47 +17,39 @@
                   // Get Positions info
                   var path = window.location.href.split('/graphic')[0] + '/positions_info';
                   $.getJSON(path, function(data){
-                      console.log(data);
                       if (data['positions'].length > 0){
                           createGraphic(data);
                       }
                   });
 
-                  function positionInfo(element, d){
-                      $("div#pos-info-div").removeClass("hidden");
-                      var chain = d["chain"];
-                      var state = "";
-                      var color = ";"
-                      switch(d["state"]){
-                          case "position_free":
-                              state = "Available";
-                              color = "#32ce16";
-                              break;
-                          case "position_reserved":
-                              state = "Reserved";
-                              color = "#39cccc";
-                              break;
-                          case "position_occupied":
-                              state = "Occupied";
-                              color = "#fc7871";
-                              break;
-                          default:
-                              break;
+                  function positionInfo(element, d) {
+                      var sample = null;
+                      if (d.state === "position_occupied") {
+                          var path = window.location.href.split('/graphic')[0] + '/sample_info';
+                          $.ajax({
+                              dataType: "json",
+                              url: path,
+                              data: {'position': d.address},
+                              success: function (data) {
+                                  renderSampleTable(data);
+                              }
+                          });
+                      }else{
+                          $("div#pos-info-div").addClass("hidden");
                       }
+                  }
+                  function renderSampleTable(data) {
+                      $("div#pos-info-div").removeClass("hidden");
                       var html = "<table class='pos-info'>" +
                         "<tbody>" +
-                        "<tr><td> Address </td>" +
-                        "<td>" + chain[chain.length - 1] + "</td><tr>" +
-                        "<tr><td> Room </td>" +
-                        "<td>" + chain[0] + "</td><tr>" +
-                        "<tr><td> Freezer/Tank </td>" +
-                        "<td>" + chain[1] + "</td><tr>" +
-                        "<tr><td> Shelf/Cannister </td>" +
-                        "<td>" + chain[2] + "</td><tr>" +
-                        "<tr><td> Box/Cane </td>" +
-                        "<td>" + chain[3] + "</td><tr>" +
-                        "<tr><td> Current State </td>"  +
-                        "<td style=\"color:" + color + "; \">" + state + "</td></tr>" +
+                        "<tr><td> Sample ID </td>" +
+                        "<td><a href='" + data['path'] +"'> " + data["id"] + "</a></td><tr>" +
+                        "<tr><td> Sample Name </td>" +
+                        "<td>" + data['name'] + "</td><tr>" +
+                        "<tr><td> Volume </td>" +
+                        "<td>" + data['volume'] + " ml</td><tr>" +
+                        "<tr><td> Quantity </td>" +
+                        "<td>" + data['quantity'] + "</td><tr>" +
                         "</tbody></table>";
 
                       $("div#pos-info-div table").remove();
@@ -113,6 +105,32 @@
                                      "Q", "R", "S", "T", "U", "V", "W", "X",
                                      "Y", "Z"];
                       // Create SVG element
+                      var wrapper = d3.select("body")
+                              .append("div")
+                              .attr("class", "wrapper");
+
+                      var tooltip = wrapper.append("div")
+                              .style("position", "absolute")
+                              .style("padding", "0 10px")
+                              .style("opacity", 0)
+                              .style("color", "white")
+                              .attr("class", "tooltip hidden");
+
+                      tooltip.append("p")
+                              .append("strong")
+                              .text("Storage Location Information");
+
+                      var address = tooltip.append("p");
+                      address.append("strong")
+                             .text("Address: ");
+                      address.append("em")
+                             .attr("id", "address");
+
+                      var stateP = tooltip.append("p");
+                      stateP.append("strong")
+                           .text("State: ");
+                      stateP.append("em")
+                           .attr("id", "state");
 
                       var graph = d3.select("#content-core")
                               .append("div")
@@ -254,8 +272,42 @@
                                   }
                               })
                               .style("fill-opacity", .5)
-                              .on('click', function(d){
+                              .on("click", function(d){
                                   positionInfo(this, d);
+                              }).on('mouseover', function(d) {
+                                  var state = '';
+                                  var color = '';
+                                  switch(d.state){
+                                      case 'position_free':
+                                          state = "Available";
+                                          color = "#32ce16";
+                                          break;
+                                      case 'position_reserved':
+                                          state = "Reserved";
+                                          color = "#39cccc";
+                                          break;
+                                      case 'position_occupied':
+                                          state = "Occupied";
+                                          color = "#fc7871";
+                                          break;
+                                  }
+                                  tooltip.transition()
+                                    .style('opacity', .9)
+                                    .style('background', '#1496bb')
+                                    .style('left',(d3.event.pageX - 100 ) + 'px')
+                                    .style('top', (d3.event.pageY - 100) + 'px');
+
+                                  tooltip.select("#address")
+                                          .html(d.address);
+                                  tooltip.select("#state")
+                                          .html(state)
+                                          .style("color", color);
+                                  tooltip.classed("hidden", false);
+                              })
+                              .on('mouseout', function(d) {
+                                  tooltip.transition()
+                                    .style('opacity', 0);
+                                  tooltip.classed("hidden", true);
                               });
 
                       var positionState = [["Free", "#32ce16"],
@@ -367,6 +419,31 @@
             .hidden{
                 display: none;
             }
+            rect:hover {
+				fill: orange;
+			}
+
+			.tooltip {
+				position: absolute;
+				width: 300px;
+				height: auto;
+				padding: 10px;
+				background-color: white;
+				-webkit-border-radius: 10px;
+				-moz-border-radius: 10px;
+				border-radius: 10px;
+				-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+				-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+				box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+				pointer-events: none;
+			}
+
+			.tooltip p {
+				margin: 0;
+				font-family: sans-serif;
+				font-size: 16px;
+				line-height: 20px;
+			}
         </style>
         </tal:css>
     </metal:block>
@@ -384,17 +461,16 @@
 <div metal:fill-slot="content-core"
      tal:define="
         portal context/@@plone_portal_state/portal;">
-    <div id="stats" class="table-info">
+    <div class="table-info">
+    <div id="stats">
         <img tal:attributes='src python:portal.absolute_url()+"/++resource++bika.sanbi.images/graph_big.png"'/>
         <span class="head-text">Statistics</span>
     </div>
-    <div id="pos-info-div" class="table-info hidden">
-        <img tal:attributes='src python:portal.absolute_url()+"/++resource++bika.sanbi.images/location_big.png"'/>
-        <span class="head-text">Position</span>
+    <p ></p>
+    <div id="pos-info-div" class="hidden" style="border-top: 1px solid deepskyblue; padding-top: 5px;">
+        <img tal:attributes='src python:portal.absolute_url()+"/++resource++bika.sanbi.images/sample_big.png"'/>
+        <span class="head-text">Sample</span>
     </div>
-    <div class="wrapper hidden">
-        I have a tooltip.
-        <div class="tooltip">I am a tooltip!</div>
     </div>
 </div>
 

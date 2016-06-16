@@ -48,7 +48,7 @@ class SampletempsView(BikaListingView):
                          'Biospecimen',
                          'SubjectID',
                          'SampleType',
-                         'Quantiy',
+                         'Quantity',
                          'Volume',
                          'Location']},
         ]
@@ -119,7 +119,7 @@ class SampletempsView(BikaListingView):
             items[x]['SampleType'] = obj.getSampleType().Title()
             items[x]['Quantity'] = obj.getQuantity()
             items[x]['Volume'] = obj.getVolume()
-            items[x]['Location'] = obj.getStorageLocation().Title()
+            items[x]['Location'] = obj.getStorageLocation() and obj.getStorageLocation().Title() or ''
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                            (items[x]['url'], items[x]['Title'])
 

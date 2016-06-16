@@ -29,7 +29,8 @@ class BikaCustomGenerator:
         for obj_id in ('bika_kittemplates',
                        'bika_storagemanagements',
                        'bika_biospectypes',
-                       'bika_biospecimens'):
+                       'bika_biospecimens',
+                       'bika_storageinventories'):
             obj = bika_setup._getOb(obj_id)
             obj.unmarkCreationFlag()
             obj.reindexObject()
@@ -79,11 +80,18 @@ class BikaCustomGenerator:
         at.setCatalogsByType('BiospecType', ['bika_setup_catalog', 'portal_catalog', ])
         at.setCatalogsByType('Biospecimen', ['bika_setup_catalog', 'portal_catalog', ])
         at.setCatalogsByType('Multimage', ['bika_setup_catalog'])
+        at.setCatalogsByType('StorageInventory', ['bika_setup_catalog', 'portal_catalog',])
 
         addIndex(bsc, 'getStorageUnit', 'FieldIndex')
         addColumn(bsc, 'getStorageUnit')
+        addIndex(bsc, 'getUnitID', 'FieldIndex')
+        addColumn(bsc, 'getUnitID')
         addIndex(bsc, 'getParentBox', 'FieldIndex')
         addColumn(bsc, 'getParentBox')
+        addIndex(bsc, 'getHasChildren', 'FieldIndex')
+        addColumn(bsc, 'getHasChildren')
+        addIndex(bsc, 'getLocation', 'FieldIndex')
+        addColumn(bsc, 'getLocation')
 
         bac = getToolByName(portal, 'bika_analysis_catalog', None)
         if bsc is None:

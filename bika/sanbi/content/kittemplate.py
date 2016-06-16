@@ -8,6 +8,7 @@ from decimal import Decimal
 from Products.Archetypes.public import *
 from Products.ATExtensions.ateapi import RecordField, RecordsField
 from bika.lims.browser.widgets.recordswidget import RecordsWidget
+from Products.Archetypes.references import HoldingReference
 
 from Products.CMFCore.permissions import View
 from bika.sanbi.interfaces import IKitTemplate
@@ -68,6 +69,17 @@ schema = BikaSchema.copy() + Schema((
         widget = ComputedWidget(
             label=_("VAT"),
             visible = {'edit':'hidden', }
+        ),
+    ),
+    ReferenceField('Category',
+        required=1,
+        vocabulary='get_kit_category',
+        allowed_types=('ProductCategory',),
+        relationship='KitCategory',
+        widget=SelectionWidget(
+           format='select',
+           label=_("Product Category"),
+           description=_(""),
         ),
     ),
 ))
@@ -149,5 +161,15 @@ class KitTemplate(BaseContent):
         # TODO: Wich one to use here, str or decimal?
         #return price.quantize(Decimal('0.00'))
         return str(price)
+
+    security.declarePublic('get_kit_category')
+    def get_kit_category(self):
+        catalog = getToolByName(self, 'bika_setup_catalog')
+        categories = []
+        brains = catalog.searchResults(portal_type="ProductCategory")
+        for brain in brains:
+            categories.append([brain.UID, brain.title])
+        categories.sort(lambda x, y: cmp(x[1].lower(), y[1].lower()))
+        return DisplayList(categories)
 
 registerType(KitTemplate, config.PROJECTNAME)
