@@ -1,9 +1,11 @@
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from Products.CMFCore.utils import getToolByName
-from Products.ATContentTypes.lib import constraintypes
-from bika.sanbi import bikaMessageFactory as _
-from bika.lims.browser import BrowserView
 import json
+
+from Products.ATContentTypes.lib import constraintypes
+from Products.CMFCore.utils import getToolByName
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+
+from bika.lims.browser import BrowserView
+from bika.sanbi import bikaMessageFactory as _
 
 
 class SampletempEdit(BrowserView):
@@ -15,7 +17,8 @@ class SampletempEdit(BrowserView):
         self.request = request
 
         super(SampletempEdit, self).__init__(context, request)
-        self.icon = self.portal_url + "/++resource++bika.sanbi.images/sample_big.png"
+        self.icon = self.portal_url + \
+                    "/++resource++bika.sanbi.images/sample_big.png"
 
     def __call__(self):
         portal = self.portal
@@ -25,16 +28,19 @@ class SampletempEdit(BrowserView):
         if 'submit' in request:
             context.setConstrainTypesMode(constraintypes.DISABLED)
 
-            # If we edit sample with empty location we have edit location too and make it's state free.
+            # If we edit sample with empty location we have edit location too
+            #  and make it's state free.
             if not form.get('StorageLocation', ''):
                 wftool = self.context.portal_workflow
                 location = self.context.getStorageLocation()
                 if location:
                     state = wftool.getInfoFor(location, 'review_state')
                     if state != 'position_free':
-                        if state == 'position_occupied' and location.getSampletemp():
+                        if state == 'position_occupied' and \
+                                location.getSampletemp():
                             location.setSampletemp(None)
-                        wftool.doActionFor(location, action='free', wf_id='bika_storageposition_workflow')
+                        wftool.doActionFor(location, action='free',
+                                           wf_id='bika_storageposition_workflow')
 
             portal_factory = getToolByName(context, 'portal_factory')
             context = portal_factory.doCreate(context, context.id)
@@ -77,6 +83,7 @@ class SampletempEdit(BrowserView):
         display_list = list(self.context.getPositions().items())
         return display_list
 
+
 class AjaxGetFreezers:
     """
     """
@@ -89,12 +96,16 @@ class AjaxGetFreezers:
     def __call__(self):
         form = self.request.form
         catalog = getToolByName(self.context, 'uid_catalog')
-        brains = catalog.searchResults(portal_type='StorageUnit', UID=form['uid'])
+        brains = catalog.searchResults(portal_type='StorageUnit',
+                                       UID=form['uid'])
         storage_unit = brains[0].getObject() if brains else None
         catalog = getToolByName(self.context, 'bika_setup_catalog')
-        #TODO: WE SHOULD USE IN THIS QUERY, getStorageUnit, AS A PARAMETER OF RESEARCH, BUT UNFORTUNATLY
-        #TODO: I DON'T KNOW WHY IT'S NOT WORKING??? KEEP SEARCHING ON THIS OR ASK QUESTION.
-        #brains = catalog.searchResults(portal_type='StorageManagement', getStorageUnit=storage_unit, sort_on='created')
+        # TODO: WE SHOULD USE IN THIS QUERY, getStorageUnit, AS A PARAMETER
+        # OF RESEARCH, BUT UNFORTUNATLY
+        # TODO: I DON'T KNOW WHY IT'S NOT WORKING??? KEEP SEARCHING ON THIS
+        # OR ASK QUESTION.
+        # brains = catalog.searchResults(portal_type='StorageManagement',
+        # getStorageUnit=storage_unit, sort_on='created')
         brains = catalog.searchResults(portal_type='StorageManagement',
                                        inactive_state='active',
                                        sort_on='created')
@@ -112,6 +123,7 @@ class AjaxGetFreezers:
 class AjaxGetShelves:
     """
     """
+
     def __init__(self, context, request):
         self.context = context
         self.request = request
@@ -120,12 +132,16 @@ class AjaxGetShelves:
     def __call__(self):
         form = self.request.form
         catalog = getToolByName(self.context, 'uid_catalog')
-        brains = catalog.searchResults(portal_type='StorageManagement', UID=form['uid'])
+        brains = catalog.searchResults(portal_type='StorageManagement',
+                                       UID=form['uid'])
         storage_unit = brains[0].getObject() if brains else None
         catalog = getToolByName(self.context, 'bika_setup_catalog')
-        # TODO: WE SHOULD USE IN THIS QUERY, getStorageUnit, AS A PARAMETER OF RESEARCH, BUT UNFORTUNATELY
-        # TODO: I DON'T KNOW WHY IT'S NOT WORKING??? KEEP SEARCHING ON THIS OR ASK QUESTION.
-        # brains = catalog.searchResults(portal_type='StorageManagement', getStorageUnit=storage_unit, sort_on='created')
+        # TODO: WE SHOULD USE IN THIS QUERY, getStorageUnit, AS A PARAMETER
+        # OF RESEARCH, BUT UNFORTUNATELY
+        # TODO: I DON'T KNOW WHY IT'S NOT WORKING??? KEEP SEARCHING ON THIS
+        # OR ASK QUESTION.
+        # brains = catalog.searchResults(portal_type='StorageManagement',
+        # getStorageUnit=storage_unit, sort_on='created')
         brains = catalog.searchResults(portal_type='StorageManagement',
                                        inactive_state='active',
                                        sort_on='created')
@@ -140,6 +156,7 @@ class AjaxGetShelves:
 
         return json.dumps(ret)
 
+
 class AjaxGetBoxes:
     """
     """
@@ -152,12 +169,16 @@ class AjaxGetBoxes:
     def __call__(self):
         form = self.request.form
         catalog = getToolByName(self.context, 'uid_catalog')
-        brains = catalog.searchResults(portal_type='StorageManagement', UID=form['uid'])
+        brains = catalog.searchResults(portal_type='StorageManagement',
+                                       UID=form['uid'])
         storage_unit = brains[0].getObject() if brains else None
         catalog = getToolByName(self.context, 'bika_setup_catalog')
-        # TODO: WE SHOULD USE IN THIS QUERY, getStorageUnit, AS A PARAMETER OF RESEARCH, BUT UNFORTUNATLY
-        # TODO: I DON'T KNOW WHY IT'S NOT WORKING??? KEEP SEARCHING ON THIS OR ASK QUESTION.
-        # brains = catalog.searchResults(portal_type='StorageManagement', getStorageUnit=storage_unit, sort_on='created')
+        # TODO: WE SHOULD USE IN THIS QUERY, getStorageUnit, AS A PARAMETER
+        # OF RESEARCH, BUT UNFORTUNATLY
+        # TODO: I DON'T KNOW WHY IT'S NOT WORKING??? KEEP SEARCHING ON THIS
+        # OR ASK QUESTION.
+        # brains = catalog.searchResults(portal_type='StorageManagement',
+        # getStorageUnit=storage_unit, sort_on='created')
         brains = catalog.searchResults(portal_type='StorageManagement',
                                        inactive_state='active',
                                        sort_on='created')
@@ -176,6 +197,7 @@ class AjaxGetBoxes:
 class AjaxGetPositions:
     """
     """
+
     def __init__(self, context, request):
         self.context = context
         self.request = request
@@ -184,7 +206,8 @@ class AjaxGetPositions:
     def __call__(self):
         form = self.request.form
         catalog = getToolByName(self.context, 'uid_catalog')
-        brains = catalog.searchResults(portal_type='StorageManagement', UID=form['uid'])
+        brains = catalog.searchResults(portal_type='StorageManagement',
+                                       UID=form['uid'])
         storage_unit = brains[0].getObject() if brains else None
         catalog = getToolByName(self.context, 'bika_setup_catalog')
         brains = catalog.searchResults(portal_type='StorageLocation',
@@ -206,6 +229,7 @@ class AjaxGetPositions:
 class AjaxGetBiospecimenVolume:
     """
     """
+
     def __init__(self, context, request):
         self.context = context
         self.request = request
@@ -214,22 +238,12 @@ class AjaxGetBiospecimenVolume:
     def __call__(self):
         form = self.request.form
         ret = {}
-        catalog = getToolByName(self.context, 'bika_setup_catalog')
-        brains = catalog.searchResults(portal_type="Biospecimen", UID=form['uid'])
-        biospecimen = brains[0].getObject() if brains else None
+        catalog = getToolByName(self.context, 'uid_catalog')
+        brains = catalog.searchResults(UID=form['uid'])
+        biospecimen = brains[0].getObject()
         volume = biospecimen.getVolume() if biospecimen else 0
         ret['volume'] = float(volume)
 
-        # catalog = getToolByName(self.context, 'bika_catalog')
-        # #TODO: WE ARE USING AN INDEX WE CREATED, getBiospecimen. AS WE EXPERIENCED, SOMETIMES THIS NOT
-        # #TODO: WORKING. THEN BECARFUL.
-        # brains = catalog.searchResults(portal_type='Sampletemp', getBiospecimen=biospecimen)
-        # total_volume = 0
-        # for brain in brains:
-        #     obj = brain.getObject()
-        #     quantity = int(obj.getQuantity()) if obj.getQuantity() else 0
-        #     volume = float(obj.getVolume()) if obj.getVolume() else 0
-        #     total_volume += float(quantity * volume)
         total_volume = biospecimen.getVolumeUsed()
         ret['total_volume'] = total_volume
         print ret

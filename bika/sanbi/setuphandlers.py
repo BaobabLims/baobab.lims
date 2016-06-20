@@ -1,8 +1,8 @@
 """ Bika setup handlers. """
 
 from Products.CMFCore.utils import getToolByName
-from bika.lims import logger
 
+from bika.lims import logger
 from bika.sanbi.permissions import *
 
 
@@ -17,7 +17,8 @@ class BikaCustomGenerator:
         for obj_id in ('kits',
                        'projects',
                        'shipments',
-                       'sampletemps'):
+                       'sampletemps',
+                       'biospecimens'):
             try:
                 obj = portal._getOb(obj_id)
                 obj.unmarkCreationFlag()
@@ -29,7 +30,6 @@ class BikaCustomGenerator:
         for obj_id in ('bika_kittemplates',
                        'bika_storagemanagements',
                        'bika_biospectypes',
-                       'bika_biospecimens',
                        'bika_storageinventories'):
             obj = bika_setup._getOb(obj_id)
             obj.unmarkCreationFlag()
@@ -59,12 +59,12 @@ class BikaCustomGenerator:
             return
         # Add indexes and metadata columns here
         at = getToolByName(portal, 'archetype_tool')
-        at.setCatalogsByType('Kit', ['bika_catalog', 'portal_catalog'])
-        at.setCatalogsByType('Project', ['bika_catalog', 'portal_catalog'])
-        at.setCatalogsByType('Shipment', ['bika_catalog', 'portal_catalog'])
-        at.setCatalogsByType('Sampletemp', ['bika_catalog', 'portal_catalog'])
-        addIndex(bc, 'getBiospecimen', 'FieldIndex')
-        addColumn(bc, 'getBiospecimen')
+        at.setCatalogsByType('Kit', ['bika_catalog'])
+        at.setCatalogsByType('Project', ['bika_catalog'])
+        at.setCatalogsByType('Shipment', ['bika_catalog'])
+        at.setCatalogsByType('Sampletemp', ['bika_catalog'])
+        at.setCatalogsByType('Biospecimen', ['bika_catalog', ])
+        addIndex(bc, 'getBiospecimenID', 'FieldIndex')
 
         # _______________________________#
         #      BIKA_SETUP_CATALOG        #
@@ -73,14 +73,14 @@ class BikaCustomGenerator:
         if bsc is None:
             logger.warning('Could not find the bika_setup_catalog tool.')
             return
+
         # Add indexes and metadata columns here
         at = getToolByName(portal, 'archetype_tool')
-        at.setCatalogsByType('KitTemplate', ['bika_setup_catalog',])
-        at.setCatalogsByType('StorageManagement', ['bika_setup_catalog', 'portal_catalog', ])
-        at.setCatalogsByType('BiospecType', ['bika_setup_catalog', 'portal_catalog', ])
-        at.setCatalogsByType('Biospecimen', ['bika_setup_catalog', 'portal_catalog', ])
-        at.setCatalogsByType('Multimage', ['bika_setup_catalog'])
-        at.setCatalogsByType('StorageInventory', ['bika_setup_catalog', 'portal_catalog',])
+        at.setCatalogsByType('KitTemplate', ['bika_setup_catalog', ])
+        at.setCatalogsByType('StorageManagement', ['bika_setup_catalog', ])
+        at.setCatalogsByType('BiospecType', ['bika_setup_catalog', ])
+        at.setCatalogsByType('Multimage', ['bika_setup_catalog', ])
+        at.setCatalogsByType('StorageInventory', ['bika_setup_catalog', ])
 
         addIndex(bsc, 'getStorageUnit', 'FieldIndex')
         addColumn(bsc, 'getStorageUnit')

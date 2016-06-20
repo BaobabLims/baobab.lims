@@ -8,8 +8,9 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 class MultimagesView(BikaListingView):
     """
-    This class implements a bika listing base view. This view is thought to be used inside other content types actions
-    as a default way to upload and show images for biospecimens.
+    This class implements a bika listing base view. This view is thought to be
+    used inside other content types actions as a default way to upload and
+    show images for biospecimens.
     """
     implements(IFolderContentsView, IViewView)
 

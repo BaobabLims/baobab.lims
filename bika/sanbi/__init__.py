@@ -31,11 +31,11 @@ def initialize(context):
     from content.projects import Projects
     from content.sampletemp import Sampletemp
     from content.sampletemps import Sampletemps
+    from content.biospecimens import Biospecimens
 
     from controlpanel.bika_kittemplates import KitTemplates
     from controlpanel.bika_storagemanagements import StorageManagements
     from controlpanel.bika_biospectypes import BiospecTypes
-    from controlpanel.bika_biospecimens import Biospecimens
     from controlpanel.bika_storageinventories import StorageInventories
 
     content_types, constructors, ftis = process_types(

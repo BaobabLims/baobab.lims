@@ -83,6 +83,11 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
 schema['description'].widget.visible = True
 schema['description'].schemata = 'default'
 
+@indexer(IBioSpecimen)
+def getBiospecimenID(instance):
+    return instance.id
+
+
 class Biospecimen(ATFolder):
     implements(IBiospecimen)
     security = ClassSecurityInfo()
@@ -111,9 +116,8 @@ class Biospecimen(ATFolder):
 
     def getVolumeUsed(self):
         catalog = getToolByName(self, 'bika_catalog')
-        # TODO: WE ARE USING AN INDEX WE CREATED, getBiospecimen. AS WE EXPERIENCED, SOMETIMES THIS NOT
-        # TODO: WORKING. THEN BECARFUL.
-        brains = catalog.searchResults(portal_type='Sampletemp', getBiospecimen=self)
+        brains = catalog.searchResults(portal_type='Sampletemp',
+                                       getBiospecimenID=self.id)
         total_volume = 0
         for brain in brains:
             obj = brain.getObject()

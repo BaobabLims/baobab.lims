@@ -12,4 +12,5 @@ class BiospecimenMultimageView(MultimagesView):
         super(BiospecimenMultimageView, self).__init__(context, request)
         self.show_workflow_action_buttons = False
         self.title = self.context.translate(_("Biospecimen Files"))
-        self.description = "Different interesting documents, files and images to be attached to the biospecimen."
+        self.description = "Different interesting documents, files and " \
+                           "images to be attached to the biospecimen."

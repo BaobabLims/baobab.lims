@@ -20,12 +20,4 @@
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
-    <browser:page
-      for="bika.sanbi.interfaces.IProject"
-      name="analyses_biospecs"
-      class="bika.sanbi.browser.project.AjaxGetAnalyses"
-      permission="cmf.ModifyPortalContent"
-      layer="bika.lims.interfaces.IBikaLIMS"
-    />
-
 </configure>
