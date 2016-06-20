@@ -8,6 +8,8 @@
     xmlns:plone="http://namespaces.plone.org/plone"
     i18n_domain="bika.sanbi">
 
+
+    <include package=".client"/>
     <include package=".analysisrequest"/>
     <include package=".kits"/>
     <include package=".kit"/>
