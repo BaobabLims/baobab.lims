@@ -20,11 +20,13 @@
     <include package=".projects"/>
     <include package=".project"/>
     <include package=".biospectype"/>
+    <include package=".biospecimens"/>
     <include package=".biospecimen"/>
     <include package=".sampletemps"/>
     <include package=".sampletemp"/>
     <include package=".multimage"/>
     <include package=".storageinventory"/>
+
 
     <!-- This registration allows additional sticker templates.
          To enable these, just copy one or more of the *.pt files

@@ -1,6 +1,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ATContentTypes.content import schemata
 from Products.Archetypes.atapi import *
+from plone.indexer import indexer
 from zope.interface import implements
 from bika.lims.content.bikaschema import BikaSchema, BikaFolderSchema
 from bika.lims.browser.widgets import DateTimeWidget as bika_DateTimeWidget
@@ -83,7 +84,8 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
 schema['description'].widget.visible = True
 schema['description'].schemata = 'default'
 
-@indexer(IBioSpecimen)
+
+@indexer(IBiospecimen)
 def getBiospecimenID(instance):
     return instance.id
 

@@ -7,7 +7,7 @@
     <browser:page
             for="bika.lims.interfaces.IClient"
             name="projects"
-            class="bika.lims.browser.client.ClientProjectsView"
+            class="bika.sanbi.browser.client.projects.ClientProjectsView"
             permission="zope2.View"
             layer="bika.lims.interfaces.IBikaLIMS"
     />

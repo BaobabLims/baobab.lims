@@ -29,14 +29,6 @@
     />
 
     <browser:page
-      for="bika.sanbi.interfaces.IBiospecimens"
-      name="folder_view"
-      class=".bika_biospecimens.BiospecimensView"
-      permission="bika.lims.ManageBika"
-      layer="bika.lims.interfaces.IBikaLIMS"
-    />
-
-    <browser:page
       for="bika.sanbi.interfaces.IStorageInventories"
       name="folder_view"
       class=".bika_storageinventories.StorageInventoriesView"
