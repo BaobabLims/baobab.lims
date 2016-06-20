@@ -31,9 +31,16 @@ class ProjectEdit(BrowserView):
             context.processForm()
 
             p_catalog = getToolByName(context, 'portal_catalog')
+
+            import sys
+            import pdb
+            for attr in ('stdin', 'stdout', 'stderr'):
+                setattr(sys, attr, getattr(sys, '__%s__' % attr))
+            pdb.set_trace()
+
             brains = p_catalog.searchResults(portal_type='Client', ClientID=form['ClientID'])
             client = brains[0].getObject()
-            context.setClientID(client)
+            context.setClient(client)
 
             analyses_uids = form.get('Analyses', [])
             context.setAnalyses(analyses_uids)
@@ -161,7 +168,7 @@ class ProjectView(BrowserView):
         # __Collect general data__ #
         self.id = context.getId()
         self.title = context.Title()
-        self.client = context.getClientID().Title()
+        self.client = context.getClient().Title()
         self.study_type = context.getStudyType()
         self.participants = context.getNumParticipants()
         self.age_interval = str(context.getAgeLow()) + ' - ' + str(context.getAgeHigh())
