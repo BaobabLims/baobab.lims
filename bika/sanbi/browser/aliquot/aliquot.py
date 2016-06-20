@@ -8,15 +8,15 @@ from bika.lims.browser import BrowserView
 from bika.sanbi import bikaMessageFactory as _
 
 
-class SampletempEdit(BrowserView):
-    template = ViewPageTemplateFile('templates/sampletemp_edit.pt')
+class AliquotEdit(BrowserView):
+    template = ViewPageTemplateFile('templates/aliquot_edit.pt')
     title = _("Sample Add/Edit")
 
     def __init__(self, context, request):
         self.context = context
         self.request = request
 
-        super(SampletempEdit, self).__init__(context, request)
+        super(AliquotEdit, self).__init__(context, request)
         self.icon = self.portal_url + \
                     "/++resource++bika.sanbi.images/sample_big.png"
 
@@ -37,8 +37,8 @@ class SampletempEdit(BrowserView):
                     state = wftool.getInfoFor(location, 'review_state')
                     if state != 'position_free':
                         if state == 'position_occupied' and \
-                                location.getSampletemp():
-                            location.setSampletemp(None)
+                                location.getAliquot():
+                            location.setAliquot(None)
                         wftool.doActionFor(location, action='free',
                                            wf_id='bika_storageposition_workflow')
 

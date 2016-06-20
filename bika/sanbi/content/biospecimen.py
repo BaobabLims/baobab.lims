@@ -118,7 +118,7 @@ class Biospecimen(ATFolder):
 
     def getVolumeUsed(self):
         catalog = getToolByName(self, 'bika_catalog')
-        brains = catalog.searchResults(portal_type='Sampletemp',
+        brains = catalog.searchResults(portal_type='Aliquot',
                                        getBiospecimenID=self.id)
         total_volume = 0
         for brain in brains:

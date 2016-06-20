@@ -24,8 +24,8 @@ class ClientProjectsView(BikaListingView):
         self.pagesize = 50
         self.form_id = "projects"
         self.icon = self.portal_url + \
-                    "/++resource++bika.lims.images/samplepoint_big.png"
-        self.title = self.context.translate(_("Sample Points"))
+                    "/++resource++bika.sanbi.images/project_big.png"
+        self.title = self.context.translate(_("Projects"))
         self.description = ""
 
         self.columns = {
@@ -51,15 +51,6 @@ class ClientProjectsView(BikaListingView):
              'columns': ['title', 'Description']},
         ]
 
-    def __call__(self):
-        mtool = getToolByName(self.context, 'portal_membership')
-        checkPermission = mtool.checkPermission
-        if checkPermission(AddSamplePoint, self.context):
-            self.context_actions[_('Add')] = \
-                {'url': 'createObject?type_name=SamplePoint',
-                 'icon': '++resource++bika.lims.images/add.png'}
-        return super(ClientProjectsView, self).__call__()
-
     def folderitems(self):
         items = BikaListingView.folderitems(self)
         for x in range(len(items)):
@@ -71,3 +62,36 @@ class ClientProjectsView(BikaListingView):
                 "<a href='%s'>%s</a>" % (items[x]['url'], items[x]['title'])
 
         return items
+
+
+mv ./bika/sanbi/browser/aliquot/sampletemp.py ./bika/sanbi/browser/aliquot/aliquot.py
+mv ./bika/sanbi/browser/aliquot/templates/sampletemp_edit.pt ./bika/sanbi/browser/aliquot/templates/aliquot_edit.pt
+
+
+
+
+
+
+
+
+Home
+Clients
+Orders
+Projects
+Kits
+Biospecimens
+Shipments
+temps - aliquot
+Supply Orders
+
+
+
+Samples
+Reference Samples
+Analysis Requests
+Batches
+Worksheets
+Imports
+Methods
+Pricelists
+Statements

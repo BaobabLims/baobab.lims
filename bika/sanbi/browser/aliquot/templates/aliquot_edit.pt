@@ -185,7 +185,7 @@
      tal:define="
         portal context/@@plone_portal_state/portal;">
 
-    <form method="post" id="sampletemp_edit" name="sampletemp_form">
+    <form method="post" id="aliquot_edit" name="aliquot_form">
         <input type="hidden" name="submit" value="1" />
         <table class="header_table" style="width: 100%;">
             <thead class="manage_storage_fileds">

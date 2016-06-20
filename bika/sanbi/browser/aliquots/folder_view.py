@@ -4,10 +4,10 @@ from bika.sanbi.permissions import *
 from bika.lims.browser.bika_listing import BikaListingView
 
 
-class SampletempsView(BikaListingView):
+class AliquotsView(BikaListingView):
     def __init__(self, context, request):
-        super(SampletempsView, self).__init__(context, request)
-        self.contentFilter = {'portal_type': 'Sampletemp',
+        super(AliquotsView, self).__init__(context, request)
+        self.contentFilter = {'portal_type': 'Aliquot',
                               'sort_on': 'sortable_title'}
 
         self.context_actions = {}
@@ -55,13 +55,13 @@ class SampletempsView(BikaListingView):
 
     def __call__(self):
         mtool = getToolByName(self.context, 'portal_membership')
-        if mtool.checkPermission(AddSampletemp, self.context):
+        if mtool.checkPermission(AddAliquot, self.context):
             self.context_actions[_('Add')] = {
-                'url': 'createObject?type_name=Sampletemp',
+                'url': 'createObject?type_name=Aliquot',
                 'icon': '++resource++bika.lims.images/add.png'
             }
 
-        if mtool.checkPermission(ManageSampletemps, self.context):
+        if mtool.checkPermission(ManageAliquots, self.context):
             self.review_states[0]['transitions'].append({'id': 'deactivate'})
             self.review_states.append(
                 {'id': 'inactive',
@@ -107,10 +107,10 @@ class SampletempsView(BikaListingView):
 
             stat = self.request.get("%s_review_state" % self.form_id, 'default')
             self.show_select_column = stat != 'all'
-        return super(SampletempsView, self).__call__()
+        return super(AliquotsView, self).__call__()
 
     def folderitems(self):
-        items = super(SampletempsView, self).folderitems()
+        items = super(AliquotsView, self).folderitems()
         for x in range(len(items)):
             if not items[x].has_key('obj'): continue
             obj = items[x]['obj']

@@ -5,9 +5,9 @@
     i18n_domain="bika.sanbi">
 
     <browser:page
-      for="bika.sanbi.interfaces.ISampletemps"
+      for="bika.sanbi.interfaces.IAliquots"
       name="folder_view"
-      class=".folder_view.SampletempsView"
+      class=".folder_view.AliquotsView"
       permission="zope2.View"
       layer="bika.lims.interfaces.IBikaLIMS"
     />

@@ -53,7 +53,7 @@
     </type>
 
     <type type_id="Samplestemp"/>
-    <type type_id="Sampletemp">
+    <type type_id="Aliquot">
         <bound-workflow workflow_id="bika_sample_storage_manage_workflow"/>
         <bound-workflow workflow_id="bika_one_state_workflow"/>
         <bound-workflow workflow_id="bika_inactive_workflow"/>

@@ -11,7 +11,7 @@ AddStorageManagement = 'SANBI: Add Storage Management'
 AddProject = 'SANBI: Add Project'
 AddShipment = 'SANBI: Add Shipment'
 AddMultimage = 'BIKA: Add Multimage'
-AddSampletemp = "BIKA: Add Sampletemp"
+AddAliquot = "BIKA: Add Aliquot"
 AddStorageInventory = "BIKA: Add Storage Inventory"
 
 # Add Permissions for specific types, if required
@@ -22,7 +22,7 @@ ADD_CONTENT_PERMISSIONS = {
     'Project': AddProject,
     'Shipment': AddShipment,
     'Multimage': AddMultimage,
-    'Sample': AddSampletemp,
+    'Sample': AddAliquot,
     'StorageInventory': AddStorageInventory,
 }
 
@@ -31,4 +31,4 @@ ManageKits = "SANBI: Manage Kits"
 ManageKitTemplates = "SANBI: Manage KitTemplates"
 ManageProjects = 'SANBI: Manage Projects'
 ManageShipments= "SANBI: Manage Shipments"
-ManageSampletemps = "SANBI: Manage Sampletemps"
+ManageAliquots = "SANBI: Manage Aliquots"

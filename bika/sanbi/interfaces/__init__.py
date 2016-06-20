@@ -45,10 +45,10 @@ class IBiospecimens(Interface):
 class IMultimage(Interface):
     """Interface for a shipment"""
 
-class ISampletemp(Interface):
+class IAliquot(Interface):
     """Interface for a shipment"""
 
-class ISampletemps(Interface):
+class IAliquots(Interface):
     """Interface for a shipment"""
 
 class IStorageInventory(Interface):
