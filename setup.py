@@ -24,7 +24,7 @@ setup(name='bika.sanbi',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          'bika.health',
+          'bika.lims',
           'archetypes.schemaextender',
           'plone.app.relationfield',
           'z3c.relationfield',

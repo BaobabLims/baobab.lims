@@ -37,7 +37,6 @@ class BikaTestLayer(PloneSandboxLayer):
         # Required by Products.CMFPlone:plone-content
         z2.installProduct(app, 'Products.PythonScripts')
         z2.installProduct(app, 'bika.lims')
-        z2.installProduct(app, 'bika.health')
         z2.installProduct(app, 'bika.sanbi')
 
     def setUpPloneSite(self, portal):
