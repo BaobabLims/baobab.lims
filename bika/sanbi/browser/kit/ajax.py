@@ -26,7 +26,9 @@ def getKitProducts(context, request):
 def getProductObject(product, catalog):
     """ get product object
     """
-    brains = catalog.searchResults({'portal_type': 'Product', 'Title': product['product']})
+    print product['product']
+    brains = catalog.searchResults({'portal_type': 'Product', 'UID': product['product_uid']})
+    print len(brains)
     msg = ''
     product_obj = None
     if brains:
@@ -74,6 +76,7 @@ class ComputeNumberKits():
         product_dict = {}
         if kittemplate_obj.kittemplate_lineitems:
             kittemplate_obj.kittemplate_lineitems = []
+
         for product in products:
             product_obj, error_msg = getProductObject(product, catalog)
             product_dict[product_obj.Title()] = {
