@@ -97,7 +97,7 @@ schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 schema['description'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 
 
-class Project(BaseContent):
+class Project(BaseFolder):
     security = ClassSecurityInfo()
     implements(IProject)
     schema = schema

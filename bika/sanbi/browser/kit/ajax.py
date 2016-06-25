@@ -26,9 +26,7 @@ def getKitProducts(context, request):
 def getProductObject(product, catalog):
     """ get product object
     """
-    print product['product']
     brains = catalog.searchResults({'portal_type': 'Product', 'UID': product['product_uid']})
-    print len(brains)
     msg = ''
     product_obj = None
     if brains:

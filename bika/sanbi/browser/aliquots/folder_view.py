@@ -2,12 +2,25 @@ from Products.CMFCore.utils import getToolByName
 from bika.sanbi import bikaMessageFactory as _
 from bika.sanbi.permissions import *
 from bika.lims.browser.bika_listing import BikaListingView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from plone.app.content.browser.interfaces import IFolderContentsView
+from plone.app.layout.globals.interfaces import IViewView
+from zope.interface.declarations import implements
+from Products.CMFPlone.utils import _createObjectByType
+from bika.lims.utils import tmpID
+from bika.lims.idserver import renameAfterCreation
+import json
 
+class SampletempsView(BikaListingView):
+    template = ViewPageTemplateFile('templates/samples.pt')
+    table_template = ViewPageTemplateFile("templates/samples_table.pt")
+    implements(IFolderContentsView, IViewView)
 
-class AliquotsView(BikaListingView):
     def __init__(self, context, request):
-        super(AliquotsView, self).__init__(context, request)
-        self.contentFilter = {'portal_type': 'Aliquot',
+        self.context = context
+        self.request = request
+        super(SampletempsView, self).__init__(context, request)
+        self.contentFilter = {'portal_type': 'Sampletemp',
                               'sort_on': 'sortable_title'}
 
         self.context_actions = {}
@@ -55,13 +68,13 @@ class AliquotsView(BikaListingView):
 
     def __call__(self):
         mtool = getToolByName(self.context, 'portal_membership')
-        if mtool.checkPermission(AddAliquot, self.context):
+        if mtool.checkPermission(AddSampletemp, self.context):
             self.context_actions[_('Add')] = {
-                'url': 'createObject?type_name=Aliquot',
+                'url': 'createObject?type_name=Sampletemp',
                 'icon': '++resource++bika.lims.images/add.png'
             }
 
-        if mtool.checkPermission(ManageAliquots, self.context):
+        if mtool.checkPermission(ManageSampletemps, self.context):
             self.review_states[0]['transitions'].append({'id': 'deactivate'})
             self.review_states.append(
                 {'id': 'inactive',
@@ -107,10 +120,11 @@ class AliquotsView(BikaListingView):
 
             stat = self.request.get("%s_review_state" % self.form_id, 'default')
             self.show_select_column = stat != 'all'
-        return super(AliquotsView, self).__call__()
+
+        return super(SampletempsView, self).__call__()
 
     def folderitems(self):
-        items = super(AliquotsView, self).folderitems()
+        items = super(SampletempsView, self).folderitems()
         for x in range(len(items)):
             if not items[x].has_key('obj'): continue
             obj = items[x]['obj']
@@ -124,3 +138,105 @@ class AliquotsView(BikaListingView):
                                            (items[x]['url'], items[x]['Title'])
 
         return items
+
+    def get_biospecimens(self):
+        biospecimens = self.context.objectValues('Biospecimen')
+        ret = {}
+        for biospecimen in biospecimens:
+            ret[biospecimen.UID()] = biospecimen.Title()
+
+        return ret
+
+
+class AjaxSampleTypes:
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+        self.errors = {}
+
+    def __call__(self):
+        bsc = getToolByName(self.context, 'bika_setup_catalog')
+        brains = bsc(portal_type='SampleType', inactive_state='active')
+        ret = []
+        for brain in brains:
+            ret.append({'uid': brain.UID,
+                        'title': brain.title})
+
+        return json.dumps(ret)
+
+class AjaxGetRooms:
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+        self.errors = {}
+
+    def __call__(self):
+        bsc = getToolByName(self.context, 'bika_setup_catalog')
+        brains = bsc(portal_type='StorageUnit', inactive_state='active')
+        ret = []
+        for brain in brains:
+            ret.append({'uid': brain.UID,
+                        'title': brain.title})
+
+        return json.dumps(ret)
+
+class AjaxGetChildren:
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+        self.errors = {}
+
+    def __call__(self):
+        form = self.request.form
+        bsc = getToolByName(self.context, 'bika_setup_catalog')
+        brains = bsc(portal_type="StorageManagement", room_storage=form['uid'])
+        ret = []
+        for brain in brains:
+            ret.append({'uid': brain.UID,
+                        'title': brain.title})
+
+        return json.dumps(ret)
+
+class CreateSamples:
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+        self.errors = {}
+
+    def __call__(self):
+        form = self.request.form
+        samples = json.loads([key for key in form][0])
+        project = self.context.aq_parent
+        uc = getToolByName(project, 'uid_catalog')
+        bsc = getToolByName(project, 'bika_setup_catalog')
+        for s in samples:
+            biospecimen = uc(UID=s['biospecimen'])[0].getObject()
+            type = uc(UID=s['type'])[0].getObject()
+            room = uc(UID=s['room'])[0].getObject()
+            freezer = uc(UID=s['freezer'])[0].getObject()
+            shelf = uc(UID=s['shelf'])[0].getObject()
+            box = uc(UID=s['box'])[0].getObject()
+            brains = bsc(portal_type='StorageLocation', parent_box_uid=s['box'], review_state='position_free')
+            position = brains[0].getObject() if brains else None
+            if not position:
+                storage = '.'.join([room.id, freezer.id, shelf.id, box.id])
+                message = "No free position available for \"%s\" in Storage \"%s\"" % (s['title'], storage)
+                return json.dumps({'error': message})
+
+            # create sample
+            sample = _createObjectByType('Sampletemp', project, tmpID())
+            sample.edit(
+                title=s['title'],
+                Biospecimen=biospecimen,
+                SubjectID=biospecimen.getSubjectID(),
+                Volume=s['volume'],
+                Quantity=1,
+                SampleType=type,
+                StorageLocation=position
+            )
+            sample.unmarkCreationFlag()
+            renameAfterCreation(sample)
+            sample.reindexObject()
+            sample.at_post_create_script()
+
+        return json.dumps({'success': 'Samples Created'})
