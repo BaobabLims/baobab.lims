@@ -1,4 +1,4 @@
-<div metal:define-macro="form_create_samples">
+<div metal:define-macro="form_create_aliquots">
     <form class="form-creation" style="padding-top: 10px;">
 
         <select class="biospecimens" tal:define="biospecimens python: view.get_biospecimens()">
@@ -9,18 +9,18 @@
                     tal:content="python:biospecimens[item]"></option>
         </select>
 
-        <input name="samples-number"
+        <input name="aliquots-number"
                type="number"
-               class="samples-number"
+               class="aliquots-number"
                placeholder="Number of items">
 
         <input type="submit"
                name="generate"
-               class="samples-add"
-               value="Add samples">
+               class="aliquots-add"
+               value="Add aliquots">
     </form>
 
-    <form name="list-samples" id="list-samples" class="hidden">
+    <form name="list-aliquots" id="list-aliquots" class="hidden">
         <table class="invoice-items items">
             <thead>
             <tr>
@@ -30,7 +30,7 @@
                 <th i18n:translate="">Position</th>
             </tr>
             </thead>
-            <tbody id="body-samples"></tbody>
+            <tbody id="body-aliquots"></tbody>
         </table>
         <input type="submit" name="submit" value="Create"/>
     </form>

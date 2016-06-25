@@ -39,7 +39,7 @@
     <browser:page
       for="*"
       name="create"
-      class=".folder_view.CreateSamples"
+      class=".folder_view.CreateAliquots"
       permission="zope.Public"
       layer="bika.lims.interfaces.IBikaLIMS"
     />

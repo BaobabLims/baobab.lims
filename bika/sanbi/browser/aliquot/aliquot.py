@@ -36,11 +36,9 @@ class AliquotEdit(BrowserView):
                 if location:
                     state = wftool.getInfoFor(location, 'review_state')
                     if state != 'position_free':
-                        if state == 'position_occupied' and \
-                                location.getAliquot():
+                        if state == 'position_occupied' and location.getAliquot():
                             location.setAliquot(None)
-                        wftool.doActionFor(location, action='free',
-                                           wf_id='bika_storageposition_workflow')
+                        wftool.doActionFor(location, action='free', wf_id='bika_storageposition_workflow')
 
             portal_factory = getToolByName(context, 'portal_factory')
             context = portal_factory.doCreate(context, context.id)

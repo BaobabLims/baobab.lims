@@ -37,12 +37,12 @@
                         $(id).html('<option>' + text + '</option>');
                     }
 
-                    $("input.samples-add").on("click", function(e){
+                    $("input.aliquots-add").on("click", function(e){
                         var biospecimen = $("select.biospecimens").val();
                         if (biospecimen === "Select Biospecimen"){
                             window.bika.lims.portalMessage("Select a biospecimen!");
                         }
-                        var num = $("input.samples-number").val();
+                        var num = $("input.aliquots-number").val();
                         var html = '';
                         var path = window.location.href.split('?')[0];
                         for(var i=1; i<=num; i++){
@@ -55,9 +55,9 @@
                                      '<select id="select-box-'+ i +'"><option>Box</option></select>' + '</td></tr>';
                             html += td;
                         }
-                        $("#body-samples").html(html);
+                        $("#body-aliquots").html(html);
 
-                        $("form[name='list-samples']").removeClass('hidden');
+                        $("form[name='list-aliquots']").removeClass('hidden');
 
                         $.ajax({
                             dataType: "json",
@@ -97,7 +97,7 @@
 
                         $("input[name='submit']").on("click", function (e) {
                             var formValues = [];
-                            var num = $("input.samples-number").val();
+                            var num = $("input.aliquots-number").val();
                             var biospecimen = $("select.biospecimens").val();
                             for(var i = 1; i <= num; i++){
                                 var title = $("#sample-"+i).val();
@@ -190,7 +190,7 @@
         tal:content="structure view/description"
         tal:condition="view/description"/>
     <tal:form>
-        <metal:form use-macro="view/table_template/macros/form_create_samples"/>
+        <metal:form use-macro="view/table_template/macros/form_create_aliquots"/>
     </tal:form>
 </metal:content-description>
 

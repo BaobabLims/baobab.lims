@@ -138,7 +138,7 @@
                       if((quantity * volume + totalVolume) > biospecVolume){
                           element.addClass("info-volume");
                           $(html).insertBefore($("div#archetypes-fieldname-Quantity > div.fieldErrorBox"));
-                          var text = "Total biospecimen samples volume is " + totalVolume + "ml. " +
+                          var text = "Total volume of aliquts is " + totalVolume + "ml. " +
                                      "Biospecimen volume is " + biospecVolume + "ml. The remaining volume " +
                                      "to use is " + parseFloat(biospecVolume - totalVolume) + "ml";
                           $("#error-volume").text(text);

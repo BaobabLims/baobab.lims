@@ -6,7 +6,7 @@ from bika.sanbi.controlpanel.bika_biospectypes import BiospecTypesView
 from bika.lims.browser import BrowserView
 from bika.lims.controlpanel.bika_analysisservices import AnalysisServicesView
 from bika.sanbi.controlpanel.bika_biospecimens import BiospecimensView
-from bika.sanbi.browser.sampletemps.folder_view import SampletempsView
+from bika.sanbi.browser.aliquots.folder_view import AliquotsView
 
 
 class ProjectEdit(BrowserView):
@@ -201,8 +201,8 @@ class ProjectBiospecimensView(BiospecimensView):
         return out_items
 
 
-class BiospecimenSamplesView(SampletempsView):
+class BiospecimenAliquotsView(AliquotsView):
     def __init__(self, context, request):
         self.context = context
-        super(BiospecimenSamplesView, self).__init__(context, request)
+        super(BiospecimenAliquotsView, self).__init__(context, request)
 

@@ -11,20 +11,20 @@ from bika.lims.utils import tmpID
 from bika.lims.idserver import renameAfterCreation
 import json
 
-class SampletempsView(BikaListingView):
-    template = ViewPageTemplateFile('templates/samples.pt')
-    table_template = ViewPageTemplateFile("templates/samples_table.pt")
+class AliquotsView(BikaListingView):
+    template = ViewPageTemplateFile('templates/aliquots.pt')
+    table_template = ViewPageTemplateFile("templates/aliquots_table.pt")
     implements(IFolderContentsView, IViewView)
 
     def __init__(self, context, request):
         self.context = context
         self.request = request
-        super(SampletempsView, self).__init__(context, request)
-        self.contentFilter = {'portal_type': 'Sampletemp',
+        super(AliquotsView, self).__init__(context, request)
+        self.contentFilter = {'portal_type': 'Aliquot',
                               'sort_on': 'sortable_title'}
 
         self.context_actions = {}
-        self.title = self.context.translate(_("Samples"))
+        self.title = self.context.translate(_("Aliquots"))
         self.icon = self.portal_url + "/++resource++bika.sanbi.images/sample_big.png"
         self.description = ""
         self.show_sort_column = False
@@ -68,13 +68,13 @@ class SampletempsView(BikaListingView):
 
     def __call__(self):
         mtool = getToolByName(self.context, 'portal_membership')
-        if mtool.checkPermission(AddSampletemp, self.context):
+        if mtool.checkPermission(AddAliquot, self.context):
             self.context_actions[_('Add')] = {
-                'url': 'createObject?type_name=Sampletemp',
+                'url': 'createObject?type_name=Aliquot',
                 'icon': '++resource++bika.lims.images/add.png'
             }
 
-        if mtool.checkPermission(ManageSampletemps, self.context):
+        if mtool.checkPermission(ManageAliquots, self.context):
             self.review_states[0]['transitions'].append({'id': 'deactivate'})
             self.review_states.append(
                 {'id': 'inactive',
@@ -121,10 +121,10 @@ class SampletempsView(BikaListingView):
             stat = self.request.get("%s_review_state" % self.form_id, 'default')
             self.show_select_column = stat != 'all'
 
-        return super(SampletempsView, self).__call__()
+        return super(AliquotsView, self).__call__()
 
     def folderitems(self):
-        items = super(SampletempsView, self).folderitems()
+        items = super(AliquotsView, self).folderitems()
         for x in range(len(items)):
             if not items[x].has_key('obj'): continue
             obj = items[x]['obj']
@@ -197,7 +197,7 @@ class AjaxGetChildren:
 
         return json.dumps(ret)
 
-class CreateSamples:
+class CreateAliquots:
     def __init__(self, context, request):
         self.context = context
         self.request = request
@@ -205,11 +205,11 @@ class CreateSamples:
 
     def __call__(self):
         form = self.request.form
-        samples = json.loads([key for key in form][0])
+        aliquots = json.loads([key for key in form][0])
         project = self.context.aq_parent
         uc = getToolByName(project, 'uid_catalog')
         bsc = getToolByName(project, 'bika_setup_catalog')
-        for s in samples:
+        for s in aliquots:
             biospecimen = uc(UID=s['biospecimen'])[0].getObject()
             type = uc(UID=s['type'])[0].getObject()
             room = uc(UID=s['room'])[0].getObject()
@@ -223,9 +223,9 @@ class CreateSamples:
                 message = "No free position available for \"%s\" in Storage \"%s\"" % (s['title'], storage)
                 return json.dumps({'error': message})
 
-            # create sample
-            sample = _createObjectByType('Sampletemp', project, tmpID())
-            sample.edit(
+            # create aliquot
+            aliquot = _createObjectByType('Aliquot', project, tmpID())
+            aliquot.edit(
                 title=s['title'],
                 Biospecimen=biospecimen,
                 SubjectID=biospecimen.getSubjectID(),
@@ -234,9 +234,9 @@ class CreateSamples:
                 SampleType=type,
                 StorageLocation=position
             )
-            sample.unmarkCreationFlag()
-            renameAfterCreation(sample)
-            sample.reindexObject()
-            sample.at_post_create_script()
+            aliquot.unmarkCreationFlag()
+            renameAfterCreation(aliquot)
+            aliquot.reindexObject()
+            aliquot.at_post_create_script()
 
-        return json.dumps({'success': 'Samples Created'})
+        return json.dumps({'success': 'Aliquots Created'})

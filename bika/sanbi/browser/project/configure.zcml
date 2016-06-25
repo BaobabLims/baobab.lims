@@ -30,8 +30,8 @@
 
     <browser:page
       for="bika.sanbi.interfaces.IProject"
-      name="samples"
-      class=".project.BiospecimenSamplesView"
+      name="aliquots"
+      class=".project.BiospecimenAliquotsView"
       permission="zope.Public"
       layer="bika.lims.interfaces.IBikaLIMS"
     />
