@@ -46,7 +46,7 @@
                         var html = '';
                         var path = window.location.href.split('?')[0];
                         for(var i=1; i<=num; i++){
-                            var td = '<tr><td><input id="sample-'+ i +'" type="text" value="Sample '+ i +'"/> </td>' +
+                            var td = '<tr><td><input id="sample-'+ i +'" type="text" value="Aliquot '+ i +'"/> </td>' +
                                      '<td><input id="volume-'+ i +'" type="number" step="0.01" placeholder="Enter Volume"/></td>' +
                                      '<td><select id="sample-type-'+ i +'"><option>None</option></select>' +
                                      '<td><select id="select-room-'+ i +'"><option>Room</option></select>' +

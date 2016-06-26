@@ -15,7 +15,7 @@ schema = BikaSchema.copy() + Schema((
     ReferenceField('Biospecimen',
         required=1,
         allowed_types=('Biospecimen',),
-        relationship='BiospecimenSample',
+        relationship='BiospecimenAliquot',
         vocabulary_display_path_bound=sys.maxsize,
         referenceClass=HoldingReference,
         widget=bika_ReferenceWidget(
@@ -54,15 +54,15 @@ schema = BikaSchema.copy() + Schema((
          description=_("The number of units that this sample represents."),
         )),
 
-    ReferenceField('SampleType',
+    ReferenceField('AliquotType',
         required=1,
-        allowed_types=('SampleType',),
-        relationship='SampleTypeSample',
+        allowed_types=('AliquotType',),
+        relationship='AliquotTypeAliquot',
         vocabulary_display_path_bound=sys.maxsize,
         referenceClass=HoldingReference,
         widget=bika_ReferenceWidget(
            checkbox_bound=0,
-           label=_("Sample Type"),
+           label=_("Aliquot Type"),
            description=_("Select the type of the sample."),
            size=40,
            catalog_name='bika_setup_catalog',

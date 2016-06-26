@@ -33,13 +33,13 @@ class AliquotsView(BikaListingView):
         self.pagesize = 50
 
         self.columns = {
-            'Title': {'title': _('Sample'),
+            'Title': {'title': _('Aliquot'),
                       'index': 'sortable_title'},
             'Biospecimen': {'title': _('Biospecimen'),
                             'toggle': True},
             'SubjectID': {'title': _('Subject ID'),
                           'toggle': True},
-            'SampleType': {'title': _('Sample Type'),
+            'AliquotType': {'title': _('Aliquot Type'),
                            'toggle': True},
             'Volume': {'title': _('Volume'),
                            'toggle': True},
@@ -60,7 +60,7 @@ class AliquotsView(BikaListingView):
              'columns': ['Title',
                          'Biospecimen',
                          'SubjectID',
-                         'SampleType',
+                         'AliquotType',
                          'Quantity',
                          'Volume',
                          'Location']},
@@ -84,7 +84,7 @@ class AliquotsView(BikaListingView):
                  'columns': ['Title',
                              'Biospecimen',
                              'SubjectID',
-                             'SampleType',
+                             'AliquotType',
                              'Quantity',
                              'Volume',
                              'Location']})
@@ -100,7 +100,7 @@ class AliquotsView(BikaListingView):
                  'columns': ['Title',
                              'Biospecimen',
                              'SubjectID',
-                             'SampleType',
+                             'AliquotType',
                              'Quantity',
                              'Volume',
                              'Location']})
@@ -113,7 +113,7 @@ class AliquotsView(BikaListingView):
                  'columns': ['Title',
                              'Biospecimen',
                              'SubjectID',
-                             'SampleType',
+                             'AliquotType',
                              'Quantity',
                              'Volume',
                              'Location']})
@@ -130,7 +130,7 @@ class AliquotsView(BikaListingView):
             obj = items[x]['obj']
             items[x]['Biospecimen'] = obj.getBiospecimen().Title()
             items[x]['SubjectID'] = obj.getSubjectID()
-            items[x]['SampleType'] = obj.getSampleType().Title()
+            items[x]['AliquotType'] = obj.getAliquotType().Title()
             items[x]['Quantity'] = obj.getQuantity()
             items[x]['Volume'] = obj.getVolume()
             items[x]['Location'] = obj.getStorageLocation() and obj.getStorageLocation().Title() or ''
@@ -231,7 +231,7 @@ class CreateAliquots:
                 SubjectID=biospecimen.getSubjectID(),
                 Volume=s['volume'],
                 Quantity=1,
-                SampleType=type,
+                AliquotType=type,
                 StorageLocation=position
             )
             aliquot.unmarkCreationFlag()

@@ -173,7 +173,7 @@
 <metal:title fill-slot="content-title">
     <h1>
         <!--?<img tal:condition="view/icon | nothing" tal:attributes="src view/icon"/>-->
-        <tal:new tal:condition="python: not context.Title()" i18n:translate="">Add New Sample</tal:new>
+        <tal:new tal:condition="python: not context.Title()" i18n:translate="">Add New Aliquot</tal:new>
         <tal:new tal:condition="python:context.Title()" tal:content="python:'Edit ' + context.getId()"></tal:new>
     </h1>
 </metal:title>
@@ -209,7 +209,7 @@
                 </tr>
 
                 <tr tal:define="fieldName python:field.getName();"
-                    tal:condition="python: fieldName == 'SampleType'">
+                    tal:condition="python: fieldName == 'AliquotType'">
 
                     <td>
                     <div style="font-weight: bold; font-family: Arial; font-size: large;">
@@ -237,7 +237,7 @@
                     </td>
                 </tr>
                 <tr tal:define="fieldName python:field.getName();"
-                    tal:condition="python: fieldName == 'SampleType'">
+                    tal:condition="python: fieldName == 'AliquotType'">
 
                     <td>
                     <div>
@@ -261,7 +261,7 @@
                     </td>
                 </tr>
                 <tr tal:define="fieldName python:field.getName();"
-                    tal:condition="python: fieldName == 'SampleType'">
+                    tal:condition="python: fieldName == 'AliquotType'">
 
                     <td>
                     <div>
@@ -285,7 +285,7 @@
                     </td>
                 </tr>
                 <tr tal:define="fieldName python:field.getName();"
-                    tal:condition="python: fieldName == 'SampleType'">
+                    tal:condition="python: fieldName == 'AliquotType'">
 
                     <td>
                     <div>
@@ -309,7 +309,7 @@
                     </td>
                 </tr>
                 <tr tal:define="fieldName python:field.getName();"
-                    tal:condition="python: fieldName == 'SampleType'">
+                    tal:condition="python: fieldName == 'AliquotType'">
 
                     <td>
                     <div>

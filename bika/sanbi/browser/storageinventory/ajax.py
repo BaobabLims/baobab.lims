@@ -235,6 +235,7 @@ class InventoryPositionsInfo:
     def __call__(self):
         response = {}
         positions = []
+        catalog = getToolByName(self.context, 'bika_setup_catalog')
         if self.context.getHasChildren():
             response = {
                 'x': self.context.getXAxis(),
@@ -243,16 +244,31 @@ class InventoryPositionsInfo:
             }
             children = self.context.getChildren()
             for c in children:
+                pos_info = {}
+                sid, product, quantity, path = '', '', 0, ''
+                if c.getIsOccupied():
+                    sid = c.getStockItemID()
+                    brains = catalog.searchResults(portal_type="StockItem", id=sid)
+                    si = brains[0].getObject()
+                    product = si.getProductTitle()
+                    quantity = si.getProduct().getQuantity()
+                    path = si.absolute_url_path()
+
                 positions.append({
                     'id': c.getId(),
-                    'occupied': c.getIsOccupied()
+                    'occupied': c.getIsOccupied(),
+                    'sid': sid,
+                    'product': product,
+                    'quantity': quantity,
+                    'path': path
                 })
                 response['positions'] = positions
 
         return json.dumps(response)
 
+
 class InventoryItemInfo:
-    def __int__(self, context, request):
+    def __init__(self, context, request):
         self.context = context
         self.request = request
 
