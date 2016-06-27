@@ -11,7 +11,7 @@ class BiospecimensView(BikaListingView):
 
     def __init__(self, context, request):
         super(BiospecimensView, self).__init__(context, request)
-        self.catalog = 'bika_setup_catalog'
+        self.catalog = 'bika_catalog'
         self.contentFilter = {
             'portal_type': 'Biospecimen',
             'sort_on': 'created',
