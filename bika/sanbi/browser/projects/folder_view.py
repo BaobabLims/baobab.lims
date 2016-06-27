@@ -8,6 +8,7 @@ class ProjectsView(BikaListingView):
 
     def __init__(self, context, request):
         super(ProjectsView, self).__init__(context, request)
+        self.catalog = "bika_catalog"
         self.contentFilter = {'portal_type': 'Project',
                               'sort_on': 'sortable_title'}
         self.context_actions = {}

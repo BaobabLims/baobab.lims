@@ -1,4 +1,6 @@
 from Products.Archetypes.public import *
+from plone.indexer import indexer
+
 from bika.lims.content.bikaschema import BikaSchema
 from Products.Archetypes.references import HoldingReference
 from bika.sanbi import bikaMessageFactory as _
@@ -10,6 +12,11 @@ from bika.sanbi import config
 import sys
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from bika.sanbi.browser.widgets import ProjectAnalysesWidget
+
+@indexer(IProject)
+def getClientTitle(instance):
+    client = instance.getClient()
+    return client.Title() if client else ""
 
 schema = BikaSchema.copy() + Schema((
     ReferenceField('Client',
