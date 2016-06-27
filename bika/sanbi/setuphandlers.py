@@ -130,3 +130,28 @@ def setupCustomVarious(context):
     gen.setupCatalogs(portal)
     gen.setupPortalContent(portal)
     gen.setupPermissions(portal)
+
+    # Hide some NAV folders that BioBank may not need.
+    for x in ['samples',
+              'referencesamples',
+              'analysisrequests',
+              'batches',
+              'worksheets',
+              'methods',
+              'pricelists',
+              'invoices',
+              'arimports', ]:
+        obj = portal[x]
+        obj.schema['excludeFromNav'].set(obj, True)
+        obj.reindexObject()
+
+    # Set the order of the nav folders that are still visible
+    for item in reversed(['clients',
+                          'projects',
+                          'kits',
+                          'biospecimens',
+                          'aliquots',
+                          'shipments',
+                          'supplyorders',
+                          'orders']):
+        portal.moveObjectsToTop([item])
