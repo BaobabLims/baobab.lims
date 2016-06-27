@@ -31,10 +31,10 @@ class ProjectEdit(BrowserView):
             context = portal_factory.doCreate(context, context.id)
             context.processForm()
 
-            p_catalog = getToolByName(context, 'portal_catalog')
-            brains = p_catalog.searchResults(portal_type='Client', ClientID=form['ClientID'])
-            client = brains[0].getObject()
-            context.setClientID(client)
+            uc = getToolByName(context, 'uid_catalog')
+            brains = uc(UID=form['Client_uid'])
+            if brains:
+                context.setClient(brains[0].getObject())
 
             analyses_uids = form.get('Analyses', [])
             context.setAnalyses(analyses_uids)
@@ -68,6 +68,10 @@ class ProjectAnalysisServicesView(AnalysisServicesView):
         self.allow_edit = False
         self.pagesize = 999999
         self.contentFilter['UID'] = self.uids
+
+        self.show_categories = True
+        self.expand_all_categories = True
+        self.ajax_categories = False
 
         self.columns = {
             'Title': {'title': _('Service'),
@@ -162,7 +166,7 @@ class ProjectView(BrowserView):
         # __Collect general data__ #
         self.id = context.getId()
         self.title = context.Title()
-        self.client = context.getClientID().Title()
+        self.client = context.getClient().Title()
         self.study_type = context.getStudyType()
         self.participants = context.getNumParticipants()
         self.age_interval = str(context.getAgeLow()) + ' - ' + str(context.getAgeHigh())
