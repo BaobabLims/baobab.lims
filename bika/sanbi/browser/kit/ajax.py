@@ -67,7 +67,6 @@ class ComputeNumberKits():
         self.request = request
 
     def __call__(self):
-        plone.protect.CheckAuthenticator(self.request)
         quantity_ratios = []
         products, catalog, kittemplate_obj = getKitProducts(self.context, self.request)
         error_msg = ''

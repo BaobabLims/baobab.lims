@@ -97,7 +97,7 @@ class PositionsView(BikaListingView):
             obj = items[x]['obj']
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                            (items[x]['url'], items[x]['Title'])
-            items[x]['StorageUnit'] = obj.getStorageUnit().Title()
+            items[x]['StorageUnit'] = obj.aq_parent.Title()
             items[x]['Hierarchy'] = obj.getHierarchy()
             items[x]['StockItemID'] = obj.getStockItemID()
             out_items.append(items[x])
@@ -143,7 +143,7 @@ class InventoryStorageView(BrowserView):
         self.id = context.getId()
         self.title = context.Title()
         self.type = self.type_text(context)
-        self.parent = context.aq_parent
+        self.parent = context.aq_parent.Title()
         self.numPositions = context.getNumPositions()
         self.dimension = self.dimension_text(context)
 
