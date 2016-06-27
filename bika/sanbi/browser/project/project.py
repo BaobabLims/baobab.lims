@@ -163,7 +163,8 @@ class ProjectView(BrowserView):
         # __Collect general data__ #
         self.id = context.getId()
         self.title = context.Title()
-        self.client = context.getClient().Title()
+        self.client = "<a href='%s'>%s</a>"%(context.getClient().absolute_url(),
+                                             context.getClient().Title())
         self.study_type = context.getStudyType()
         self.participants = context.getNumParticipants()
         self.age_interval = str(context.getAgeLow()) + ' - ' + str(context.getAgeHigh())
