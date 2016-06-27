@@ -63,35 +63,3 @@ class ClientProjectsView(BikaListingView):
 
         return items
 
-
-mv ./bika/sanbi/browser/aliquot/sampletemp.py ./bika/sanbi/browser/aliquot/aliquot.py
-mv ./bika/sanbi/browser/aliquot/templates/sampletemp_edit.pt ./bika/sanbi/browser/aliquot/templates/aliquot_edit.pt
-
-
-
-
-
-
-
-
-Home
-Clients
-Orders
-Projects
-Kits
-Biospecimens
-Shipments
-temps - aliquot
-Supply Orders
-
-
-
-Samples
-Reference Samples
-Analysis Requests
-Batches
-Worksheets
-Imports
-Methods
-Pricelists
-Statements
