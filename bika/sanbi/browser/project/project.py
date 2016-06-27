@@ -36,9 +36,6 @@ class ProjectEdit(BrowserView):
             if brains:
                 context.setClient(brains[0].getObject())
 
-            analyses_uids = form.get('Analyses', [])
-            context.setAnalyses(analyses_uids)
-
             obj_url = context.absolute_url_path()
             request.response.redirect(obj_url)
             return

@@ -76,27 +76,14 @@ schema = BikaSchema.copy() + Schema((
            visible={'edit': 'visible', 'view': 'visible'},
         )),
 
-    LinesField('Analyses',
-        vocabulary='_getBiospecimensDisplayList',
-        widget=MultiSelectionWidget(
-           modes=('edit',),
-           label=_("Analyses"),
-           description=_(
-               "Multi-select widget. Select manually or use biospecimen-type widget to select Analysis services. "
-               "The services chosen here will be use in Analysis requests."),
-           visible={'edit': False, 'view': False},
-        )),
-
     ReferenceField('Service',
            required=1,
            multiValued=1,
            allowed_types=('AnalysisService',),
            relationship='BiospecimenAnalysisService',
            widget=ProjectAnalysesWidget(
-               label=_("Analyse Services"),
-               description=_(
-                   "Multi-checkboxes table. Select manually or use biospecimen-type widget to select Analysis services. "
-                   "The services chosen here will be used in Analysis requests."),
+               label=_("Analyses"),
+               description="",
            )),
 ))
 schema['title'].required = True
