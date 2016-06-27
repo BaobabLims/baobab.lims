@@ -9,7 +9,12 @@ from zope.interface import implements
 from bika.sanbi.interfaces import IStorageManagement
 from Products.CMFPlone.interfaces import IConstrainTypes
 from Products.CMFCore.utils import getToolByName
+from plone.indexer import indexer
 import sys
+
+@indexer(IStorageManagement)
+def get_storage_room_id(instance):
+    return instance.getStorageUnit().UID()
 
 schema = BikaSchema.copy() + Schema((
 
@@ -116,7 +121,6 @@ schema = BikaSchema.copy() + Schema((
 
 schema['title'].required = True
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
-#schema['title'].widget.size = 100
 schema['description'].widget.visible = {'edit': 'visible', 'view': 'visible'}
 schema.moveField('ChildrenTitle', before="Dimension")
 

@@ -72,7 +72,7 @@ class ProjectsView(BikaListingView):
         for x in range(len(items)):
             if not items[x].has_key('obj'): continue
             obj = items[x]['obj']
-            items[x]['getClient'] = obj.getClientID().Title()
+            items[x]['getClient'] = obj.getClient().Title()
             items[x]['getStudyType'] = obj.getStudyType()
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                            (items[x]['url'], items[x]['Title'])

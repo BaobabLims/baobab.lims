@@ -57,4 +57,16 @@
         visible="True">
     <permission value="Modify portal content"/>
  </action>
+
+ <action title="Documents"
+        action_id="biospecimenmultimage"
+        category="object"
+        condition_expr=""
+        icon_expr="string:${portal_url}/images/instrumentcertification.png"
+        url_expr="string:${object_url}/multimage"
+        i18n:attributes="title"
+        visible="True">
+    <permission value="Modify portal content"/>
+ </action>
+
 </object>

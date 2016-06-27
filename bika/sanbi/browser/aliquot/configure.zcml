@@ -5,49 +5,49 @@
     i18n_domain="bika.sanbi">
 
     <browser:page
-      for="bika.sanbi.interfaces.ISampletemp"
+      for="bika.sanbi.interfaces.IAliquot"
       name="base_edit"
-      class="bika.sanbi.browser.sampletemp.SampletempEdit"
+      class="bika.sanbi.browser.aliquot.AliquotEdit"
       permission="cmf.ModifyPortalContent"
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
     <browser:page
-      for="bika.sanbi.interfaces.ISampletemp"
+      for="bika.sanbi.interfaces.IAliquot"
       name="get_freezers"
-      class="bika.sanbi.browser.sampletemp.AjaxGetFreezers"
+      class="bika.sanbi.browser.aliquot.AjaxGetFreezers"
       permission="cmf.ModifyPortalContent"
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
     <browser:page
-      for="bika.sanbi.interfaces.ISampletemp"
+      for="bika.sanbi.interfaces.IAliquot"
       name="get_shelves"
-      class="bika.sanbi.browser.sampletemp.AjaxGetShelves"
+      class="bika.sanbi.browser.aliquot.AjaxGetShelves"
       permission="cmf.ModifyPortalContent"
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
     <browser:page
-      for="bika.sanbi.interfaces.ISampletemp"
+      for="bika.sanbi.interfaces.IAliquot"
       name="get_boxes"
-      class="bika.sanbi.browser.sampletemp.AjaxGetBoxes"
+      class="bika.sanbi.browser.aliquot.AjaxGetBoxes"
       permission="cmf.ModifyPortalContent"
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
     <browser:page
-      for="bika.sanbi.interfaces.ISampletemp"
+      for="bika.sanbi.interfaces.IAliquot"
       name="get_positions"
-      class="bika.sanbi.browser.sampletemp.AjaxGetPositions"
+      class="bika.sanbi.browser.aliquot.AjaxGetPositions"
       permission="cmf.ModifyPortalContent"
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
     <browser:page
-      for="bika.sanbi.interfaces.ISampletemp"
+      for="bika.sanbi.interfaces.IAliquot"
       name="biospecimen_volume"
-      class="bika.sanbi.browser.sampletemp.AjaxGetBiospecimenVolume"
+      class="bika.sanbi.browser.aliquot.AjaxGetBiospecimenVolume"
       permission="cmf.ModifyPortalContent"
       layer="bika.lims.interfaces.IBikaLIMS"
     />

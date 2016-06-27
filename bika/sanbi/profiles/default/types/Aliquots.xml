@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
-<object name="Sampletemps"
+<object name="Aliquots"
         meta_type="Factory-based Type Information with dynamic views"
         xmlns:i18n="http://xml.zope.org/namespaces/i18n"
         i18n:domain="plone">
- <property name="title" i18n:translate="">Sample temps</property>
+ <property name="title" i18n:translate="">Aliquots</property>
  <property name="description"></property>
  <property name="content_icon">++resource++bika.sanbi.images/sample.png</property>
- <property name="content_meta_type">Sampletemps</property>
+ <property name="content_meta_type">Aliquots</property>
  <property name="product">bika.sanbi</property>
- <property name="factory">addSampletemps</property>
+ <property name="factory">addAliquots</property>
  <property name="add_view_expr"></property>
  <property name="link_target"></property>
  <property name="global_allow">False</property>
  <property name="filter_content_types">True</property>
  <property name="allowed_content_types">
-  <element value="Sampletemp"/>
+  <element value="Aliquot"/>
  </property>
  <property name="allow_discussion">False</property>
  <property name="default_view_fallback">False</property>

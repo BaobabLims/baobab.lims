@@ -12,7 +12,11 @@
  <property name="add_view_expr"></property>
  <property name="link_target"></property>
  <property name="global_allow">False</property>
- <property name="filter_content_types">False</property>
+ <property name="filter_content_types">True</property>
+ <property name="allowed_content_types">
+  <element value="Biospecimen"/>
+  <element value="Aliquot"/>
+ </property>
  <property name="allow_discussion">False</property>
  <property name="default_view_fallback">False</property>
 
@@ -44,6 +48,31 @@
          i18n:domain="plone"
          visible="True">
   <permission value="Modify portal content"/>
+ </action>
+
+ <action title="Biospecimens"
+         action_id="biospecimens"
+         category="object"
+         condition_expr=""
+         icon_expr=""
+         link_target=""
+         url_expr="string:${object_url}/biospecimens"
+         i18n:attributes="title"
+         i18n:domain="plone"
+         visible="True">
+  <permission value="Modify portal content"/>
+ </action>
+
+ <action title="Aliquots"
+        action_id="aliquots"
+        category="object"
+        condition_expr=""
+        icon_expr=""
+        link_target=""
+        url_expr="string:${object_url}/aliquots"
+        i18n:attributes="title"
+        visible="True">
+    <permission value="Modify portal content"/>
  </action>
 
 </object>

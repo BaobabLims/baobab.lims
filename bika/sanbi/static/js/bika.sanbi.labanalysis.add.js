@@ -2,7 +2,6 @@ function CustomLabAnalysisAddView(){
     var biospecimensFd = '#archetypes-fieldname-Biospecimentypes';
 
     this.load = function(){
-        console.log('salam');
         // disable browser auto-complete
         $('input[type=text]').prop('autocomplete', 'off');
         init();

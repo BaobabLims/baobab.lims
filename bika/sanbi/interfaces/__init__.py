@@ -37,19 +37,19 @@ class IShipment(Interface):
     """Interface for a shipment"""
 
 class IBiospecimen(Interface):
-    """Interface for a shipment"""
+    """Interface for a biospecimen"""
 
 class IBiospecimens(Interface):
-    """Interface for a shipment"""
+    """Interface for a biospecimens"""
 
 class IMultimage(Interface):
-    """Interface for a shipment"""
+    """Interface for a multimage"""
 
-class ISampletemp(Interface):
-    """Interface for a shipment"""
+class IAliquot(Interface):
+    """Interface for a aliquot"""
 
-class ISampletemps(Interface):
-    """Interface for a shipment"""
+class IAliquots(Interface):
+    """Interface for aliquots"""
 
 class IStorageInventory(Interface):
     """Interface for StorageInventory"""

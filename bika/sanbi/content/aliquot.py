@@ -5,7 +5,7 @@ from bika.sanbi import bikaMessageFactory as _
 from AccessControl import ClassSecurityInfo
 from zope.interface import implements
 from Products.CMFCore.utils import getToolByName
-from bika.sanbi.interfaces import ISampletemp
+from bika.sanbi.interfaces import IAliquot
 from bika.sanbi import config
 import sys
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
@@ -15,7 +15,7 @@ schema = BikaSchema.copy() + Schema((
     ReferenceField('Biospecimen',
         required=1,
         allowed_types=('Biospecimen',),
-        relationship='BiospecimenSample',
+        relationship='BiospecimenAliquot',
         vocabulary_display_path_bound=sys.maxsize,
         referenceClass=HoldingReference,
         widget=bika_ReferenceWidget(
@@ -54,15 +54,15 @@ schema = BikaSchema.copy() + Schema((
          description=_("The number of units that this sample represents."),
         )),
 
-    ReferenceField('SampleType',
+    ReferenceField('AliquotType',
         required=1,
-        allowed_types=('SampleType',),
-        relationship='SampleTypeSample',
+        allowed_types=('AliquotType',),
+        relationship='AliquotTypeAliquot',
         vocabulary_display_path_bound=sys.maxsize,
         referenceClass=HoldingReference,
         widget=bika_ReferenceWidget(
            checkbox_bound=0,
-           label=_("Sample Type"),
+           label=_("Aliquot Type"),
            description=_("Select the type of the sample."),
            size=40,
            catalog_name='bika_setup_catalog',
@@ -73,7 +73,7 @@ schema = BikaSchema.copy() + Schema((
     ReferenceField(
         'StorageLocation',
         allowed_types=('StorageLocation',),
-        relationship='SampletempStorageLocation',
+        relationship='AliquotStorageLocation',
         widget=bika_ReferenceWidget(
             label=_("Storage Location"),
             description=_("Location where sample is kept"),
@@ -96,7 +96,7 @@ schema = BikaSchema.copy() + Schema((
     ReferenceField('StorageUnits',
         vocabulary='getStorageUnits',
         allowed_types=('StorageUnit',),
-        relationship='SampletempUnit',
+        relationship='AliquotUnit',
         widget=SelectionWidget(
            format='select',
            label=_("Storage Units"),
@@ -106,7 +106,7 @@ schema = BikaSchema.copy() + Schema((
     ReferenceField('Freezers',
         vocabulary='getFreezers',
         allowed_types=('StorageManagement',),
-        relationship='SampletempStorage',
+        relationship='AliquotStorage',
         widget=SelectionWidget(
            format='select',
            label=_("Freezers"),
@@ -116,7 +116,7 @@ schema = BikaSchema.copy() + Schema((
     ReferenceField('Shelves',
         vocabulary='getShelves',
         allowed_types=('StorageManagement',),
-        relationship='SampletempStorage',
+        relationship='AliquotStorage',
         widget=SelectionWidget(
            format='select',
            label=_("Shelves"),
@@ -126,7 +126,7 @@ schema = BikaSchema.copy() + Schema((
     ReferenceField('Boxes',
         vocabulary='getBoxes',
         allowed_types=('StorageManagement',),
-        relationship='SampletempStorage',
+        relationship='AliquotStorage',
         widget=SelectionWidget(
            format='select',
            label=_("Boxes"),
@@ -138,8 +138,8 @@ schema['title'].required = True
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 schema['description'].widget.visible = {'edit': 'visible', 'view': 'visible'}
 
-class Sampletemp(BaseContent):
-    implements(ISampletemp)
+class Aliquot(BaseContent):
+    implements(IAliquot)
     security = ClassSecurityInfo()
     displayContentsTab = False
     schema = schema
@@ -264,8 +264,8 @@ class Sampletemp(BaseContent):
             state = wftool.getInfoFor(storage_location, 'review_state')
             if state != 'position_occupied':
                 #wftool.doActionFor(storage_location, action='reserve', wf_id='bika_storageposition_workflow')
-                if not storage_location.getSampletemp():
-                    storage_location.setSampletemp(self)
+                if not storage_location.getAliquot():
+                    storage_location.setAliquot(self)
                 wftool.doActionFor(storage_location, action='occupy', wf_id="bika_storageposition_workflow")
 
     def workflow_script_pend(self):
@@ -276,8 +276,8 @@ class Sampletemp(BaseContent):
             storage_location = self.getStorageLocation()
             state = wftool.getInfoFor(storage_location, 'review_state')
             if state == 'position_occupied':
-                storage_location.setSampletemp(None)
+                storage_location.setAliquot(None)
                 wftool.doActionFor(storage_location, action='reserve', wf_id='bika_storageposition_workflow')
 
 
-registerType(Sampletemp, config.PROJECTNAME)
+registerType(Aliquot, config.PROJECTNAME)

@@ -17,7 +17,7 @@ class BikaCustomGenerator:
         for obj_id in ('kits',
                        'projects',
                        'shipments',
-                       'sampletemps',
+                       'aliquots',
                        'biospecimens'):
             try:
                 obj = portal._getOb(obj_id)
@@ -62,7 +62,7 @@ class BikaCustomGenerator:
         at.setCatalogsByType('Kit', ['bika_catalog'])
         at.setCatalogsByType('Project', ['bika_catalog'])
         at.setCatalogsByType('Shipment', ['bika_catalog'])
-        at.setCatalogsByType('Sampletemp', ['bika_catalog'])
+        at.setCatalogsByType('Aliquot', ['bika_catalog'])
         at.setCatalogsByType('Biospecimen', ['bika_catalog', ])
         addIndex(bc, 'getBiospecimenID', 'FieldIndex')
 
@@ -91,6 +91,7 @@ class BikaCustomGenerator:
         addIndex(bsc, 'getHasChildren', 'FieldIndex')
         addColumn(bsc, 'getHasChildren')
         addIndex(bsc, 'getLocation', 'FieldIndex')
+        addIndex(bsc, 'room_storage', 'FieldIndex')
         addColumn(bsc, 'getLocation')
 
         bac = getToolByName(portal, 'bika_analysis_catalog', None)
@@ -130,3 +131,28 @@ def setupCustomVarious(context):
     gen.setupCatalogs(portal)
     gen.setupPortalContent(portal)
     gen.setupPermissions(portal)
+
+    # Hide some NAV folders that BioBank may not need.
+    for x in ['samples',
+              'referencesamples',
+              'analysisrequests',
+              'batches',
+              'worksheets',
+              'methods',
+              'pricelists',
+              'invoices',
+              'arimports', ]:
+        obj = portal[x]
+        obj.schema['excludeFromNav'].set(obj, True)
+        obj.reindexObject()
+
+    # Set the order of the nav folders that are still visible
+    for item in reversed(['clients',
+                          'projects',
+                          'kits',
+                          'biospecimens',
+                          'aliquots',
+                          'shipments',
+                          'supplyorders',
+                          'orders']):
+        portal.moveObjectsToTop([item])

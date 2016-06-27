@@ -2,10 +2,11 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.CMFCore.utils import getToolByName
 from Products.ATContentTypes.lib import constraintypes
 from bika.sanbi import bikaMessageFactory as _
+from bika.sanbi.browser.biospecimens.biospecimens import BiospecimensView
 from bika.sanbi.controlpanel.bika_biospectypes import BiospecTypesView
 from bika.lims.browser import BrowserView
 from bika.lims.controlpanel.bika_analysisservices import AnalysisServicesView
-import json
+from bika.sanbi.browser.aliquots.folder_view import AliquotsView
 
 
 class ProjectEdit(BrowserView):
@@ -174,3 +175,34 @@ class ProjectView(BrowserView):
 
         self.analyses_table = view.contents_table()
         return self.template()
+
+
+class ProjectBiospecimensView(BiospecimensView):
+    def __init__(self, context, request):
+        self.context = context
+        super(ProjectBiospecimensView, self).__init__(context, request)
+
+    def folderitems(self, full_objects=False):
+        items = BiospecimensView.folderitems(self)
+        out_items = []
+        for x in range(len(items)):
+            if not items[x].has_key('obj'): continue
+            obj = items[x]['obj']
+            project = obj.aq_parent
+            if project == self.context:
+                items[x]['Type'] = obj.getType().Title()
+                items[x]['Condition'] = obj.getCondition()
+                items[x]['SubjectID'] = obj.getSubjectID()
+                items[x]['Volume'] = obj.getVolume()
+                items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
+                                               (items[x]['url'], items[x]['Title'])
+                out_items.append(items[x])
+
+        return out_items
+
+
+class BiospecimenAliquotsView(AliquotsView):
+    def __init__(self, context, request):
+        self.context = context
+        super(BiospecimenAliquotsView, self).__init__(context, request)
+

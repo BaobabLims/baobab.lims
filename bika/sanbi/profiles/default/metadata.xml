@@ -2,6 +2,6 @@
 <metadata>
   <version>1000</version>
   <dependencies>
-      <dependency>profile-bika.health:default</dependency>
+      <dependency>profile-bika.lims:default</dependency>
   </dependencies>
 </metadata>

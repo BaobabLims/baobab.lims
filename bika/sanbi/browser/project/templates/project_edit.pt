@@ -5,10 +5,14 @@
       i18n:domain="bika">
 
 <head>
-    <metal:javascript_head_slot fill-slot="javascript_head_slot">
+    <metal:javascript_head_slot
+            tal:define="portal context/@@plone_portal_state/portal;"
+            fill-slot="javascript_head_slot">
         <script type="text/javascript" charset="utf-8"
                 tal:define="navroot context/@@plone_portal_state/navigation_root_url"
                 tal:attributes="href string:${navroot}/++resource++bika.sanbi.js/d3.v3.js"></script>
+        <script type="text/javascript"
+                tal:attributes="src python:portal.absolute_url() + '/bika_widgets/referencewidget.js'"></script>
         <script type="text/javascript" charset="utf-8">
               (function($) {
                   $(function() {
@@ -17,11 +21,15 @@
               })(jQuery);
           </script>
     </metal:javascript_head_slot>
-    <metal:block fill-slot="style_slot">
+    <metal:block
+            tal:define="portal context/@@plone_portal_state/portal;"
+            fill-slot="style_slot">
         <link rel="stylesheet" type="text/css"
             tal:define="navroot context/@@plone_portal_state/navigation_root_url"
             tal:attributes="href string:${navroot}/++resource++bika.sanbi.css/myfile.css"
             />
+        <link rel="stylesheet" type="text/css" media="all" href=""
+              tal:attributes="href string:${portal/absolute_url}/bika_widgets/referencewidget.css"/>
     </metal:block>
 </head>
 

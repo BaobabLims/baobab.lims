@@ -20,7 +20,7 @@
     <element value="BiospecType"/>
     <element value="Biospecimen"/>
     <element value="Shipment"/>
-    <element value="Sampletemp"/>
+    <element value="Aliquot"/>
     <element value="StorageInventory"/>
   </property>
 </object>

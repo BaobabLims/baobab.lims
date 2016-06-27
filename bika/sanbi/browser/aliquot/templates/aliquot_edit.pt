@@ -138,7 +138,7 @@
                       if((quantity * volume + totalVolume) > biospecVolume){
                           element.addClass("info-volume");
                           $(html).insertBefore($("div#archetypes-fieldname-Quantity > div.fieldErrorBox"));
-                          var text = "Total biospecimen samples volume is " + totalVolume + "ml. " +
+                          var text = "Total volume of aliquts is " + totalVolume + "ml. " +
                                      "Biospecimen volume is " + biospecVolume + "ml. The remaining volume " +
                                      "to use is " + parseFloat(biospecVolume - totalVolume) + "ml";
                           $("#error-volume").text(text);
@@ -173,7 +173,7 @@
 <metal:title fill-slot="content-title">
     <h1>
         <!--?<img tal:condition="view/icon | nothing" tal:attributes="src view/icon"/>-->
-        <tal:new tal:condition="python: not context.Title()" i18n:translate="">Add New Sample</tal:new>
+        <tal:new tal:condition="python: not context.Title()" i18n:translate="">Add New Aliquot</tal:new>
         <tal:new tal:condition="python:context.Title()" tal:content="python:'Edit ' + context.getId()"></tal:new>
     </h1>
 </metal:title>
@@ -185,7 +185,7 @@
      tal:define="
         portal context/@@plone_portal_state/portal;">
 
-    <form method="post" id="sampletemp_edit" name="sampletemp_form">
+    <form method="post" id="aliquot_edit" name="aliquot_form">
         <input type="hidden" name="submit" value="1" />
         <table class="header_table" style="width: 100%;">
             <thead class="manage_storage_fileds">
@@ -209,7 +209,7 @@
                 </tr>
 
                 <tr tal:define="fieldName python:field.getName();"
-                    tal:condition="python: fieldName == 'SampleType'">
+                    tal:condition="python: fieldName == 'AliquotType'">
 
                     <td>
                     <div style="font-weight: bold; font-family: Arial; font-size: large;">
@@ -237,7 +237,7 @@
                     </td>
                 </tr>
                 <tr tal:define="fieldName python:field.getName();"
-                    tal:condition="python: fieldName == 'SampleType'">
+                    tal:condition="python: fieldName == 'AliquotType'">
 
                     <td>
                     <div>
@@ -261,7 +261,7 @@
                     </td>
                 </tr>
                 <tr tal:define="fieldName python:field.getName();"
-                    tal:condition="python: fieldName == 'SampleType'">
+                    tal:condition="python: fieldName == 'AliquotType'">
 
                     <td>
                     <div>
@@ -285,7 +285,7 @@
                     </td>
                 </tr>
                 <tr tal:define="fieldName python:field.getName();"
-                    tal:condition="python: fieldName == 'SampleType'">
+                    tal:condition="python: fieldName == 'AliquotType'">
 
                     <td>
                     <div>
@@ -309,7 +309,7 @@
                     </td>
                 </tr>
                 <tr tal:define="fieldName python:field.getName();"
-                    tal:condition="python: fieldName == 'SampleType'">
+                    tal:condition="python: fieldName == 'AliquotType'">
 
                     <td>
                     <div>

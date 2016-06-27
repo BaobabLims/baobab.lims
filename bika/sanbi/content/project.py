@@ -12,7 +12,7 @@ from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from bika.sanbi.browser.widgets import ProjectAnalysesWidget
 
 schema = BikaSchema.copy() + Schema((
-    ReferenceField('ClientID',
+    ReferenceField('Client',
         required=1,
         allowed_types=('Client',),
         relationship='ClientProject',
@@ -97,7 +97,7 @@ schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 schema['description'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 
 
-class Project(BaseContent):
+class Project(BaseFolder):
     security = ClassSecurityInfo()
     implements(IProject)
     schema = schema

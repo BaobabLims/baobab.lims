@@ -357,7 +357,7 @@ class SampleInfo:
         id = form['position']
         catalog = getToolByName(self.context, 'bika_setup_catalog')
         brains = catalog.searchResults(portal_type="StorageLocation", id=id)
-        sample = brains[0].getObject().getSampletemp()
+        sample = brains[0].getObject().getAliquot()
 
         ret = {
             'id': sample.getId(),

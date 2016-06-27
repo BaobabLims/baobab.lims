@@ -50,7 +50,6 @@
             <ul style="font-size:1.2em;margin-left:15px;">
                 <li><a class="external-link" href="http://demo.bikalabs.com/knowledge-centre/manual/bika-3-user-manual">Bika LIMS User Manual</a></li>
                 <li><a href="http://demo.bikalabs.com/knowledge-centre/manual/bika-3-user-manual/introduction-and-overview"><span class="state-published">Introduction and Overview</span></a></li>
-                <li><a href="http://github.com/bikalabs/bika.health/wiki"><span class="state-published">Bika Health Wiki</span></a></li>
                 <li><a href="http://github.com/bikalabs/Bika-LIMS/wiki"><span class="state-published">Bika LIMS Wiki</span></a></li>
             </ul>
 
@@ -59,7 +58,6 @@
                 Bika Health can be installed easily on Windows, Mac OS X, Linux, BSD and other platforms:
             </p>
             <ul style="font-size:1.2em;margin-left:15px;">
-                <li><a href="https://github.com/bikalabs/bika.health/wiki/Installing-Bika-Health-Extension">Installation Guide for Bika Health on the GitHub Wiki.</a></li>
                 <li><a href="https://github.com/bikalabs/Bika-LIMS/wiki/Bika-LIMS-Installation">Installation Guide for Bika LIMS on the GitHub Wiki.</a></li>
             </ul>
         </div>
@@ -82,7 +80,6 @@
             </p>
             <ul style="font-size:1.2em;margin-left:15px;">
                 <li><a href="https://github.com/rockfruit/bika.sanbi">SANBI LIMS Source repository</a></li>
-                <li><a href="https://github.com/bikalabs/bika.health">Bika LIMS</a></li>
                 <li><a href="https://github.com/bikalabs/bika.lims">Bika HEALTH</a></li>
             </ul>
 

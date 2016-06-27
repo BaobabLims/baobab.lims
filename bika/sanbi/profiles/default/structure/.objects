@@ -2,5 +2,5 @@ projects,Projects
 kits,Kits
 biospecimens,Biospecimens
 shipments,Shipments
-sampletemps,Sampletemps
+aliquots,Aliquots
 bika_setup,BikaSetup

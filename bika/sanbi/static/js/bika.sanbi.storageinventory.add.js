@@ -111,7 +111,8 @@ function CustomStorageInventoryAddView(){
                 url: path,
                 data: requestData,
                 success: function(data){
-                    console.log('Salam');
+                    destination = window.location.origin + data['url'];
+                    window.location.replace(destination)
                 },
                 error: function (xhr, status, error) {
                     console.log("HTMLPage: " + xhr.responseText);

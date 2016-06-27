@@ -75,7 +75,7 @@ class StorageLocation(BaseLocation):
         """
         wftool = self.portal_workflow
         review_state = wftool.getInfoFor(self, 'review_state')
-        if self.getSampletemp() and (review_state == 'position_free' or
+        if self.getAliquot() and (review_state == 'position_free' or
                                      review_state == 'position_reserved'):
             return True
 
@@ -90,7 +90,7 @@ class StorageLocation(BaseLocation):
         wftool = self.portal_workflow
         review_state = wftool.getInfoFor(self, 'review_state')
 
-        if not self.getSampletemp() and review_state in ('position_occupied', 'position_reserved'):
+        if not self.getAliquot() and review_state in ('position_occupied', 'position_reserved'):
             return True
 
         return False

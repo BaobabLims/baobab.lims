@@ -7,9 +7,6 @@
 <head>
 
     <metal:javascript_head_slot fill-slot="javascript_head_slot">
-        <!--?<script type="text/javascript" charset="utf-8"-->
-                <!--?tal:define="navroot context/@@plone_portal_state/navigation_root_url"-->
-                <!--?tal:attributes="href string:${navroot}/++resource++bika.sanbi.js/d3.v3.js"></script>-->
 
         <script type="text/javascript" charset="utf-8">
             (function($) {
@@ -385,12 +382,6 @@
                 width: 30%;
             }
             div.table-info{
-                border-left-style: groove;
-                border-left-color: green;
-                border-left-width: 15px;
-                border-bottom-style: ridge;
-                border-bottom-color: yellow;
-                border-bottom-width: 25px;
             }
             span.head-text{
                 font-family: sans-serif;
@@ -422,6 +413,16 @@
             rect:hover {
 				fill: orange;
 			}
+
+            g.x-labels, g.y-labels{
+                fill: gray;
+            }
+            table.box-info{
+                margin-top: 7px;
+            }
+            table.pos-info{
+                margin-top: 7px;
+            }
 
 			.tooltip {
 				position: absolute;
