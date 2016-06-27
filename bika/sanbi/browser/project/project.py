@@ -2,10 +2,10 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.CMFCore.utils import getToolByName
 from Products.ATContentTypes.lib import constraintypes
 from bika.sanbi import bikaMessageFactory as _
+from bika.sanbi.browser.biospecimens.biospecimens import BiospecimensView
 from bika.sanbi.controlpanel.bika_biospectypes import BiospecTypesView
 from bika.lims.browser import BrowserView
 from bika.lims.controlpanel.bika_analysisservices import AnalysisServicesView
-from bika.sanbi.controlpanel.bika_biospecimens import BiospecimensView
 from bika.sanbi.browser.aliquots.folder_view import AliquotsView
 
 
