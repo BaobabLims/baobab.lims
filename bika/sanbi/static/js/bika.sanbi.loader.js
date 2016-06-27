@@ -19,10 +19,14 @@ window.bika.sanbi.controllers =  {
         ['CustomKitAddView'],
     "#kit-printview-wrapper":
         ['KitPrintView'],
-    ".template-base_edit #storage_edit_form":
-        ['CustomStorageOrderAddView'],
     ".template-base_edit #storagemanage_edit":
         ['CustomStorageManageAddView'],
+    ".template-base_edit #project_registration_edit":
+        ['CustomProjectAddView'],
+    "#kittemplate-base-edit":
+        ['ComputeKitTemplatePrice'],
+    ".template-base_edit #storageinventory_edit":
+        ['CustomStorageInventoryAddView']
 };
 
 /**

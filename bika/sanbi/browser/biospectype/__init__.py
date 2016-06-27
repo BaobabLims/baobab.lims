@@ -1,0 +1,1 @@
+from biospectype import JSONReadExtender

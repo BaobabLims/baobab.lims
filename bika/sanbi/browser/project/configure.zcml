@@ -1,0 +1,39 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    i18n_domain="bika.sanbi">
+
+    <browser:page
+      for="bika.sanbi.interfaces.IProject"
+      name="base_edit"
+      class="bika.sanbi.browser.project.ProjectEdit"
+      permission="cmf.ModifyPortalContent"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="bika.sanbi.interfaces.IProject"
+      name="base_view"
+      class="bika.sanbi.browser.project.ProjectView"
+      permission="cmf.ModifyPortalContent"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="bika.sanbi.interfaces.IProject"
+      name="biospecimens"
+      class=".project.ProjectBiospecimensView"
+      permission="zope2.View"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="bika.sanbi.interfaces.IProject"
+      name="aliquots"
+      class=".project.BiospecimenAliquotsView"
+      permission="zope.Public"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+</configure>

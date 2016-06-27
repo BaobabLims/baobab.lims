@@ -26,7 +26,7 @@ def getKitProducts(context, request):
 def getProductObject(product, catalog):
     """ get product object
     """
-    brains = catalog.searchResults({'portal_type': 'Product', 'Title': product['product']})
+    brains = catalog.searchResults({'portal_type': 'Product', 'UID': product['product_uid']})
     msg = ''
     product_obj = None
     if brains:
@@ -74,10 +74,11 @@ class ComputeNumberKits():
         product_dict = {}
         if kittemplate_obj.kittemplate_lineitems:
             kittemplate_obj.kittemplate_lineitems = []
+
         for product in products:
             product_obj, error_msg = getProductObject(product, catalog)
             product_dict[product_obj.Title()] = {
-                'quantity': product['quantity'] * int(self.request.get('kit_quantity', 1)),
+                'quantity': int(product['quantity']) * int(self.request.get('kit_quantity', 1)),
                 'price': product_obj.getPrice()
             }
             kittemplate_obj.kittemplate_lineitems.append(
@@ -98,16 +99,43 @@ class ComputeNumberKits():
         #self.context.plone_utils.addPortalMessage('Test: ' + str(min(quantity_ratios)), 'warning')
         subtotal = '%.2f' % kittemplate_obj.getSubtotal()
         vat = '%.2f' % kittemplate_obj.getVATAmount()
-        total = '%.2f' % kittemplate_obj.getTotal()
+        total = '%.2f' % float(kittemplate_obj.getTotal())
 
+        # Tasks we define in the jamboree are get date expiry from kit-template components and
+        # set kit description with kit-template description.
+        kit_description = kittemplate_obj.Description()
+        min_expiry_date = self.minimum_expiry_date(kittemplate_obj.getProductList())
         if quantity_ratios:
             return json.dumps({'qtt':min(quantity_ratios), 'products': product_dict, 'error_msg': error_msg,
                                'currency': self.context.bika_setup.getCurrency(), 'subtotal': subtotal,
-                               'vat': vat, 'total': total})
+                               'vat': vat, 'total': total, 'expiry_date': min_expiry_date,
+                               'description': kit_description})
         else:
             return json.dumps({'qtt':0, 'products': product_dict, 'error_msg': error_msg,
                                'currency': self.context.bika_setup.getCurrency(), 'subtotal': subtotal,
-                               'vat': vat, 'total': total})
+                               'vat': vat, 'total': total, 'expiry_date': min_expiry_date,
+                               'description': kit_description})
+
+    def minimum_expiry_date(self, kit_template_products):
+        """
+        Get the minimum expiry date from the kit-template's components.
+        This minimum date will be used as kit expiry date.
+        """
+        bsc = getToolByName(self.context, "bika_setup_catalog")
+        dates = []
+        uids = [p['product_uid'] for p in kit_template_products]
+        brains = bsc.searchResults(portal_type='StockItem', Product=uids)
+        for brain in brains:
+            date = brain.getObject().getExpiryDate()
+            if date:
+                dates.append(date)
+
+        if dates:
+            date = min(dates)
+            return "%s-%2.2d-%2.2d" % (date.year(), date.month(), date.day())
+
+        return ''
+
 
 def deductStockItemQuantities(references, product, no_kits, old_no_kits):
     """Substract product quantities from stockitems
@@ -116,7 +144,7 @@ def deductStockItemQuantities(references, product, no_kits, old_no_kits):
     ok_msg = ''
     total_qtt = computeRefTotalQtt(references)
     if int(total_qtt) < int(product['quantity']) * (int(no_kits) - int(old_no_kits)):
-        error_msg = 'Quantity asked is higher than the existant in stock!'
+        error_msg = 'Quantity asked is higher than what exists in stock!'
     else:
         product_qtt = int(product['quantity']) * (int(no_kits) - int(old_no_kits))
         for ref in references:

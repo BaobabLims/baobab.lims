@@ -15,9 +15,13 @@
   <property name="idsNotToList" type="lines"/>
   <property name="metaTypesNotToList" type="lines" purge="False">
     <element value="Kit"/>
-    <element value="StorageOrder"/>
     <element value="StorageManagement"/>
+    <element value="Project"/>
+    <element value="BiospecType"/>
+    <element value="Biospecimen"/>
     <element value="Shipment"/>
+    <element value="Aliquot"/>
+    <element value="StorageInventory"/>
   </property>
 </object>
 

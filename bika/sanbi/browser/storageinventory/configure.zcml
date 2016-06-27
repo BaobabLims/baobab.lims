@@ -1,0 +1,64 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    i18n_domain="bika">
+
+
+    <browser:page
+      for="bika.sanbi.interfaces.IStorageInventory"
+      name="base_view"
+      class="bika.sanbi.browser.storageinventory.InventoryStorageView"
+      permission="cmf.ModifyPortalContent"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="bika.sanbi.interfaces.IStorageInventory"
+      name="base_edit"
+      class="bika.sanbi.browser.storageinventory.InventoryStorageEdit"
+      permission="cmf.ModifyPortalContent"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="*"
+      name="storageinventory_submit"
+      class="bika.sanbi.browser.storageinventory.StorageInventorySubmit"
+      permission="zope.Public"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="bika.sanbi.interfaces.IStorageInventory"
+      name="listobjects"
+      class="bika.sanbi.browser.storageinventory.PositionsView"
+      permission="cmf.ModifyPortalContent"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="bika.sanbi.interfaces.IStorageInventory"
+      name="graphic"
+      class="bika.sanbi.browser.storageinventory.InventoryGraph"
+      permission="cmf.ModifyPortalContent"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="*"
+      name="inventory_positions_info"
+      class="bika.sanbi.browser.storageinventory.InventoryPositionsInfo"
+      permission="zope.Public"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="*"
+      name="inventory_item_info"
+      class="bika.sanbi.browser.storageinventory.InventoryItemInfo"
+      permission="zope.Public"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+</configure>

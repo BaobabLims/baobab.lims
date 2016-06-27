@@ -9,41 +9,46 @@ from zope.interface import implements
 from bika.sanbi.interfaces import IStorageManagement
 from Products.CMFPlone.interfaces import IConstrainTypes
 from Products.CMFCore.utils import getToolByName
+from plone.indexer import indexer
 import sys
+
+@indexer(IStorageManagement)
+def get_storage_room_id(instance):
+    return instance.getStorageUnit().UID()
 
 schema = BikaSchema.copy() + Schema((
 
     StringField('Type',
-                required=1,
-                searchable=True,
-                widget=StringWidget(
-                    label=_('Storage type'),
-                    visible=False,
-                )),
+        required=1,
+        searchable=True,
+        widget=StringWidget(
+            label=_('Storage type'),
+            visible=False,
+        )),
 
     ReferenceField('StorageUnit',
-                required=1,
-                allowed_types=('StorageUnit',),
-                relationship='StorageManageUnit',
-                vocabulary_display_path_bound=sys.maxsize,
-                referenceClass=HoldingReference,
-                widget=ReferenceWidget(
-                    checkbox_bound=0,
-                    label=_("Storage Unit"),
-                    description=_("Select the enclosure containing the new storage."),
-                    size=50,
-                    showOn=True,
-                    visible={'edit': 'visible', 'view': 'visible'},
-                )),
+        required=1,
+        allowed_types=('StorageUnit',),
+        relationship='StorageManageUnit',
+        vocabulary_display_path_bound=sys.maxsize,
+        referenceClass=HoldingReference,
+        widget=ReferenceWidget(
+            checkbox_bound=0,
+            label=_("Storage Unit"),
+            description=_("Select the enclosure containing the new storage."),
+            size=50,
+            showOn=True,
+            visible={'edit': 'visible', 'view': 'visible'},
+        )),
 
     IntegerField('Shelves',
-                widget=IntegerWidget(
-                    label=_("Shelves Number"),
-                    default=0,
-                    size=20,
-                    description=_("Specify the number of shelves for the new storage."),
-                    visible={'edit': 'visible', 'view': 'visible'},
-                )),
+        widget=IntegerWidget(
+            label=_("Shelves Number"),
+            default=0,
+            size=20,
+            description=_("Specify the number of shelves for the new storage."),
+            visible={'edit': 'visible', 'view': 'visible'},
+        )),
 
     StringField(
         'ChildrenTitle',
@@ -62,6 +67,14 @@ schema = BikaSchema.copy() + Schema((
         default=False,
         widget=BooleanWidget(
             label='Storage Location',
+            visible=False,
+        )),
+
+    BooleanField(
+        'LetterID',
+        default=False,
+        widget=BooleanWidget(
+            label='Use letters for IDs',
             visible=False,
         )),
 
@@ -108,7 +121,6 @@ schema = BikaSchema.copy() + Schema((
 
 schema['title'].required = True
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
-#schema['title'].widget.size = 100
 schema['description'].widget.visible = {'edit': 'visible', 'view': 'visible'}
 schema.moveField('ChildrenTitle', before="Dimension")
 
@@ -133,6 +145,17 @@ class StorageManagement(BaseFolder):
         for obj in all_objects:
             obj = obj.getObject()
             if obj.getStorageUnit() == self:
+                children.append(obj)
+
+        return children
+
+    def getPositions(self):
+        children = []
+        bsc = getToolByName(self, 'bika_setup_catalog')
+        all_objects = bsc.searchResults(portal_type='StorageLocation', sort_on='sortable_title')
+        for obj in all_objects:
+            obj = obj.getObject()
+            if obj.aq_parent == self:
                 children.append(obj)
 
         return children

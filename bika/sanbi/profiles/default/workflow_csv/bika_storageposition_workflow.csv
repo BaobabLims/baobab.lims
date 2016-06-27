@@ -19,7 +19,7 @@ Modify portal content,N,N,Y,N,N,N,N,N,N,Y
 Id:,position_reserved,,,,,,,,,
 Title:,Position Reserved,,,,,,,,,
 Description:,,,,,,,,,,
-Transitions,"occupy",,,,,,,,,
+Transitions,"free, occupy",,,,,,,,,
 Permissions,Acquire,Anonymous,Manager,Owner,Reader,Editor,Contributor,Analyst,LabClerk,LabManager
 View,N,N,Y,Y,N,N,N,Y,Y,Y
 Modify portal content,N,N,Y,N,N,N,N,N,N,Y
@@ -28,7 +28,7 @@ Modify portal content,N,N,Y,N,N,N,N,N,N,Y
 Id:,position_occupied,,,,,,,,,
 Title:,Position Occupied,,,,,,,,,
 Description:,,,,,,,,,,
-Transitions,"free",,,,,,,,,
+Transitions,"free, reserve",,,,,,,,,
 Permissions,Acquire,Anonymous,Manager,Owner,Reader,Editor,Contributor,Analyst,LabClerk,LabManager
 View,N,N,Y,Y,N,N,N,Y,Y,Y
 Modify portal content,N,N,Y,N,N,N,N,N,N,Y
@@ -39,7 +39,7 @@ Title:,Reserve,,,,,,,,,
 Description:,Reserve,,,,,,,,,
 Target state:,position_reserved,,,,,,,,,
 Trigger:,User,,,,,,,,,
-Guard expression:,python:here.getProduct()==None,,,,,,,,,
+Guard expression:,python:here.getAliquot()==None,,,,,,,,,
 ,,,,,,,,,,
 [Transition],,,,,,,,,,
 Id:,occupy,,,,,,,,,

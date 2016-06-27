@@ -8,14 +8,25 @@
     xmlns:plone="http://namespaces.plone.org/plone"
     i18n_domain="bika.sanbi">
 
+
+    <include package=".client"/>
     <include package=".analysisrequest"/>
     <include package=".kits"/>
     <include package=".kit"/>
     <include package=".shipments"/>
     <include package=".shipment"/>
     <include package=".ajax"/>
-    <include package=".storageorder"/>
     <include package=".storagemanagement"/>
+    <include package=".projects"/>
+    <include package=".project"/>
+    <include package=".biospectype"/>
+    <include package=".biospecimens"/>
+    <include package=".biospecimen"/>
+    <include package=".aliquots"/>
+    <include package=".aliquot"/>
+    <include package=".multimage"/>
+    <include package=".storageinventory"/>
+
 
     <!-- This registration allows additional sticker templates.
          To enable these, just copy one or more of the *.pt files

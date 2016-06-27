@@ -6,7 +6,7 @@
         purge="True">
  <property name="title" i18n:translate="">Storage Managements</property>
  <property name="description"></property>
- <property name="content_icon">++resource++bika.lims.images/department.png</property>
+ <property name="content_icon">++resource++bika.sanbi.images/freezer.png</property>
  <property name="content_meta_type">StorageManagements</property>
  <property name="product">bika.sanbi</property>
  <property name="factory">addStorageManagements</property>

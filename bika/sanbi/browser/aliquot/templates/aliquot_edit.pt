@@ -1,0 +1,351 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:metal="http://xml.zope.org/namespaces/metal"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    metal:use-macro="here/main_template/macros/master"
+    i18n:domain="bika">
+
+
+<head>
+    <metal:javascript_head_slot fill-slot="javascript_head_slot"
+        tal:define="portal context/@@plone_portal_state/portal;">
+        <script type="text/javascript"
+                tal:attributes="src python:portal.absolute_url() + '/bika_widgets/datetimewidget.js'"></script>
+        <script type="text/javascript"
+                tal:attributes="src python:portal.absolute_url() + '/bika_widgets/referencewidget.js'"></script>
+        <script type="text/javascript" charset="utf-8">
+          (function($) {
+              $(function() {
+                  var biospecVolume = 0;
+                  var totalVolume = 0;
+                  var errorInForm = false;
+                  /*____________________________________________*
+
+                   *     ADVANCED STORAGE LOCATION SEARCH       *
+                     ___________________________________________
+                   *                                            */
+                  function setSelectOptions(data, element){
+                      element.html("<option>None</option>");
+                      $.each(data, function (i, v) {
+                          var html = "<option value=" +v.uid + ">" + v.title + "</option>";
+                          element.append(html);
+                      })
+                  }
+
+                  $("div#storage_units select").on("change", function(event){
+                      var element = $("div#freezers select");
+                      var value = $(this).val();
+                      var path = window.location.href.split("/edit")[0] + "/get_freezers";
+                      $.ajax({url:path, data:{'uid': value}})
+                          .done(function (data) {
+                              data = $.parseJSON(data);
+                              console.log(data);
+                              setSelectOptions(data, element);
+                          });
+                  });
+
+                  $("div#freezers select").on("change", function(event){
+                      var element = $("div#shelves select");
+                      var value = $(this).val();
+                      var path = window.location.href.split("/edit")[0] + "/get_shelves";
+                      $.ajax({
+                          url:path,
+                          data:{'uid': value},
+                          dataType: "json",
+                          success: function (data) {
+                              setSelectOptions(data, element);
+                          }
+                      });
+                  });
+
+                  $("div#shelves select").on("change", function(event){
+                      var element = $("div#boxes select");
+                      var value = $(this).val();
+                      var path = window.location.href.split("/edit")[0] + "/get_boxes";
+                      $.ajax({
+                          url:path,
+                          data:{'uid': value},
+                          dataType: "json",
+                          success: function (data) {
+                              setSelectOptions(data, element);
+                          }
+                      });
+                  });
+
+                  function setSelectOptionPositions(data, element){
+                      element.html("<option>None</option>");
+                      $.each(data, function (i, v) {
+                          var l = v.title.split('.');
+                          var title = l[l.length - 1];
+                          var html = "<option value=" +v.uid + " address=" + v.title + ">" + title + "</option>";
+                          element.append(html);
+                      })
+                  }
+
+                  $("div#boxes select").on("change", function(event){
+                      var element = $("div#positions select");
+                      var value = $(this).val();
+                      var path = window.location.href.split("/edit")[0] + "/get_positions";
+                      $.ajax({url:path, data:{'uid': value}})
+                          .done(function (data) {
+                              data = $.parseJSON(data);
+                              setSelectOptionPositions(data, element);
+                          });
+                  });
+
+                  $("div#positions select").on("change", function(event){
+                      var option = $('option:selected', this);
+                      var address = option.attr("address");
+                      var uid = option.val();
+                      var element = $("input#StorageLocation");
+                      //element.val(address);
+                      element.attr("value", address);
+                      element.attr("uid", uid);
+                      element.attr("uid_check", uid);
+                      element.attr("val_check", address);
+
+                      $("input#StorageLocation_uid").val(uid);
+                  });
+
+
+                  /*____________________________________________*
+
+                   *      VOLUME AND QUANTITY CONTROLES         *
+                     ___________________________________________
+                   *                                            */
+                  $("input#Biospecimen_uid").on("focus", function (event) {
+                      var path = window.location.href.split("/edit")[0] + "/biospecimen_volume";
+                      var value = $(this).val();
+                      $.ajax({
+                          url:path,
+                          data:{'uid': value},
+                          dataType:"json"
+                      }).done(function (data) {
+                          biospecVolume = data["volume"];
+                          totalVolume = data["total_volume"];
+                      });
+                  });
+
+                  $("input#Volume").on("change", function(event){
+                      $("input#Quantity").trigger("change");
+                  });
+
+                  $("input#Quantity").on("change", function(event){
+                      var quantity = parseFloat($(this).val());
+                      var volume = parseFloat($("input#Volume").val());
+                      var element = $("#archetypes-fieldname-Quantity");
+                      var html = "<div class=\"err-vol\" id=\"error-volume\"></div>";
+                      if((quantity * volume + totalVolume) > biospecVolume){
+                          element.addClass("info-volume");
+                          $(html).insertBefore($("div#archetypes-fieldname-Quantity > div.fieldErrorBox"));
+                          var text = "Total volume of aliquts is " + totalVolume + "ml. " +
+                                     "Biospecimen volume is " + biospecVolume + "ml. The remaining volume " +
+                                     "to use is " + parseFloat(biospecVolume - totalVolume) + "ml";
+                          $("#error-volume").text(text);
+                          errorInForm = true;
+                      }else{
+                          $("#error-volume").remove();
+                          element.removeClass("info-volume");
+                          errorInForm = false;
+                      }
+                  });
+
+                  $("input[type='submit']").on("click", function (event) {
+                      if(errorInForm){
+                          event.preventDefault();
+                      }
+                  })
+
+              });
+          })(jQuery);
+        </script>
+    </metal:javascript_head_slot>
+    <metal:block fill-slot="style_slot">
+        <link rel="stylesheet" type="text/css"
+            tal:define="navroot context/@@plone_portal_state/navigation_root_url"
+            tal:attributes="href string:${navroot}/++resource++bika.sanbi.css/myfile.css"
+            />
+    </metal:block>
+</head>
+
+<body>
+
+<metal:title fill-slot="content-title">
+    <h1>
+        <!--?<img tal:condition="view/icon | nothing" tal:attributes="src view/icon"/>-->
+        <tal:new tal:condition="python: not context.Title()" i18n:translate="">Add New Aliquot</tal:new>
+        <tal:new tal:condition="python:context.Title()" tal:content="python:'Edit ' + context.getId()"></tal:new>
+    </h1>
+</metal:title>
+
+<metal:content-description fill-slot="content-description">
+</metal:content-description>
+
+<div metal:fill-slot="content-core"
+     tal:define="
+        portal context/@@plone_portal_state/portal;">
+
+    <form method="post" id="aliquot_edit" name="aliquot_form">
+        <input type="hidden" name="submit" value="1" />
+        <table class="header_table" style="width: 100%;">
+            <thead class="manage_storage_fileds">
+            <tal:field repeat="field python:view.get_fields_with_visibility('visible')">
+                <tr tal:define="
+                        fieldName python:field.getName();
+                        fieldMacro here/widgets/field/macros/edit;
+                        accessor python:field.getAccessor(context);
+                        widget python:field.widget;
+                        errors python:{};
+                        mode string:edit;"
+                    tal:condition="python: fieldName != 'Remarks'">
+
+                    <td colspan="5">
+                        <tal:x condition="python:mode!='structure'">
+                            <metal:field
+                                use-macro="python:context.widget(fieldName, mode=mode)"/>
+                        </tal:x>
+                    </td>
+
+                </tr>
+
+                <tr tal:define="fieldName python:field.getName();"
+                    tal:condition="python: fieldName == 'AliquotType'">
+
+                    <td>
+                    <div style="font-weight: bold; font-family: Arial; font-size: large;">
+                        <img title="Project"
+                             tal:attributes="src string:${view/portal_url}/++resource++bika.sanbi.images/location_big.png">
+                        Advanced Storage Location search
+                    </div>
+                    <div style="border-top: 1px solid cornflowerblue; margin-top: 5px; padding-top: 5px;">
+                        <span style="font-weight: bold;">Storage Units</span>
+                        <span class="formHelp" id="storagetype_help">Select the storage units containing the location.
+                        </span>
+                    </div>
+                    <div data-fieldname="StorageUnits" id="storage_units">
+                        <select tal:define="display_list python:view.get_storage_units()" style="width: 300px;
+                                       height: 34px;
+                                       overflow: hidden;
+                                       border: 1px solid #ccc;">
+                            <option>None</option>
+                            <option tal:condition="python:display_list"
+                                    tal:repeat="item display_list"
+                                    tal:attributes="value python:item[0]"
+                                    tal:content="python:item[1]"></option>
+                        </select>
+                    </div>
+                    </td>
+                </tr>
+                <tr tal:define="fieldName python:field.getName();"
+                    tal:condition="python: fieldName == 'AliquotType'">
+
+                    <td>
+                    <div>
+                        <span style="font-weight: bold;">Freezer/Tanks</span>
+                        <span class="formHelp" id="storagetype_help">Select the freezer/tank containing
+                            the position of this sample.
+                        </span>
+                    </div>
+                    <div data-fieldname="Freezers" id="freezers">
+                        <select tal:define="display_list python:view.get_freezers()" style="width: 300px;
+                                       height: 34px;
+                                       overflow: hidden;
+                                       border: 1px solid #ccc;">
+                            <option>None</option>
+                            <option tal:condition="python:display_list"
+                                    tal:repeat="item display_list"
+                                    tal:attributes="value python:item[0]"
+                                    tal:content="python:item[1]"></option>
+                        </select>
+                    </div>
+                    </td>
+                </tr>
+                <tr tal:define="fieldName python:field.getName();"
+                    tal:condition="python: fieldName == 'AliquotType'">
+
+                    <td>
+                    <div>
+                        <span style="font-weight: bold;">Shelves/Canisters</span>
+                        <span class="formHelp" id="storagetype_help">Select the Shelf/Canister containing the position
+                            of this sample.
+                        </span>
+                    </div>
+                    <div data-fieldname="Shelves" id="shelves">
+                        <select tal:define="display_list python:view.get_shelves()" style="width: 300px;
+                                       height: 34px;
+                                       overflow: hidden;
+                                       border: 1px solid #ccc;">
+                            <option>None</option>
+                            <option tal:condition="python:display_list"
+                                    tal:repeat="item display_list"
+                                    tal:attributes="value python:item[0]"
+                                    tal:content="python:item[1]"></option>
+                        </select>
+                    </div>
+                    </td>
+                </tr>
+                <tr tal:define="fieldName python:field.getName();"
+                    tal:condition="python: fieldName == 'AliquotType'">
+
+                    <td>
+                    <div>
+                        <span style="font-weight: bold;">Boxes/Canes</span>
+                        <span class="formHelp" id="storagetype_help">Select the Shelf/Canister containing the position
+                            of this sample.
+                        </span>
+                    </div>
+                    <div data-fieldname="Boxes" id="boxes">
+                        <select tal:define="display_list python:view.get_boxes()" style="width: 300px;
+                                       height: 34px;
+                                       overflow: hidden;
+                                       border: 1px solid #ccc;">
+                            <option>None</option>
+                            <option tal:condition="python:display_list"
+                                    tal:repeat="item display_list"
+                                    tal:attributes="value python:item[0]"
+                                    tal:content="python:item[1]"></option>
+                        </select>
+                    </div>
+                    </td>
+                </tr>
+                <tr tal:define="fieldName python:field.getName();"
+                    tal:condition="python: fieldName == 'AliquotType'">
+
+                    <td>
+                    <div>
+                        <span style="font-weight: bold;">Storage Position</span>
+                        <span class="formHelp" id="storagetype_help">Select the position in stock where to store the
+                            sample.
+                        </span>
+                    </div>
+                    <div data-fieldname="Positions" id="positions">
+                        <select tal:define="display_list python:view.get_positions()" style="width: 300px;
+                                       height: 34px;
+                                       overflow: hidden;
+                                       border: 1px solid #ccc;">
+                            <option>None</option>
+                            <option tal:condition="python:display_list"
+                                    tal:repeat="item display_list"
+                                    tal:attributes="value python:item[0]"
+                                    tal:content="python:item[1]"></option>
+                        </select>
+                    </div>
+                    </td>
+                </tr>
+            </tal:field>
+            </thead>
+        </table>
+        <span>
+            <div style="text-align: left; padding-bottom: 10px;">
+                <input i18n:attributes="value"
+                    class="context button allowMultiSubmit"
+                    type="submit"
+                    name="submit"
+                    value="Save"/>
+            </div>
+        </span>
+    </form>
+</div>
+
+</body>
+</html>

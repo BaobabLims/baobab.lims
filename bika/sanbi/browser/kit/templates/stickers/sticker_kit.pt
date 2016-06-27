@@ -3,7 +3,7 @@
      portal_url        portal_state/portal_url;
      itemID            python: view.items and view.items[0].getId() or '';
      product           python: view.items and view.items[0].getProduct().getId();
-     expiryDate        python: view.items and view.items[0].getExpiryDate().Date();">
+     expiryDate        python: view.items and view.items[0].getExpiryDate() and view.items[0].getExpiryDate().Date() or '';">
 
     <table cellpadding="0" cellspacing="0">
         <thead>

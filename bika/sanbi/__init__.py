@@ -20,15 +20,23 @@ def initialize(context):
     from content.shipments import Shipments
 
     from content.kittemplate import KitTemplate
-    #from content.kittemplates import KitTemplates
+    from content.biospectype import BiospecType
+    from content.biospecimen import Biospecimen
+    from content.storageinventory import StorageInventory
+    from content.multimage import Multimage
+    from content.storagemanagement import StorageManagement
     from content.kit import Kit
     from content.kits import Kits
-    from content.storageorder import StorageOrder
-    from content.storagemanagement import StorageManagement
+    from content.project import Project
+    from content.projects import Projects
+    from content.aliquot import Aliquot
+    from content.aliquots import Aliquots
+    from content.biospecimens import Biospecimens
 
     from controlpanel.bika_kittemplates import KitTemplates
-    from controlpanel.bika_storageorders import StorageOrders
     from controlpanel.bika_storagemanagements import StorageManagements
+    from controlpanel.bika_biospectypes import BiospecTypes
+    from controlpanel.bika_storageinventories import StorageInventories
 
     content_types, constructors, ftis = process_types(
         listTypes(PROJECTNAME),

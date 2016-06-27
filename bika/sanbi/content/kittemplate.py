@@ -1,36 +1,19 @@
 from AccessControl import ClassSecurityInfo
 from zope.interface import implements
-from Products.Archetypes import atapi
 from bika.lims import bikaMessageFactory as _
-from Products.ATContentTypes.content import base
-from Products.ATContentTypes.content import schemata
 from Products.CMFCore.utils import getToolByName
 from bika.sanbi import config
 from bika.lims.content.bikaschema import BikaSchema
-from DateTime.DateTime import DateTime
 from decimal import Decimal
 from Products.Archetypes.public import *
-from Products.Archetypes.references import HoldingReference
-import sys
 from Products.ATExtensions.ateapi import RecordField, RecordsField
 from bika.lims.browser.widgets.recordswidget import RecordsWidget
+from Products.Archetypes.references import HoldingReference
 
 from Products.CMFCore.permissions import View
 from bika.sanbi.interfaces import IKitTemplate
 
 schema = BikaSchema.copy() + Schema((
-    ReferenceField('Category',
-        required=1,
-        vocabulary='getCategories',
-        allowed_types=('ProductCategory',),
-        relationship='KitTemplateProductCategory',
-        referenceClass=HoldingReference,
-        widget=ReferenceWidget(
-            checkbox_bound=0,
-            label = _("Product Category"),
-            description = _(""),
-        ),
-    ),
     RecordsField('ProductList',
         schemata="Product List",
         type='productList',
@@ -56,23 +39,9 @@ schema = BikaSchema.copy() + Schema((
          },
         ),
     ),
-    IntegerField('Quantity',
-        widget = IntegerWidget(
-            label=_("Quantity"),
-            description=_("The number of items of this product already in "
-                          "storage. eg. 15, 100"),
-        ),
-    ),
-    TextField('StorageConditions',
-        default_output_type = 'text/plain',
-        allowable_content_types = ('text/plain',),
-        widget=TextAreaWidget (
-            label = _("Storage Conditions")),
-            description=_("Requirements for storing the product."),
-    ),
     FixedPointField('Price',
         schemata='Price',
-        default='0.00',
+        default= "0.0",
         widget = DecimalWidget(
             label=_("Price excluding VAT"),
             description=_("This is the price will be charged for each completed kit."),
@@ -88,7 +57,7 @@ schema = BikaSchema.copy() + Schema((
     ),
     FixedPointField('Cost',
         schemata='Price',
-        default_method='getCost',
+        default_method='getTotal',
         widget = DecimalWidget(
             label=_("Cost"),
             size=10,
@@ -102,9 +71,16 @@ schema = BikaSchema.copy() + Schema((
             visible = {'edit':'hidden', }
         ),
     ),
-    ComputedField('CategoryTitle',
-        expression="context.getCategory() and context.getCategory().Title() or ''",
-        widget=ComputedWidget(visible=False),
+    ReferenceField('Category',
+        required=1,
+        vocabulary='get_kit_category',
+        allowed_types=('ProductCategory',),
+        relationship='KitCategory',
+        widget=SelectionWidget(
+           format='select',
+           label=_("Product Category"),
+           description=_(""),
+        ),
     ),
 ))
 
@@ -159,7 +135,7 @@ class KitTemplate(BaseContent):
             total += Decimal(lineitem['Quantity']) * \
                      Decimal(lineitem['Price']) * \
                      ((Decimal(lineitem['VAT']) /100) + 1)
-        return total
+        return str(total)
 
     security.declareProtected(View, 'getVATAmount')
     def getVATAmount(self):
@@ -182,32 +158,18 @@ class KitTemplate(BaseContent):
             product_totalprice = brains[0].getObject().getTotalPrice() * quantity
             price += product_totalprice
 
-        # TODO: Chech wich one to use here, str or decimal?
+        # TODO: Wich one to use here, str or decimal?
         #return price.quantize(Decimal('0.00'))
         return str(price)
 
-    '''
-    security.declarePublic('getTotalPrice')
-    def getTotalPrice(self):
-        """ compute total price """
-        price = self.getPrice()
-        price = Decimal(price or '0.00')
-        vat = Decimal(self.getVAT())
-        price = price and price or 0
-        vat = vat and vat / 100 or 0
-        price = price + (price * vat)
-        return price.quantize(Decimal('0.00'))
-
-    security.declarePublic('getVATAmount')
-    def getVATAmount(self):
-        """ Compute VATAmount
-        """
-        try:
-            vatamount = self.getTotalPrice() - Decimal(self.getPrice())
-        except:
-            vatamount = Decimal('0.00')
-        return vatamount.quantize(Decimal('0.00'))
-    '''
-
+    security.declarePublic('get_kit_category')
+    def get_kit_category(self):
+        catalog = getToolByName(self, 'bika_setup_catalog')
+        categories = []
+        brains = catalog.searchResults(portal_type="ProductCategory")
+        for brain in brains:
+            categories.append([brain.UID, brain.title])
+        categories.sort(lambda x, y: cmp(x[1].lower(), y[1].lower()))
+        return DisplayList(categories)
 
 registerType(KitTemplate, config.PROJECTNAME)

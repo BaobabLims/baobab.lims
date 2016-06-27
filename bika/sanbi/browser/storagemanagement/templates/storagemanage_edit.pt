@@ -17,6 +17,23 @@
                 tal:attributes="href string:${portal/absolute_url}/bika_widgets/referencewidget.css"/>
     </metal:block>
 
+    <metal:block fill-slot="style_slot">
+        <tal:css>
+        <style type="text/css">
+            div input.letter-location-check{
+                width: 17px; height: 17px;
+                position: absolute;
+                border: 1px solid #aaa;
+                background: #f8f8f8;
+                border-radius: 3px;
+            }
+            label.field-label{
+                font-weight: bold;
+                margin-left: 20px;
+            }
+        </style>
+        </tal:css>
+    </metal:block>
 </head>
 <metal:content-title fill-slot="content-title">
     <h1>
@@ -97,13 +114,26 @@
                 <tr tal:define="fieldName python:field.getName();"
                     tal:condition="python: fieldName == 'ChildrenTitle'">
                     <td>
+                        <div data-fieldname="LetterID" id="letter-child-ids" style="display: inline-block;">
+                            <input tal:condition="python:context.getLetterID()==False" class="letter-location-check"
+                                   type="checkbox" id="letter-ids" />
+                            <input tal:condition="python:context.getLetterID()==True" class="letter-location-check"
+                                   type="checkbox" id="letter-ids" checked />
+                            <label class="field-label">Use letters for children's IDs</label>
+                        </div>
+                        <div>
+                            <span class="formHelp" id="letter-ids_help">
+                                If selected, the ids of the created children will be a serie of letters 'A', 'B',...
+                                Shoud be used in case of Tank storage type.
+                            </span>
+                        </div>
+
                         <div data-fieldname="StorageLocation" id="storagelocation" style="display: inline-block;">
-                            <input type="checkbox" id="storageposition" style="width: 17px; height: 17px;
-                                                                               position: absolute;
-                                                                               border: 1px solid #aaa;
-                                                                               background: #f8f8f8;
-                                                                               border-radius: 3px;"/>
-                            <label style="font-weight: bold; margin-left: 20px;">Storage Location</label>
+                            <input tal:condition="python:context.getStorageLocation()==False" type="checkbox"
+                                   id="storageposition" class="letter-location-check"/>
+                            <input tal:condition="python:context.getStorageLocation()==True" type="checkbox"
+                                   id="storageposition" class="letter-location-check" checked/>
+                            <label class="field-label">Storage Location</label>
                         </div>
                         <div>
                             <span class="formHelp" id="storagelocation_help">
@@ -111,6 +141,7 @@
                                 StorageLocation content type.
                             </span>
                         </div>
+
                     </td>
                 </tr>
                 <tr tal:define="fieldName python:field.getName();"

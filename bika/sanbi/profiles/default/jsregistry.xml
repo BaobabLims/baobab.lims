@@ -24,7 +24,7 @@
               insert-after="*"/>
 
   <javascript authenticated="True"
-              id="++resource++bika.sanbi.js/bika.sanbi.storageorder.add.js"
+              id="++resource++bika.sanbi.js/bika.sanbi.storagemanage.add.js"
               cacheable="True"
               compression="safe"
               conditionalcomment=""
@@ -35,7 +35,29 @@
               insert-after="*"/>
 
   <javascript authenticated="True"
-              id="++resource++bika.sanbi.js/bika.sanbi.storagemanage.add.js"
+              id="++resource++bika.sanbi.js/bika.sanbi.project.add.js"
+              cacheable="True"
+              compression="safe"
+              conditionalcomment=""
+              cookable="True"
+              enabled="on"
+              expression=""
+              inline="False"
+              insert-after="*"/>
+
+  <javascript authenticated="True"
+              id="++resource++bika.sanbi.js/bika.sanbi.shared.js"
+              cacheable="True"
+              compression="safe"
+              conditionalcomment=""
+              cookable="True"
+              enabled="on"
+              expression=""
+              inline="False"
+              insert-after="*"/>
+
+  <javascript authenticated="True"
+              id="++resource++bika.sanbi.js/bika.sanbi.storageinventory.add.js"
               cacheable="True"
               compression="safe"
               conditionalcomment=""

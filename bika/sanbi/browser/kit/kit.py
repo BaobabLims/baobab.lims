@@ -34,7 +34,7 @@ class KitView(BrowserView):
 
         self.subtotal = '%.2f' % context.getKitTemplate().getSubtotal()
         self.vat = '%.2f' % context.getKitTemplate().getVATAmount()
-        self.total = '%.2f' % context.getKitTemplate().getTotal()
+        self.total = '%.2f' % float(context.getKitTemplate().getTotal())
 
         items = context.getKitTemplate().kittemplate_lineitems
         self.items = []
@@ -132,7 +132,7 @@ class KitView(BrowserView):
 class EditView(BrowserView):
 
     template = ViewPageTemplateFile('templates/kit_edit.pt')
-    field = ViewPageTemplateFile('templates/row_field.pt')
+    #field = ViewPageTemplateFile('templates/row_field.pt')
 
     def __call__(self):
         portal = self.portal
@@ -143,7 +143,7 @@ class EditView(BrowserView):
         if 'submitted' in request:
             #pdb.set_trace()
             context.setConstrainTypesMode(constraintypes.DISABLED)
-            # This following line does the same as precedent which one is the best?
+            # This following line does the same as the precedent. Which one is the best?
             #context.aq_parent.setConstrainTypesMode(constraintypes.DISABLED)
             portal_factory = getToolByName(context, 'portal_factory')
             context = portal_factory.doCreate(context, context.id)
@@ -166,11 +166,6 @@ class EditView(BrowserView):
                 fields.append(field)
         return fields
 
-    def computeNumberKits(self):
-        """Implement me later"""
-
-    def updateStockItems(self):
-        """Implement me later"""
 
 class PrintView(KitView):
 
@@ -198,7 +193,7 @@ class PrintView(KitView):
         self.items = sorted(self.items, key=itemgetter('title'))
         self.subtotal = '%.2f' % self.context.getKitTemplate().getSubtotal()
         self.vat = '%.2f' % self.context.getKitTemplate().getVATAmount()
-        self.total = '%.2f' % self.context.getKitTemplate().getTotal()
+        self.total = '%.2f' % float(self.context.getKitTemplate().getTotal())
         return self.template()
 
     def getCSS(self):

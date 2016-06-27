@@ -7,6 +7,7 @@
 
 <object name="bika_kit_assembly_workflow" meta_type="Workflow"/>
 <object name="bika_storageposition_workflow" meta_type="Workflow"/>
+<object name="bika_aliquot_storage_manage_workflow" meta_type="Workflow"/>
 
 <bindings>
     <type type_id="KitTemplate">
@@ -27,14 +28,38 @@
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>
 
-    <type type_id="StorageOrders"/>
-    <type type_id="StorageOrder">
+    <type type_id="StorageManagements"/>
+    <type type_id="StorageManagement">
         <bound-workflow workflow_id="bika_one_state_workflow"/>
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>
 
-    <type type_id="StorageManagements"/>
-    <type type_id="StorageManagement">
+    <type type_id="Projects"/>
+    <type type_id="Project">
+        <bound-workflow workflow_id="bika_one_state_workflow"/>
+        <bound-workflow workflow_id="bika_inactive_workflow"/>
+    </type>
+
+    <type type_id="BiospecTypes"/>
+    <type type_id="BiospecType">
+        <bound-workflow workflow_id="bika_one_state_workflow"/>
+        <bound-workflow workflow_id="bika_inactive_workflow"/>
+    </type>
+
+    <type type_id="Biospecimens"/>
+    <type type_id="Biospecimen">
+        <bound-workflow workflow_id="bika_one_state_workflow"/>
+        <bound-workflow workflow_id="bika_inactive_workflow"/>
+    </type>
+
+    <type type_id="Aliquots"/>
+    <type type_id="Aliquot">
+        <bound-workflow workflow_id="bika_aliquot_storage_manage_workflow"/>
+        <bound-workflow workflow_id="bika_inactive_workflow"/>
+    </type>
+
+    <type type_id="StorageInventories"/>
+    <type type_id="StorageInventory">
         <bound-workflow workflow_id="bika_one_state_workflow"/>
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>

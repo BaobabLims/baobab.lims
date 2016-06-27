@@ -1,4 +1,6 @@
-shipments,Shipments
+projects,Projects
 kits,Kits
+biospecimens,Biospecimens
+shipments,Shipments
+aliquots,Aliquots
 bika_setup,BikaSetup
-

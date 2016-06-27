@@ -12,22 +12,51 @@ class IKits(Interface):
 class IKit(Interface):
     """Package Supply"""
 
-class IStorageOrder(Interface):
-    "Interface for Storage order"
-
-class IStorageOrders(Interface):
-    "Interface for Storage orders"
-
 class IStorageManagement(Interface):
-    "Interface for Storage management"
+    """Interface for Storage management"""
 
 class IStorageManagements(Interface):
-    "Interface for Storage managements"
+    """Interface for Storage managements"""
 
+class IProject(Interface):
+    """Interface for Project"""
+
+class IProjects(Interface):
+    """Interface for Projects"""
+
+class IBiospecType(Interface):
+    """Interface for Project"""
+
+class IBiospecTypes(Interface):
+    """Interface for Projects"""
 
 class IShipments(Interface):
     """Interface for shipments"""
 
-
 class IShipment(Interface):
     """Interface for a shipment"""
+
+class IBiospecimen(Interface):
+    """Interface for a biospecimen"""
+
+class IBiospecimens(Interface):
+    """Interface for a biospecimens"""
+
+class IMultimage(Interface):
+    """Interface for a multimage"""
+
+class IAliquot(Interface):
+    """Interface for a aliquot"""
+
+class IAliquots(Interface):
+    """Interface for aliquots"""
+
+class IStorageInventory(Interface):
+    """Interface for StorageInventory"""
+
+class IStorageInventories(Interface):
+    """Interface for StorageInventories"""
+
+class IInventoryAssignable(Interface):
+    """Interface for StorageInventories"""
+

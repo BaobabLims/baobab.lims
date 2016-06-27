@@ -81,7 +81,7 @@ class StorageManagementEdit(BrowserView):
 
     def __init__(self, context, request):
         super(StorageManagementEdit, self).__init__(context, request)
-        self.icon = self.portal_url + "/++resource++bika.lims.images/department_big.png"
+        self.icon = self.portal_url + "/++resource++bika.sanbi.images/freezer_big.png"
 
     def __call__(self):
         portal = self.portal
@@ -122,3 +122,12 @@ class StorageManagementEdit(BrowserView):
             num_childs_sub = old_num_items - new_num_items
 
         return num_childs_add, num_childs_sub
+
+
+class StorageGraph(StorageManagementView):
+    template = ViewPageTemplateFile("templates/storagemanage_graph.pt")
+    title = _("Managing Storage")
+
+    def __call__(self):
+
+        return self.template()

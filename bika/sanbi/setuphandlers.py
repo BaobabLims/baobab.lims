@@ -1,8 +1,8 @@
 """ Bika setup handlers. """
 
 from Products.CMFCore.utils import getToolByName
-from bika.lims import logger
 
+from bika.lims import logger
 from bika.sanbi.permissions import *
 
 
@@ -14,7 +14,11 @@ class BikaCustomGenerator:
 
     def setupPortalContent(self, portal):
         # remove undesired content objects
-        for obj_id in ('kits', 'shipments'):
+        for obj_id in ('kits',
+                       'projects',
+                       'shipments',
+                       'aliquots',
+                       'biospecimens'):
             try:
                 obj = portal._getOb(obj_id)
                 obj.unmarkCreationFlag()
@@ -24,8 +28,9 @@ class BikaCustomGenerator:
 
         bika_setup = portal._getOb('bika_setup')
         for obj_id in ('bika_kittemplates',
-                       'bika_storageorders',
-                       'bika_storagemanagements'):
+                       'bika_storagemanagements',
+                       'bika_biospectypes',
+                       'bika_storageinventories'):
             obj = bika_setup._getOb(obj_id)
             obj.unmarkCreationFlag()
             obj.reindexObject()
@@ -54,8 +59,12 @@ class BikaCustomGenerator:
             return
         # Add indexes and metadata columns here
         at = getToolByName(portal, 'archetype_tool')
-        at.setCatalogsByType('Kit', ['bika_catalog', 'portal_catalog'])
-        at.setCatalogsByType('Shipment', ['bika_catalog', 'portal_catalog'])
+        at.setCatalogsByType('Kit', ['bika_catalog'])
+        at.setCatalogsByType('Project', ['bika_catalog'])
+        at.setCatalogsByType('Shipment', ['bika_catalog'])
+        at.setCatalogsByType('Aliquot', ['bika_catalog'])
+        at.setCatalogsByType('Biospecimen', ['bika_catalog', ])
+        addIndex(bc, 'getBiospecimenID', 'FieldIndex')
 
         # _______________________________#
         #      BIKA_SETUP_CATALOG        #
@@ -64,11 +73,26 @@ class BikaCustomGenerator:
         if bsc is None:
             logger.warning('Could not find the bika_setup_catalog tool.')
             return
+
         # Add indexes and metadata columns here
         at = getToolByName(portal, 'archetype_tool')
-        at.setCatalogsByType('KitTemplate', ['bika_setup_catalog',])
-        at.setCatalogsByType('StorageOrder', ['bika_setup_catalog', 'portal_catalog', ])
-        at.setCatalogsByType('StorageManagement', ['bika_setup_catalog', 'portal_catalog', ])
+        at.setCatalogsByType('KitTemplate', ['bika_setup_catalog', ])
+        at.setCatalogsByType('StorageManagement', ['bika_setup_catalog', ])
+        at.setCatalogsByType('BiospecType', ['bika_setup_catalog', ])
+        at.setCatalogsByType('Multimage', ['bika_setup_catalog', ])
+        at.setCatalogsByType('StorageInventory', ['bika_setup_catalog', ])
+
+        addIndex(bsc, 'getStorageUnit', 'FieldIndex')
+        addColumn(bsc, 'getStorageUnit')
+        addIndex(bsc, 'getUnitID', 'FieldIndex')
+        addColumn(bsc, 'getUnitID')
+        addIndex(bsc, 'getParentBox', 'FieldIndex')
+        addColumn(bsc, 'getParentBox')
+        addIndex(bsc, 'getHasChildren', 'FieldIndex')
+        addColumn(bsc, 'getHasChildren')
+        addIndex(bsc, 'getLocation', 'FieldIndex')
+        addIndex(bsc, 'room_storage', 'FieldIndex')
+        addColumn(bsc, 'getLocation')
 
         bac = getToolByName(portal, 'bika_analysis_catalog', None)
         if bsc is None:
@@ -76,11 +100,15 @@ class BikaCustomGenerator:
             return
         # Add indexes and metadata columns here
 
+
+
     def setupPermissions(self, portal):
         """ Set up some suggested role to permission mappings.
         """
 
         # Root permissions
+        mp = portal.manage_permission
+        mp(AddMultimage, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp = portal.kits.manage_permission
         mp(AddKit, ['Manager', 'Owner'], 1)
         mp(ManageKits, ['Manager', 'Owner'], 1)
@@ -103,3 +131,28 @@ def setupCustomVarious(context):
     gen.setupCatalogs(portal)
     gen.setupPortalContent(portal)
     gen.setupPermissions(portal)
+
+    # Hide some NAV folders that BioBank may not need.
+    for x in ['samples',
+              'referencesamples',
+              'analysisrequests',
+              'batches',
+              'worksheets',
+              'methods',
+              'pricelists',
+              'invoices',
+              'arimports', ]:
+        obj = portal[x]
+        obj.schema['excludeFromNav'].set(obj, True)
+        obj.reindexObject()
+
+    # Set the order of the nav folders that are still visible
+    for item in reversed(['clients',
+                          'projects',
+                          'kits',
+                          'biospecimens',
+                          'aliquots',
+                          'shipments',
+                          'supplyorders',
+                          'orders']):
+        portal.moveObjectsToTop([item])

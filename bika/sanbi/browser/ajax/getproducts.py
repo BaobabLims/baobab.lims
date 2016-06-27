@@ -1,6 +1,7 @@
 from bika.lims.browser import BrowserView
 from bika.lims.permissions import *
 from operator import itemgetter
+from Products.CMFCore.utils import getToolByName
 import json
 import plone
 
@@ -26,7 +27,8 @@ class ajaxGetProducts(BrowserView):
         for p in brains:
             rows.append({'product': p.Title,
                          'product_uid': p.UID,
-                         'Description': p.Description})
+                         'Description': p.Description,
+                         'price': p.getPrice})
 
         rows = sorted(rows, cmp=lambda x, y: cmp(x.lower(), y.lower()), key=itemgetter(sidx and sidx or 'product'))
         if sord == 'desc':
@@ -37,5 +39,20 @@ class ajaxGetProducts(BrowserView):
                'total': pages,
                'records': len(rows),
                'rows': rows[(int(page) - 1) * int(nr_rows): int(page) * int(nr_rows)]}
+
+        return json.dumps(ret)
+
+
+class ComputeTotalPrice(BrowserView):
+    """This class is used to compute the total price for kit-template products."""
+    def __call__(self):
+        titles = self.request.form['titles[]']
+        catalog = 'bika_setup_catalog'
+        bsc = getToolByName(self.context, catalog)
+        brains = bsc.searchResults(portal_type='Product', title=titles)
+
+        ret = []
+        for brain in brains:
+            ret.append({'title': brain.title, 'price': brain.getPrice})
 
         return json.dumps(ret)

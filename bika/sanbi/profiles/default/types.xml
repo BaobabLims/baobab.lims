@@ -6,8 +6,20 @@
     <object name="Kit" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Shipment" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Shipments" meta_type="Factory-based Type Information with dynamic views"/>
-    <object name="StorageOrder" meta_type="Factory-based Type Information with dynamic views"/>
-    <object name="StorageOrders" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="StorageManagement" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="StorageManagements" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="Project" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="Projects" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="BiospecType" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="BiospecTypes" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="Biospecimen" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="Biospecimens" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="Aliquot" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="Aliquots" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="Multimage" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="StorageInventory" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="StorageInventories" meta_type="Factory-based Type Information with dynamic views"/>
+
+    <!-- Override values from bika.lims -->
+    <object name="Client" meta_type="Factory-based Type Information with dynamic views"/>
 </object>

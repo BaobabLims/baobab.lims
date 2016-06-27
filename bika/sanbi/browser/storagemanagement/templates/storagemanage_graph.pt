@@ -1,0 +1,481 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+            metal:use-macro="here/main_template/macros/master"
+      i18n:domain="bika">
+
+<head>
+
+    <metal:javascript_head_slot fill-slot="javascript_head_slot">
+
+        <script type="text/javascript" charset="utf-8">
+            (function($) {
+              $(function() {
+                  // Get Positions info
+                  var path = window.location.href.split('/graphic')[0] + '/positions_info';
+                  $.getJSON(path, function(data){
+                      if (data['positions'].length > 0){
+                          createGraphic(data);
+                      }
+                  });
+
+                  function positionInfo(element, d) {
+                      var sample = null;
+                      if (d.state === "position_occupied") {
+                          var path = window.location.href.split('/graphic')[0] + '/sample_info';
+                          $.ajax({
+                              dataType: "json",
+                              url: path,
+                              data: {'position': d.address},
+                              success: function (data) {
+                                  renderSampleTable(data);
+                              }
+                          });
+                      }else{
+                          $("div#pos-info-div").addClass("hidden");
+                      }
+                  }
+                  function renderSampleTable(data) {
+                      $("div#pos-info-div").removeClass("hidden");
+                      var html = "<table class='pos-info'>" +
+                        "<tbody>" +
+                        "<tr><td> Sample ID </td>" +
+                        "<td><a href='" + data['path'] +"'> " + data["id"] + "</a></td><tr>" +
+                        "<tr><td> Sample Name </td>" +
+                        "<td>" + data['name'] + "</td><tr>" +
+                        "<tr><td> Volume </td>" +
+                        "<td>" + data['volume'] + " ml</td><tr>" +
+                        "<tr><td> Quantity </td>" +
+                        "<td>" + data['quantity'] + "</td><tr>" +
+                        "</tbody></table>";
+
+                      $("div#pos-info-div table").remove();
+                      $("div#pos-info-div").append(html);
+
+                  }
+
+                  function tableStats(data){
+                      var totalPositions = data["positions"].length;
+                      var freePositions = 0, reservedPositions = 0, occupiedPositions = 0;
+                      for(var i = 0; i < totalPositions; i++){
+                          switch(data["positions"][i]["state"]){
+                              case 'position_free':
+                                  freePositions += 1;
+                                  break;
+                              case 'position_reserved':
+                                  reservedPositions += 1;
+                                  break;
+                              case 'position_occupied':
+                                  occupiedPositions += 1;
+                                  break;
+                              default: break;
+                          }
+                      }
+                      var html = "<table class='box-info'>" +
+                        "<tbody>" +
+                        "<tr><td> Total Positions </td>" +
+                        "<td>" + data['positions'].length + "</td><tr>" +
+                        "<tr><td> Available Positions </td>" +
+                        "<td>" + freePositions + "</td><tr>" +
+                        "<tr><td> Reserved Positions </td>"  +
+                        "<td>" + reservedPositions + "</td></tr>" +
+                        "<tr><td> Occupied Positions</td>"   +
+                        "<td>" + occupiedPositions + "</td></tr>" +
+                        "</tbody></table>";
+
+                      $("#stats").append(html);
+                  }
+
+                  function createGraphic(data){
+                      tableStats(data);
+                      var width = 700;
+                      var height = 500;
+                      var padding = 3;
+                      var marginTop = 30;
+                      var marginLeft = 30;
+                      var marginRight = 200;
+                      var widthPos = width - marginRight - marginLeft;
+                      var heightPos = height - marginTop;
+                      var rowCol = data["x"] + data["y"];
+                      var letters = ["A", "B", "C", "D", "E", "F", "G", "H",
+                                     "I", "J", "K", "L", "M", "N", "O", "P",
+                                     "Q", "R", "S", "T", "U", "V", "W", "X",
+                                     "Y", "Z"];
+                      // Create SVG element
+                      var wrapper = d3.select("body")
+                              .append("div")
+                              .attr("class", "wrapper");
+
+                      var tooltip = wrapper.append("div")
+                              .style("position", "absolute")
+                              .style("padding", "0 10px")
+                              .style("opacity", 0)
+                              .style("color", "white")
+                              .attr("class", "tooltip hidden");
+
+                      tooltip.append("p")
+                              .append("strong")
+                              .text("Storage Location Information");
+
+                      var address = tooltip.append("p");
+                      address.append("strong")
+                             .text("Address: ");
+                      address.append("em")
+                             .attr("id", "address");
+
+                      var stateP = tooltip.append("p");
+                      stateP.append("strong")
+                           .text("State: ");
+                      stateP.append("em")
+                           .attr("id", "state");
+
+                      var graph = d3.select("#content-core")
+                              .append("div")
+                              .attr("id", "graphic")
+                              .attr("class", "graphic");
+
+                      var svg = d3.select("#graphic")
+                                  .append("svg")
+                                  .attr("width", width)
+                                  .attr("height", height);
+
+                      var totalg = parseInt(rowCol + data["positions"].length);
+
+                      var gp = svg.selectAll("g")
+                              .data(d3.range(totalg))
+                              .enter()
+                              .append("g")
+                              .attr("i", function(d, i){
+                                  return i;
+                              })
+                              .attr("class", function (d) {
+                                   if (d < data["x"])
+                                       return "x-labels";
+                                   else if (d >= data["x"] && d < parseInt(rowCol)) {
+                                       return "y-labels";
+                                   }else return "graph-svg";
+                              })
+                              .on("click", function () {
+                                  gp.classed("on", false);
+                                  d3.select(this).classed("on", true);
+                              });
+
+                      var xLabels = svg.selectAll("g.x-labels");
+                      var yLabels = svg.selectAll("g.y-labels");
+                      var graphSVG = svg.selectAll("g.graph-svg")
+                                        .data(data["positions"]);
+
+                      xLabels.selectAll("text")
+                              .data(function () {
+                                  return [d3.select(this.parentNode).datum()];
+                              })
+                              .enter()
+                              .append("text")
+                              .text(function(d){
+                                  return d;
+                              })
+                              .attr("x", function(d){
+                                  var i = d3.select(this.parentNode).attr("i");
+                                  var x = i % data["x"] * Math.floor(widthPos / data["x"]) + marginLeft;
+                                  var w = widthPos / data["x"] - padding;
+                                  return x + w / 2;
+                              })
+                              .attr("y", function(d, i){
+                                  return marginTop - 10;
+                              });
+
+                      yLabels.selectAll("text")
+                              .data(function () {
+                                  return [d3.select(this.parentNode).datum()];
+                              })
+                              .enter()
+                              .append("text")
+                              .text(function(d){
+                                  return letters[d - data["y"]];
+                              })
+                              .attr("x", function(d, i){
+                                  return marginLeft - 20;
+                              })
+                              .attr("y", function(d){
+                                  var i = d3.select(this.parentNode).attr("i");
+                                  var y = (i - data["y"]) % data["y"] * Math.floor(heightPos / data["y"]) + marginTop;
+                                  var w = heightPos / data["y"] - padding;
+                                  return y + w / 2;
+                              });
+
+
+                      graphSVG.selectAll("rect")
+                              .data(function () {
+                                  return [d3.select(this.parentNode).datum()];
+                              })
+                              .enter()
+                              .append("rect")
+                              .attr("x", function(d){
+                                  var i = d3.select(this.parentNode).attr("i");
+                                  return (i - rowCol) % data["x"] * Math.floor(widthPos / data["x"]) + marginLeft;
+                              })
+                              .attr("y", function(d){
+                                  var i = d3.select(this.parentNode).attr("i");
+                                  return Math.floor((i - rowCol) / data["y"]) * heightPos / data["y"] + marginTop;
+                              })
+                              .attr("width", function(d) {
+                                  return widthPos / data["y"] - padding;
+                              })
+                              .attr("height", function(d){
+                                  return heightPos / data["x"] - padding;
+                              })
+                              .attr("fill", function(d){
+                                  return "#dadada";
+                              })
+                              .style("stroke", "#eee")
+                              .style("fill-opacity", .7);
+
+                      graphSVG.selectAll("circle")
+                              .data(function () {
+                                  return [d3.select(this.parentNode).datum()];
+                              })
+                              .enter()
+                              .append("circle")
+                              .attr("cx", function(d){
+                                  var i = d3.select(this.parentNode).attr("i");
+                                  var x = (i - rowCol) % data["x"] * Math.floor(widthPos / data["x"]) + marginLeft;
+                                  var w = widthPos / data["x"] - padding;
+                                  return x + w / 2;
+                              })
+                              .attr("cy", function(d){
+                                  var i = d3.select(this.parentNode).attr("i");
+                                  var y = Math.floor((i - rowCol) / data["y"]) * heightPos / data["x"] + marginTop;
+                                  var h = heightPos / data["y"] - padding;
+                                  return y + h / 2;
+                              })
+                              .attr("r", function(d){
+                                  var w = widthPos / data["x"] - padding;
+                                  var h = heightPos / data["y"] - padding;
+                                  return d3.max([w / 2 - 2*padding, h / 2 - 2*padding])
+                              })
+                              .attr("fill", function(d){
+                                  switch (d["state"]){
+                                      case 'position_free':
+                                          return "#32ce16";
+                                          break;
+                                      case 'position_reserved':
+                                          return "#39cccc";
+                                          break;
+                                      case 'position_occupied':
+                                          return "#fc7871";
+                                          break;
+                                      default:
+                                          break;
+                                  }
+                              })
+                              .style("fill-opacity", .5)
+                              .on("click", function(d){
+                                  positionInfo(this, d);
+                              }).on('mouseover', function(d) {
+                                  var state = '';
+                                  var color = '';
+                                  switch(d.state){
+                                      case 'position_free':
+                                          state = "Available";
+                                          color = "#32ce16";
+                                          break;
+                                      case 'position_reserved':
+                                          state = "Reserved";
+                                          color = "#39cccc";
+                                          break;
+                                      case 'position_occupied':
+                                          state = "Occupied";
+                                          color = "#fc7871";
+                                          break;
+                                  }
+                                  tooltip.transition()
+                                    .style('opacity', .9)
+                                    .style('background', '#1496bb')
+                                    .style('left',(d3.event.pageX - 100 ) + 'px')
+                                    .style('top', (d3.event.pageY - 100) + 'px');
+
+                                  tooltip.select("#address")
+                                          .html(d.address);
+                                  tooltip.select("#state")
+                                          .html(state)
+                                          .style("color", color);
+                                  tooltip.classed("hidden", false);
+                              })
+                              .on('mouseout', function(d) {
+                                  tooltip.transition()
+                                    .style('opacity', 0);
+                                  tooltip.classed("hidden", true);
+                              });
+
+                      var positionState = [["Free", "#32ce16"],
+                                           ["Reserved", "#39cccc"],
+                                           ["Occupied", "#fc7871"]];
+
+                      var legend = svg.append("g")
+                          .attr("class", "legend")
+                          .attr("x", width - 150)
+                          .attr("y", 25 + marginTop)
+                          .attr("height", 100)
+                          .attr("width", 100);
+
+                      legend.selectAll('circle')
+                              .data(positionState)
+                              .enter()
+                              .append("circle")
+                              .attr("cx", width - 150)
+                              .attr("cy", function(d, i){
+                                  return i*25 + marginTop + 5;
+                              })
+                              .attr("r", 6)
+                              .style("fill", function(d,i){
+                                  return d[1];
+                              });
+
+                      legend.selectAll("text")
+                              .data(positionState)
+                              .enter()
+                              .append("text")
+                              .attr("x", width - 128)
+                              .attr("y", function(d, i){
+                                  return i * 25 + marginTop + 8;
+                              })
+                              .attr("height",30)
+                              .attr("width",100)
+                              .text(function(d, i){
+                                  return d[0];
+                              })
+                              .style("font-family", "sans-serif")
+                              .style("font-weight", "bold");
+                  }
+              });
+            })(jQuery);
+        </script>
+    </metal:javascript_head_slot>
+    <metal:block fill-slot="style_slot">
+        <tal:css>
+        <style type="text/css">
+            rect:hover{
+                fill: orange;
+            }
+            rect {
+                -moz-transition: all 0.3s;
+                -o-transition: all 0.3s;
+                -webkit-transition: all 0.3s;
+                transition: all 0.3s;
+            }
+            circle:hover{
+                fill: black;
+            }
+            g.on > rect{
+                fill:orange;
+            }
+            .legend {
+	            padding: 5px;
+	            font: 10px sans-serif;
+	            background: yellow;
+	            box-shadow: 2px 2px 1px #888;
+            }
+            #content-core > div:first-of-type{
+                float: left;
+                clear: none;
+                margin: 20px 0;
+                width: 30%;
+            }
+            div.table-info{
+            }
+            span.head-text{
+                font-family: sans-serif;
+                font-size: 14px;
+                font-weight: bold;
+            }
+            div.table-info table {
+                border: solid 1px #DDEEEE;
+                border-collapse: collapse;
+                border-spacing: 0;
+                font: normal 13px Arial, sans-serif;
+                width:100%;
+            }
+            div.table-info table tbody td {
+                border: solid 1px #DDEEEE;
+                color: #333;
+                padding: 10px;
+                text-shadow: 1px 1px 1px #fff;
+            }
+
+            div#graphic{
+                margin: 20px 30px;
+                float: left;
+                width: 50%;
+            }
+            .hidden{
+                display: none;
+            }
+            rect:hover {
+				fill: orange;
+			}
+
+            g.x-labels, g.y-labels{
+                fill: gray;
+            }
+            table.box-info{
+                margin-top: 7px;
+            }
+            table.pos-info{
+                margin-top: 7px;
+            }
+
+			.tooltip {
+				position: absolute;
+				width: 300px;
+				height: auto;
+				padding: 10px;
+				background-color: white;
+				-webkit-border-radius: 10px;
+				-moz-border-radius: 10px;
+				border-radius: 10px;
+				-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+				-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+				box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+				pointer-events: none;
+			}
+
+			.tooltip p {
+				margin: 0;
+				font-family: sans-serif;
+				font-size: 16px;
+				line-height: 20px;
+			}
+        </style>
+        </tal:css>
+    </metal:block>
+
+</head>
+
+<body>
+
+<metal:title fill-slot="content-title">
+</metal:title>
+
+<metal:content-description fill-slot="content-description">
+</metal:content-description>
+
+<div metal:fill-slot="content-core"
+     tal:define="
+        portal context/@@plone_portal_state/portal;">
+    <div class="table-info">
+    <div id="stats">
+        <img tal:attributes='src python:portal.absolute_url()+"/++resource++bika.sanbi.images/graph_big.png"'/>
+        <span class="head-text">Statistics</span>
+    </div>
+    <p ></p>
+    <div id="pos-info-div" class="hidden" style="border-top: 1px solid deepskyblue; padding-top: 5px;">
+        <img tal:attributes='src python:portal.absolute_url()+"/++resource++bika.sanbi.images/sample_big.png"'/>
+        <span class="head-text">Sample</span>
+    </div>
+    </div>
+</div>
+
+
+</body>
+
+</html>

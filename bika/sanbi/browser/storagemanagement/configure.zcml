@@ -22,9 +22,33 @@
     />
 
     <browser:page
+      for="bika.sanbi.interfaces.IStorageManagement"
+      name="graphic"
+      class="bika.sanbi.browser.storagemanagement.StorageGraph"
+      permission="cmf.ModifyPortalContent"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
       for="*"
       name="storagemanage_submit"
       class="bika.sanbi.browser.storagemanagement.StorageManageSubmit"
+      permission="zope.Public"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="*"
+      name="positions_info"
+      class="bika.sanbi.browser.storagemanagement.PositionsInfo"
+      permission="zope.Public"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="*"
+      name="sample_info"
+      class="bika.sanbi.browser.storagemanagement.SampleInfo"
       permission="zope.Public"
       layer="bika.lims.interfaces.IBikaLIMS"
     />

@@ -7,6 +7,7 @@ from bika.lims.browser.bika_listing import BikaListingView
 from plone.app.layout.globals.interfaces import IViewView
 from plone.app.content.browser.interfaces import IFolderContentsView
 
+
 class KitsView(BikaListingView):
     implements(IFolderContentsView, IViewView)
         
@@ -16,7 +17,7 @@ class KitsView(BikaListingView):
                               'sort_on': 'sortable_title'}
         self.context_actions = {}
         self.title = self.context.translate(_("Kits"))
-        self.icon = self.portal_url + "/++resource++bika.lims.images/container_big.png"
+        self.icon = self.portal_url + "/++resource++bika.sanbi.images/kit_big.png"
         self.description = ""
         self.show_sort_column = False
         self.show_select_row = False

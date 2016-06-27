@@ -5,7 +5,7 @@
         i18n:domain="plone">
  <property name="title" i18n:translate="">Kit Assembly</property>
  <property name="description"></property>
- <property name="content_icon">++resource++bika.lims.images/supplyorder.png</property>
+ <property name="content_icon">++resource++bika.sanbi.images/kit.png</property>
  <property name="content_meta_type">Kit</property>
  <property name="product">bika.sanbi</property>
  <property name="factory">addKit</property>
