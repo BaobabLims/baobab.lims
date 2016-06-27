@@ -143,7 +143,7 @@ class InventoryStorageView(BrowserView):
         self.id = context.getId()
         self.title = context.Title()
         self.type = self.type_text(context)
-        self.parent = context.getStorageUnit().Title()
+        self.parent = context.aq_parent
         self.numPositions = context.getNumPositions()
         self.dimension = self.dimension_text(context)
 

@@ -73,7 +73,6 @@ class StorageInventorySubmit:
             Location=True,
             Dimension='N'
         )
-        child.setStorageUnit(self.context)
         child.unmarkCreationFlag()
         renameAfterCreation(child)
         child.reindexObject()
@@ -182,41 +181,36 @@ class StorageInventorySubmit:
         return self.context
 
     def create_storage(self, values):
-        uid_Catalog = getToolByName(self.context, 'uid_catalog')
         exist = self.context.aq_parent.hasObject(self.context.getId())
-        numr = values.has_key('XAxis') and values.get('XAxis') and int(values['XAxis']) or 0
-        numc = values.has_key('YAxis') and values.get('YAxis') and int(values['YAxis']) or 0
+        numr = values.has_key('XAxis') and values.get('XAxis') and int(values['XAxis']) or 1
+        numc = values.has_key('YAxis') and values.get('YAxis') and int(values['YAxis']) or 1
         context_b = {}
         if not exist:
             num_add, num_sub = self.number_children_add_sub(values)
-            brains = uid_Catalog(UID=values['StorageUnit'])
-            parent = brains[0].getObject() if len(brains) else None
 
             # Create the current context in ZODB
-            self.context = _createObjectByType('StorageInventory', parent, tmpID())
+            self.context = _createObjectByType(
+                'StorageInventory', self.context.aq_parent, tmpID())
             self.context.processForm(REQUEST=self.request, values=values)
             self.context.edit(
-                XAxis=values.get('XAxis') and values['XAxis'] or 0,
-                YAxis=values.get('YAxis') and values['YAxis'] or 0
+                XAxis=values.get('XAxis') and values['XAxis'] or 1,
+                YAxis=values.get('YAxis') and values['YAxis'] or 1
             )
             renameAfterCreation(self.context)
 
-            if num_add:
-                self.dimension_representation(num_add, context_b, values, rows=numr, cols=numc)
-                if self.context.getHasChildren():
-                    alsoProvides(self.context, IInventoryAssignable)
-                    self.context.reindexObject(idxs=['object_provides'])
+            self.dimension_representation(num_add, context_b, values, rows=numr, cols=numc)
+            if self.context.getHasChildren():
+                alsoProvides(self.context, IInventoryAssignable)
+                self.context.reindexObject(idxs=['object_provides'])
 
         else:
-            if not values.get('StorageUnit', ''):
-                values['StorageUnit'] = self.context.aq_parent.UID()
 
             context_b = self.context_to_dict()
             num_add, num_sub = self.number_children_add_sub(values)
             self.context.processForm(REQUEST=self.request, values=values)
 
-            numr = numr and numr or context_b.get('XAxis', 0)
-            numc = numc and numc or context_b.get('YAxis', 0)
+            numr = numr and numr or context_b.get('XAxis', 1)
+            numc = numc and numc or context_b.get('YAxis', 1)
             if num_add and context_b['NumPositions'] < self.context.getNumPositions():
                 self.dimension_representation(num_add, context_b, values, rows=numr, cols=numc)
 
