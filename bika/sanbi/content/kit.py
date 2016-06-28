@@ -28,6 +28,7 @@ schema = BikaSchema.copy() + Schema((
         referenceClass=HoldingReference,
         widget=bika_ReferenceWidget(
            label=_("Project"),
+           catalog_name='bika_catalog',
            size=30,
            render_own_label=True,
            showOn=True,
