@@ -128,6 +128,10 @@ class StorageGraph(StorageManagementView):
     template = ViewPageTemplateFile("templates/storagemanage_graph.pt")
     title = _("Managing Storage")
 
+    def __init__(self, context, request):
+        super(StorageGraph, self).__init__(context, request)
+        request.set('disable_plone.rightcolumn', 1)
+
     def __call__(self):
 
         return self.template()

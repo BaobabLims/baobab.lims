@@ -21,32 +21,28 @@
 
                   function positionInfo(element, d) {
                       var sample = null;
-                      if (d.state === "position_occupied") {
-                          var path = window.location.href.split('/graphic')[0] + '/sample_info';
-                          $.ajax({
-                              dataType: "json",
-                              url: path,
-                              data: {'position': d.address},
-                              success: function (data) {
-                                  renderSampleTable(data);
-                              }
-                          });
+                      if (d.state === "position_occupied" || d.state == "position_reserved") {
+                          console.log(d);
+                          renderSampleTable(d);
                       }else{
                           $("div#pos-info-div").addClass("hidden");
                       }
                   }
-                  function renderSampleTable(data) {
+                  function renderSampleTable(d) {
                       $("div#pos-info-div").removeClass("hidden");
+                      var arr = d["address"].split(".");
+                      var posID = arr[arr.length -1];
+                      $("span.position-info").html(posID);
                       var html = "<table class='pos-info'>" +
                         "<tbody>" +
                         "<tr><td> Sample ID </td>" +
-                        "<td><a href='" + data['path'] +"'> " + data["id"] + "</a></td><tr>" +
+                        "<td><a href='" + d['path'] +"'> " + d["aid"] + "</a></td><tr>" +
                         "<tr><td> Sample Name </td>" +
-                        "<td>" + data['name'] + "</td><tr>" +
+                        "<td>" + d['name'] + "</td><tr>" +
                         "<tr><td> Volume </td>" +
-                        "<td>" + data['volume'] + " ml</td><tr>" +
+                        "<td>" + d['volume'] + " ml</td><tr>" +
                         "<tr><td> Quantity </td>" +
-                        "<td>" + data['quantity'] + "</td><tr>" +
+                        "<td>" + d['quantity'] + "</td><tr>" +
                         "</tbody></table>";
 
                       $("div#pos-info-div table").remove();
@@ -75,11 +71,11 @@
                         "<tbody>" +
                         "<tr><td> Total Positions </td>" +
                         "<td>" + data['positions'].length + "</td><tr>" +
-                        "<tr><td> Available Positions </td>" +
+                        "<tr><td> Available </td>" +
                         "<td>" + freePositions + "</td><tr>" +
-                        "<tr><td> Reserved Positions </td>"  +
+                        "<tr><td> Reserved </td>"  +
                         "<td>" + reservedPositions + "</td></tr>" +
-                        "<tr><td> Occupied Positions</td>"   +
+                        "<tr><td> Occupied </td>"   +
                         "<td>" + occupiedPositions + "</td></tr>" +
                         "</tbody></table>";
 
@@ -88,12 +84,12 @@
 
                   function createGraphic(data){
                       tableStats(data);
-                      var width = 700;
-                      var height = 500;
+                      var width = 900;
+                      var height = 700;
                       var padding = 3;
                       var marginTop = 30;
                       var marginLeft = 30;
-                      var marginRight = 200;
+                      var marginRight = 180;
                       var widthPos = width - marginRight - marginLeft;
                       var heightPos = height - marginTop;
                       var rowCol = data["x"] + data["y"];
@@ -288,24 +284,60 @@
                                           color = "#fc7871";
                                           break;
                                   }
-                                  tooltip.transition()
-                                    .style('opacity', .9)
-                                    .style('background', '#1496bb')
-                                    .style('left',(d3.event.pageX - 100 ) + 'px')
-                                    .style('top', (d3.event.pageY - 100) + 'px');
 
-                                  tooltip.select("#address")
-                                          .html(d.address);
-                                  tooltip.select("#state")
-                                          .html(state)
-                                          .style("color", color);
-                                  tooltip.classed("hidden", false);
+//                                  tooltip.transition()
+//                                    .style('opacity', .9)
+//                                    .style('background', '#1496bb')
+//                                    .style('left',(d3.event.pageX - 100 ) + 'px')
+//                                    .style('top', (d3.event.pageY - 100) + 'px');
+//
+//                                  tooltip.select("#address")
+//                                          .html(d.address);
+//                                  tooltip.select("#state")
+//                                          .html(state)
+//                                          .style("color", color);
+//                                  tooltip.classed("hidden", false);
                               })
                               .on('mouseout', function(d) {
-                                  tooltip.transition()
-                                    .style('opacity', 0);
-                                  tooltip.classed("hidden", true);
+//                                  tooltip.transition()
+//                                    .style('opacity', 0);
+//                                  tooltip.classed("hidden", true);
                               });
+
+                      graphSVG.selectAll("a")
+                              .data(function () {
+                                  return [d3.select(this.parentNode).datum()];
+                              })
+                              .enter()
+                              .append("a")
+                              .attr({"xlink:href": function (d) {
+                                  if (d["occupied"] || d["reserved"]){
+                                      return d["path"];
+                                  }
+                                  return '#';
+                              }})
+                              .append("text")
+                              .text(function (d) {
+                                  if(d["occupied"] || d["reserved"]){
+                                    return d["aid"];
+                                  }
+                                  return '';
+                              })
+                              .attr({x: function (d) {
+                                  var i = d3.select(this.parentNode.parentNode).attr("i");
+                                  var x = (i - rowCol) % data["x"] * Math.floor(widthPos / data["x"]) + marginLeft;
+                                  var w = widthPos / data["x"] - padding;
+                                  return x + w / 2;
+                              }, y:function (d) {
+                                  var i = d3.select(this.parentNode.parentNode).attr("i");
+                                  var y = Math.floor((i - rowCol) / data["y"]) * heightPos / data["x"] + marginTop;
+                                  var h = heightPos / data["y"] - padding;
+                                  return y + h / 2;
+                              }})
+                              .attr("font-family", "sans-serif")
+                              .attr("font-size", "10px")
+                              .attr("fill", "#146fba")
+                              .style({"text-anchor": "middle", "font-weight": "bold"});
 
                       var positionState = [["Free", "#32ce16"],
                                            ["Reserved", "#39cccc"],
@@ -364,10 +396,10 @@
                 transition: all 0.3s;
             }
             circle:hover{
-                fill: black;
+                opacity:0.7;
             }
             g.on > rect{
-                fill:orange;
+                fill: #c1aeae;
             }
             .legend {
 	            padding: 5px;
@@ -465,12 +497,12 @@
     <div class="table-info">
     <div id="stats">
         <img tal:attributes='src python:portal.absolute_url()+"/++resource++bika.sanbi.images/graph_big.png"'/>
-        <span class="head-text">Statistics</span>
+        <span class="head-text">Occupancy</span>
     </div>
     <p ></p>
     <div id="pos-info-div" class="hidden" style="border-top: 1px solid deepskyblue; padding-top: 5px;">
         <img tal:attributes='src python:portal.absolute_url()+"/++resource++bika.sanbi.images/sample_big.png"'/>
-        <span class="head-text">Sample</span>
+        <span class="head-text position-info">Sample</span>
     </div>
     </div>
 </div>
