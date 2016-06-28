@@ -191,5 +191,9 @@ class InventoryGraph(InventoryStorageView):
     template = ViewPageTemplateFile("templates/inventory_graph.pt")
     title = _("Managing Inventory")
 
+    def __init__(self, context, request):
+        super(InventoryGraph, self).__init__(context, request)
+        request.set('disable_plone.rightcolumn', 1)
+
     def __call__(self):
         return self.template()

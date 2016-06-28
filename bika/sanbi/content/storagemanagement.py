@@ -152,13 +152,16 @@ class StorageManagement(BaseFolder):
     def getPositions(self):
         children = []
         bsc = getToolByName(self, 'bika_setup_catalog')
-        all_objects = bsc.searchResults(portal_type='StorageLocation', sort_on='sortable_title')
-        for obj in all_objects:
-            obj = obj.getObject()
-            if obj.aq_parent == self:
-                children.append(obj)
+        brains = bsc.searchResults(portal_type='StorageLocation',
+                                        inactive_state='active',
+                                        sort_on='sortable_title',
+                                        path={'query': "/".join(self.getPhysicalPath()), 'level':0})
+        # for obj in all_objects:
+        #     obj = obj.getObject()
+        #     if obj.aq_parent == self:
+        #         children.append(obj)
 
-        return children
+        return [brain.getObject() for brain in brains]
 
     def getHierarchy(self, char='>'):
         ancestors = []
