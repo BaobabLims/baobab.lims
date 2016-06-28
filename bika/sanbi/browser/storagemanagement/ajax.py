@@ -335,11 +335,28 @@ class PositionsInfo:
 
             children = self.context.getPositions()
             for c in children:
+                aid, name, quantity, volume, path, pos = '', '', 0, 0, '', ''
+                if c.getIsOccupied() or c.getIsReserved():
+                    aliquot = c.getAliquot()
+                    aid = aliquot.getId()
+                    name = aliquot.Title()
+                    quantity = aliquot.getQuantity()
+                    volume = aliquot.getVolume()
+                    path = aliquot.absolute_url_path()
+                    pos = c.absolute_url_path()
+
                 positions.append({
                     'occupied': c.getIsOccupied(),
+                    'reserved': c.getIsReserved(),
                     'chain': [o.Title() for o in reversed(c.getChain())],
                     'address': c.Title(),
-                    'state': workflow.getInfoFor(c, 'review_state')
+                    'state': workflow.getInfoFor(c, 'review_state'),
+                    'aid': aid,
+                    'name': name,
+                    'quantity': quantity,
+                    'volume': volume,
+                    'path': path,
+                    'pos': pos
                 })
                 response['positions'] = positions
 
