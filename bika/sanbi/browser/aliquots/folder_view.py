@@ -17,9 +17,10 @@ class AliquotsView(BikaListingView):
     implements(IFolderContentsView, IViewView)
 
     def __init__(self, context, request):
+        super(AliquotsView, self).__init__(context, request)
         self.context = context
         self.request = request
-        super(AliquotsView, self).__init__(context, request)
+        self.catalog = "bika_catalog"
         self.contentFilter = {'portal_type': 'Aliquot',
                               'sort_on': 'sortable_title'}
 
