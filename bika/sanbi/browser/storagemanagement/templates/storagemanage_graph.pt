@@ -33,17 +33,23 @@
                       var arr = d["address"].split(".");
                       var posID = arr[arr.length -1];
                       $("span.position-info").html(posID);
+                      var portalType = 'Aliquot';
+                      if(d["subject"]){
+                          portalType = 'Biospecimen';
+                      }
                       var html = "<table class='pos-info'>" +
                         "<tbody>" +
-                        "<tr><td> Sample ID </td>" +
+                        "<tr><td>"+ portalType +" ID </td>" +
                         "<td><a href='" + d['path'] +"'> " + d["aid"] + "</a></td><tr>" +
-                        "<tr><td> Sample Name </td>" +
+                        "<tr><td>"+ portalType +" Name </td>" +
                         "<td>" + d['name'] + "</td><tr>" +
                         "<tr><td> Volume </td>" +
-                        "<td>" + d['volume'] + " ml</td><tr>" +
-                        "<tr><td> Quantity </td>" +
-                        "<td>" + d['quantity'] + "</td><tr>" +
-                        "</tbody></table>";
+                        "<td>" + d['volume'] + " ml</td><tr>";
+                      if(portalType === 'Biospecimen'){
+                        html += "<tr><td> Subject ID </td>" +
+                        "<td>" + d['subject'] + "</td><tr>";
+                      }
+                      html +=  "</tbody></table>";
 
                       $("div#pos-info-div table").remove();
                       $("div#pos-info-div").append(html);
@@ -501,7 +507,7 @@
     </div>
     <p ></p>
     <div id="pos-info-div" class="hidden" style="border-top: 1px solid deepskyblue; padding-top: 5px;">
-        <img tal:attributes='src python:portal.absolute_url()+"/++resource++bika.sanbi.images/sample_big.png"'/>
+        <img tal:attributes='src python:portal.absolute_url()+"/++resource++bika.sanbi.images/aliquot_big.png"'/>
         <span class="head-text position-info">Sample</span>
     </div>
     </div>

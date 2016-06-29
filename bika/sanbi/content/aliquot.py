@@ -240,9 +240,10 @@ class Aliquot(BaseContent):
                 wftool.doActionFor(storage_location, action='reserve', wf_id='bika_storageposition_workflow')
                 storage_location.edit(
                     IsReserved=True,
-                    AliquotUID=self.UID()
+                    IsOccupied=False,
+                    SampleUID=self.UID()
                 )
-                storage_location.setAliquot(self)
+                storage_location.setSample(self)
                 storage_location.reindexObject()
 
     def at_post_edit_script(self):
@@ -275,8 +276,8 @@ class Aliquot(BaseContent):
             storage_location = self.getStorageLocation()
             state = wftool.getInfoFor(storage_location, 'review_state')
             if state == 'position_reserved':
-                if not storage_location.getAliquot():
-                    storage_location.setAliquot(self)
+                if not storage_location.getSample():
+                    storage_location.setSample(self)
 
                 storage_location.edit(
                     IsReserved=False,

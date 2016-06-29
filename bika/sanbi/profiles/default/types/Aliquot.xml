@@ -5,7 +5,7 @@
         i18n:domain="plone">
  <property name="title" i18n:translate="">Aliquot</property>
  <property name="description"></property>
- <property name="content_icon">++resource++bika.sanbi.images/sample.png</property>
+ <property name="content_icon">++resource++bika.sanbi.images/aliquot.png</property>
  <property name="content_meta_type">Aliquot</property>
  <property name="product">bika.sanbi</property>
  <property name="factory">addAliquot</property>

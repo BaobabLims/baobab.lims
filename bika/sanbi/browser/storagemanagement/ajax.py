@@ -335,14 +335,15 @@ class PositionsInfo:
 
             children = self.context.getPositions()
             for c in children:
-                aid, name, quantity, volume, path, pos = '', '', 0, 0, '', ''
+                aid, name, subject, volume, path, pos = '', '', 0, 0, '', ''
                 if c.getIsOccupied() or c.getIsReserved():
-                    aliquot = c.getAliquot()
-                    aid = aliquot.getId()
-                    name = aliquot.Title()
-                    quantity = aliquot.getQuantity()
-                    volume = aliquot.getVolume()
-                    path = aliquot.absolute_url_path()
+                    sample = c.getSample()
+                    aid = sample.getId()
+                    name = sample.Title()
+                    if sample.portal_type == "Biospecimen":
+                        subject = sample.getSubjectID()
+                    volume = sample.getVolume()
+                    path = sample.absolute_url_path()
                     pos = c.absolute_url_path()
 
                 positions.append({
@@ -353,7 +354,7 @@ class PositionsInfo:
                     'state': workflow.getInfoFor(c, 'review_state'),
                     'aid': aid,
                     'name': name,
-                    'quantity': quantity,
+                    'subject': subject,
                     'volume': volume,
                     'path': path,
                     'pos': pos
@@ -374,7 +375,7 @@ class SampleInfo:
         id = form['position']
         catalog = getToolByName(self.context, 'bika_setup_catalog')
         brains = catalog.searchResults(portal_type="StorageLocation", id=id)
-        sample = brains[0].getObject().getAliquot()
+        sample = brains[0].getObject().getSample()
 
         ret = {
             'id': sample.getId(),
