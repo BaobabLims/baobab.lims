@@ -29,7 +29,7 @@ class StorageManagementsView(BikaListingView):
                 'icon': '++resource++bika.lims.images/add.png'
             }
         }
-        self.title = self.context.translate(_("Storage Management"))
+        self.title = self.context.translate(_("Sample Storage"))
         self.icon = self.portal_url +"/++resource++bika.sanbi.images/freezer_big.png"
         self.description = ''
         self.show_sort_column = False
