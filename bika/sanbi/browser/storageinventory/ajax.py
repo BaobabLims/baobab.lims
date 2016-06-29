@@ -73,7 +73,6 @@ class StorageInventorySubmit:
             Location=True,
             Dimension='N'
         )
-        child.setStorageUnit(self.context)
         child.unmarkCreationFlag()
         renameAfterCreation(child)
         child.reindexObject()

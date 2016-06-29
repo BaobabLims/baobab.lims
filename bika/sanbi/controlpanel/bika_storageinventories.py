@@ -101,7 +101,7 @@ class StorageInventoriesView(BikaListingView):
             obj = items[x]['obj']
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                  (items[x]['url'], items[x]['Title'])
-            items[x]['StorageUnit'] = obj.getStorageUnit().Title()
+            items[x]['StorageUnit'] = obj.aq_parent.Title()
             items[x]['Hierarchy'] = obj.getHierarchy()
             # items[x]['IsOccupied'] = 'yes' if obj.getIsOccupied() else 'no'
 

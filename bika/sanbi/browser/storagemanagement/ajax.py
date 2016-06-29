@@ -104,7 +104,6 @@ class StorageManageSubmit:
             YAxis=1,
             ZAxis=1
         )
-        child.setStorageUnit(self.context)
         child.unmarkCreationFlag()
         renameAfterCreation(child)
         child.reindexObject()

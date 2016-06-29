@@ -25,22 +25,6 @@ schema = BikaSchema.copy() + Schema((
             visible={'edit': 'visible', 'view': 'visible'},
         )),
 
-    ReferenceField(
-        'StorageUnit',
-        required=1,
-        allowed_types=('StorageUnit',),
-        relationship='StorageManageUnit',
-        vocabulary_display_path_bound=sys.maxsize,
-        referenceClass=HoldingReference,
-        widget=ReferenceWidget(
-            checkbox_bound=0,
-            label=_("Storage Unit"),
-            description=_("Select the enclosure containing the new storage."),
-            size=50,
-            showOn=True,
-            visible={'edit': 'visible', 'view': 'visible'},
-        )),
-    
     BooleanField(
         'LetterID',
         default=False,
@@ -133,7 +117,7 @@ schema = BikaSchema.copy() + Schema((
 
     ComputedField(
         'UnitID',
-        expression="context.getStorageUnit() and context.getStorageUnit().getId() or '' ",
+        expression="context.aq_parent.getId()",
         widget=ComputedWidget(
             visible=False
         )),

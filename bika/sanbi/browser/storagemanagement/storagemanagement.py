@@ -19,7 +19,7 @@ class StorageView(StorageManagementsView):
             if not items[x].has_key('obj'): continue
             obj = items[x]['obj']
             if obj in self.children or obj.UID() == self.context.UID():
-                items[x]['StorageUnit'] = obj.getStorageUnit().Title()
+                items[x]['StorageUnit'] = obj.aq_parent.Title()
                 items[x]['Shelves'] = obj.getShelves() and int(obj.getShelves()) or 0
                 items[x]['Hierarchy'] = obj.getHierarchy()
                 items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
@@ -53,7 +53,7 @@ class StorageManagementView(BrowserView):
         self.id = context.getId()
         self.title = context.Title()
         self.type = context.getType()
-        self.storage_unit = context.getStorageUnit().Title()
+        self.storage_unit = context.aq_parent.Title()
         self.shelves = context.getShelves()
         self.dimension = context.getDimension()
 

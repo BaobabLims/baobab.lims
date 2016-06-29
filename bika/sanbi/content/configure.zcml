@@ -11,7 +11,5 @@
 
     <adapter factory=".storagelocation.StorageLocationSchemaExtender" />
 
-    <adapter name="room_storage" factory=".storagemanagement.get_storage_room_id" />
-
     <adapter name="getClientTitle" factory=".project.getClientTitle" />
 </configure>
