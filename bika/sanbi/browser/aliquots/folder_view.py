@@ -197,10 +197,10 @@ class AjaxGetChildren:
         else:
             roompath = ''
 
+        print roompath
         bsc = getToolByName(self.context, 'bika_setup_catalog')
         brains = bsc(portal_type="StorageManagement",
-                     path={'query': roompath,
-                           'level': 0}
+                     path={'query': roompath, 'depth': 1}
                      )
         ret = []
         for brain in brains:
