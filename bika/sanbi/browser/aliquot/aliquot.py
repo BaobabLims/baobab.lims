@@ -1,11 +1,9 @@
-import json
-
 from Products.ATContentTypes.lib import constraintypes
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-
 from bika.lims.browser import BrowserView
 from bika.sanbi import bikaMessageFactory as _
+import json
 
 
 class AliquotEdit(BrowserView):
@@ -18,7 +16,7 @@ class AliquotEdit(BrowserView):
 
         super(AliquotEdit, self).__init__(context, request)
         self.icon = self.portal_url + \
-                    "/++resource++bika.sanbi.images/sample_big.png"
+                    "/++resource++bika.sanbi.images/aliquot_big.png"
 
     def __call__(self):
         portal = self.portal
@@ -28,15 +26,14 @@ class AliquotEdit(BrowserView):
         if 'submit' in request:
             context.setConstrainTypesMode(constraintypes.DISABLED)
 
-            # If we edit sample with empty location we have edit location too
-            #  and make it's state free.
+            # If we edit sample with empty location we have to set location too free
             if not form.get('StorageLocation', ''):
                 wftool = self.context.portal_workflow
                 location = self.context.getStorageLocation()
                 if location:
                     state = wftool.getInfoFor(location, 'review_state')
                     if state != 'position_free':
-                        if state == 'position_occupied' and location.getAliquot():
+                        if state == 'position_occupied' and location.getSample():
                             location.setAliquot(None)
                         wftool.doActionFor(location, action='free', wf_id='bika_storageposition_workflow')
 

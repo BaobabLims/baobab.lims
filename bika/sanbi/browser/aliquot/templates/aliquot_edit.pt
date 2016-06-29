@@ -39,7 +39,6 @@
                       $.ajax({url:path, data:{'uid': value}})
                           .done(function (data) {
                               data = $.parseJSON(data);
-                              console.log(data);
                               setSelectOptions(data, element);
                           });
                   });

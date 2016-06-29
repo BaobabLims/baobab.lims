@@ -26,7 +26,7 @@ class AliquotsView(BikaListingView):
 
         self.context_actions = {}
         self.title = self.context.translate(_("Aliquots"))
-        self.icon = self.portal_url + "/++resource++bika.sanbi.images/sample_big.png"
+        self.icon = self.portal_url + "/++resource++bika.sanbi.images/aliquot_big.png"
         self.description = ""
         self.show_sort_column = False
         self.show_select_row = False
