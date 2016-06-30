@@ -30,7 +30,7 @@ class StorageInventoriesView(BikaListingView):
         self.title = (hasattr(self.context, 'Title') and self.context.Title() or
                       self.context.translate(_("Storage Levels")))
         self.icon = self.portal_url
-        self.icon += "/++resource++bika.lims.images/storagelocation_big.png"
+        self.icon += "/++resource++bika.sanbi.images/inventory_big.png"
         self.description = ""
         self.show_sort_column = False
         self.show_select_row = False

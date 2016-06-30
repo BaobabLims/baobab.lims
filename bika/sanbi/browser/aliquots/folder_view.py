@@ -69,11 +69,11 @@ class AliquotsView(BikaListingView):
 
     def __call__(self):
         mtool = getToolByName(self.context, 'portal_membership')
-        if mtool.checkPermission(AddAliquot, self.context):
-            self.context_actions[_('Add')] = {
-                'url': 'createObject?type_name=Aliquot',
-                'icon': '++resource++bika.lims.images/add.png'
-            }
+        # if mtool.checkPermission(AddAliquot, self.context):
+        #     self.context_actions[_('Add')] = {
+        #         'url': 'createObject?type_name=Aliquot',
+        #         'icon': '++resource++bika.lims.images/add.png'
+        #     }
 
         if mtool.checkPermission(ManageAliquots, self.context):
             self.review_states[0]['transitions'].append({'id': 'deactivate'})
@@ -197,7 +197,6 @@ class AjaxGetChildren:
         else:
             roompath = ''
 
-        print roompath
         bsc = getToolByName(self.context, 'bika_setup_catalog')
         brains = bsc(portal_type="StorageManagement",
                      path={'query': roompath, 'depth': 1}

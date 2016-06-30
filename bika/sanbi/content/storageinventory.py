@@ -39,7 +39,7 @@ schema = BikaSchema.copy() + Schema((
         mode='rw',
         widget=StringWidget(
             label=_("Freezer ID"),
-            description=_("Provide an ID Freezer"),
+            description=_("Provide a Freezer ID"),
             visible={'edit': 'visible', 'view': 'visible'}
         )),
 
@@ -49,7 +49,7 @@ schema = BikaSchema.copy() + Schema((
         mode='rw',
         widget=StringWidget(
             label=_("Shelf ID"),
-            description=_("Provide an ID Shelf"),
+            description=_("Select a Shelf ID"),
             visible={'edit': 'visible', 'view': 'visible'}
         )),
 
@@ -59,7 +59,7 @@ schema = BikaSchema.copy() + Schema((
         mode="rw",
         widget=StringWidget(
             label=_("Box ID"),
-            description=_("Provide an ID Box"),
+            description=_("Select a Box ID"),
             visible={'edit': 'visible', 'view': 'visible'}
         )),
 
@@ -70,7 +70,7 @@ schema = BikaSchema.copy() + Schema((
             label=_("Number Positions"),
             default=0,
             size=20,
-            description=_("Specify the number of positions to create in stock."),
+            description=_("Specify the number of storage positions in the box."),
             visible={'edit': 'visible', 'view': 'visible'},
         )),
 
@@ -142,6 +142,7 @@ schema['title'].required = True
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 #schema['title'].widget.size = 100
 schema['description'].widget.visible = {'edit': 'visible', 'view': 'visible'}
+schema['description'].widget.label = "Used in Listings and Searchs  "
 
 
 class StorageInventory(BaseFolder):

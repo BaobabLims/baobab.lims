@@ -15,6 +15,6 @@ INVENTORY_TYPES = DisplayList((
 
 DIMENSION_OPTIONS = DisplayList((
     ('N', _('None')),
-    ('f', _('First Dimension\t')),
-    ('s', _('Second Dimension\t')),
+    ('f', _('One Dimension\t')),
+    ('s', _('Two Dimension\t')),
 ))

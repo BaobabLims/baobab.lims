@@ -6,7 +6,7 @@
         purge="True">
  <property name="title" i18n:translate="">Storage Inventories</property>
  <property name="description"></property>
- <property name="content_icon">++resource++bika.sanbi.images/freezer.png</property>
+ <property name="content_icon">++resource++bika.sanbi.images/inventory.png</property>
  <property name="content_meta_type">StorageInventories</property>
  <property name="product">bika.sanbi</property>
  <property name="factory">addStorageInventories</property>

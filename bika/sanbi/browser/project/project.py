@@ -7,6 +7,7 @@ from bika.sanbi.controlpanel.bika_biospectypes import BiospecTypesView
 from bika.lims.browser import BrowserView
 from bika.lims.controlpanel.bika_analysisservices import AnalysisServicesView
 from bika.sanbi.browser.aliquots.folder_view import AliquotsView
+from bika.sanbi.permissions import AddProject
 
 
 class ProjectEdit(BrowserView):
@@ -181,8 +182,14 @@ class ProjectView(BrowserView):
 
 class ProjectBiospecimensView(BiospecimensView):
     def __init__(self, context, request):
-        self.context = context
         super(ProjectBiospecimensView, self).__init__(context, request)
+        self.context = context
+        self.context_actions = {
+            _('Add'): {
+                'url': 'createObject?type_name=Biospecimen',
+                'icon': '++resource++bika.lims.images/add.png'
+            }
+        }
 
     def folderitems(self, full_objects=False):
         items = BiospecimensView.folderitems(self)
@@ -205,6 +212,11 @@ class ProjectBiospecimensView(BiospecimensView):
 
 class BiospecimenAliquotsView(AliquotsView):
     def __init__(self, context, request):
-        self.context = context
         super(BiospecimenAliquotsView, self).__init__(context, request)
+        self.context = context
+        # mtool = getToolByName(self.context, 'portal_membership')
+        self.context_actions[_('Add')] = {
+            'url': 'createObject?type_name=Aliquot',
+            'icon': '++resource++bika.lims.images/add.png'
+        }
 

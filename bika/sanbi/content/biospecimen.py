@@ -71,7 +71,7 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
         relationship='AliquotUnit',
         widget=SelectionWidget(
             format='select',
-            label=_("Storage Units"),
+            label=_("Rooms"),
             visible={'view': 'invisible', 'edit': 'invisible'}
         )),
 

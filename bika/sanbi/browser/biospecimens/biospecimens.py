@@ -18,10 +18,10 @@ class BiospecimensView(BikaListingView):
             'sort_order': 'ascending'
         }
         self.context_actions = {
-            _('Add'): {
-                'url': 'createObject?type_name=Biospecimen',
-                'icon': '++resource++bika.lims.images/add.png'
-            }
+            # _('Add'): {
+            #     'url': 'createObject?type_name=Biospecimen',
+            #     'icon': '++resource++bika.lims.images/add.png'
+            # }
         }
         self.title = self.context.translate(_("Biospecimen"))
         self.icon = self.portal_url + \
