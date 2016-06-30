@@ -186,12 +186,15 @@
         form_id view/form_id;
         table_only python:hasattr(view, 'table_only') and view.table_only or view.request.get('table_only','') == form_id;"
     tal:condition="python:not table_only">
+
     <div class="documentDescription"
         tal:content="structure view/description"
         tal:condition="view/description"/>
-    <tal:form>
+
+    <tal:form tal:condition="python: context.portal_type=='Project'">
         <metal:form use-macro="view/table_template/macros/form_create_aliquots"/>
     </tal:form>
+
 </metal:content-description>
 
 <metal:content-core fill-slot="content-core">
