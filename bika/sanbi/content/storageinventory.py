@@ -39,7 +39,7 @@ schema = BikaSchema.copy() + Schema((
         mode='rw',
         widget=StringWidget(
             label=_("Freezer ID"),
-            description=_("Provide a Freezer ID"),
+            description=_("Select a Freezer ID"),
             visible={'edit': 'visible', 'view': 'visible'}
         )),
 
@@ -142,7 +142,7 @@ schema['title'].required = True
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 #schema['title'].widget.size = 100
 schema['description'].widget.visible = {'edit': 'visible', 'view': 'visible'}
-schema['description'].widget.label = "Used in Listings and Searchs  "
+schema['description'].widget.description = "Used in Listings and Searches"
 
 
 class StorageInventory(BaseFolder):

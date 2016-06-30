@@ -104,6 +104,7 @@ schema = BikaSchema.copy() + Schema((
 schema['title'].required = True
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 schema['description'].widget.visible = {'edit': 'visible', 'view': 'visible'}
+schema['description'].widget.description = "Used in Listings and Searches"
 schema.moveField('ChildrenTitle', before="Dimension")
 
 

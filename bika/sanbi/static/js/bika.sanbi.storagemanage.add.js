@@ -152,21 +152,21 @@ function CustomStorageManageAddView(){
 
     function storageTypeCustomization(){
         if ($("#storage_type select").val() == "Freeze"){
-            var html = "<label class='formQuestion' for='Shelves'>Shelves Number" +
+            var html = "<label class='formQuestion' for='Shelves'>Number of Shelves" +
                        "<span class='formHelp' id='shelves_help'>Specify the number of " +
-                       "shelves for the new storage.</span>";
+                       "shelves in the new storage.</span>";
             $("#archetypes-fieldname-Shelves > label").replaceWith(html);
         }
         else if ($("#storage_type select").val() == "Tank"){
-            var html = "<label class='formQuestion' for='Shelves'>Canisters Number" +
+            var html = "<label class='formQuestion' for='Shelves'>Number of Canisters" +
                        "<span class='formHelp' id='canisters_help'>Specify the number of " +
-                       "canisters for the new storage.</span>";
+                       "canisters in the new storage.</span>";
             $("#archetypes-fieldname-Shelves > label").replaceWith(html);
         }
         else if($("#storage_type select").val() == "Other"){
-            var html = "<label class='formQuestion' for='Shelves'>Children Number" +
+            var html = "<label class='formQuestion' for='Shelves'>Number of Children" +
                        "<span class='formHelp' id='childs_help'>Specify the number of " +
-                       "children items for the new storage.</span>";
+                       "children in the new storage.</span>";
             $("#archetypes-fieldname-Shelves > label").replaceWith(html);
         }
     }
