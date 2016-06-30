@@ -1,13 +1,8 @@
 from Products.ATContentTypes.content import schemata
 from Products.Archetypes import atapi
-from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone.utils import _createObjectByType
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from bika.lims.browser import BrowserView
 from bika.lims.browser.bika_listing import BikaListingView
 from bika.sanbi.config import PROJECTNAME
 from bika.sanbi import bikaMessageFactory as _
-from bika.lims.utils import tmpID
 from plone.app.layout.globals.interfaces import IViewView
 from plone.app.content.browser.interfaces import IFolderContentsView
 from plone.app.folder.folder import ATFolder, ATFolderSchema
@@ -24,9 +19,9 @@ class StorageInventoriesView(BikaListingView):
         self.catalog = 'bika_setup_catalog'
         self.contentFilter = {'portal_type': 'StorageInventory',
                               'sort_on': 'sortable_title'}
-        self.context_actions = {_('Add'):
-                                {'url': 'createObject?type_name=StorageInventory',
-                                 'icon': '++resource++bika.lims.images/add.png'}}
+        # self.context_actions = {_('Add'):
+        #                         {'url': 'createObject?type_name=StorageInventory',
+        #                          'icon': '++resource++bika.lims.images/add.png'}}
         self.title = (hasattr(self.context, 'Title') and self.context.Title() or
                       self.context.translate(_("Storage Levels")))
         self.icon = self.portal_url
@@ -63,8 +58,7 @@ class StorageInventoriesView(BikaListingView):
              'contentFilter': {'inactive_state': 'active',
                                'sort_on': 'created',
                                'sort_order': 'ascending',
-                               'getHasChildren': True,
-                               'getUnitID': context.getId()},
+                               'getHasChildren': True},
              'transitions': [{'id':'deactivate'}, ],
              'columns': ['Title',
                          'Description',
