@@ -211,9 +211,10 @@ class StorageManageSubmit:
         context_b = {}
         if not obj_exist:
             num_add, num_sub = self.number_children_add_sub(values)
-            brains = uid_catalog(UID=values['StorageUnit'])
-            if len(brains):
-                parent_unit = brains[0].getObject()
+            parent_unit = self.context.aq_parent
+            # brains = uid_catalog(UID=values['StorageUnit'])
+            # if len(brains):
+            #     parent_unit = brains[0].getObject()
 
             # Create the current context in ZODB
             self.context = _createObjectByType('StorageManagement', parent_unit, tmpID())

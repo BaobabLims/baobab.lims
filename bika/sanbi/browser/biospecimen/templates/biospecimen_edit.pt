@@ -58,6 +58,7 @@
                           url: path,
                           data:{'uid': $(this).val()},
                           success: function (data) {
+                              console.log(data);
                               if (data.hasOwnProperty("error")){
                                   window.bika.lims.portalWarningMessage(data.error);
                               }else{
