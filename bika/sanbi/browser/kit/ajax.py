@@ -217,7 +217,7 @@ def get_stockitem_positions(storage, pr_uid, context, number):
     bsc = getToolByName(context, 'bika_setup_catalog')
     rc = getToolByName(context, REFERENCE_CATALOG)
     references = rc.getBackReferences(pr_uid, relationship='StockItemProduct')
-    stock_items = [ref.getSourceObject().getId() for ref in references if ref.getSourceObject().getIsStored()]
+    stock_items = sorted([ref.getSourceObject().getId() for ref in references if ref.getSourceObject().getIsStored()])
 
     results = []
     for si in stock_items:
@@ -230,6 +230,7 @@ def get_stockitem_positions(storage, pr_uid, context, number):
         return results[:number]
 
     return None
+
 
 class AjaxFetchStockProducts:
     def __init__(self, context, request):
@@ -259,6 +260,7 @@ class AjaxFetchStockProducts:
             self.context.setItemPositions(uids)
 
         return json.dumps({'error': message})
+
 
 class AjaxAvailableStock:
     def __init__(self, context, request):
