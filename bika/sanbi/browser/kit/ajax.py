@@ -54,7 +54,9 @@ def computeRefTotalQtt(references):
     """
     total_qtt = 0
     for ref in references:
-        total_qtt += int(ref.getSourceObject().getQuantity())
+        obj = ref.getSourceObject()
+        if obj.getIsStored():
+            total_qtt += int(ref.getSourceObject().getQuantity())
 
     return total_qtt
 
@@ -82,10 +84,10 @@ class ComputeNumberKits():
             }
             kittemplate_obj.kittemplate_lineitems.append(
                     {'Product': product_obj.Title(),
-                     'Quantity': product.get('quantity', 0) * \
-                                 int(self.request.get('kit_quantity', 1)),
+                     'Quantity': int(product.get('quantity', 0)) * int(self.request.get('kit_quantity', 1)),
                      'Price': product_obj.getPrice(),
-                     'VAT': product_obj.getVAT()})
+                     'VAT': product_obj.getVAT(),
+                     'UID': product_obj.UID()})
             if error_msg:
                 break
             references, error_msg = getReferenceObjects(product_obj)
@@ -188,6 +190,7 @@ class UpdateStockItems():
                 break
         return json.dumps({'ok_msg': ok_msg, 'error_msg': error_msg})
 
+
 class ObjectExists():
     def __init__(self, context, request):
         self.context = context
@@ -206,3 +209,75 @@ class ObjectExists():
             kit_quantity = self.context.getQuantity()
 
         return kit_quantity
+
+
+def get_stockitem_positions(storage, pr_uid, context, number):
+    """Return first stock items available
+    """
+    bsc = getToolByName(context, 'bika_setup_catalog')
+    rc = getToolByName(context, REFERENCE_CATALOG)
+    references = rc.getBackReferences(pr_uid, relationship='StockItemProduct')
+    stock_items = [ref.getSourceObject().getId() for ref in references if ref.getSourceObject().getIsStored()]
+
+    results = []
+    for si in stock_items:
+        brains = bsc(portal_type='StorageInventory', inactive_state= 'active', getISID=si,
+                     path={'query': "/".join(storage.getPhysicalPath()), 'level':0})
+
+        results.append(brains[0]) if brains else ''
+
+    if len(results) >= number:
+        return results[:number]
+
+    return None
+
+class AjaxFetchStockProducts:
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+
+    def __call__(self):
+        form = json.loads([key for key in self.request.form][0])
+        uc = getToolByName(self.context, 'uid_catalog')
+        uids = []
+        message = ''
+        for st_uid in form:
+            storage = uc(UID=st_uid)[0].getObject()
+            for product in form[st_uid]:
+                prd_uid = product[0]
+                number = int(product[1])
+                if number > 0:
+                    positions = get_stockitem_positions(storage, prd_uid, self.context, number)
+                    if not positions:
+                        message = 'The storage can not satisfy the number entered!'
+                        uids = []
+                        break
+                    for p in positions:
+                        uids.append(p.UID)
+
+        if uids:
+            self.context.setItemPositions(uids)
+
+        return json.dumps({'error': message})
+
+class AjaxAvailableStock:
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+
+    def __call__(self):
+        form = self.request.form
+        uc = getToolByName(self.context, 'uid_catalog')
+        bsc = getToolByName(self.context, 'bika_setup_catalog')
+        storage = uc(UID=form['uid'])[0].getObject()
+
+        # brains = bsc(portal_type='StorageInventory',
+        #              inactive_state='active',
+        #              path={'query':"/".join(storage.getPhysicalPath()), 'depth':1})
+        #
+        # available = 0
+        # for brain in brains:
+        #     if not brain.getObject().getIsOccupied():
+        #         available += 1
+
+        return storage.getNumberOfAvailableChildren()

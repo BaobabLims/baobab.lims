@@ -10,6 +10,6 @@
     <include package="archetypes.schemaextender" />
 
     <adapter factory=".storagelocation.StorageLocationSchemaExtender" />
-
     <adapter name="getClientTitle" factory=".project.getClientTitle" />
+
 </configure>

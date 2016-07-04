@@ -44,7 +44,7 @@ class PositionsView(BikaListingView):
                 'title': _('Hierarchy'),
                 'toggle': True
             },
-            'StockItemID': {
+            'ISID': {
                 'title': _('Stock item ID'),
                 'toggle': True
             },
@@ -63,7 +63,7 @@ class PositionsView(BikaListingView):
                          'Description',
                          'StorageUnit',
                          'Hierarchy',
-                         'StockItemID']},
+                         'ISID']},
             {'id': 'inactive',
              'title': _('Dormant'),
              'contentFilter': {'inactive_state': 'inactive',
@@ -76,7 +76,7 @@ class PositionsView(BikaListingView):
                          'Description',
                          'StorageUnit',
                          'Hierarchy',
-                         'StockItemID']},
+                         'ISID']},
             {'id': 'all',
              'title': _('All'),
              'contentFilter': {'sort_on': 'created',
@@ -86,7 +86,7 @@ class PositionsView(BikaListingView):
                          'Description',
                          'StorageUnit',
                          'Hierarchy',
-                         'StockItemID']},
+                         'ISID']},
         ]
 
     def folderitems(self):
@@ -99,7 +99,7 @@ class PositionsView(BikaListingView):
                                            (items[x]['url'], items[x]['Title'])
             items[x]['StorageUnit'] = obj.aq_parent.Title()
             items[x]['Hierarchy'] = obj.getHierarchy()
-            items[x]['StockItemID'] = obj.getStockItemID()
+            items[x]['ISID'] = obj.getISID()
             out_items.append(items[x])
 
         return out_items

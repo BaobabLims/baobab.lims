@@ -16,7 +16,7 @@ from bika.sanbi.browser.widgets import ProjectAnalysesWidget
 @indexer(IProject)
 def getClientTitle(instance):
     client = instance.getClient()
-    return client.Title() if client else ""
+    return client.Title() if client else ''
 
 schema = BikaSchema.copy() + Schema((
     ReferenceField('Client',

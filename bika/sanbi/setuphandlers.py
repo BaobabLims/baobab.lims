@@ -87,6 +87,7 @@ class BikaCustomGenerator:
         addIndex(bsc, 'getParentBox', 'FieldIndex')
         addIndex(bsc, 'getHasChildren', 'FieldIndex')
         addIndex(bsc, 'getLocation', 'FieldIndex')
+        addIndex(bsc, 'getISID', 'FieldIndex')
 
         bac = getToolByName(portal, 'bika_analysis_catalog', None)
         if bsc is None:

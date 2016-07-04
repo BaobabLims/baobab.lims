@@ -19,6 +19,7 @@ class KitsView(BikaListingView):
         self.title = self.context.translate(_("Kits"))
         self.icon = self.portal_url + "/++resource++bika.sanbi.images/kit_big.png"
         self.description = ""
+        self.catalog = "bika_catalog"
         self.show_sort_column = False
         self.show_select_row = False
         self.show_select_column = False
@@ -84,6 +85,8 @@ class KitsView(BikaListingView):
 
     def folderitems(self):
         items = super(KitsView, self).folderitems()
+        # print items
+        # print '-----'
         for x in range(len(items)):
             if not items[x].has_key('obj'): continue
             obj = items[x]['obj']

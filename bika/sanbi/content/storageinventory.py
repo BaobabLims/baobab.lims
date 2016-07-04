@@ -1,16 +1,18 @@
 from bika.sanbi import bikaMessageFactory as _
 from bika.lims.content.bikaschema import BikaSchema
 from Products.Archetypes.public import *
-from bika.lims.browser.widgets import ReferenceWidget
 from AccessControl import ClassSecurityInfo
 from bika.sanbi.config import PROJECTNAME
-from Products.Archetypes.references import HoldingReference
 from zope.interface import implements
 from bika.sanbi.interfaces import IStorageInventory
 from Products.CMFPlone.interfaces import IConstrainTypes
 from Products.CMFCore.utils import getToolByName
 from bika.sanbi.config import INVENTORY_TYPES, DIMENSION_OPTIONS
-import sys
+from plone.indexer import indexer
+
+@indexer(IStorageInventory)
+def get_product_uid(instance):
+    return instance.getProductUID()
 
 schema = BikaSchema.copy() + Schema((
 
@@ -122,8 +124,9 @@ schema = BikaSchema.copy() + Schema((
             visible=False
         )),
 
+    # inventory stock item id
     StringField(
-        'StockItemID',
+        'ISID',
         widget=StringWidget(visible=False),
     ),
     BooleanField(
@@ -182,7 +185,7 @@ class StorageInventory(BaseFolder):
     def liberatePosition(self):
         if self.getLocation():
             self.setIsOccupied(0)
-            self.setStockItemID('')
+            self.setISID('')
             num = self.aq_parent.getNumberOfAvailableChildren()
             self.aq_parent.setNumberOfAvailableChildren(num + 1)
 

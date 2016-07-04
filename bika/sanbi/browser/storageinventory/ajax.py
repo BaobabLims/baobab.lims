@@ -241,7 +241,8 @@ class InventoryPositionsInfo:
                 pos_info = {}
                 sid, product, quantity, path = '', '', 0, ''
                 if c.getIsOccupied():
-                    sid = c.getStockItemID()
+                    # get inventory position stock item
+                    sid = c.getISID()
                     brains = catalog.searchResults(portal_type="StockItem", id=sid)
                     si = brains[0].getObject()
                     product = si.getProductTitle()

@@ -63,8 +63,9 @@ schema = BikaSchema.copy() + Schema((
             catalog_name='bika_setup_catalog',
             showOn=True,
             description=_("Start typing to filter the list of available kit templates."),
-        ),
+        )
     ),
+
     IntegerField('quantity',
         mode="rw",
         required=1,
@@ -74,7 +75,16 @@ schema = BikaSchema.copy() + Schema((
             render_own_label=True,
             description=_("The number of kit templates to assemble. eg. 15, 100"),
             visible={'view': 'visible', 'edit': 'visible'},
-        ),
+        )
+    ),
+
+    IntegerField('QtyStored',
+        mode="rw",
+        required=1,
+        default=0,
+        widget=IntegerWidget(
+            visible={'view': 'invisible', 'edit': 'invisible'},
+        )
     ),
 
     ReferenceField('Location',
@@ -123,6 +133,7 @@ schema = BikaSchema.copy() + Schema((
                      },
         )
     ),
+
     BooleanField(
         'FormsThere',
         required=1,
@@ -137,10 +148,17 @@ schema = BikaSchema.copy() + Schema((
     ),
 
     StringField(
-        'KitPrdID',
+        'KitPrdUID',
         widget=StringWidget(
             description=_("The id of the corresponding produt of this kit."),
             visible={'view': 'invisible', 'edit': 'invisible'},
+        )
+    ),
+
+    LinesField(
+        'ItemPositions',
+        widget=LinesWidget(
+            visible=False
         )
     ),
 ))
@@ -186,46 +204,22 @@ class Kit(BaseContent):
         kit_price = kittemplate.getPrice()
         kit_vat = kittemplate.getVAT()
 
-        # update products quantities
-        bsc = getToolByName(self, 'bika_setup_catalog')
-        uids = [p['product_uid'] for p in kittemplate.getProductList()]
-        qtties = [int(p['quantity']) for p in kittemplate.getProductList()]
-        products = [brain.getObject() for brain in bsc.searchResults(portal_type='Product', UID=uids)]
-        stockitems = []
-        remain_quantities = []
-        message = ''
-        for i, product in enumerate(products):
-            qty = product.getQuantity() - kit_qty * qtties[i]
-            if qty < 0:
-                message = 'No sufficient quantities in stock!'
-                break
-            remain_quantities.append(qty)
-
-            brains = bsc.searchResults(portal_type='StockItem', getProductTitle=product.Title(), review_state='valid')
-            # TODO: WORK WITH ONLY STOCKITEMS STORED, IS IT RIGHT?
-            stockitems.append([brain.getObject() for brain in brains if brain.getObject().getIsStored()])
-
-        if message:
-            self.context.plone_utils.addPortalMessage(_(message), 'error')
-            raise AssertionError('No sufficient quantities in stock.')
-
-        for i, product in enumerate(products):
-            product.setQuantity(remain_quantities[i])
-
-        # TODO: deactivate stockitems equivalent to the products
         wf = getToolByName(self, 'portal_workflow')
-        for i, pi in enumerate(stockitems):
-            qty = qtties[i] * kit_qty
-            for j in xrange(len(pi)-1, -1, -1):
-                pi[j].setQuantity(0)
-                wf.doActionFor(pi[j], 'discard')
-                qty -= 1
-                brains = bsc.searchResults(portal_type='StorageInventory', id=pi[j].getStorageLevelID())
-                position = brains[0].getObject() if len(brains) else None
-                position.liberatePosition()
-                pi[j].setStorageLevelID('')
-                if qty == 0:
-                    break
+        uids = self.getItemPositions()
+        uc = getToolByName(self, 'uid_catalog')
+        bsc = getToolByName(self, 'bika_setup_catalog')
+        for uid in uids:
+            brains = uc(UID=uid)
+            position = brains[0].getObject()
+            sid = position.getISID()
+            si = bsc(portal_type='StockItem', id=sid)[0].getObject()
+            product = si.getProduct()
+            product.setQuantity(product.getQuantity() - 1)
+            si.setQuantity(0)
+            si.setIsStored(False)
+            wf.doActionFor(si, 'discard')
+            si.setStorageLevelID('')
+            position.liberatePosition()
 
         # create kit assembly as product
         catalog = getToolByName(self, 'bika_setup_catalog')
@@ -258,7 +252,7 @@ class Kit(BaseContent):
             )
             product.reindexObject()
 
-        self.setKitPrdID(product.getId())
+        self.setKitPrdUID(product.UID())
 
         # create kit quantity as stockitems
         folder = self.bika_setup.bika_stockitems
@@ -270,7 +264,7 @@ class Kit(BaseContent):
                 location='',
                 Quantity=1,
                 orderId='',
-                IsStored=True,
+                IsStored=False,
                 dateManufactured=DateTime(),
                 expiryDate=self.getExpiryDate(),
                 title=product.Title()
@@ -280,44 +274,6 @@ class Kit(BaseContent):
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
             self.bika_setup_catalog.reindexObject(obj)
-
-    def workflow_script_store(self):
-        """Store kit assembled
-        """
-        kittemplate = self.getKitTemplate()
-        kit_name = kittemplate.Title()
-        quantity = self.getQuantity()
-        expiry_date = self.getExpiryDate()
-        catalog = getToolByName(self, 'bika_setup_catalog')
-        brains = catalog.searchResults({'portal_type': 'StockItem', 'getProductID': self.getKitPrdID()})
-        stockitems = [brain.getObject() for brain in brains]
-
-        container = self.getLocation()
-        bsc = getToolByName(self, 'bika_setup_catalog')
-        child_container = [cc.getObject() for cc in bsc(portal_type='StorageInventory',
-                                                        getUnitID=container.getId())
-                                                 if not cc.getObject().getIsOccupied()]
-        message = ''
-        if not child_container:
-            message = 'Storage level is required. Please correct.'
-        if quantity > len(child_container):
-            message = 'The number entered for %s is %d but the ' \
-                      'storage inventory only has %d spaces.' % (
-                          kit_name, quantity, len(child_container))
-        if message:
-            self.context.plone_utils.addPortalMessage(_(message), 'error')
-            raise AssertionError(message)
-
-        # Store stock items in available levels
-        for i, pi in enumerate(stockitems):
-            position = child_container[i]
-            pi.setStorageLevelID(position.getId())
-            pi.setIsStored(True)
-            position.setStockItemID(pi.getId())
-            position.setIsOccupied(True)
-            # Decrement number of available children of parent
-            nac = position.aq_parent.getNumberOfAvailableChildren()
-            position.aq_parent.setNumberOfAvailableChildren(nac - 1)
 
     def workflow_script_deactivate(self):
         """DEACTIVATE ACTION"""
