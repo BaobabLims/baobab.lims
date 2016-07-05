@@ -76,7 +76,7 @@
             action_id="samples"
             category="object"
             condition_expr=""
-            icon_expr="string:${portal_url}/images/sample.png"
+            icon_expr="string:${portal_url}/images/aliquot.png"
             link_target=""
             url_expr="string:${object_url}/samples"
             i18n:attributes="title"

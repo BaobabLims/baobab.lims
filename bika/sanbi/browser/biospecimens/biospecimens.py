@@ -18,10 +18,10 @@ class BiospecimensView(BikaListingView):
             'sort_order': 'ascending'
         }
         self.context_actions = {
-            _('Add'): {
-                'url': 'createObject?type_name=Biospecimen',
-                'icon': '++resource++bika.lims.images/add.png'
-            }
+            # _('Add'): {
+            #     'url': 'createObject?type_name=Biospecimen',
+            #     'icon': '++resource++bika.lims.images/add.png'
+            # }
         }
         self.title = self.context.translate(_("Biospecimen"))
         self.icon = self.portal_url + \
@@ -66,13 +66,56 @@ class BiospecimensView(BikaListingView):
              'contentFilter': {'inactive_state': 'active',
                                'sort_on': 'created',
                                'sort_order': 'ascending'},
-             'transitions': [{'id': 'deactivate'}, ],
+             'transitions': [{'id': 'deactivate'},
+                             {'id': 'receive'}],
              'columns': ['Title',
                          'Description',
                          'Type',
                          'Condition',
                          'SubjectID',
                          'Volume']},
+
+            {'id': 'due',
+             'title': _('Due'),
+             'contentFilter': {'review_state': 'due',
+                               'sort_on': 'created',
+                               'sort_order': 'reverse'},
+             'transitions': [{'id': 'deactivate'},
+                             {'id': 'receive'}],
+             'columns': ['Title',
+                         'Description',
+                         'Type',
+                         'Condition',
+                         'SubjectID',
+                         'Volume']},
+
+            {'id': 'received',
+             'title': _('Received'),
+             'contentFilter': {'review_state': 'received',
+                               'sort_on': 'created',
+                               'sort_order': 'reverse'},
+             'transitions': [{'id': 'deactivate'},
+                             {'id': 'store'}],
+             'columns': ['Title',
+                         'Description',
+                         'Type',
+                         'Condition',
+                         'SubjectID',
+                         'Volume']},
+
+            {'id': 'stored',
+             'title': _('Stored'),
+             'contentFilter': {'review_state': 'stored',
+                               'sort_on': 'created',
+                               'sort_order': 'reverse'},
+             'transitions': [{'id': 'deactivate'},],
+             'columns': ['Title',
+                         'Description',
+                         'Type',
+                         'Condition',
+                         'SubjectID',
+                         'Volume']},
+
             {'id': 'inactive',
              'title': _('Dormant'),
              'contentFilter': {'inactive_state': 'inactive',
@@ -85,6 +128,7 @@ class BiospecimensView(BikaListingView):
                          'Condition',
                          'SubjectID',
                          'Volume']},
+
             {'id': 'all',
              'title': _('All'),
              'contentFilter': {'sort_on': 'created',

@@ -44,7 +44,7 @@ class PositionsView(BikaListingView):
                 'title': _('Hierarchy'),
                 'toggle': True
             },
-            'StockItemID': {
+            'ISID': {
                 'title': _('Stock item ID'),
                 'toggle': True
             },
@@ -63,7 +63,7 @@ class PositionsView(BikaListingView):
                          'Description',
                          'StorageUnit',
                          'Hierarchy',
-                         'StockItemID']},
+                         'ISID']},
             {'id': 'inactive',
              'title': _('Dormant'),
              'contentFilter': {'inactive_state': 'inactive',
@@ -76,7 +76,7 @@ class PositionsView(BikaListingView):
                          'Description',
                          'StorageUnit',
                          'Hierarchy',
-                         'StockItemID']},
+                         'ISID']},
             {'id': 'all',
              'title': _('All'),
              'contentFilter': {'sort_on': 'created',
@@ -86,7 +86,7 @@ class PositionsView(BikaListingView):
                          'Description',
                          'StorageUnit',
                          'Hierarchy',
-                         'StockItemID']},
+                         'ISID']},
         ]
 
     def folderitems(self):
@@ -97,9 +97,9 @@ class PositionsView(BikaListingView):
             obj = items[x]['obj']
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                            (items[x]['url'], items[x]['Title'])
-            items[x]['StorageUnit'] = obj.getStorageUnit().Title()
+            items[x]['StorageUnit'] = obj.aq_parent.Title()
             items[x]['Hierarchy'] = obj.getHierarchy()
-            items[x]['StockItemID'] = obj.getStockItemID()
+            items[x]['ISID'] = obj.getISID()
             out_items.append(items[x])
 
         return out_items
@@ -143,7 +143,7 @@ class InventoryStorageView(BrowserView):
         self.id = context.getId()
         self.title = context.Title()
         self.type = self.type_text(context)
-        self.parent = context.getStorageUnit().Title()
+        self.parent = context.aq_parent.Title()
         self.numPositions = context.getNumPositions()
         self.dimension = self.dimension_text(context)
 
@@ -190,6 +190,10 @@ class InventoryStorageEdit(BrowserView):
 class InventoryGraph(InventoryStorageView):
     template = ViewPageTemplateFile("templates/inventory_graph.pt")
     title = _("Managing Inventory")
+
+    def __init__(self, context, request):
+        super(InventoryGraph, self).__init__(context, request)
+        request.set('disable_plone.rightcolumn', 1)
 
     def __call__(self):
         return self.template()

@@ -1,20 +1,17 @@
-from bika.sanbi import bikaMessageFactory as _
-from bika.lims.content.bikaschema import BikaSchema
-from Products.Archetypes.public import *
-from bika.lims.browser.widgets import ReferenceWidget
-from AccessControl import ClassSecurityInfo
-from bika.sanbi.config import PROJECTNAME
-from Products.Archetypes.references import HoldingReference
-from zope.interface import implements
-from bika.sanbi.interfaces import IStorageManagement
-from Products.CMFPlone.interfaces import IConstrainTypes
-from Products.CMFCore.utils import getToolByName
-from plone.indexer import indexer
 import sys
+from AccessControl import ClassSecurityInfo
 
-@indexer(IStorageManagement)
-def get_storage_room_id(instance):
-    return instance.getStorageUnit().UID()
+from Products.Archetypes.public import *
+from Products.Archetypes.references import HoldingReference
+from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.interfaces import IConstrainTypes
+from zope.interface import implements
+
+from bika.lims.browser.widgets import ReferenceWidget
+from bika.lims.content.bikaschema import BikaSchema
+from bika.sanbi import bikaMessageFactory as _
+from bika.sanbi.config import PROJECTNAME
+from bika.sanbi.interfaces import IStorageManagement
 
 schema = BikaSchema.copy() + Schema((
 
@@ -24,21 +21,6 @@ schema = BikaSchema.copy() + Schema((
         widget=StringWidget(
             label=_('Storage type'),
             visible=False,
-        )),
-
-    ReferenceField('StorageUnit',
-        required=1,
-        allowed_types=('StorageUnit',),
-        relationship='StorageManageUnit',
-        vocabulary_display_path_bound=sys.maxsize,
-        referenceClass=HoldingReference,
-        widget=ReferenceWidget(
-            checkbox_bound=0,
-            label=_("Storage Unit"),
-            description=_("Select the enclosure containing the new storage."),
-            size=50,
-            showOn=True,
-            visible={'edit': 'visible', 'view': 'visible'},
         )),
 
     IntegerField('Shelves',
@@ -122,6 +104,7 @@ schema = BikaSchema.copy() + Schema((
 schema['title'].required = True
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 schema['description'].widget.visible = {'edit': 'visible', 'view': 'visible'}
+schema['description'].widget.description = "Used in Listings and Searches"
 schema.moveField('ChildrenTitle', before="Dimension")
 
 
@@ -130,35 +113,19 @@ class StorageManagement(BaseFolder):
     implements(IStorageManagement, IConstrainTypes)
     schema = schema
 
-    '''
-    # The call to the renameAfterCreation() is in ajax.py
-    _at_rename_after_creation = True
-    def _renameAfterCreation(self, check_auto_id=False):
-        from bika.lims.idserver import renameAfterCreation
-        renameAfterCreation(self)
-    '''
-
     def getChildren(self):
-        children = []
-        bsc = getToolByName(self, 'bika_setup_catalog')
-        all_objects = bsc.searchResults(portal_type='StorageManagement')
-        for obj in all_objects:
-            obj = obj.getObject()
-            if obj.getStorageUnit() == self:
-                children.append(obj)
-
-        return children
+        return self.objectValues('StorageManagement')
 
     def getPositions(self):
         children = []
         bsc = getToolByName(self, 'bika_setup_catalog')
-        all_objects = bsc.searchResults(portal_type='StorageLocation', sort_on='sortable_title')
-        for obj in all_objects:
-            obj = obj.getObject()
-            if obj.aq_parent == self:
-                children.append(obj)
+        brains = bsc.searchResults(
+            portal_type='StorageLocation',
+            inactive_state='active',
+            sort_on='sortable_title',
+            path={'query': "/".join(self.getPhysicalPath()), 'level': 0})
 
-        return children
+        return [brain.getObject() for brain in brains]
 
     def getHierarchy(self, char='>'):
         ancestors = []

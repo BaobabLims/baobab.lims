@@ -1,0 +1,206 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:metal="http://xml.zope.org/namespaces/metal"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    metal:use-macro="here/main_template/macros/master"
+    i18n:domain="bika">
+
+<head>
+
+    <metal:javascript_head_slot fill-slot="javascript_head_slot"
+        tal:define="portal context/@@plone_portal_state/portal;">
+        <script type="text/javascript"
+                tal:attributes="src string:$portal_url/widgets/js/textcount.js"></script>
+        <script type="text/javascript"
+                tal:attributes="src string:$portal_url/jscalendar/calendar_stripped.js"></script>
+        <script type="text/javascript"
+                tal:attributes="src string:$portal_url/jscalendar/calendar-en.js"></script>
+        <script type="text/javascript"
+                tal:attributes="src python:portal.absolute_url() + '/bika_widgets/referencewidget.js'"></script>
+        <script type="text/javascript" charset="utf-8">
+          (function($) {
+              $(function() {
+                  function AjaxGetChildren(element, idChild){
+                      //"get_children is defined in aliquots/configure.zcml and calls calss AjaxGetChildren.
+                      // This is Plone!!!
+                      var path = window.location.href.split('/edit')[0] + '/get_children';
+                      $.ajax({
+                          dataType: "json",
+                          url: path,
+                          data:{'uid': element.val()},
+                          success: function (data) {
+                              $.each(data, function (i, v) {
+                                  $(idChild).append(new Option(v.title, v.uid));
+                              });
+                          }
+                      });
+                  }
+
+                  $("#storage-unit").on("change", function (e) {
+                      $("#freezer").html('<option>Freezer/Cannister</option>');
+                      AjaxGetChildren($(this), '#freezer');
+                  });
+
+                  $("#freezer").on("change", function (e) {
+                      $("#shelf").html('<option>Shelf/Cane</option>');
+                      AjaxGetChildren($(this), '#shelf');
+                  });
+
+                  $("#shelf").on("change", function (e) {
+                      $("#box").html('<option>Box</option>');
+                      AjaxGetChildren($(this), '#box');
+                  });
+
+                  $("#box").on("change", function (e) {
+                      var path = window.location.href.split('/edit')[0] + '/get_box_positions';
+                      $.ajax({
+                          dataType: "json",
+                          url: path,
+                          data:{'uid': $(this).val()},
+                          success: function (data) {
+                              console.log(data);
+                              if (data.hasOwnProperty("error")){
+                                  window.bika.lims.portalWarningMessage(data.error);
+                              }else{
+                                  var element = $("input#StorageLocation");
+                                  element.attr("value", data.address);
+                                  element.attr("uid", data.uid);
+                                  element.attr("uid_check", data.uid);
+                                  element.attr("val_check", data.address);
+
+                                  $("input#StorageLocation_uid").val(data.uid);
+                              }
+                          }
+                      })
+                  })
+
+              });
+          })(jQuery);
+        </script>
+    </metal:javascript_head_slot>
+
+    <metal:block fill-slot="style_slot">
+        <link rel="stylesheet" type="text/css"
+            tal:define="navroot context/@@plone_portal_state/navigation_root_url"
+            tal:attributes="href string:${navroot}/++resource++bika.sanbi.css/myfile.css" />
+
+        <link rel="stylesheet" type="text/css"
+              tal:attributes="href string:$portal_url/jscalendar/calendar-system.css" />
+        <tal:css>
+        <style type="text/css">
+            select.select-level{
+                width: 200px;
+                height: 34px;
+                overflow: hidden;
+                background: #ccc;
+                border: 1px solid #fff;
+            }
+        </style>
+        </tal:css>
+    </metal:block>
+
+</head>
+
+<body>
+
+<metal:title fill-slot="content-title">
+    <h1>
+        <tal:new tal:condition="python: not context.Title()" i18n:translate="">Add New Biospecimen</tal:new>
+        <tal:new tal:condition="python:context.Title()" tal:content="python:'Edit ' + context.getId()"></tal:new>
+        <img style="float: right;" tal:condition="view/icon | nothing" tal:attributes="src view/icon"/>
+    </h1><hr>
+</metal:title>
+
+<metal:content-description fill-slot="content-description">
+</metal:content-description>
+
+<div metal:fill-slot="content-core"
+     tal:define="
+        portal context/@@plone_portal_state/portal;">
+
+    <form method="post" id="biospecimen_edit" name="biospecimen_form">
+        <input type="hidden" name="submit" value="1" />
+        <table class="header_table" style="width: 100%;">
+            <thead class="biospecimen_fileds">
+            <tal:field repeat="field python:view.get_fields_with_visibility('visible')">
+                <tr tal:define="
+                        fieldName python:field.getName();
+                        fieldMacro here/widgets/field/macros/edit;
+                        accessor python:field.getAccessor(context);
+                        widget python:field.widget;
+                        errors python:{};
+                        mode string:edit;"
+                    tal:condition="python: fieldName != 'Remarks' and fieldName != 'StorageLocation'">
+
+                    <td colspan="5">
+                        <tal:x condition="python:mode!='structure'">
+                            <metal:field
+                                use-macro="python:context.widget(fieldName, mode=mode)"/>
+                        </tal:x>
+                    </td>
+
+                </tr>
+                <tr tal:define="fieldName python:field.getName();
+                                errors python:{};
+                                mode string:edit;"
+                    tal:condition="python: fieldName == 'StorageLocation'">
+                    <td class="storage-levels" style="background-color: #eee;">
+                        <div>
+                            <span style="font-weight: bold;">Storage Location</span>
+                            <span class="formHelp" id="storagetype_help">
+                                Select the storage where the biospecimen will be stored.
+                            </span>
+                        </div>
+
+                        <div data-fieldname="StorageUnits" id="storage_units" style="display: inline-block;">
+                            <select tal:define="display_list python:view.get_storage_units()"
+                                    id="storage-unit"
+                                    class="select-level">
+                                <option>Room</option>
+                                <option tal:condition="python:display_list"
+                                        tal:repeat="item display_list"
+                                        tal:attributes="value python:item[0]"
+                                        tal:content="python:item[1]"></option>
+                            </select>
+                        </div>
+                        <div data-fieldname="Freezers" id="freezers" style="display: inline-block;">
+                            <select id="freezer" class="select-level">
+                                <option>Freezer/Cannister</option>
+                            </select>
+                        </div>
+                        <div data-fieldname="Shelves" id="shelves" style="display: inline-block;">
+                            <select id="shelf" class="select-level">
+                                <option>Shelf/Cane</option>
+                            </select>
+                        </div>
+                        <div data-fieldname="Boxes" id="boxes" style="display: inline-block;">
+                            <select id="box" class="select-level">
+                                <option>Box</option>
+                            </select>
+                        </div>
+
+                        <div style="margin-top: 5px;">
+                        <tal:x condition="python:mode!='structure'">
+                            <metal:field
+                                use-macro="python:context.widget(fieldName, mode=mode)"/>
+                        </tal:x>
+                        </div>
+                    </td>
+                </tr>
+            </tal:field>
+            </thead>
+        </table>
+        <span>
+            <div style="text-align: left; padding-bottom: 10px;">
+                <input i18n:attributes="value"
+                    class="context button allowMultiSubmit"
+                    type="submit"
+                    name="submit"
+                    value="Save"/>
+            </div>
+        </span>
+    </form>
+</div>
+
+</body>
+</html>

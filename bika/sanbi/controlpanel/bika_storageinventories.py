@@ -1,13 +1,8 @@
 from Products.ATContentTypes.content import schemata
 from Products.Archetypes import atapi
-from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone.utils import _createObjectByType
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from bika.lims.browser import BrowserView
 from bika.lims.browser.bika_listing import BikaListingView
 from bika.sanbi.config import PROJECTNAME
 from bika.sanbi import bikaMessageFactory as _
-from bika.lims.utils import tmpID
 from plone.app.layout.globals.interfaces import IViewView
 from plone.app.content.browser.interfaces import IFolderContentsView
 from plone.app.folder.folder import ATFolder, ATFolderSchema
@@ -24,13 +19,13 @@ class StorageInventoriesView(BikaListingView):
         self.catalog = 'bika_setup_catalog'
         self.contentFilter = {'portal_type': 'StorageInventory',
                               'sort_on': 'sortable_title'}
-        self.context_actions = {_('Add'):
-                                {'url': 'createObject?type_name=StorageInventory',
-                                 'icon': '++resource++bika.lims.images/add.png'}}
+        # self.context_actions = {_('Add'):
+        #                         {'url': 'createObject?type_name=StorageInventory',
+        #                          'icon': '++resource++bika.lims.images/add.png'}}
         self.title = (hasattr(self.context, 'Title') and self.context.Title() or
                       self.context.translate(_("Storage Levels")))
         self.icon = self.portal_url
-        self.icon += "/++resource++bika.lims.images/storagelocation_big.png"
+        self.icon += "/++resource++bika.sanbi.images/inventory_big.png"
         self.description = ""
         self.show_sort_column = False
         self.show_select_row = False
@@ -63,8 +58,7 @@ class StorageInventoriesView(BikaListingView):
              'contentFilter': {'inactive_state': 'active',
                                'sort_on': 'created',
                                'sort_order': 'ascending',
-                               'getHasChildren': True,
-                               'getUnitID': context.getId()},
+                               'getHasChildren': True},
              'transitions': [{'id':'deactivate'}, ],
              'columns': ['Title',
                          'Description',
@@ -101,7 +95,7 @@ class StorageInventoriesView(BikaListingView):
             obj = items[x]['obj']
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                  (items[x]['url'], items[x]['Title'])
-            items[x]['StorageUnit'] = obj.getStorageUnit().Title()
+            items[x]['StorageUnit'] = obj.aq_parent.Title()
             items[x]['Hierarchy'] = obj.getHierarchy()
             # items[x]['IsOccupied'] = 'yes' if obj.getIsOccupied() else 'no'
 

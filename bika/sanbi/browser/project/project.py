@@ -7,6 +7,7 @@ from bika.sanbi.controlpanel.bika_biospectypes import BiospecTypesView
 from bika.lims.browser import BrowserView
 from bika.lims.controlpanel.bika_analysisservices import AnalysisServicesView
 from bika.sanbi.browser.aliquots.folder_view import AliquotsView
+from bika.sanbi.permissions import AddProject
 
 
 class ProjectEdit(BrowserView):
@@ -35,9 +36,6 @@ class ProjectEdit(BrowserView):
             brains = uc(UID=form['Client_uid'])
             if brains:
                 context.setClient(brains[0].getObject())
-
-            analyses_uids = form.get('Analyses', [])
-            context.setAnalyses(analyses_uids)
 
             obj_url = context.absolute_url_path()
             request.response.redirect(obj_url)
@@ -166,7 +164,8 @@ class ProjectView(BrowserView):
         # __Collect general data__ #
         self.id = context.getId()
         self.title = context.Title()
-        self.client = context.getClient().Title()
+        self.client = "<a href='%s'>%s</a>"%(context.getClient().absolute_url(),
+                                             context.getClient().Title())
         self.study_type = context.getStudyType()
         self.participants = context.getNumParticipants()
         self.age_interval = str(context.getAgeLow()) + ' - ' + str(context.getAgeHigh())
@@ -183,8 +182,14 @@ class ProjectView(BrowserView):
 
 class ProjectBiospecimensView(BiospecimensView):
     def __init__(self, context, request):
-        self.context = context
         super(ProjectBiospecimensView, self).__init__(context, request)
+        self.context = context
+        self.context_actions = {
+            _('Add'): {
+                'url': 'createObject?type_name=Biospecimen',
+                'icon': '++resource++bika.lims.images/add.png'
+            }
+        }
 
     def folderitems(self, full_objects=False):
         items = BiospecimensView.folderitems(self)
@@ -207,6 +212,11 @@ class ProjectBiospecimensView(BiospecimensView):
 
 class BiospecimenAliquotsView(AliquotsView):
     def __init__(self, context, request):
-        self.context = context
         super(BiospecimenAliquotsView, self).__init__(context, request)
+        self.context = context
+        # mtool = getToolByName(self.context, 'portal_membership')
+        self.context_actions[_('Add')] = {
+            'url': 'createObject?type_name=Aliquot',
+            'icon': '++resource++bika.lims.images/add.png'
+        }
 

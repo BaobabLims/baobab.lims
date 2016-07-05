@@ -36,7 +36,7 @@
               class="documentFirstHeading"
               tal:content="python:'Edit' + ' ' + context.Title()"></span>
         <span tal:condition="python:not context.Title()"
-              class="documentFistHeading">Add New Storage</span>
+              class="documentFistHeading">Add Storage Locations</span>
     </h1>
     <hr/>
 </metal:content-title>
@@ -83,7 +83,7 @@
 
                     <div style="display: inline-block;padding-left:10px; border: 1px solid #837aff; padding: 5px; width: auto;">
                         <div data-fieldname="XAxis" id="XAxis" style="display: inline-block;">
-                            <span style="font-weight: bold; padding-right: 5px;">X-Axis:</span>
+                            <span style="font-weight: bold; padding-right: 5px;">Rows:</span>
                             <input id="xaxis_num" type="number" style="background-color: #FDFDFD;
                                                                                  border:1px solid #cdcdcd;
                                                                                  height: 20px;
@@ -91,7 +91,7 @@
                                    tal:attributes="value python:context.getXAxis() and context.getXAxis() or 0"/>
                         </div>
                         <div data-fieldname="YAxis" id="YAxis" style="display: inline-block;">
-                            <span style="font-weight: bold; padding-right: 5px;">Y-Axis:</span>
+                            <span style="font-weight: bold; padding-right: 5px;">Columns:</span>
                             <input id="yaxis_num"  type="number"  style="background-color: #FDFDFD;
                                                                                     border: 1px solid #cdcdcd;
                                                                                     height: 20px;

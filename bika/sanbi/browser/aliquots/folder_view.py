@@ -17,15 +17,16 @@ class AliquotsView(BikaListingView):
     implements(IFolderContentsView, IViewView)
 
     def __init__(self, context, request):
+        super(AliquotsView, self).__init__(context, request)
         self.context = context
         self.request = request
-        super(AliquotsView, self).__init__(context, request)
+        self.catalog = "bika_catalog"
         self.contentFilter = {'portal_type': 'Aliquot',
                               'sort_on': 'sortable_title'}
 
         self.context_actions = {}
         self.title = self.context.translate(_("Aliquots"))
-        self.icon = self.portal_url + "/++resource++bika.sanbi.images/sample_big.png"
+        self.icon = self.portal_url + "/++resource++bika.sanbi.images/aliquot_big.png"
         self.description = ""
         self.show_sort_column = False
         self.show_select_row = False
@@ -68,11 +69,11 @@ class AliquotsView(BikaListingView):
 
     def __call__(self):
         mtool = getToolByName(self.context, 'portal_membership')
-        if mtool.checkPermission(AddAliquot, self.context):
-            self.context_actions[_('Add')] = {
-                'url': 'createObject?type_name=Aliquot',
-                'icon': '++resource++bika.lims.images/add.png'
-            }
+        # if mtool.checkPermission(AddAliquot, self.context):
+        #     self.context_actions[_('Add')] = {
+        #         'url': 'createObject?type_name=Aliquot',
+        #         'icon': '++resource++bika.lims.images/add.png'
+        #     }
 
         if mtool.checkPermission(ManageAliquots, self.context):
             self.review_states[0]['transitions'].append({'id': 'deactivate'})
@@ -188,8 +189,18 @@ class AjaxGetChildren:
 
     def __call__(self):
         form = self.request.form
+
+        uc = getToolByName(self.context, 'uid_catalog')
+        brains = uc(UID=form['uid'])
+        if brains:
+            roompath = '/'.join(brains[0].getObject().getPhysicalPath())
+        else:
+            roompath = ''
+
         bsc = getToolByName(self.context, 'bika_setup_catalog')
-        brains = bsc(portal_type="StorageManagement", room_storage=form['uid'])
+        brains = bsc(portal_type="StorageManagement",
+                     path={'query': roompath, 'depth': 1}
+                     )
         ret = []
         for brain in brains:
             ret.append({'uid': brain.UID,

@@ -5,7 +5,7 @@
         i18n:domain="plone">
  <property name="title" i18n:translate="">Storage Inventory</property>
  <property name="description"></property>
- <property name="content_icon">++resource++bika.sanbi.images/freezer.png</property>
+ <property name="content_icon">++resource++bika.sanbi.images/inventory.png</property>
  <property name="content_meta_type">StorageInventory</property>
  <property name="product">bika.sanbi</property>
  <property name="factory">addStorageInventory</property>

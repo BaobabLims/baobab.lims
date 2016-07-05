@@ -1,2 +1,4 @@
 from projectanalyseswidget import ProjectAnalysesWidget
 from projectanalyseswidget import ProjectAnalysesView
+from productsupplierswidget import ProductSuppliersWidget
+from productsupplierswidget import ProductSuppliersView

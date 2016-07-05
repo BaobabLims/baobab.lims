@@ -1,6 +1,6 @@
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from operator import itemgetter, methodcaller
+from operator import itemgetter
 from bika.sanbi import bikaMessageFactory as _
 from bika.lims.browser import BrowserView
 from Products.ATContentTypes.lib import constraintypes
@@ -8,6 +8,7 @@ from Products.CMFPlone.utils import _createObjectByType
 from Products.Archetypes.public import BaseFolder
 from DateTime import DateTime
 from bika.lims.utils import to_utf8
+from Products.Archetypes.config import REFERENCE_CATALOG
 import os
 import traceback
 
@@ -15,6 +16,10 @@ class KitView(BrowserView):
 
     template = ViewPageTemplateFile('templates/kit_view.pt')
     title = _("Kit's components")
+
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
 
     def __call__(self):
 
@@ -27,6 +32,8 @@ class KitView(BrowserView):
         context.setConstrainTypesMode(1)
         context.setLocallyAllowedTypes(())
         # Collect general data
+        self.st_icon = self.portal_url + \
+                    "/++resource++bika.sanbi.images/inventory.png"
         self.id = context.getId()
         self.title = context.Title()
         self.kittemplate_title = context.getKitTemplate().Title()
@@ -52,6 +59,13 @@ class KitView(BrowserView):
             })
         self.items = sorted(self.items, key=itemgetter('title'))
 
+        self.kit_storage = {
+            'kitID': self.context.getId(),
+            'stored': self.context.getQtyStored(),
+            'qty': self.context.getQuantity(),
+            'all_stored': self.context.getQuantity() == self.context.getQtyStored()
+        }
+
         if 'form.action.addKitAttachment' in self.request:
             self.addKitAttachment()
         elif 'form.action.delARAttachment' in self.request:
@@ -59,6 +73,44 @@ class KitView(BrowserView):
 
         # Render the template
         return self.template()
+
+    def get_product_storage_qtts(self, uid):
+        catalog = getToolByName(self.context, "bika_setup_catalog")
+        brains = catalog({'portal_type': 'StorageInventory', 'inactive_state': 'active',
+                          'object_provides': 'bika.sanbi.interfaces.IInventoryAssignable'})
+
+        rc = getToolByName(self.context, REFERENCE_CATALOG)
+        references = rc.getBackReferences(uid, relationship="StockItemProduct")
+        stock_items = [ref.getSourceObject().getId() for ref in references if ref.getSourceObject().getIsStored()]
+
+        ret = {}
+        for brain in brains:
+            ret[brain.title] = [brain.UID, 0]
+
+        for si in stock_items:
+            brains = catalog({'portal_type': 'StorageInventory',
+                              'inactive_state': 'active',
+                              'getISID': si})
+
+            if brains:
+                storage = brains[0].getObject().aq_parent
+                ret[storage.title][1] += 1
+
+        results = []
+        for k in ret:
+            results.append([k,ret[k]])
+
+        return results
+
+    def storage_products(self):
+        results = []
+        items = self.context.getKitTemplate().kittemplate_lineitems
+        for item in items:
+            storages = self.get_product_storage_qtts(item['UID'])
+            results.append(([item['Product'], item['UID']], storages))
+
+        return results
+
 
     def delARAttachment(self):
         """ delete the attachment """
@@ -290,3 +342,48 @@ class PrintView(KitView):
         data['laboratory'] = self._lab_data()
 
         return data
+
+
+class StoreKitAssembly:
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+
+    def __call__(self):
+        form = self.request.form
+        uc = getToolByName(self.context, 'uid_catalog')
+        bsc = getToolByName(self.context, 'bika_setup_catalog')
+        rc = getToolByName(self.context, REFERENCE_CATALOG)
+        storage = uc(UID=form['StorageInventory_uid'])[0].getObject()
+        brains = bsc(portal_type='StorageInventory', inactive_state='active',
+                     path={'query': "/".join(storage.getPhysicalPath()), 'depth':1})
+
+        brains = [brain for brain in brains if not brain.getObject().getIsOccupied()]
+        message = ''
+        number = int(form['number-kit'])
+        if len(brains) < number:
+            message = "No sufficient free positions availble."
+
+        if message:
+            self.context.plone_utils.addPortalMessage(_(message), 'error')
+        else:
+            positions = [brain.getObject() for brain in brains[:number]]
+            product_uid = self.context.getKitPrdUID()
+            references = rc.getBackReferences(product_uid, relationship="StockItemProduct")
+            stock_items = [ref.getSourceObject() for ref in references if not ref.getSourceObject().getIsStored()]
+            assert len(stock_items) >= len(positions)
+            for i in range(len(positions)):
+                position = positions[i]
+                stock_item = stock_items[i]
+                stock_item.setStorageLevelID(position.getId())
+                stock_item.setIsStored(True)
+                position.setISID(stock_item.getId())
+                position.setIsOccupied(True)
+                # Decrement number of available children of parent
+                nac = position.aq_parent.getNumberOfAvailableChildren()
+                position.aq_parent.setNumberOfAvailableChildren(nac - 1)
+                # set number of kit stored
+                self.context.setQtyStored(self.context.getQtyStored() + 1)
+
+        self.request.response.redirect(self.context.absolute_url_path())
+        return

@@ -6,6 +6,80 @@
 	i18n:domain="bika">
 
 	<head>
+        <metal:javascript_head_slot fill-slot="javascript_head_slot"
+        tal:define="portal context/@@plone_portal_state/portal;">
+        <script type="text/javascript"
+                tal:attributes="src python:portal.absolute_url() + '/bika_widgets/referencewidget.js'"></script>
+        <script type="text/javascript" charset="utf-8">
+
+            (function($){
+                $(function(){
+                    var dataPost = {};
+                    $("input[id*='qtty-']").on("change", function (e) {
+                        var value = $(this).val();
+                        var prdUID = $(this).attr('pr-uid');
+                        var strUID = $(this).attr('st-uid');
+                        if(! dataPost[strUID]){
+                            dataPost[strUID] = [[prdUID, value]];
+                        }else {
+                            var found = false;
+                            $.each(dataPost[strUID], function (i, v) {
+                                if(v[0] == prdUID){
+                                    v[1] = value;
+                                    found = true;
+                                    return false;
+                                }
+                            });
+                            if(! found){
+                                dataPost[strUID].push([prdUID, value]);
+                            }
+                        }
+                        console.log(dataPost);
+                    });
+
+                    $("#assemble").on("click", function (e) {
+                        var path = window.location.href.split('/?')[0];
+                         $.ajax({
+                             dataType: "json",
+                             contentType: 'application/json',
+                             url: path + '/fetch_stock_prds',
+                             data: JSON.stringify(dataPost),
+                             success: function (data) {
+                                 if (data["error"]){
+                                     window.bika.lims.portalWarningMessage(data.error);
+                                 }
+                                 else{
+                                     window.bika.lims.portalInfoMessage("Stock Items Selected");
+                                 }
+                             }
+                         });
+                        e.preventDefault();
+                    });
+
+                    $("#StorageInventory_uid").on("focus", function (e) {
+                        var uid = $(this).val();
+                        var path = window.location.href.split('/?')[0];
+                        $.ajax({
+                            dataType: "json",
+                            contentType: 'application/json',
+                            url: path + '/available_stock',
+                            data: {'uid': uid},
+                            success: function (data) {
+                                if (data["error"]){
+                                    window.bika.lims.portalWarningMessage(data.error);
+                                }
+                                else{
+                                    $("#qty-available").html('<span style="color:green;">' + data + '</span>');
+                                }
+                            }
+                        });
+                    })
+                });
+            })(jQuery);
+
+        </script>
+        </metal:javascript_head_slot>
+
         <metal:css fill-slot="style_slot">
             <tal:css>
                 <style type="text/css"
@@ -48,7 +122,9 @@
                     review_state python: context.portal_workflow.getInfoFor(context, 'review_state');
                     attachments_allowed here/bika_setup/getAttachmentsPermitted;
                     delete_attachments python:True;
-                    update_attachments python:True;">
+                    update_attachments python:True;
+                    pending python:context.portal_workflow.getInfoFor(context, 'review_state') == 'pending';
+                    completed python:context.portal_workflow.getInfoFor(context, 'review_state') == 'completed'">
 
             <div tal:condition="attachments_allowed">
                 <metal:block use-macro="here/kitattachments/macros/attachments"/>
@@ -66,6 +142,7 @@
                 </tr>
                 </tbody>
             </table>
+
             <table class="invoice-items items">
                 <thead>
                 <tr>
@@ -113,6 +190,128 @@
                 </tr>
                 </tbody>
             </table>
+
+            <div tal:condition="python:completed" tal:define="item view/kit_storage;">
+                <img tal:condition="view/st_icon | nothing" tal:attributes="src view/st_icon"/>
+                <span class="label">Kit Storage</span>
+                <form name="order-storage" method="POST"
+                      tal:attributes="action python: item['kitID'] + '/store_kit'">
+                <table class="invoice-items items">
+                    <thead>
+                    <tr>
+                        <th i18n:translate="">Kit</th>
+                        <th i18n:translate="">Storage</th>
+                        <th i18n:translate="">Available</th>
+                        <th i18n:translate="">Assembled(Stored)</th>
+                        <th i18n:translate="">Store</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tal:item>
+                            <td tal:content="item/kitID"></td>
+                            <td class="center">
+                                <div  tal:condition="item/all_stored"> - </div>
+                                <div style="width:100%;margin:0 auto;" class="field ArchetypesReferenceWidget"
+                                     tal:condition="python:not item['all_stored']">
+
+                                    <input
+                                        type="text"
+                                        id="StorageInventory"
+                                        class="blurrable firstToFocus referencewidget"
+                                        value=""
+                                        size=25
+                                        tal:attributes="name python:'storage-' + str(item['kitID'])"
+                                        base_query='{"portal_type": "StorageInventory",
+                                                     "object_provides": "bika.sanbi.interfaces.IInventoryAssignable"}'
+                                        search_query='{}'
+                                        catalog_name="bika_setup_catalog"
+                                        ui_item="Title"
+                                        autocomplete="false"
+                                        combogrid_options='{"colModel":[{
+                                                                "columnName": "Title",
+                                                                "align": "left",
+                                                                "label": "Title",
+                                                                "width": "20"
+                                                            }, {
+                                                                "columnName": "Description",
+                                                                "align": "center",
+                                                                "label": "Description",
+                                                                "width": "80"
+                                                            }],
+                                                            "search_fields": ["Title"],
+                                                            "catalog_name": "bika_setup_catalog",
+                                                            "url": "referencewidget_search",
+
+                                                            "discard_empty": [],
+                                                            "popup_width": "550px",
+                                                            "showOn": true,
+                                                            "searchIcon": true,
+                                                            "minLength": "0",
+                                                            "resetButton": false,
+                                                            "sord": "asc",
+                                                            "sidx": "Title",
+                                                            "force_all": true,
+                                                            "portal_types": {}}'/>
+
+                                    <input type="hidden" name="StorageInventory_uid" id="StorageInventory_uid">
+                                </div>
+                            </td>
+                            <td id="qty-available" class="center">0</td>
+                            <td tal:content="python:str(item['qty'])+' ('+str(item['stored'])+')'" class="center"></td>
+                            <td>
+                                <div class="center" tal:condition="item/all_stored"> - </div>
+                                <div class="center" tal:condition="python: not item['all_stored']">
+                                    <input
+                                        min=0
+                                        type="number"
+                                        style="width: 50px"
+                                        tal:attributes="max python:item['qty']-item['stored'];
+                                                        name python:'number-kit'"/>
+                                </div>
+                            </td>
+                        </tal:item>
+                    </tbody>
+                </table>
+                <input type="submit" name="submit" value="Store Kit"
+                        tal:condition="python: not item['all_stored']"/>
+                </form>
+            </div>
+
+            <div tal:condition="python:pending">
+                <img tal:condition="view/st_icon | nothing" tal:attributes="src view/st_icon"/>
+                <span class="label">Product Storages</span>
+
+                <table class="invoice-items items">
+                    <thead>
+                    <tr>
+                        <th i18n:translate="">Product</th>
+                        <th i18n:translate="">Storage</th>
+                        <th i18n:translate="">Available</th>
+                        <th i18n:translate="">Use</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tal:items repeat="item view/storage_products">
+                        <tal:item repeat="storage python: item[1]">
+                            <tr tal:define="i repeat/item/index;
+                                            j repeat/storage/index">
+                                <td width="40%" tal:content="python: item[0][0]"></td>
+                                <td width="20%" style="text-align: center" tal:content="python:storage[0]"></td>
+                                <td width="20%" style="text-align: center" tal:content="python:storage[1][1]"></td>
+                                <td width="20%">
+                                    <input tal:attributes="id python:'qtty-'+ str(i) +'-'+ str(j);
+                                                           name string:use-qty;
+                                                           type string:number;
+                                                           st-uid python:storage[1][0];
+                                                           pr-uid python:item[0][1];">
+                                </td>
+                            </tr>
+                        </tal:item>
+                    </tal:items>
+                    </tbody>
+                </table>
+                <input type="submit" id="assemble" class="product-fetch" value="Assemble kit">
+            </div>
 
 		</metal:core>
 

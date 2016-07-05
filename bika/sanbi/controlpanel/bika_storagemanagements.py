@@ -29,7 +29,7 @@ class StorageManagementsView(BikaListingView):
                 'icon': '++resource++bika.lims.images/add.png'
             }
         }
-        self.title = self.context.translate(_("Storage Management"))
+        self.title = self.context.translate(_("Sample Storage"))
         self.icon = self.portal_url +"/++resource++bika.sanbi.images/freezer_big.png"
         self.description = ''
         self.show_sort_column = False
@@ -104,7 +104,7 @@ class StorageManagementsView(BikaListingView):
         for x in range(len(items)):
             if not items[x].has_key('obj'): continue
             obj = items[x]['obj']
-            items[x]['StorageUnit'] = obj.getStorageUnit().Title()
+            items[x]['StorageUnit'] = obj.aq_parent.Title()
             items[x]['Shelves'] = obj.getShelves() and int(obj.getShelves()) or 0
             items[x]['Hierarchy'] = obj.getHierarchy()
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \

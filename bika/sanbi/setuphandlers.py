@@ -83,16 +83,11 @@ class BikaCustomGenerator:
         at.setCatalogsByType('StorageInventory', ['bika_setup_catalog', ])
 
         addIndex(bsc, 'getStorageUnit', 'FieldIndex')
-        addColumn(bsc, 'getStorageUnit')
         addIndex(bsc, 'getUnitID', 'FieldIndex')
-        addColumn(bsc, 'getUnitID')
         addIndex(bsc, 'getParentBox', 'FieldIndex')
-        addColumn(bsc, 'getParentBox')
         addIndex(bsc, 'getHasChildren', 'FieldIndex')
-        addColumn(bsc, 'getHasChildren')
         addIndex(bsc, 'getLocation', 'FieldIndex')
-        addIndex(bsc, 'room_storage', 'FieldIndex')
-        addColumn(bsc, 'getLocation')
+        addIndex(bsc, 'getISID', 'FieldIndex')
 
         bac = getToolByName(portal, 'bika_analysis_catalog', None)
         if bsc is None:

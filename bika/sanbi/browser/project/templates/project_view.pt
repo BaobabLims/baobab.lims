@@ -39,10 +39,16 @@
             <td tal:content="view/title" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
+        <tr>
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;">Description </th>
+            <td tal:content="here/description" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
         <tr style="background: #f0f0f2;">
             <th i18n:translate="" style="padding-bottom: .2em;border: 1px solid #cecfd5;
                                          padding: 10px 15px;">Client </th>
-            <td tal:content="view/client" style="padding-bottom: .5em;border: 1px solid #cecfd5;
+            <td tal:content="structure view/client" style="padding-bottom: .5em;border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
         <tr>
@@ -74,7 +80,7 @@
 
     <h3 style="margin-top:1em;">
         <img title="Project Lab Analyses "
-             tal:attributes="src string:${view/portal_url}/++resource++bika.sanbi.images/lab.png">
+             tal:attributes="src string:${view/portal_url}/++resource++bika.sanbi.images/analysis.png">
         <span i18n:translate="">Laboratory Analyses:</span>
     </h3>
     <tal:parts replace="structure view/analyses_table"/>

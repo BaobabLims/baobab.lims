@@ -99,7 +99,7 @@ schema = BikaSchema.copy() + Schema((
         relationship='AliquotUnit',
         widget=SelectionWidget(
            format='select',
-           label=_("Storage Units"),
+           label=_("Rooms"),
            visible={'view': 'invisible', 'edit': 'invisible'}
         )),
 
@@ -236,8 +236,15 @@ class Aliquot(BaseContent):
         storage_location = self.getStorageLocation()
         if self.guard_store_transition():
             state = wftool.getInfoFor(storage_location, 'review_state')
-            if state != 'position_reserved':
+            if state == 'position_free':
                 wftool.doActionFor(storage_location, action='reserve', wf_id='bika_storageposition_workflow')
+                storage_location.edit(
+                    IsReserved=True,
+                    IsOccupied=False,
+                    SampleUID=self.UID()
+                )
+                storage_location.setSample(self)
+                storage_location.reindexObject()
 
     def at_post_edit_script(self):
         """Execute once the object is updated
@@ -246,8 +253,14 @@ class Aliquot(BaseContent):
         storage_location = self.getStorageLocation()
         if self.guard_store_transition():
             state = wftool.getInfoFor(storage_location, 'review_state')
-            if state != 'position_reserved':
+            if state == 'position_free':
                 wftool.doActionFor(storage_location, action='reserve', wf_id='bika_storageposition_workflow')
+                storage_location.edit(
+                    IsReserved=True,
+                    AliquotUID=self.UID()
+                )
+                storage_location.setAliquot(self)
+                storage_location.reindexObject()
 
         #TODO: DO WE NEED THIS?
         if self.guard_pending_transition():
@@ -262,10 +275,16 @@ class Aliquot(BaseContent):
         if self.guard_pending_transition():
             storage_location = self.getStorageLocation()
             state = wftool.getInfoFor(storage_location, 'review_state')
-            if state != 'position_occupied':
-                #wftool.doActionFor(storage_location, action='reserve', wf_id='bika_storageposition_workflow')
-                if not storage_location.getAliquot():
-                    storage_location.setAliquot(self)
+            if state == 'position_reserved':
+                if not storage_location.getSample():
+                    storage_location.setSample(self)
+
+                storage_location.edit(
+                    IsReserved=False,
+                    IsOccupied=True
+                )
+                storage_location.reindexObject()
+                print storage_location.getIsOccupied()
                 wftool.doActionFor(storage_location, action='occupy', wf_id="bika_storageposition_workflow")
 
     def workflow_script_pend(self):

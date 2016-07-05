@@ -61,4 +61,28 @@
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
+    <browser:page
+      for="bika.sanbi.interfaces.IKit"
+      name="fetch_stock_prds"
+      class=".ajax.AjaxFetchStockProducts"
+      permission="zope2.View"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="bika.sanbi.interfaces.IKit"
+      name="available_stock"
+      class=".ajax.AjaxAvailableStock"
+      permission="zope2.View"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="bika.sanbi.interfaces.IKit"
+      name="store_kit"
+      class=".kit.StoreKitAssembly"
+      permission="zope2.View"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
 </configure>

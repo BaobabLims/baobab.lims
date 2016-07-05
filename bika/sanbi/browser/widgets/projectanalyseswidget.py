@@ -1,10 +1,8 @@
 from AccessControl import ClassSecurityInfo
-from Products.Archetypes.Registry import registerWidget, registerPropertyType
+from Products.Archetypes.Registry import registerWidget
 from Products.Archetypes.Widget import TypesWidget
 from Products.CMFCore.utils import getToolByName
-from bika.lims.browser import BrowserView
-from bika.lims import bikaMessageFactory as _
-from bika.lims.utils import t
+from bika.sanbi import bikaMessageFactory as _
 from bika.lims.browser.bika_listing import BikaListingView
 from zope.i18n.locales import locales
 
@@ -52,7 +50,7 @@ class ProjectAnalysesView(BikaListingView):
              },
         ]
 
-        if not self.context.bika_setup.getShowPrices():
+        if not context.bika_setup.getShowPrices():
             self.review_states[0]['columns'].remove('Price')
 
         self.field_value = field_value
@@ -121,16 +119,15 @@ class ProjectAnalysesWidget(TypesWidget):
     security = ClassSecurityInfo()
 
     security.declarePublic('process_form')
-    def process_form(self, instance, field, form, empty_marker = None,
-                     emptyReturnsMarker = False):
+
+    def process_form(self, instance, field, form, empty_marker = None, emptyReturnsMarker = False):
 
         service_uids = form.get('uids', None)
 
-        # if instance.portal_type == 'BiospecType':
-        #     pass
         return service_uids, {}
 
     security.declarePublic('Analyses')
+
     def Analyses(self, field, allow_edit=False):
         """Print analyses table
         """

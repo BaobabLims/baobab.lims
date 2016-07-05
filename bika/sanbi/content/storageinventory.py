@@ -1,16 +1,18 @@
 from bika.sanbi import bikaMessageFactory as _
 from bika.lims.content.bikaschema import BikaSchema
 from Products.Archetypes.public import *
-from bika.lims.browser.widgets import ReferenceWidget
 from AccessControl import ClassSecurityInfo
 from bika.sanbi.config import PROJECTNAME
-from Products.Archetypes.references import HoldingReference
 from zope.interface import implements
 from bika.sanbi.interfaces import IStorageInventory
 from Products.CMFPlone.interfaces import IConstrainTypes
 from Products.CMFCore.utils import getToolByName
 from bika.sanbi.config import INVENTORY_TYPES, DIMENSION_OPTIONS
-import sys
+from plone.indexer import indexer
+
+@indexer(IStorageInventory)
+def get_product_uid(instance):
+    return instance.getProductUID()
 
 schema = BikaSchema.copy() + Schema((
 
@@ -22,22 +24,6 @@ schema = BikaSchema.copy() + Schema((
             format='select',
             label=_("Type"),
             description=_("Select a storage type."),
-            visible={'edit': 'visible', 'view': 'visible'},
-        )),
-
-    ReferenceField(
-        'StorageUnit',
-        required=1,
-        allowed_types=('StorageUnit',),
-        relationship='StorageManageUnit',
-        vocabulary_display_path_bound=sys.maxsize,
-        referenceClass=HoldingReference,
-        widget=ReferenceWidget(
-            checkbox_bound=0,
-            label=_("Storage Unit"),
-            description=_("Select the enclosure containing the new storage."),
-            size=50,
-            showOn=True,
             visible={'edit': 'visible', 'view': 'visible'},
         )),
 
@@ -55,7 +41,7 @@ schema = BikaSchema.copy() + Schema((
         mode='rw',
         widget=StringWidget(
             label=_("Freezer ID"),
-            description=_("Provide an ID Freezer"),
+            description=_("Select a Freezer ID"),
             visible={'edit': 'visible', 'view': 'visible'}
         )),
 
@@ -65,7 +51,7 @@ schema = BikaSchema.copy() + Schema((
         mode='rw',
         widget=StringWidget(
             label=_("Shelf ID"),
-            description=_("Provide an ID Shelf"),
+            description=_("Select a Shelf ID"),
             visible={'edit': 'visible', 'view': 'visible'}
         )),
 
@@ -75,17 +61,18 @@ schema = BikaSchema.copy() + Schema((
         mode="rw",
         widget=StringWidget(
             label=_("Box ID"),
-            description=_("Provide an ID Box"),
+            description=_("Select a Box ID"),
             visible={'edit': 'visible', 'view': 'visible'}
         )),
 
     IntegerField(
         'NumPositions',
+        required=True,
         widget=IntegerWidget(
             label=_("Number Positions"),
             default=0,
             size=20,
-            description=_("Specify the number of positions to create in stock."),
+            description=_("Specify the number of storage positions in the box."),
             visible={'edit': 'visible', 'view': 'visible'},
         )),
 
@@ -132,13 +119,14 @@ schema = BikaSchema.copy() + Schema((
 
     ComputedField(
         'UnitID',
-        expression="context.getStorageUnit() and context.getStorageUnit().getId() or '' ",
+        expression="context.aq_parent.getId()",
         widget=ComputedWidget(
             visible=False
         )),
 
+    # inventory stock item id
     StringField(
-        'StockItemID',
+        'ISID',
         widget=StringWidget(visible=False),
     ),
     BooleanField(
@@ -157,6 +145,7 @@ schema['title'].required = True
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 #schema['title'].widget.size = 100
 schema['description'].widget.visible = {'edit': 'visible', 'view': 'visible'}
+schema['description'].widget.description = "Used in Listings and Searches"
 
 
 class StorageInventory(BaseFolder):
@@ -196,7 +185,7 @@ class StorageInventory(BaseFolder):
     def liberatePosition(self):
         if self.getLocation():
             self.setIsOccupied(0)
-            self.setStockItemID('')
+            self.setISID('')
             num = self.aq_parent.getNumberOfAvailableChildren()
             self.aq_parent.setNumberOfAvailableChildren(num + 1)
 

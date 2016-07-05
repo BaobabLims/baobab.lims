@@ -104,7 +104,6 @@ class StorageManageSubmit:
             YAxis=1,
             ZAxis=1
         )
-        child.setStorageUnit(self.context)
         child.unmarkCreationFlag()
         renameAfterCreation(child)
         child.reindexObject()
@@ -212,9 +211,10 @@ class StorageManageSubmit:
         context_b = {}
         if not obj_exist:
             num_add, num_sub = self.number_children_add_sub(values)
-            brains = uid_catalog(UID=values['StorageUnit'])
-            if len(brains):
-                parent_unit = brains[0].getObject()
+            parent_unit = self.context.aq_parent
+            # brains = uid_catalog(UID=values['StorageUnit'])
+            # if len(brains):
+            #     parent_unit = brains[0].getObject()
 
             # Create the current context in ZODB
             self.context = _createObjectByType('StorageManagement', parent_unit, tmpID())
@@ -335,11 +335,29 @@ class PositionsInfo:
 
             children = self.context.getPositions()
             for c in children:
+                aid, name, subject, volume, path, pos = '', '', 0, 0, '', ''
+                if c.getIsOccupied() or c.getIsReserved():
+                    sample = c.getSample()
+                    aid = sample.getId()
+                    name = sample.Title()
+                    if sample.portal_type == "Biospecimen":
+                        subject = sample.getSubjectID()
+                    volume = sample.getVolume()
+                    path = sample.absolute_url_path()
+                    pos = c.absolute_url_path()
+
                 positions.append({
                     'occupied': c.getIsOccupied(),
+                    'reserved': c.getIsReserved(),
                     'chain': [o.Title() for o in reversed(c.getChain())],
                     'address': c.Title(),
-                    'state': workflow.getInfoFor(c, 'review_state')
+                    'state': workflow.getInfoFor(c, 'review_state'),
+                    'aid': aid,
+                    'name': name,
+                    'subject': subject,
+                    'volume': volume,
+                    'path': path,
+                    'pos': pos
                 })
                 response['positions'] = positions
 
@@ -357,7 +375,7 @@ class SampleInfo:
         id = form['position']
         catalog = getToolByName(self.context, 'bika_setup_catalog')
         brains = catalog.searchResults(portal_type="StorageLocation", id=id)
-        sample = brains[0].getObject().getAliquot()
+        sample = brains[0].getObject().getSample()
 
         ret = {
             'id': sample.getId(),

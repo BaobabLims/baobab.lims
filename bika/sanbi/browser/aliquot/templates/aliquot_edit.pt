@@ -39,7 +39,6 @@
                       $.ajax({url:path, data:{'uid': value}})
                           .done(function (data) {
                               data = $.parseJSON(data);
-                              console.log(data);
                               setSelectOptions(data, element);
                           });
                   });
@@ -218,8 +217,8 @@
                         Advanced Storage Location search
                     </div>
                     <div style="border-top: 1px solid cornflowerblue; margin-top: 5px; padding-top: 5px;">
-                        <span style="font-weight: bold;">Storage Units</span>
-                        <span class="formHelp" id="storagetype_help">Select the storage units containing the location.
+                        <span style="font-weight: bold;">Rooms</span>
+                        <span class="formHelp" id="storagetype_help">Select the room containing the location.
                         </span>
                     </div>
                     <div data-fieldname="StorageUnits" id="storage_units">
@@ -241,7 +240,7 @@
 
                     <td>
                     <div>
-                        <span style="font-weight: bold;">Freezer/Tanks</span>
+                        <span style="font-weight: bold;">Freezers/Tanks</span>
                         <span class="formHelp" id="storagetype_help">Select the freezer/tank containing
                             the position of this sample.
                         </span>
