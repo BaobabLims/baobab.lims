@@ -77,14 +77,14 @@ schema = BikaSchema.copy() + Schema((
         )),
 
     ReferenceField('Service',
-           required=1,
-           multiValued=1,
-           allowed_types=('AnalysisService',),
-           relationship='BiospecimenAnalysisService',
-           widget=ProjectAnalysesWidget(
-               label=_("Analyses"),
-               description="",
-           )),
+        required=1,
+        multiValued=1,
+        allowed_types=('AnalysisService',),
+        relationship='BiospecimenAnalysisService',
+        widget=ProjectAnalysesWidget(
+           label=_("Analyses"),
+           description="",
+        )),
 ))
 schema['title'].required = True
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
