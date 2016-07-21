@@ -117,13 +117,24 @@ class StorageManagement(BaseFolder):
         return self.objectValues('StorageManagement')
 
     def getPositions(self):
-        children = []
         bsc = getToolByName(self, 'bika_setup_catalog')
         brains = bsc.searchResults(
             portal_type='StorageLocation',
             inactive_state='active',
             sort_on='sortable_title',
             path={'query': "/".join(self.getPhysicalPath()), 'level': 0})
+
+        return [brain.getObject() for brain in brains]
+
+    def get_free_positions(self):
+        bsc = getToolByName(self, 'bika_setup_catalog')
+        brains = bsc.searchResults(
+            portal_type='StorageLocation',
+            inactive_state='active',
+            sort_on='sortable_title',
+            review_state='position_free',
+            path={'query': "/".join(self.getPhysicalPath()), 'level': 0}
+        )
 
         return [brain.getObject() for brain in brains]
 

@@ -4,12 +4,27 @@
         i18n_domain="bika.sanbi">
 
     <browser:page
-            for="bika.sanbi.interfaces.IBiospecimens"
-            name="folder_view"
-            class=".biospecimens.BiospecimensView"
-            permission="bika.lims.ManageBika"
-            layer="bika.lims.interfaces.IBikaLIMS"
+        for="bika.sanbi.interfaces.IBiospecimens"
+        name="folder_view"
+        class=".biospecimens.BiospecimensView"
+        permission="bika.lims.ManageBika"
+        layer="bika.lims.interfaces.IBikaLIMS"
     />
 
+    <browser:page
+        for="*"
+        name="available_positions"
+        class=".biospecimens.AjaxAvailablePositions"
+        permission="bika.lims.ManageBika"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+        for="*"
+        name="create_biospecimens"
+        class=".biospecimens.CreateBiospecimens"
+        permission="bika.lims.ManageBika"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
 
 </configure>

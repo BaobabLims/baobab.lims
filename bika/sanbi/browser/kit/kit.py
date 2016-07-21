@@ -368,7 +368,7 @@ class StoreKitAssembly:
             self.context.plone_utils.addPortalMessage(_(message), 'error')
         else:
             positions = [brain.getObject() for brain in brains[:number]]
-            product_uid = self.context.getKitPrdUID()
+            product_uid = self.context.UID()
             references = rc.getBackReferences(product_uid, relationship="StockItemProduct")
             stock_items = [ref.getSourceObject() for ref in references if not ref.getSourceObject().getIsStored()]
             assert len(stock_items) >= len(positions)

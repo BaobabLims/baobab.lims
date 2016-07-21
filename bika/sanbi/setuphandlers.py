@@ -64,7 +64,7 @@ class BikaCustomGenerator:
         at.setCatalogsByType('Shipment', ['bika_catalog'])
         at.setCatalogsByType('Aliquot', ['bika_catalog'])
         at.setCatalogsByType('Biospecimen', ['bika_catalog', ])
-        addIndex(bc, 'getBiospecimenID', 'FieldIndex')
+        addIndex(bc, 'kit_project_uid', 'FieldIndex')
 
         # _______________________________#
         #      BIKA_SETUP_CATALOG        #
@@ -82,7 +82,7 @@ class BikaCustomGenerator:
         at.setCatalogsByType('Multimage', ['bika_setup_catalog', ])
         at.setCatalogsByType('StorageInventory', ['bika_setup_catalog', ])
 
-        addIndex(bsc, 'getStorageUnit', 'FieldIndex')
+        # addIndex(bsc, 'getStorageUnit', 'FieldIndex')
         addIndex(bsc, 'getUnitID', 'FieldIndex')
         addIndex(bsc, 'getParentBox', 'FieldIndex')
         addIndex(bsc, 'getHasChildren', 'FieldIndex')
@@ -148,6 +148,5 @@ def setupCustomVarious(context):
                           'biospecimens',
                           'aliquots',
                           'shipments',
-                          'supplyorders',
-                          'orders']):
+                          'supplyorders']):
         portal.moveObjectsToTop([item])

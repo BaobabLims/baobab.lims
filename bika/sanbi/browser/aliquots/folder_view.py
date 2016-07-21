@@ -181,33 +181,6 @@ class AjaxGetRooms:
 
         return json.dumps(ret)
 
-class AjaxGetChildren:
-    def __init__(self, context, request):
-        self.context = context
-        self.request = request
-        self.errors = {}
-
-    def __call__(self):
-        form = self.request.form
-
-        uc = getToolByName(self.context, 'uid_catalog')
-        brains = uc(UID=form['uid'])
-        if brains:
-            roompath = '/'.join(brains[0].getObject().getPhysicalPath())
-        else:
-            roompath = ''
-
-        bsc = getToolByName(self.context, 'bika_setup_catalog')
-        brains = bsc(portal_type="StorageManagement",
-                     path={'query': roompath, 'depth': 1}
-                     )
-        ret = []
-        for brain in brains:
-            ret.append({'uid': brain.UID,
-                        'title': brain.title})
-
-        return json.dumps(ret)
-
 class CreateAliquots:
     def __init__(self, context, request):
         self.context = context

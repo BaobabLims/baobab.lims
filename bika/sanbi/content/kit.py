@@ -17,6 +17,12 @@ from DateTime import DateTime
 from bika.lims.browser.widgets import DateTimeWidget as bika_DateTimeWidget
 
 from Products.CMFCore import permissions
+from plone.indexer import indexer
+
+
+@indexer(IKit)
+def get_kit_project_uid(instance):
+    return instance.getProject().UID()
 
 schema = BikaSchema.copy() + Schema((
     ReferenceField(
@@ -50,6 +56,14 @@ schema = BikaSchema.copy() + Schema((
             placeholder="KIT-",
         )
     ),
+
+    StringField(
+        'CategoryTitle',
+        widget=StringWidget(
+            visible=False
+        )
+    ),
+
     ReferenceField('KitTemplate',
         required=1,
         vocabulary_display_path_bound = sys.maxint,
@@ -87,37 +101,12 @@ schema = BikaSchema.copy() + Schema((
         )
     ),
 
-    ReferenceField('Location',
-        required=1,
-        vocabulary_display_path_bound=sys.maxint,
-        allowed_types=('StorageInventory',),
-        relationship='KitInventory',
-        referenceClass=HoldingReference,
-        widget=bika_ReferenceWidget(
-            label=_("Location"),
-            size=30,
-            render_own_label=True,
-            catalog_name='bika_setup_catalog',
-            showOn=True,
-            description=_("Start typing to filter the list of available Storage Inventories."),
-            base_query={'inactive_state': 'active', 'object_provides': 'bika.sanbi.interfaces.IInventoryAssignable'},
-            visible={'view': 'visible', 'edit': 'visible'}
-        ),
-    ),
-    DateTimeField('expiryDate',
-        searchable=1,
-        widget=bika_DateTimeWidget(
-            label='Expiry Date',
-            description=_("Provide the expected expiry date of the kit product."),
-            render_own_label=True,
-            size=20
-        ),
-    ),
     BooleanField(
         'IsStored',
         default=False,
         widget=BooleanWidget(visible=False),
     ),
+
     ReferenceField(
         'Attachment',
         multiValued=1,
@@ -142,8 +131,7 @@ schema = BikaSchema.copy() + Schema((
             label="Form Added to Kit",
             description="It is necessary to add all forms describing the content of the kit.",
             render_own_label=True,
-            visible={'edit': 'visible',
-                     'view': 'visible'}
+            visible={'edit': 'visible', 'view': 'visible'}
         )
     ),
 
@@ -168,9 +156,7 @@ schema['description'].schemata = 'default'
 schema['description'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 schema['description'].widget.render_own_label = True
 schema.moveField('Prefix', before='description')
-schema.moveField('Location', before='description')
 schema.moveField('quantity', before='description')
-schema.moveField('expiryDate', before='description')
 schema.moveField('KitTemplate', before='Prefix')
 schema.moveField('Project', before='KitTemplate')
 
@@ -194,21 +180,14 @@ class Kit(BaseContent):
         """Execute once the object is created
         """
         self.title = self.getId()
+        self.setCategoryTitle('Kit-Category')
         self.reindexObject()
 
     def workflow_script_complete(self):
         """Complete kit assembly
         """
         kittemplate = self.getKitTemplate()
-        # "kit_name" will be used as product name
-        kit_name = kittemplate.Title()
-        kit_description = self.Description()
-        # for product category we will use the one in kit template
-        product_category = kittemplate.getCategory()
         kit_qty = self.getQuantity()
-        #storage_conditions = kittemplate.getStorageConditions()
-        kit_price = kittemplate.getPrice()
-        kit_vat = kittemplate.getVAT()
 
         wf = getToolByName(self, 'portal_workflow')
         uids = self.getItemPositions()
@@ -227,55 +206,21 @@ class Kit(BaseContent):
             si.setStorageLevelID('')
             position.liberatePosition()
 
-        # create kit assembly as product
-        catalog = getToolByName(self, 'bika_setup_catalog')
-        # TODO: WHY I ADDED THIS LINE?
-        brains = catalog.searchResults({'portal_type': 'Product', 'title': kit_name})
-        if len(brains) == 0:
-            folder = self.bika_setup.bika_products
-            product = _createObjectByType('Product', folder, tmpID())
-            product.edit(
-                title=kit_name,
-                description=kit_description,
-                Hazardous=True,
-                Quantity=kit_qty,
-                Price=kit_price,
-                VAT=kit_vat,
-                # StorageConditions=storage_conditions,
-            )
-            product.setCategory(product_category)
-            product.unmarkCreationFlag()
-            renameAfterCreation(product)
-        else:
-            product = brains[0].getObject()
-            new_qty = product.getQuantity() + kit_qty
-            product.edit(
-                description=kit_description,
-                Quantity=new_qty,
-                Price=kit_price,
-                VAT=kit_vat,
-                # StorageConditions=storage_conditions,
-            )
-            product.reindexObject()
-
-        self.setKitPrdUID(product.UID())
-
         # create kit quantity as stockitems
         folder = self.bika_setup.bika_stockitems
         for i in range(kit_qty):
             obj = _createObjectByType("StockItem", folder, tmpID())
             obj.edit(
                 StockItemID='',
-                description=product.Description(),
+                description=self.Description(),
                 location='',
                 Quantity=1,
                 orderId='',
                 IsStored=False,
                 dateManufactured=DateTime(),
-                expiryDate=self.getExpiryDate(),
                 title=product.Title()
             )
-            obj.setProduct(product)
+            obj.setProduct(self)
             obj.setDateReceived(DateTime())
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)

@@ -11,5 +11,6 @@
 
     <adapter factory=".storagelocation.StorageLocationSchemaExtender" />
     <adapter name="getClientTitle" factory=".project.getClientTitle" />
+    <adapter name="kit_project_uid" factory=".kit.get_kit_project_uid" />
 
 </configure>

@@ -34,11 +34,38 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
             visible={'edit': 'visible', 'view': 'visible'}
         )),
 
+    ReferenceField('kit',
+        vocabulary='getKits',
+        allowed_types=('Kit',),
+        relationship='BiospecimenKit',
+        required=1,
+        widget=SelectionWidget(
+            format='select',
+            label=_("Kit"),
+            visible={'view': 'invisible', 'edit': 'visible'}
+        )),
+
     StringField('SubjectID',
         searchable=True,
         widget=StringWidget(
             label=_("Subject ID"),
             description=_("Human-subject ID the specimen is taken from."),
+            visible={'edit': 'visible', 'view': 'visible'}
+        )),
+
+    StringField('KitStockItem',
+        searchable=True,
+        widget=StringWidget(
+            label=_("Kit Stock Item"),
+            description=_("Kit corresponding stock item."),
+            visible={'edit': 'visible', 'view': 'visible'}
+        )),
+
+    StringField('Barcode',
+        searchable=True,
+        widget=StringWidget(
+            label=_("Barcode"),
+            description=_("Biospecimen barcode."),
             visible={'edit': 'visible', 'view': 'visible'}
         )),
 
@@ -179,6 +206,16 @@ class Biospecimen(ATFolder):
                               inactive_state='active')]
         items.sort(lambda x, y: cmp(x[1], y[1]))
         return DisplayList(items)
+
+    def getKits(self):
+        bc = getToolByName(self, 'bika_catalog')
+        items = [(c.UID, c.Title) \
+                 for c in bc(portal_type='Kit',
+                             inactive_state='active',
+                             kit_project_uid=self.aq_parent)]
+        items.sort(lambda x, y: cmp(x[1], y[1]))
+        return DisplayList(items)
+
 
     def getDocuments(self):
         """

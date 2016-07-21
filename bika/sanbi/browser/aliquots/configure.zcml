@@ -30,14 +30,6 @@
 
     <browser:page
       for="*"
-      name="get_children"
-      class=".folder_view.AjaxGetChildren"
-      permission="zope.Public"
-      layer="bika.lims.interfaces.IBikaLIMS"
-    />
-
-    <browser:page
-      for="*"
       name="create"
       class=".folder_view.CreateAliquots"
       permission="zope.Public"

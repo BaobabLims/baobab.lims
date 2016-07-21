@@ -1,0 +1,55 @@
+<div metal:define-macro="form_create_biospecimens">
+
+    <form class="form-creation" style="padding-top: 10px;">
+
+        <select class="kits" tal:define="kits python: view.get_kits()">
+            <option>Select Kit</option>
+            <option tal:condition="python:kits"
+                    tal:repeat="item kits"
+                    tal:attributes="value python:item.UID()"
+                    tal:content="python:item.Title()"></option>
+        </select>
+
+        <input name="biospec-title"
+               type="text"
+               class="bio-title"
+               placeholder="Biospecimens Title">
+
+        <input name="biospec-sequencestart"
+               type="number"
+               class="biospec-sequencestart"
+               placeholder="ID sequence start">
+
+        <input name="kit-number"
+               type="number"
+               class="kit-num"
+               placeholder="Number of items">
+
+        <input name="biospecs-number"
+               type="number"
+               class="biospec-per-kit"
+               placeholder="biospecimens/kit">
+
+        <input type="submit"
+               name="generate"
+               class="biospec-add"
+               value="Add">
+    </form>
+    <form name="list-biospecs" id="list-biospecs" class="hidden">
+        <table class="invoice-items items">
+            <thead>
+            <tr>
+                <th i18n:translate="">Title</th>
+                <th i18n:translate="">Volume</th>
+                <th i18n:translate="">Type</th>
+                <th i18n:translate="">Subject ID</th>
+                <th i18n:translate="">Kit Stock Item</th>
+                <th i18n:translate="">Barcode</th>
+                <th i18n:translate="">Position</th>
+            </tr>
+            </thead>
+            <tbody id="body-biospecimens"></tbody>
+        </table>
+        <input type="submit" name="submit" value="Create"/>
+    </form>
+</div>

@@ -91,7 +91,6 @@ class KitsView(BikaListingView):
             if not items[x].has_key('obj'): continue
             obj = items[x]['obj']
             items[x]['kitTemplate'] = obj.getKitTemplateTitle()
-            items[x]['expiryDate'] = self.ulocalized_time(obj.getExpiryDate())
             items[x]['replace']['Prefix'] = "<a href='%s'>%s</a>" % \
                 (items[x]['url'], obj.getKitId())
 
