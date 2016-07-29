@@ -60,3 +60,18 @@ class IStorageInventories(Interface):
 class IInventoryAssignable(Interface):
     """Interface for StorageInventories"""
 
+class IStockItemStorageLocation(Interface):
+    """A StorageLocation or StorageLevel that can store StockItems must
+    provide this interface"""
+
+class IBioSpecimenStorageLocation(Interface):
+    """A StorageLocation or StorageLevel that can store BioSpecimen objects
+     must provide this interface"""
+
+class IAliquotStorageLocation(Interface):
+    """A StorageLocation or StorageLevel that can store Aliquots must
+    provide this interface"""
+
+class IKitStorageLocation(Interface):
+    """A StorageLocation or StorageLevel that can store Kits must
+    provide this interface"""

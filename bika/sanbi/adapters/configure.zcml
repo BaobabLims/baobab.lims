@@ -4,4 +4,11 @@
     xmlns:i18n="http://namespaces.zope.org/i18n"
     i18n_domain="bika">
 
+    <adapter
+            for="*"
+            provides="bika.lims.interfaces.IStorageTypeRegistration"
+            name="bika.sanbi.storagetypes"
+            factory="bika.sanbi.adapters.storage.defaultStorageTypes"
+    />
+
 </configure>
