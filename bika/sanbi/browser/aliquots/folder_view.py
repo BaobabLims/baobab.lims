@@ -1,15 +1,18 @@
+import json
+
 from Products.CMFCore.utils import getToolByName
-from bika.sanbi import bikaMessageFactory as _
-from bika.sanbi.permissions import *
-from bika.lims.browser.bika_listing import BikaListingView
+from Products.CMFPlone.utils import _createObjectByType
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone.app.content.browser.interfaces import IFolderContentsView
 from plone.app.layout.globals.interfaces import IViewView
 from zope.interface.declarations import implements
-from Products.CMFPlone.utils import _createObjectByType
-from bika.lims.utils import tmpID
+
+from bika.lims.browser.bika_listing import BikaListingView
 from bika.lims.idserver import renameAfterCreation
-import json
+from bika.lims.utils import tmpID
+from bika.sanbi import bikaMessageFactory as _
+from bika.sanbi.permissions import *
+
 
 class AliquotsView(BikaListingView):
     template = ViewPageTemplateFile('templates/aliquots.pt')
@@ -26,7 +29,8 @@ class AliquotsView(BikaListingView):
 
         self.context_actions = {}
         self.title = self.context.translate(_("Aliquots"))
-        self.icon = self.portal_url + "/++resource++bika.sanbi.images/aliquot_big.png"
+        self.icon = self.portal_url + \
+                    "/++resource++bika.sanbi.images/aliquot_big.png"
         self.description = ""
         self.show_sort_column = False
         self.show_select_row = False
@@ -41,13 +45,13 @@ class AliquotsView(BikaListingView):
             'SubjectID': {'title': _('Subject ID'),
                           'toggle': True},
             'AliquotType': {'title': _('Aliquot Type'),
-                           'toggle': True},
+                            'toggle': True},
             'Volume': {'title': _('Volume'),
-                           'toggle': True},
+                       'toggle': True},
             'Quantity': {'title': _('Quantity'),
-                           'toggle': True},
+                         'toggle': True},
             'Location': {'title': _('Location'),
-                           'toggle': True},
+                         'toggle': True},
         }
 
         self.review_states = [
@@ -127,14 +131,17 @@ class AliquotsView(BikaListingView):
     def folderitems(self):
         items = super(AliquotsView, self).folderitems()
         for x in range(len(items)):
-            if not items[x].has_key('obj'): continue
+            if not items[x].has_key('obj'):
+                continue
             obj = items[x]['obj']
             items[x]['Biospecimen'] = obj.getBiospecimen().Title()
             items[x]['SubjectID'] = obj.getSubjectID()
             items[x]['AliquotType'] = obj.getAliquotType().Title()
             items[x]['Quantity'] = obj.getQuantity()
             items[x]['Volume'] = obj.getVolume()
-            items[x]['Location'] = obj.getStorageLocation() and obj.getStorageLocation().Title() or ''
+            items[x][
+                'Location'] = obj.getStorageLocation() and \
+                              obj.getStorageLocation().Title() or ''
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                            (items[x]['url'], items[x]['Title'])
 
@@ -165,6 +172,7 @@ class AjaxSampleTypes:
 
         return json.dumps(ret)
 
+
 class AjaxGetRooms:
     def __init__(self, context, request):
         self.context = context
@@ -180,6 +188,7 @@ class AjaxGetRooms:
                         'title': brain.title})
 
         return json.dumps(ret)
+
 
 class CreateAliquots:
     def __init__(self, context, request):
@@ -200,11 +209,14 @@ class CreateAliquots:
             freezer = uc(UID=s['freezer'])[0].getObject()
             shelf = uc(UID=s['shelf'])[0].getObject()
             box = uc(UID=s['box'])[0].getObject()
-            brains = bsc(portal_type='StorageLocation', parent_box_uid=s['box'], review_state='position_free')
+            brains = bsc(portal_type='StorageLocation', parent_box_uid=s['box'],
+                         review_state='position_free')
             position = brains[0].getObject() if brains else None
             if not position:
                 storage = '.'.join([room.id, freezer.id, shelf.id, box.id])
-                message = "No free position available for \"%s\" in Storage \"%s\"" % (s['title'], storage)
+                message = "No free position available for \"%s\" in Storage " \
+                          "\"%s\"" % (
+                s['title'], storage)
                 return json.dumps({'error': message})
 
             # create aliquot

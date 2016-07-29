@@ -1,11 +1,11 @@
 from Products.CMFCore.utils import getToolByName
-from bika.sanbi import bikaMessageFactory as _
-from zope.interface.declarations import implements
-from bika.sanbi.permissions import *
-from bika.lims.browser.bika_listing import BikaListingView
-
-from plone.app.layout.globals.interfaces import IViewView
 from plone.app.content.browser.interfaces import IFolderContentsView
+from plone.app.layout.globals.interfaces import IViewView
+from zope.interface.declarations import implements
+
+from bika.lims.browser.bika_listing import BikaListingView
+from bika.sanbi import bikaMessageFactory as _
+from bika.sanbi.permissions import *
 
 
 class ShipmentsView(BikaListingView):
@@ -17,7 +17,8 @@ class ShipmentsView(BikaListingView):
                               'sort_on': 'sortable_title'}
         self.context_actions = {}
         self.title = self.context.translate(_("Shipments"))
-        self.icon = self.portal_url + "/++resource++bika.sanbi.images/shipment_big.png"
+        self.icon = self.portal_url + \
+                    "/++resource++bika.sanbi.images/shipment_big.png"
         self.description = ""
         self.show_sort_column = False
         self.show_select_row = False
@@ -26,28 +27,30 @@ class ShipmentsView(BikaListingView):
 
         self.columns = {
             'ShipmentID': {'title': _('Shipment ID'),
-                      'index': 'sortable_title',
-                      'toggle': True},
+                           'index': 'sortable_title',
+                           'toggle': True},
             'Courier': {'title': _('Courier'),
-                       'toggle': True},
+                        'toggle': True},
             'TrackingURL': {'title': _('Tracking URL'),
-                       'toggle': True},
+                            'toggle': True},
             'ShippingDate': {'title': _('Shipping Date'),
-                       'toggle': True},
+                             'toggle': True},
         }
 
         self.review_states = [
             {
-                'id':'default',
+                'id': 'default',
                 'title': _('All'),
-                'contentFilter':{},
-                'columns': ['ShipmentID', 'Courier', 'TrackingURL', 'ShippingDate']
+                'contentFilter': {},
+                'columns': ['ShipmentID', 'Courier', 'TrackingURL',
+                            'ShippingDate']
             },
             {
                 'id': 'pending',
                 'title': _('Pending'),
                 'contentFilter': {'review_state': 'pending'},
-                'columns': ['ShipmentID', 'Courier', 'TrackingURL', 'ShippingDate']
+                'columns': ['ShipmentID', 'Courier', 'TrackingURL',
+                            'ShippingDate']
             },
         ]
 
@@ -60,18 +63,21 @@ class ShipmentsView(BikaListingView):
                 'icon': '++resource++bika.lims.images/add.png'
             }
         if mtool.checkPermission(ManageShipments, self.context):
-            stat = self.request.get("%s_review_state"%self.form_id, 'default')
+            stat = self.request.get("%s_review_state" % self.form_id, 'default')
             self.show_select_column = stat != 'all'
         return super(ShipmentsView, self).__call__()
 
     def folderitems(self):
         items = super(ShipmentsView, self).folderitems()
         for x in range(len(items)):
-            if not items[x].has_key('obj'): continue
+            if not items[x].has_key('obj'):
+                continue
             obj = items[x]['obj']
             items[x]['ShipmentID'] = obj.getOwnShippingId()
-            items[x]['ShippingDate'] = self.ulocalized_time(obj.getShippingDate())
+            items[x]['ShippingDate'] = self.ulocalized_time(
+                obj.getShippingDate())
             items[x]['Courier'] = obj.getCourier().getName()
             items[x]['replace']['ShipmentID'] = "<a href='%s'>%s</a>" % \
-                (items[x]['url'], obj.getOwnShippingId())
+                                                (items[x]['url'],
+                                                 obj.getOwnShippingId())
         return items

@@ -1,15 +1,16 @@
+import json
+
+from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.utils import _createObjectByType
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone.app.content.browser.interfaces import IFolderContentsView
 from plone.app.layout.globals.interfaces import IViewView
 from zope.interface.declarations import implements
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone.utils import _createObjectByType
-from bika.lims.utils import tmpID
-from bika.lims.browser.bika_listing import BikaListingView
-from bika.sanbi import bikaMessageFactory as _
-from bika.lims.idserver import renameAfterCreation
 
-import json
+from bika.lims.browser.bika_listing import BikaListingView
+from bika.lims.idserver import renameAfterCreation
+from bika.lims.utils import tmpID
+from bika.sanbi import bikaMessageFactory as _
 
 
 class BiospecimensView(BikaListingView):
@@ -125,7 +126,7 @@ class BiospecimensView(BikaListingView):
              'contentFilter': {'review_state': 'stored',
                                'sort_on': 'created',
                                'sort_order': 'reverse'},
-             'transitions': [{'id': 'deactivate'},],
+             'transitions': [{'id': 'deactivate'}, ],
              'columns': ['Title',
                          'Type',
                          'Volume',
@@ -232,7 +233,8 @@ class CreateBiospecimens:
         project = self.context.aq_parent
         uc = getToolByName(project, 'uid_catalog')
         bsc = getToolByName(project, 'bika_setup_catalog')
-        kit = uc(UID=biospecimens[0]['kit'])[0].getObject() if biospecimens else None
+        kit = uc(UID=biospecimens[0]['kit'])[
+            0].getObject() if biospecimens else None
         for b in biospecimens:
             if b['type'] == 'None':
                 message = 'type should be specified!'
@@ -244,7 +246,9 @@ class CreateBiospecimens:
             box = uc(UID=b['box'])[0].getObject()
             positions = box.get_free_positions()
             if not positions:
-                message = "No free position available for \"%s\" in Storage \"%s\"" % (b['title'], box.id)
+                message = "No free position available for \"%s\" in Storage " \
+                          "\"%s\"" % (
+                b['title'], box.id)
                 return json.dumps({'error': message})
 
             # Create biospecimen

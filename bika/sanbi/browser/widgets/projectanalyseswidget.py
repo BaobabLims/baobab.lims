@@ -1,16 +1,19 @@
 from AccessControl import ClassSecurityInfo
+
 from Products.Archetypes.Registry import registerWidget
 from Products.Archetypes.Widget import TypesWidget
 from Products.CMFCore.utils import getToolByName
-from bika.sanbi import bikaMessageFactory as _
-from bika.lims.browser.bika_listing import BikaListingView
 from zope.i18n.locales import locales
+
+from bika.lims.browser.bika_listing import BikaListingView
+from bika.sanbi import bikaMessageFactory as _
 
 
 class ProjectAnalysesView(BikaListingView):
     """bika listing to display Analyses table for an project
        and biospecimen.
     """
+
     def __init__(self, context, request, field_value=[], allow_edit=False):
         super(ProjectAnalysesView, self).__init__(context, request)
         self.catalog = "bika_setup_catalog"
@@ -40,13 +43,13 @@ class ProjectAnalysesView(BikaListingView):
         }
 
         self.review_states = [
-            {'id':'default',
+            {'id': 'default',
              'title': _('All'),
-             'contentFilter':{},
+             'contentFilter': {},
              'columns': ['Title',
                          'Price',
                          ],
-             'transitions': [{'id':'empty'}, ], # none
+             'transitions': [{'id': 'empty'}, ],  # none
              },
         ]
 
@@ -64,7 +67,8 @@ class ProjectAnalysesView(BikaListingView):
 
         items = BikaListingView.folderitems(self)
         for x in range(len(items)):
-            if not items[x].has_key('obj'): continue
+            if not items[x].has_key('obj'):
+                continue
             obj = items[x]['obj']
 
             analyses = [a.UID() for a in self.field_value]
@@ -105,8 +109,8 @@ class ProjectAnalysesView(BikaListingView):
             if after_icons:
                 items[x]['after']['Title'] = after_icons
 
-
         return items
+
 
 class ProjectAnalysesWidget(TypesWidget):
     _properties = TypesWidget._properties.copy()
@@ -120,8 +124,8 @@ class ProjectAnalysesWidget(TypesWidget):
 
     security.declarePublic('process_form')
 
-    def process_form(self, instance, field, form, empty_marker = None, emptyReturnsMarker = False):
-
+    def process_form(self, instance, field, form, empty_marker=None,
+                     emptyReturnsMarker=False):
         service_uids = form.get('uids', None)
 
         return service_uids, {}
@@ -134,9 +138,10 @@ class ProjectAnalysesWidget(TypesWidget):
         field_value = getattr(field, field.accessor)()
         view = ProjectAnalysesView(self,
                                    self.REQUEST,
-                                   field_value = field_value,
-                                   allow_edit = allow_edit)
+                                   field_value=field_value,
+                                   allow_edit=allow_edit)
         return view.contents_table(table_only=True)
+
 
 registerWidget(ProjectAnalysesWidget,
                title='Project Analyses selector',

@@ -1,34 +1,42 @@
-from Products.CMFCore.utils import getToolByName
-from bika.lims import logger
-from bika.lims.browser import BrowserView
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from bika.sanbi import bikaMessageFactory as _
 import os
 import traceback
+
+from Products.CMFCore.utils import getToolByName
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+
+from bika.lims import logger
+from bika.lims.browser import BrowserView
+from bika.sanbi import bikaMessageFactory as _
+
 
 class Sticker(BrowserView):
     """Labels of assembled kits"""
     _TEMPLATES_DIR = 'templates/stickers'
+
     def __call__(self):
         bsc = getToolByName(self.context, 'bika_setup_catalog')
         items = self.request.get('items', '')
         if items:
             self.items = [o.getObject() for o in bsc(id=items.split(","))]
         else:
-            self.items = [self.context,]
+            self.items = [self.context, ]
 
         new_items = []
         for i in self.items:
             if i.portal_type == "Kit":
                 catalog = bsc(portal_type="StockItem")
-                brains = bsc.searchResults({'portal_type': 'Product', 'title': i.getKitTemplate().Title()})
+                brains = bsc.searchResults({'portal_type': 'Product',
+                                            'title': i.getKitTemplate().Title()})
 
                 if len(brains) == 1:
                     new_items += [pi.getObject() for pi in catalog
-                                 if pi.getObject().getProduct().getId() == brains[0].getObject().getId()]
+                                  if
+                                  pi.getObject().getProduct().getId() == brains[
+                                      0].getObject().getId()]
         self.items = new_items
         if not self.items:
-            logger.warning("Cannot print sticker: no items specified in request")
+            logger.warning(
+                "Cannot print sticker: no items specified in request")
             self.request.response.redirect(self.context.absolute_url())
             return
 

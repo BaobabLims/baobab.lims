@@ -1,8 +1,8 @@
-from bika.sanbi import bikaMessageFactory as _
-from bika.lims.browser import BrowserView
-from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+
+from bika.lims.browser import BrowserView
 from bika.lims.browser.bika_listing import BikaListingView
+from bika.sanbi import bikaMessageFactory as _
 from bika.sanbi.config import DIMENSION_OPTIONS, INVENTORY_TYPES
 
 
@@ -91,9 +91,10 @@ class PositionsView(BikaListingView):
 
     def folderitems(self):
         items = BikaListingView.folderitems(self)
-        out_items=[]
+        out_items = []
         for x in range(len(items)):
-            if not items[x].has_key('obj'): continue
+            if not items[x].has_key('obj'):
+                continue
             obj = items[x]['obj']
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                            (items[x]['url'], items[x]['Title'])
@@ -103,6 +104,7 @@ class PositionsView(BikaListingView):
             out_items.append(items[x])
 
         return out_items
+
 
 class InventoryStorageView(BrowserView):
     """
@@ -135,7 +137,8 @@ class InventoryStorageView(BrowserView):
 
         self.absolute_url = context.absolute_url()
         setup = portal.bika_setup
-        self.icon = self.portal_url + "/++resource++bika.sanbi.images/info_big.png"
+        self.icon = self.portal_url + \
+                    "/++resource++bika.sanbi.images/info_big.png"
         # Disable the add new menu item #
         context.setLocallyAllowedTypes(())
 
@@ -154,6 +157,7 @@ class InventoryStorageView(BrowserView):
 
         return self.template()
 
+
 class InventoryStorageEdit(BrowserView):
     """
     """
@@ -170,7 +174,8 @@ class InventoryStorageEdit(BrowserView):
         setup = portal.bika_setup
         form = request.form
 
-        if "submit" in request: return
+        if "submit" in request:
+            return
 
         return self.template()
 

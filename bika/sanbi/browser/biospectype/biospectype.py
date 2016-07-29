@@ -1,8 +1,8 @@
-from bika.lims.jsonapi import load_field_values
-from bika.lims.interfaces import IJSONReadExtender
-from bika.sanbi.interfaces import IBiospecType
 from zope.component import adapts
 from zope.interface import implements
+
+from bika.lims.interfaces import IJSONReadExtender
+from bika.sanbi.interfaces import IBiospecType
 
 
 class JSONReadExtender(object):
@@ -29,4 +29,3 @@ class JSONReadExtender(object):
                             'CategoryTitle': service.getCategory().Title()}
             service_data.append(this_service)
         data['service_data'] = service_data
-

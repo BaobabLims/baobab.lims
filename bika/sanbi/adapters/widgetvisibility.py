@@ -14,8 +14,9 @@ To define rules for showing/hiding fields at runtime, this is the best way.
 For simpler field visibility configuration examine extenders/analysisrequest.py
 where the widget.visible flag is used to control adapters in bika.lims.
 """
-from bika.lims.interfaces import IATWidgetVisibility
 from zope.interface import implements
+
+from bika.lims.interfaces import IATWidgetVisibility
 
 
 class CustomFieldWidgetVisibility(object):
@@ -28,7 +29,7 @@ class CustomFieldWidgetVisibility(object):
         self.context = context
         self.sort = 10
         self.hidden_fields = ['AdHoc', 'Composite', 'InvoiceExclude']
-        self.random = 4 # fair dice roll
+        self.random = 4  # fair dice roll
 
     def __call__(self, context, mode, field, default):
         state = default if default else 'hidden'

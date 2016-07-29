@@ -1,10 +1,12 @@
-from zope.interface import implements
-from bika.lims.browser.bika_listing import BikaListingView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone.app.content.browser.interfaces import IFolderContentsView
 from plone.app.layout.globals.interfaces import IViewView
-from bika.sanbi import bikaMessageFactory as _
+from zope.interface import implements
+
 from bika.lims.browser import BrowserView
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from bika.lims.browser.bika_listing import BikaListingView
+from bika.sanbi import bikaMessageFactory as _
+
 
 class MultimagesView(BikaListingView):
     """
@@ -21,15 +23,18 @@ class MultimagesView(BikaListingView):
             'portal_type': 'Multimage',
         }
         self.context_actions = {_('Add'):
-                                {'url': 'createObject?type_name=Multimage',
-                                 'icon': '++resource++bika.lims.images/add.png'}}
+                                    {'url': 'createObject?type_name=Multimage',
+                                     'icon':
+                                         '++resource++bika.lims.images/add.png'}}
         self.show_table_only = False
         self.show_sort_column = False
         self.show_select_row = False
         self.show_select_column = True
         self.pagesize = 25
         self.form_id = "multimage"
-        self.icon = self.portal_url + "/++resource++bika.lims.images/instrumentcertification_big.png"
+        self.icon = self.portal_url + \
+                    "/++resource++bika.lims.images" \
+                    "/instrumentcertification_big.png"
         self.title = self.context.translate(_("Images"))
         self.description = ""
 
@@ -37,8 +42,8 @@ class MultimagesView(BikaListingView):
             "DocumentID": {'title': _("Document ID"),
                            'index': 'sortable_title'},
             "SmallDesc": {'title': _("Description"),
-                           'index': 'sortable_title'},
-            "DatetimeCreated": {'title':_("Date Creation"),
+                          'index': 'sortable_title'},
+            "DatetimeCreated": {'title': _("Date Creation"),
                                 'toggle': False},
             'FileDownload': {'title': _('File')}
         }
@@ -61,17 +66,23 @@ class MultimagesView(BikaListingView):
             toshow.append(val.UID())
 
         for x in range(len(items)):
-            if not items[x].has_key('obj'): continue
+            if not items[x].has_key('obj'):
+                continue
             obj = items[x]['obj']
             if obj.UID() in toshow:
                 items[x]['replace']['DocumentID'] = "<a href='%s'>%s</a>" % \
-                        (items[x]['url'], items[x]['DocumentID'])
+                                                    (items[x]['url'],
+                                                     items[x]['DocumentID'])
                 items[x]['SmallDesc'] = obj.getSmallDescription()
                 items[x]['FileDownload'] = obj.getFile().filename
-                filename = obj.getFile().filename if obj.getFile().filename != '' else 'Image'
+                filename = obj.getFile().filename if obj.getFile().filename \
+                                                     != '' else 'Image'
                 items[x]['replace']['FileDownload'] = "<a href='%s'>%s</a>" % \
-                                                       (obj.getFile().absolute_url_path(), filename)
-                items[x]['DatetimeCreated'] = self.ulocalized_time(obj.getDatetimeCreated())
+                                                      (
+                                                      obj.getFile().absolute_url_path(),
+                                                      filename)
+                items[x]['DatetimeCreated'] = self.ulocalized_time(
+                    obj.getDatetimeCreated())
                 outitems.append(items[x])
         return outitems
 

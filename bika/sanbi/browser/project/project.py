@@ -1,13 +1,13 @@
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from Products.CMFCore.utils import getToolByName
 from Products.ATContentTypes.lib import constraintypes
-from bika.sanbi import bikaMessageFactory as _
-from bika.sanbi.browser.biospecimens.biospecimens import BiospecimensView
-from bika.sanbi.controlpanel.bika_biospectypes import BiospecTypesView
+from Products.CMFCore.utils import getToolByName
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+
 from bika.lims.browser import BrowserView
 from bika.lims.controlpanel.bika_analysisservices import AnalysisServicesView
+from bika.sanbi import bikaMessageFactory as _
 from bika.sanbi.browser.aliquots.folder_view import AliquotsView
-from bika.sanbi.permissions import AddProject
+from bika.sanbi.browser.biospecimens.biospecimens import BiospecimensView
+from bika.sanbi.controlpanel.bika_biospectypes import BiospecTypesView
 
 
 class ProjectEdit(BrowserView):
@@ -19,7 +19,8 @@ class ProjectEdit(BrowserView):
         self.request = request
 
         super(ProjectEdit, self).__init__(context, request)
-        self.icon = self.portal_url + "/++resource++bika.sanbi.images/project_big.png"
+        self.icon = self.portal_url + \
+                    "/++resource++bika.sanbi.images/project_big.png"
 
     def __call__(self):
         portal = self.portal
@@ -53,6 +54,7 @@ class ProjectEdit(BrowserView):
             if v == visibility:
                 fields.append(field)
         return fields
+
 
 class ProjectAnalysisServicesView(AnalysisServicesView):
     def __init__(self, context, request, uids):
@@ -89,11 +91,12 @@ class ProjectAnalysisServicesView(AnalysisServicesView):
         items = AnalysisServicesView.folderitems(self)
         out_items = []
         for x in range(len(items)):
-            if not items[x].has_key('obj'): continue
+            if not items[x].has_key('obj'):
+                continue
             obj = items[x]['obj']
             items[x]['Price'] = "%s.%02d" % obj.Price
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % (
-                                            items[x]['url'], items[x]['Title'])
+                items[x]['url'], items[x]['Title'])
             out_items.append(items[x])
 
         return out_items
@@ -133,7 +136,8 @@ class ProjectBiospecView(BiospecTypesView):
         items = BiospecTypesView.folderitems(self)
         out_items = []
         for x in range(len(items)):
-            if not items[x].has_key('obj'): continue
+            if not items[x].has_key('obj'):
+                continue
             obj = items[x]['obj']
             items[x]['Description'] = obj.Description()
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
@@ -144,6 +148,7 @@ class ProjectBiospecView(BiospecTypesView):
 
     def __call__(self):
         return super(ProjectBiospecView, self).__call__()
+
 
 class ProjectView(BrowserView):
     """
@@ -164,13 +169,16 @@ class ProjectView(BrowserView):
         # __Collect general data__ #
         self.id = context.getId()
         self.title = context.Title()
-        self.client = "<a href='%s'>%s</a>"%(context.getClient().absolute_url(),
-                                             context.getClient().Title())
+        self.client = "<a href='%s'>%s</a>" % (
+        context.getClient().absolute_url(),
+        context.getClient().Title())
         self.study_type = context.getStudyType()
         self.participants = context.getNumParticipants()
-        self.age_interval = str(context.getAgeLow()) + ' - ' + str(context.getAgeHigh())
+        self.age_interval = str(context.getAgeLow()) + ' - ' + str(
+            context.getAgeHigh())
 
-        biospec_types = ProjectBiospecView(context, request, context.getBiospectypes())
+        biospec_types = ProjectBiospecView(context, request,
+                                           context.getBiospectypes())
         self.bio_table = biospec_types.contents_table()
 
         uids = [o.UID() for o in context.getService()]
@@ -195,7 +203,8 @@ class ProjectBiospecimensView(BiospecimensView):
         items = BiospecimensView.folderitems(self)
         out_items = []
         for x in range(len(items)):
-            if not items[x].has_key('obj'): continue
+            if not items[x].has_key('obj'):
+                continue
             obj = items[x]['obj']
             project = obj.aq_parent
             if project == self.context:
@@ -204,7 +213,8 @@ class ProjectBiospecimensView(BiospecimensView):
                 items[x]['SubjectID'] = obj.getSubjectID()
                 items[x]['Volume'] = obj.getVolume()
                 items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
-                                               (items[x]['url'], items[x]['Title'])
+                                               (items[x]['url'],
+                                                items[x]['Title'])
                 out_items.append(items[x])
 
         return out_items
@@ -219,4 +229,3 @@ class BiospecimenAliquotsView(AliquotsView):
             'url': 'createObject?type_name=Aliquot',
             'icon': '++resource++bika.lims.images/add.png'
         }
-

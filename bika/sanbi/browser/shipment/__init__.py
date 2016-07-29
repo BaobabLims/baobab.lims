@@ -1,3 +1,4 @@
 from shipment import EditView
-from shipment import ShipmentView
 from shipment import PrintView
+from shipment import ShipmentView
+

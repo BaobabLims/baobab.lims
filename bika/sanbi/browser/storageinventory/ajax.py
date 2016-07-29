@@ -1,22 +1,21 @@
-from Products.CMFCore.utils import getToolByName
-from Products.Archetypes import PloneMessageFactory as PMF
-from Products.CMFPlone.utils import _createObjectByType, safe_unicode
-from bika.lims.utils import t, tmpID
-from bika.lims.idserver import renameAfterCreation
-from bika.sanbi import bikaMessageFactory as _
-from Products.Archetypes import public as atapi
-
-from bika.sanbi.interfaces import IInventoryAssignable
-from bika.sanbi.permissions import AddStorageInventory
-from zope.interface import alsoProvides, noLongerProvides
-
-import plone
 import json
 import string
 
+import plone
+from Products.Archetypes import PloneMessageFactory as PMF
+from Products.Archetypes import public as atapi
+from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.utils import _createObjectByType, safe_unicode
+from zope.interface import alsoProvides
+
+from bika.lims.idserver import renameAfterCreation
+from bika.lims.utils import t, tmpID
+from bika.sanbi import bikaMessageFactory as _
+from bika.sanbi.interfaces import IInventoryAssignable
+from bika.sanbi.permissions import AddStorageInventory
+
 
 def ajax_form_error(errors, field=None, message=None):
-
     if not message:
         message = t(PMF('Input is required but no input given.'))
     if field:
@@ -24,6 +23,7 @@ def ajax_form_error(errors, field=None, message=None):
     else:
         error_key = 'Form error'
     errors[error_key] = message
+
 
 class StorageInventorySubmit:
     def __init__(self, context, request):
@@ -53,7 +53,8 @@ class StorageInventorySubmit:
 
         # used to redirect to view template (check it in js)
         storage_url = storage.absolute_url_path()
-        message = _('Storage ${STO} was successfully created/updated.', mapping={'STO': safe_unicode(storage)})
+        message = _('Storage ${STO} was successfully created/updated.',
+                    mapping={'STO': safe_unicode(storage)})
 
         return json.dumps({'success': message, 'url': storage_url})
 
@@ -80,8 +81,10 @@ class StorageInventorySubmit:
         return child
 
     def number_children_add_sub(self, values):
-        old_num_items = self.context.getNumPositions() and self.context.getNumPositions() or 0
-        new_num_items = values.get('NumPositions') and int(values['NumPositions']) or 0
+        old_num_items = self.context.getNumPositions() and \
+                        self.context.getNumPositions() or 0
+        new_num_items = values.get('NumPositions') and int(
+            values['NumPositions']) or 0
 
         if 'NumPositions' not in values.keys():
             return 0, 0
@@ -95,7 +98,8 @@ class StorageInventorySubmit:
 
         return num_children_add, num_children_sub
 
-    def dimension_representation(self, num_add, context_b, values, rows=0, cols=0):
+    def dimension_representation(self, num_add, context_b, values, rows=0,
+                                 cols=0):
         """Compute indices and create children objects
         """
         alphabet = string.uppercase[:26]
@@ -113,7 +117,8 @@ class StorageInventorySubmit:
                     continue
                 index = str(y + 1)
             elif dimension == 's':
-                if x < context_b.get('XAxis', 0) and y < context_b.get('YAxis', 0):
+                if x < context_b.get('XAxis', 0) and y < context_b.get('YAxis',
+                                                                       0):
                     continue
                 index = alphabet[x] + str(y + 1)
             else:
@@ -160,7 +165,7 @@ class StorageInventorySubmit:
 
             for i in range(nx):
                 for j in range(ny):
-                    indices.append(i*x + j)
+                    indices.append(i * x + j)
             positions = []
             for i in range(len(children)):
                 if i in indices:
@@ -182,8 +187,10 @@ class StorageInventorySubmit:
 
     def create_storage(self, values):
         exist = self.context.aq_parent.hasObject(self.context.getId())
-        numr = values.has_key('XAxis') and values.get('XAxis') and int(values['XAxis']) or 1
-        numc = values.has_key('YAxis') and values.get('YAxis') and int(values['YAxis']) or 1
+        numr = values.has_key('XAxis') and values.get('XAxis') and int(
+            values['XAxis']) or 1
+        numc = values.has_key('YAxis') and values.get('YAxis') and int(
+            values['YAxis']) or 1
         context_b = {}
         if not exist:
             num_add, num_sub = self.number_children_add_sub(values)
@@ -198,7 +205,8 @@ class StorageInventorySubmit:
             )
             renameAfterCreation(self.context)
 
-            self.dimension_representation(num_add, context_b, values, rows=numr, cols=numc)
+            self.dimension_representation(num_add, context_b, values, rows=numr,
+                                          cols=numc)
             if self.context.getHasChildren():
                 alsoProvides(self.context, IInventoryAssignable)
                 self.context.reindexObject(idxs=['object_provides'])
@@ -211,10 +219,13 @@ class StorageInventorySubmit:
 
             numr = numr and numr or context_b.get('XAxis', 1)
             numc = numc and numc or context_b.get('YAxis', 1)
-            if num_add and context_b['NumPositions'] < self.context.getNumPositions():
-                self.dimension_representation(num_add, context_b, values, rows=numr, cols=numc)
+            if num_add and context_b[
+                'NumPositions'] < self.context.getNumPositions():
+                self.dimension_representation(num_add, context_b, values,
+                                              rows=numr, cols=numc)
 
-            if num_sub and context_b['NumPositions'] > self.context.getNumPositions():
+            if num_sub and context_b[
+                'NumPositions'] > self.context.getNumPositions():
                 self.delete_children(num_sub, context_b, values)
 
         return self.context, {}
@@ -243,7 +254,8 @@ class InventoryPositionsInfo:
                 if c.getIsOccupied():
                     # get inventory position stock item
                     sid = c.getISID()
-                    brains = catalog.searchResults(portal_type="StockItem", id=sid)
+                    brains = catalog.searchResults(portal_type="StockItem",
+                                                   id=sid)
                     si = brains[0].getObject()
                     product = si.getProductTitle()
                     quantity = si.getProduct().getQuantity()

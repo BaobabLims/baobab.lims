@@ -1,2 +1,3 @@
-from multimage import MultimagesView
 from multimage import MultimageView
+from multimage import MultimagesView
+

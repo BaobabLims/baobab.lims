@@ -1,8 +1,9 @@
-from bika.sanbi import bikaMessageFactory as _
-from bika.lims.browser import BrowserView
-from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from bika.sanbi.controlpanel.bika_storagemanagements import StorageManagementsView
+
+from bika.lims.browser import BrowserView
+from bika.sanbi import bikaMessageFactory as _
+from bika.sanbi.controlpanel.bika_storagemanagements import \
+    StorageManagementsView
 
 
 class StorageView(StorageManagementsView):
@@ -12,22 +13,25 @@ class StorageView(StorageManagementsView):
         self.children = self.context.getChildren()
         super(StorageView, self).__init__(context, request)
 
-    def folderitems(self, full_objects = False):
+    def folderitems(self, full_objects=False):
         items = StorageManagementsView.folderitems(self)
         out_items = []
         for x in range(len(items)):
-            if not items[x].has_key('obj'): continue
+            if not items[x].has_key('obj'):
+                continue
             obj = items[x]['obj']
             if obj in self.children or obj.UID() == self.context.UID():
                 items[x]['StorageUnit'] = obj.aq_parent.Title()
-                items[x]['Shelves'] = obj.getShelves() and int(obj.getShelves()) or 0
+                items[x]['Shelves'] = obj.getShelves() and int(
+                    obj.getShelves()) or 0
                 items[x]['Hierarchy'] = obj.getHierarchy()
                 items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
-                                               (items[x]['url'], items[x]['Title'])
+                                               (items[x]['url'],
+                                                items[x]['Title'])
                 out_items.append(items[x])
 
         return out_items
-    
+
     def __call__(self):
         return super(StorageView, self).__call__()
 
@@ -63,10 +67,14 @@ class StorageManagementView(BrowserView):
         self.table = storage_view.contents_table()
 
         # storage_view = StorageManagementsView(context, request)
-        # TODO: THIS LINE IS VERY IMPORTANT IT ALLOWS TO CALL __call__ IN bika_storagemanagements.py
-        # TODO: THIS ONE IN TURN CALL __call__ OF BikaListingView CLASS IN bika_listing.py AND
-        # TODO: CALL _process_request() WHICH MODIFY self.contentFilter TO ADD FOR EG inactive_state
-        # TODO: IN CASE WE CLICK IN dormant BUTTON OF the active-inactive WORKFLOW.
+        # TODO: THIS LINE IS VERY IMPORTANT IT ALLOWS TO CALL __call__ IN
+        # bika_storagemanagements.py
+        # TODO: THIS ONE IN TURN CALL __call__ OF BikaListingView CLASS IN
+        # bika_listing.py AND
+        # TODO: CALL _process_request() WHICH MODIFY self.contentFilter TO
+        # ADD FOR EG inactive_state
+        # TODO: IN CASE WE CLICK IN dormant BUTTON OF the active-inactive
+        # WORKFLOW.
         # storage_view()
         # storage_view.show_column_toggles = False
         # self.table = storage_view.contents_table()
@@ -81,7 +89,8 @@ class StorageManagementEdit(BrowserView):
 
     def __init__(self, context, request):
         super(StorageManagementEdit, self).__init__(context, request)
-        self.icon = self.portal_url + "/++resource++bika.sanbi.images/freezer_big.png"
+        self.icon = self.portal_url + \
+                    "/++resource++bika.sanbi.images/freezer_big.png"
 
     def __call__(self):
         portal = self.portal
@@ -90,7 +99,8 @@ class StorageManagementEdit(BrowserView):
         setup = portal.bika_setup
         form = request.form
 
-        if "submit" in request: return
+        if "submit" in request:
+            return
 
         return self.template()
 
@@ -133,5 +143,4 @@ class StorageGraph(StorageManagementView):
         request.set('disable_plone.rightcolumn', 1)
 
     def __call__(self):
-
         return self.template()

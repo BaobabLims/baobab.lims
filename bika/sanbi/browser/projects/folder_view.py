@@ -1,12 +1,13 @@
-from Products.CMFCore.utils import getToolByName
-from bika.sanbi import bikaMessageFactory as _
-from bika.sanbi.permissions import *
-from bika.lims.browser.bika_listing import BikaListingView
-
 import json
 
-class ProjectsView(BikaListingView):
+from Products.CMFCore.utils import getToolByName
 
+from bika.lims.browser.bika_listing import BikaListingView
+from bika.sanbi import bikaMessageFactory as _
+from bika.sanbi.permissions import *
+
+
+class ProjectsView(BikaListingView):
     def __init__(self, context, request):
         super(ProjectsView, self).__init__(context, request)
         self.catalog = "bika_catalog"
@@ -14,7 +15,8 @@ class ProjectsView(BikaListingView):
                               'sort_on': 'sortable_title'}
         self.context_actions = {}
         self.title = self.context.translate(_("Projects"))
-        self.icon = self.portal_url + "/++resource++bika.sanbi.images/project_big.png"
+        self.icon = self.portal_url + \
+                    "/++resource++bika.sanbi.images/project_big.png"
         self.description = ""
         self.show_sort_column = False
         self.show_select_row = False
@@ -25,13 +27,13 @@ class ProjectsView(BikaListingView):
             'Title': {'title': _('Project'),
                       'index': 'sortable_title'},
             'getClient': {'title': _('Client'),
-                       'toggle':True},
+                          'toggle': True},
             'getStudyType': {'title': _('Study Type'),
-                             'toggle':True},
+                             'toggle': True},
         }
 
         self.review_states = [
-            {'id':'default',
+            {'id': 'default',
              'title': _('Active'),
              'contentFilter': {'inactive_state': 'active'},
              'transitions': [],
@@ -48,31 +50,32 @@ class ProjectsView(BikaListingView):
                 'icon': '++resource++bika.lims.images/add.png'
             }
         if mtool.checkPermission(ManageProjects, self.context):
-            self.review_states[0]['transitions'].append({'id':'deactivate'})
+            self.review_states[0]['transitions'].append({'id': 'deactivate'})
             self.review_states.append(
-                {'id':'inactive',
+                {'id': 'inactive',
                  'title': _('Dormant'),
                  'contentFilter': {'inactive_state': 'inactive'},
-                 'transitions': [{'id':'activate'}, ],
+                 'transitions': [{'id': 'activate'}, ],
                  'columns': ['Title',
                              'getClient',
                              'getStudyType']})
             self.review_states.append(
-                {'id':'all',
+                {'id': 'all',
                  'title': _('All'),
-                 'contentFilter':{},
-                 'transitions':[{'id':'empty'}],
+                 'contentFilter': {},
+                 'transitions': [{'id': 'empty'}],
                  'columns': ['Title',
                              'getClient',
                              'getStudyType']})
-            stat = self.request.get("%s_review_state"%self.form_id, 'default')
+            stat = self.request.get("%s_review_state" % self.form_id, 'default')
             self.show_select_column = stat != 'all'
         return super(ProjectsView, self).__call__()
 
     def folderitems(self):
         items = super(ProjectsView, self).folderitems()
         for x in range(len(items)):
-            if not items[x].has_key('obj'): continue
+            if not items[x].has_key('obj'):
+                continue
             obj = items[x]['obj']
             items[x]['getClient'] = obj.getClient().Title()
             items[x]['getStudyType'] = obj.getStudyType()

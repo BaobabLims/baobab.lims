@@ -1,19 +1,21 @@
-from Products.CMFCore.utils import getToolByName
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from operator import itemgetter
-from bika.sanbi import bikaMessageFactory as _
-from bika.lims.browser import BrowserView
-from Products.ATContentTypes.lib import constraintypes
-from Products.CMFPlone.utils import _createObjectByType
-from Products.Archetypes.public import BaseFolder
-from DateTime import DateTime
-from bika.lims.utils import to_utf8
-from Products.Archetypes.config import REFERENCE_CATALOG
 import os
 import traceback
+from operator import itemgetter
+
+from DateTime import DateTime
+from Products.ATContentTypes.lib import constraintypes
+from Products.Archetypes.config import REFERENCE_CATALOG
+from Products.Archetypes.public import BaseFolder
+from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.utils import _createObjectByType
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+
+from bika.lims.browser import BrowserView
+from bika.lims.utils import to_utf8
+from bika.sanbi import bikaMessageFactory as _
+
 
 class KitView(BrowserView):
-
     template = ViewPageTemplateFile('templates/kit_view.pt')
     title = _("Kit's components")
 
@@ -33,7 +35,7 @@ class KitView(BrowserView):
         context.setLocallyAllowedTypes(())
         # Collect general data
         self.st_icon = self.portal_url + \
-                    "/++resource++bika.sanbi.images/inventory.png"
+                       "/++resource++bika.sanbi.images/inventory.png"
         self.id = context.getId()
         self.title = context.Title()
         self.kittemplate_title = context.getKitTemplate().Title()
@@ -63,7 +65,8 @@ class KitView(BrowserView):
             'kitID': self.context.getId(),
             'stored': self.context.getQtyStored(),
             'qty': self.context.getQuantity(),
-            'all_stored': self.context.getQuantity() == self.context.getQtyStored()
+            'all_stored': self.context.getQuantity() ==
+                          self.context.getQtyStored()
         }
 
         if 'form.action.addKitAttachment' in self.request:
@@ -76,12 +79,14 @@ class KitView(BrowserView):
 
     def get_product_storage_qtts(self, uid):
         catalog = getToolByName(self.context, "bika_setup_catalog")
-        brains = catalog({'portal_type': 'StorageInventory', 'inactive_state': 'active',
-                          'object_provides': 'bika.sanbi.interfaces.IInventoryAssignable'})
+        brains = catalog(
+            {'portal_type': 'StorageInventory', 'inactive_state': 'active',
+             'object_provides': 'bika.sanbi.interfaces.IInventoryAssignable'})
 
         rc = getToolByName(self.context, REFERENCE_CATALOG)
         references = rc.getBackReferences(uid, relationship="StockItemProduct")
-        stock_items = [ref.getSourceObject().getId() for ref in references if ref.getSourceObject().getIsStored()]
+        stock_items = [ref.getSourceObject().getId() for ref in references if
+                       ref.getSourceObject().getIsStored()]
 
         ret = {}
         for brain in brains:
@@ -98,7 +103,7 @@ class KitView(BrowserView):
 
         results = []
         for k in ret:
-            results.append([k,ret[k]])
+            results.append([k, ret[k]])
 
         return results
 
@@ -110,7 +115,6 @@ class KitView(BrowserView):
             results.append(([item['Product'], item['UID']], storages))
 
         return results
-
 
     def delARAttachment(self):
         """ delete the attachment """
@@ -129,8 +133,9 @@ class KitView(BrowserView):
         ids = [attachment.getId(), ]
         BaseFolder.manage_delObjects(kits, ids, self.request)
 
-        #self.request.RESPONSE.redirect(self.context.absolute_url())
-        self.request.RESPONSE.redirect(self.request.REQUEST.get_header('referer'))
+        # self.request.RESPONSE.redirect(self.context.absolute_url())
+        self.request.RESPONSE.redirect(
+            self.request.REQUEST.get_header('referer'))
 
     def getPreferredCurrencyAbreviation(self):
         return self.context.bika_setup.getCurrency()
@@ -174,7 +179,8 @@ class KitView(BrowserView):
                 'size': fsize,
                 'name': file.filename,
                 'Icon': file.getBestIcon(),
-                'type': att.getAttachmentType().Title() if att.getAttachmentType() else '',
+                'type': att.getAttachmentType().Title() if
+                att.getAttachmentType() else '',
                 'absolute_url': att.absolute_url(),
                 'UID': att.UID(),
             })
@@ -182,9 +188,9 @@ class KitView(BrowserView):
 
 
 class EditView(BrowserView):
-
     template = ViewPageTemplateFile('templates/kit_edit.pt')
-    #field = ViewPageTemplateFile('templates/row_field.pt')
+
+    # field = ViewPageTemplateFile('templates/row_field.pt')
 
     def __call__(self):
         portal = self.portal
@@ -193,10 +199,11 @@ class EditView(BrowserView):
         setup = portal.bika_setup
 
         if 'submitted' in request:
-            #pdb.set_trace()
+            # pdb.set_trace()
             context.setConstrainTypesMode(constraintypes.DISABLED)
-            # This following line does the same as the precedent. Which one is the best?
-            #context.aq_parent.setConstrainTypesMode(constraintypes.DISABLED)
+            # This following line does the same as the precedent. Which one
+            # is the best?
+            # context.aq_parent.setConstrainTypesMode(constraintypes.DISABLED)
             portal_factory = getToolByName(context, 'portal_factory')
             context = portal_factory.doCreate(context, context.id)
             context.processForm()
@@ -220,7 +227,6 @@ class EditView(BrowserView):
 
 
 class PrintView(KitView):
-
     template = ViewPageTemplateFile('templates/print.pt')
     _TEMPLATES_DIR = 'templates/print'
 
@@ -269,8 +275,9 @@ class PrintView(KitView):
         except:
             tbex = traceback.format_exc()
             ktid = self.context.id
-            reptemplate = "<div class='error-print'>%s - %s '%s':<pre>%s</pre></div>" % (
-            ktid, _("Unable to load the template"), template_name, tbex)
+            reptemplate = "<div class='error-print'>%s - %s " \
+                          "'%s':<pre>%s</pre></div>" % (
+                ktid, _("Unable to load the template"), template_name, tbex)
 
         return reptemplate
 
@@ -335,7 +342,8 @@ class PrintView(KitView):
     def getKitInfo(self):
         data = {
             'date_printed': self.ulocalized_time(DateTime(), long_format=1),
-            'date_created': self.ulocalized_time(self.context.created(), long_format=1),
+            'date_created': self.ulocalized_time(self.context.created(),
+                                                 long_format=1),
         }
         data['createdby'] = self._createdby_data()
         data['printedby'] = self._printedby_data()
@@ -356,9 +364,11 @@ class StoreKitAssembly:
         rc = getToolByName(self.context, REFERENCE_CATALOG)
         storage = uc(UID=form['StorageInventory_uid'])[0].getObject()
         brains = bsc(portal_type='StorageInventory', inactive_state='active',
-                     path={'query': "/".join(storage.getPhysicalPath()), 'depth':1})
+                     path={'query': "/".join(storage.getPhysicalPath()),
+                           'depth': 1})
 
-        brains = [brain for brain in brains if not brain.getObject().getIsOccupied()]
+        brains = [brain for brain in brains if
+                  not brain.getObject().getIsOccupied()]
         message = ''
         number = int(form['number-kit'])
         if len(brains) < number:
@@ -369,8 +379,10 @@ class StoreKitAssembly:
         else:
             positions = [brain.getObject() for brain in brains[:number]]
             product_uid = self.context.UID()
-            references = rc.getBackReferences(product_uid, relationship="StockItemProduct")
-            stock_items = [ref.getSourceObject() for ref in references if not ref.getSourceObject().getIsStored()]
+            references = rc.getBackReferences(product_uid,
+                                              relationship="StockItemProduct")
+            stock_items = [ref.getSourceObject() for ref in references if
+                           not ref.getSourceObject().getIsStored()]
             assert len(stock_items) >= len(positions)
             for i in range(len(positions)):
                 position = positions[i]

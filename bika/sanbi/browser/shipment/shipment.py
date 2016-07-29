@@ -1,19 +1,19 @@
-from Products.CMFCore.utils import getToolByName
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from operator import itemgetter, methodcaller
-from bika.sanbi import bikaMessageFactory as _
-from bika.lims.browser import BrowserView
-from Products.ATContentTypes.lib import constraintypes
-from Products.CMFPlone.utils import _createObjectByType
-from Products.Archetypes.public import BaseFolder
-from DateTime import DateTime
-from bika.lims.utils import to_utf8
 import os
 import traceback
 
+from DateTime import DateTime
+from Products.ATContentTypes.lib import constraintypes
+from Products.Archetypes.public import BaseFolder
+from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.utils import _createObjectByType
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+
+from bika.lims.browser import BrowserView
+from bika.lims.utils import to_utf8
+from bika.sanbi import bikaMessageFactory as _
+
 
 class ShipmentView(BrowserView):
-
     template = ViewPageTemplateFile('templates/shipment_view.pt')
     title = _("Shipment Info")
 
@@ -25,13 +25,14 @@ class ShipmentView(BrowserView):
         self.absolute_url = context.absolute_url()
         setup = portal.bika_setup
         # Disable the add new menu item
-        #context.setConstrainTypesMode(1)
-        #context.setLocallyAllowedTypes(())
+        # context.setConstrainTypesMode(1)
+        # context.setLocallyAllowedTypes(())
         # Collect general data
         self.id = context.getId()
         self.title = context.Title()
         self.sender_address = context.getDeliveryAddress()
-        self.header_text = "{0} : {1}".format(context.getProjectID(), context.getOwnShippingId())
+        self.header_text = "{0} : {1}".format(context.getProjectID(),
+                                              context.getOwnShippingId())
         self.from_contact = context.getFromContact()
         self.to_contact = context.getToContact()
         self.study_name = context.getProjectID()
@@ -46,7 +47,6 @@ class ShipmentView(BrowserView):
         self.courier_name = context.getCourier().Title()
 
         self.user = context.getOwner()
-
 
         return self.template()
 
@@ -67,8 +67,9 @@ class ShipmentView(BrowserView):
         ids = [attachment.getId(), ]
         BaseFolder.manage_delObjects(ships, ids, self.request)
 
-        #self.request.RESPONSE.redirect(self.context.absolute_url())
-        self.request.RESPONSE.redirect(self.request.REQUEST.get_header('referer'))
+        # self.request.RESPONSE.redirect(self.context.absolute_url())
+        self.request.RESPONSE.redirect(
+            self.request.REQUEST.get_header('referer'))
 
     def getPreferredCurrencyAbreviation(self):
         return self.context.bika_setup.getCurrency()
@@ -112,7 +113,8 @@ class ShipmentView(BrowserView):
                 'size': fsize,
                 'name': file.filename,
                 'Icon': file.getBestIcon(),
-                'type': att.getAttachmentType().Title() if att.getAttachmentType() else '',
+                'type': att.getAttachmentType().Title() if
+                att.getAttachmentType() else '',
                 'absolute_url': att.absolute_url(),
                 'UID': att.UID(),
             })
@@ -120,7 +122,6 @@ class ShipmentView(BrowserView):
 
 
 class EditView(BrowserView):
-
     template = ViewPageTemplateFile('templates/shipment_edit.pt')
     field = ViewPageTemplateFile('templates/row_field.pt')
 
@@ -131,10 +132,12 @@ class EditView(BrowserView):
         setup = portal.bika_setup
 
         if 'submitted' in request:
-            #pdb.set_trace()
+            # pdb.set_trace()
             context.setConstrainTypesMode(constraintypes.DISABLED)
-            # This following line does the same as precedent which one is the best?
-            #context.aq_parent.setConstrainTypesMode(constraintypes.DISABLED)
+            # This following line does the same as precedent which one is the
+            #  best?
+
+            # context.aq_parent.setConstrainTypesMode(constraintypes.DISABLED)
             portal_factory = getToolByName(context, 'portal_factory')
             context = portal_factory.doCreate(context, context.id)
             context.processForm()
@@ -158,7 +161,6 @@ class EditView(BrowserView):
 
 
 class PrintView(ShipmentView):
-
     template = ViewPageTemplateFile('templates/print.pt')
     _TEMPLATES_DIR = 'templates/print'
 
@@ -170,13 +172,14 @@ class PrintView(ShipmentView):
         self.absolute_url = context.absolute_url()
         setup = portal.bika_setup
         # Disable the add new menu item
-        #context.setConstrainTypesMode(1)
-        #context.setLocallyAllowedTypes(())
+        # context.setConstrainTypesMode(1)
+        # context.setLocallyAllowedTypes(())
         # Collect general data
         self.id = context.getId()
         self.title = context.Title()
         self.sender_address = context.getDeliveryAddress()
-        self.header_text = "{0} : {1}".format(context.getProjectID(), context.getOwnShippingId())
+        self.header_text = "{0} : {1}".format(context.getProjectID(),
+                                              context.getOwnShippingId())
         self.from_contact = context.getFromContact()
         self.to_contact = context.getToContact()
         self.study_name = context.getProjectID()
@@ -191,7 +194,6 @@ class PrintView(ShipmentView):
         self.courier_name = context.getCourier().Title()
 
         self.user = context.getOwner()
-
 
         return self.template()
 
@@ -208,7 +210,8 @@ class PrintView(ShipmentView):
     def renderKTemplate(self):
         templates_dir = self._TEMPLATES_DIR
         template_name = 'kit_print.pt'
-        self.header_text = "{0} : {1}".format(self.context.getProjectID(), self.context.getOwnShippingId())
+        self.header_text = "{0} : {1}".format(self.context.getProjectID(),
+                                              self.context.getOwnShippingId())
         embed = ViewPageTemplateFile(os.path.join(templates_dir, template_name))
         reptemplate = ""
         try:
@@ -216,8 +219,9 @@ class PrintView(ShipmentView):
         except:
             tbex = traceback.format_exc()
             ktid = self.context.id
-            reptemplate = "<div class='error-print'>%s - %s '%s':<pre>%s</pre></div>" % (
-            ktid, _("Unable to load the template"), template_name, tbex)
+            reptemplate = "<div class='error-print'>%s - %s " \
+                          "'%s':<pre>%s</pre></div>" % (
+                ktid, _("Unable to load the template"), template_name, tbex)
 
         return reptemplate
 
@@ -282,7 +286,8 @@ class PrintView(ShipmentView):
     def getKitInfo(self):
         data = {
             'date_printed': self.ulocalized_time(DateTime(), long_format=1),
-            'date_created': self.ulocalized_time(self.context.created(), long_format=1),
+            'date_created': self.ulocalized_time(self.context.created(),
+                                                 long_format=1),
         }
         data['createdby'] = self._createdby_data()
         data['printedby'] = self._printedby_data()

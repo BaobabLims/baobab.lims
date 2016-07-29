@@ -1,9 +1,11 @@
 from AccessControl import ClassSecurityInfo
-from Products.Archetypes.Widget import TypesWidget
+
 from Products.Archetypes.Registry import registerWidget
+from Products.Archetypes.Widget import TypesWidget
+from Products.CMFCore.utils import getToolByName
+
 from bika.lims.browser.bika_listing import BikaListingView
 from bika.sanbi import bikaMessageFactory as _
-from Products.CMFCore.utils import getToolByName
 
 
 class ProductSuppliersView(BikaListingView):
@@ -29,10 +31,10 @@ class ProductSuppliersView(BikaListingView):
 
         self.columns = {
             'Name': {'title': _('Name'),
-                      'index': 'sortable_title',
-                      'sortable': False,},
+                     'index': 'sortable_title',
+                     'sortable': False,},
             'Website': {'title': _('Website'),
-                      'sortable': False,},
+                        'sortable': False,},
         }
 
         self.review_states = [
@@ -57,7 +59,8 @@ class ProductSuppliersView(BikaListingView):
 
         items = BikaListingView.folderitems(self)
         for x in range(len(items)):
-            if not items[x].has_key('obj'): continue
+            if not items[x].has_key('obj'):
+                continue
             obj = items[x]['obj']
 
             suppliers = [a.UID() for a in self.field_value]
@@ -83,7 +86,8 @@ class ProductSuppliersWidget(TypesWidget):
 
     security.declarePublic('process_form')
 
-    def process_form(self, instance, field, form, empty_marker=None, emptyReturnsMarker=False):
+    def process_form(self, instance, field, form, empty_marker=None,
+                     emptyReturnsMarker=False):
         service_uids = form.get('uids', None)
 
         return service_uids, {}
@@ -95,9 +99,9 @@ class ProductSuppliersWidget(TypesWidget):
         """
         field_value = getattr(field, field.accessor)()
         view = ProductSuppliersView(self,
-                                   self.REQUEST,
-                                   field_value=field_value,
-                                   allow_edit=allow_edit)
+                                    self.REQUEST,
+                                    field_value=field_value,
+                                    allow_edit=allow_edit)
         return view.contents_table(table_only=True)
 
 

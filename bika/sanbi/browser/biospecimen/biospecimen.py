@@ -1,23 +1,26 @@
-from bika.lims import bikaMessageFactory as _
+import json
+
+from Products.ATContentTypes.lib import constraintypes
+from Products.CMFCore.utils import getToolByName
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone.app.content.browser.interfaces import IFolderContentsView
 from plone.app.layout.globals.interfaces import IViewView
 from zope.interface import implements
-from bika.sanbi.browser.multimage import MultimagesView
+
+from bika.lims import bikaMessageFactory as _
 from bika.lims.browser import BrowserView
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from Products.ATContentTypes.lib import constraintypes
-from Products.CMFCore.utils import getToolByName
-import json
+from bika.sanbi.browser.multimage import MultimagesView
+
 
 class BiospecimenEdit(BrowserView):
     template = ViewPageTemplateFile('templates/biospecimen_edit.pt')
     title = _("Biospecimen Add/Edit")
 
     def __init__(self, context, request):
+        super(BiospecimenEdit, self).__init__(context, request)
         self.context = context
         self.request = request
 
-        super(BiospecimenEdit, self).__init__(context, request)
         self.icon = self.portal_url + \
                     "/++resource++bika.sanbi.images/biospecimen_big.png"
 
@@ -55,6 +58,7 @@ class BiospecimenEdit(BrowserView):
         display_list = list(self.context.getStorageUnits().items())
         return display_list
 
+
 class AjaxBoxPositions:
     def __init__(self, context, request):
         self.context = context
@@ -66,17 +70,20 @@ class AjaxBoxPositions:
         bsc = getToolByName(self.context, 'bika_setup_catalog')
         brains = uc(UID=form['uid'])
         box = brains[0].getObject()
-        brains = brains = bsc.searchResults(
-                        portal_type='StorageLocation',
-                        inactive_state='active',
-                        sort_on='sortable_title',
-                        path={'query': "/".join(box.getPhysicalPath()), 'level': 0})
+        brains = bsc.searchResults(
+            portal_type='StorageLocation',
+            inactive_state='active',
+            sort_on='sortable_title',
+            path={'query': "/".join(box.getPhysicalPath()), 'level': 0})
 
-        message = 'No free position in stock. Please select another container.' if not len(brains) else ''
+        message = 'No free position in stock. Please select another ' \
+                  'container.' if not len(
+            brains) else ''
         if message:
             return json.dumps({'error': message})
 
         return json.dumps({'uid': brains[0].UID, 'address': brains[0].title})
+
 
 class BiospecimenMultimageView(MultimagesView):
     implements(IFolderContentsView, IViewView)

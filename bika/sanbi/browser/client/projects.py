@@ -1,7 +1,5 @@
 from bika.lims import bikaMessageFactory as _
 from bika.lims.browser.bika_listing import BikaListingView
-from bika.lims.permissions import *
-from Products.CMFCore.utils import getToolByName
 
 from bika.sanbi.browser.projects import ProjectsView
 
@@ -18,11 +16,11 @@ class ClientProjectsView(ProjectsView):
             'Title': {'title': _('Project'),
                       'index': 'sortable_title'},
             'getStudyType': {'title': _('Study Type'),
-                             'toggle':True},
+                             'toggle': True},
         }
 
         self.review_states = [
-            {'id':'default',
+            {'id': 'default',
              'title': _('Active'),
              'contentFilter': {'inactive_state': 'active'},
              'transitions': [],
@@ -41,4 +39,3 @@ class ClientProjectsView(ProjectsView):
                 "<a href='%s'>%s</a>" % (items[x]['url'], items[x]['Title'])
 
         return items
-
