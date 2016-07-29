@@ -11,7 +11,6 @@ class Empty:
 
 
 class BikaCustomGenerator:
-
     def setupPortalContent(self, portal):
         # remove undesired content objects
         for obj_id in ('kits',
@@ -50,6 +49,7 @@ class BikaCustomGenerator:
             except:
                 logger.warning("Could not create metadata %s in catalog %s" %
                                (col, cat))
+
         # _______________________________#
         #          BIKA_CATALOG          #
         # _______________________________#
@@ -93,9 +93,7 @@ class BikaCustomGenerator:
         if bsc is None:
             logger.warning('Could not find the bika_analysis_catalog tool.')
             return
-        # Add indexes and metadata columns here
-
-
+            # Add indexes and metadata columns here
 
     def setupPermissions(self, portal):
         """ Set up some suggested role to permission mappings.
@@ -104,15 +102,19 @@ class BikaCustomGenerator:
         # Root permissions
         mp = portal.manage_permission
         mp(AddMultimage, ['Manager', 'LabManager', 'LabClerk'], 1)
+
+        # kits
         mp = portal.kits.manage_permission
-        mp(AddKit, ['Manager', 'Owner'], 1)
-        mp(ManageKits, ['Manager', 'Owner'], 1)
+        mp(AddKit, ['Manager', 'LabManager', 'Owner'], 1)
+        mp(ManageKits, ['Manager', 'LabManager', 'Owner'], 1)
         portal.kits.reindexObject()
 
+        # shipments
         mp = portal.shipments.manage_permission
-        mp(AddShipment, ['Manager', 'Owner'], 1)
-        mp(ManageShipments, ['Manager', 'Owner'], 1)
+        mp(AddShipment, ['Manager', 'LabManager', 'Owner'], 1)
+        mp(ManageShipments, ['Manager', 'LabManager', 'Owner'], 1)
         portal.shipments.reindexObject()
+
 
 def setupCustomVarious(context):
     """ Setup Bika site structure """
