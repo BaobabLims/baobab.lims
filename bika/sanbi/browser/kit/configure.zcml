@@ -6,14 +6,6 @@
 
     <browser:page
       for="bika.sanbi.interfaces.IKit"
-      name="base_edit"
-      class="bika.sanbi.browser.kit.EditView"
-      permission="cmf.ModifyPortalContent"
-      layer="bika.lims.interfaces.IBikaLIMS"
-    />
-
-    <browser:page
-      for="bika.sanbi.interfaces.IKit"
       name="base_view"
       class="bika.sanbi.browser.kit.KitView"
       permission="cmf.ModifyPortalContent"
@@ -29,60 +21,5 @@
     />
 
     <!-- Ajax signatures -->
-    <browser:page
-      for="bika.sanbi.interfaces.IKit"
-      name="computeNumberKits"
-      class="bika.sanbi.browser.kit.ajax.ComputeNumberKits"
-      permission="zope.Public"
-      layer="bika.lims.interfaces.IBikaLIMS"
-    />
-
-    <browser:page
-      for="bika.sanbi.interfaces.IKit"
-      name="updateStockItems"
-      class="bika.sanbi.browser.kit.ajax.UpdateStockItems"
-      permission="zope.Public"
-      layer="bika.lims.interfaces.IBikaLIMS"
-    />
-
-    <browser:page
-      for="bika.sanbi.interfaces.IKit"
-      name="objectExists"
-      class="bika.sanbi.browser.kit.ajax.ObjectExists"
-      permission="zope.Public"
-      layer="bika.lims.interfaces.IBikaLIMS"
-    />
-
-    <browser:page
-      for="bika.sanbi.interfaces.IKit"
-      name="stickers"
-      class="bika.sanbi.browser.kit.stickers.Sticker"
-      permission="zope2.View"
-      layer="bika.lims.interfaces.IBikaLIMS"
-    />
-
-    <browser:page
-      for="bika.sanbi.interfaces.IKit"
-      name="fetch_stock_prds"
-      class=".ajax.AjaxFetchStockProducts"
-      permission="zope2.View"
-      layer="bika.lims.interfaces.IBikaLIMS"
-    />
-
-    <browser:page
-      for="bika.sanbi.interfaces.IKit"
-      name="available_stock"
-      class=".ajax.AjaxAvailableStock"
-      permission="zope2.View"
-      layer="bika.lims.interfaces.IBikaLIMS"
-    />
-
-    <browser:page
-      for="bika.sanbi.interfaces.IKit"
-      name="store_kit"
-      class=".kit.StoreKitAssembly"
-      permission="zope2.View"
-      layer="bika.lims.interfaces.IBikaLIMS"
-    />
 
 </configure>

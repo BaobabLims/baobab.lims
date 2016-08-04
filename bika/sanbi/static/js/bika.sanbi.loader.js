@@ -15,8 +15,6 @@ window.bika.sanbi.controllers =  {
     
     ".template-ar_add #analysisrequest_edit_form":
         ['CustomAnalysisRequestAddView'],
-    ".template-base_edit #kitassembly_edit_form":
-        ['CustomKitAddView'],
     "#kit-printview-wrapper":
         ['KitPrintView'],
     ".template-base_edit #storagemanage_edit":
