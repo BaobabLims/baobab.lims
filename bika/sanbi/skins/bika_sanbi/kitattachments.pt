@@ -1,0 +1,98 @@
+<html
+   xmlns="http://www.w3.org/1999/xhtml"
+   i18n:domain="dida">
+   <body>
+
+        <!-- Used on AR views to render the collapsing fieldset with Attachments inside -->
+        <div class="attachments"
+         metal:define-macro="attachments">
+            <dl class="collapsible collapsedOnLoad">
+            <dt class="attachments collapsibleHeader">
+            <img src='++resource++bika.lims.images/attachment.png'
+              title='Attachment'
+              i18n:attributes="title"/>
+            <span i18n:translate="">Attachments</span>
+            </dt>
+            <dd class="collapsibleContent" style="margin-bottom:0;">
+            <table class="attachments" style="margin-bottom:0;">
+              <tr>
+                 <td tal:define="updateable python: review_state in ('pending', 'completed', 'stored')"
+                    tal:condition="python:updateable and (update_attachments or add_attachments)">
+                    <metal:block use-macro="here/kitattachments/macros/attachments_update"/>
+                 </td>
+                 <td style="padding-left:2em;">
+                    <metal:block use-macro="here/kitattachments/macros/attachments_list"/>
+                 </td>
+              </tr>
+            </table>
+            </dd>
+            </dl>
+        </div>
+
+        <div metal:define-macro="attachments_update">
+         <form tal:attributes="action view/absolute_url" method="post" name="add_attachment"
+            enctype="multipart/form-data">
+            <div>
+               <input type="file" name="AttachmentFile_file" size="30"
+                  onchange="string:document.getElementById('addKitButton').disabled=false"/>
+            </div>
+
+            <div>
+               <span i18n:translate="">Keywords</span>
+            </div>
+            <div>
+               <input size="40" name="AttachmentKeys"/>
+            </div>
+            <input disabled
+               class="context"
+               id="addKitButton"
+               type="submit"
+               name="form.action.addKitAttachment"
+               value="Add"
+               i18n:attributes="value"/>
+         </form>
+      </div>
+
+        <div metal:define-macro="attachments_list"
+         class="attachments_list"
+         tal:define="deleteable python:delete_attachments and review_state in  ['pending', 'completed','stored']">
+         <metal:block tal:define="dummy python:request.RESPONSE.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, post-check=0, pre-check=0')" />
+        <table class="invoice-items items">
+            <tr>
+                <th style='text-align:left;' i18n:translate=''>&nbsp;</th>
+                <th style='text-align:left;' i18n:translate=''>name</th>
+                <th style='text-align:left;' i18n:translate=''>size</th>
+                <th style='text-align:left;' i18n:translate=''>keywords</th>
+            </tr>
+            <tr tal:repeat="attachment attachments">
+                <form tal:attributes="action view/absolute_url" method="post" name="list_attachment">
+                   <td  style='text-align:left;'>
+                      <input
+                          class="delAttachmentButton"
+                          type="submit"
+                          name="form.action.delARAttachment"
+                          value=""
+                          title="Delete attachment"
+                          i18n:attributes="title"
+                          tal:condition="deleteable"/>
+                      <input type="hidden" name="Attachment" value=""
+                          tal:attributes="value attachment/UID"/>
+                    </td>
+
+                    <td  style='text-align:left;'>
+                      <img tal:condition="icon"
+                      tal:define="icon attachment/Icon | nothing;"
+                      tal:attributes="src string:${here/portal_url}/$icon"/>
+                      <a title="Click to download"
+                         tal:attributes="href string:${attachment/absolute_url}/at_download/AttachmentFile"
+                         tal:content="attachment/name">name</a>
+                    </td>
+
+                    <td  style='text-align:left;' tal:content="attachment/size">size</td>
+                    <td  style='text-align:left;' tal:content="attachment/keywords">keywords</td>
+                </form>
+            </tr>
+        </table>
+      </div>
+   </body>
+</html>
