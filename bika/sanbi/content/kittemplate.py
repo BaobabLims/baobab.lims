@@ -71,17 +71,6 @@ schema = BikaSchema.copy() + Schema((
             visible = {'edit':'hidden', }
         ),
     ),
-    ReferenceField('Category',
-        required=1,
-        vocabulary='get_kit_category',
-        allowed_types=('ProductCategory',),
-        relationship='KitCategory',
-        widget=SelectionWidget(
-           format='select',
-           label=_("Product Category"),
-           description=_(""),
-        ),
-    ),
 ))
 
 schema['description'].schemata = 'default'
@@ -99,14 +88,9 @@ class KitTemplate(BaseContent):
         from bika.lims.idserver import renameAfterCreation
         renameAfterCreation(self)
 
-    security.declarePublic('getCategories')
-    def getCategories(self):
-        bsc = getToolByName(self, 'bika_setup_catalog')
-        deps = []
-        for d in bsc(portal_type='ProductCategory',
-                     inactive_state='active'):
-            deps.append((d.UID, d.Title))
-        return DisplayList(deps)
+    security.declarePublic('kit_template_components')
+    def kit_template_components(self):
+        products = self.getProductList()
 
     security.declarePublic('getDefaultVAT')
     def getDefaultVAT(self):
@@ -123,7 +107,7 @@ class KitTemplate(BaseContent):
         """
         if self.kittemplate_lineitems:
             return sum(
-                [(Decimal(obj['Quantity']) * Decimal(obj['Price'])) for obj in self.kittemplate_lineitems])
+                [(Decimal(obj['quantity']) * Decimal(obj['price'])) for obj in self.kittemplate_lineitems])
         return 0
 
     security.declareProtected(View, 'getTotal')
@@ -132,8 +116,8 @@ class KitTemplate(BaseContent):
         """
         total = 0
         for lineitem in self.kittemplate_lineitems:
-            total += Decimal(lineitem['Quantity']) * \
-                     Decimal(lineitem['Price']) * \
+            total += Decimal(lineitem['quantity']) * \
+                     Decimal(lineitem['price']) * \
                      ((Decimal(lineitem['VAT']) /100) + 1)
         return str(total)
 
@@ -162,14 +146,24 @@ class KitTemplate(BaseContent):
         #return price.quantize(Decimal('0.00'))
         return str(price)
 
-    security.declarePublic('get_kit_category')
-    def get_kit_category(self):
-        catalog = getToolByName(self, 'bika_setup_catalog')
-        categories = []
-        brains = catalog.searchResults(portal_type="ProductCategory")
-        for brain in brains:
-            categories.append([brain.UID, brain.title])
-        categories.sort(lambda x, y: cmp(x[1].lower(), y[1].lower()))
-        return DisplayList(categories)
+    security.declarePublic('kit_components')
+    def kit_components(self):
+        """Extract information of products in kit template. These information are in kit_view.pt
+        """
+        catalog = getToolByName(self, 'uid_catalog')
+        product_refs = self.getProductList()
+        self.kittemplate_lineitems = []
+        for product_ref in product_refs:
+            brains = catalog(portal_type='Product', UID=product_ref['product_uid'])
+            product = brains[0].getObject()
+            self.kittemplate_lineitems.append({
+                'title': product.Title(),
+                'price': product.getPrice(),
+                'VAT': product.getVAT(),
+                'quantity': product_ref['quantity'],
+                'total_price': '%.2f' % (float(product.getPrice()) * float(product_ref['quantity']))
+            })
+
+        return self.kittemplate_lineitems
 
 registerType(KitTemplate, config.PROJECTNAME)
