@@ -38,37 +38,15 @@ class KitView(BrowserView):
                        "/++resource++bika.sanbi.images/inventory.png"
         self.id = context.getId()
         self.title = context.Title()
-        self.kittemplate_title = context.getKitTemplate().Title()
-        self.quantity = context.getQuantity()
-
+        self.project = context.getProject().Title()
+        kit_template = context.getKitTemplate()
+        self.kit_template_title = kit_template.Title()
+        self.items = kit_template.kit_components()
         self.subtotal = '%.2f' % context.getKitTemplate().getSubtotal()
         self.vat = '%.2f' % context.getKitTemplate().getVATAmount()
         self.total = '%.2f' % float(context.getKitTemplate().getTotal())
 
-        items = context.getKitTemplate().kittemplate_lineitems
-        self.items = []
-        for item in items:
-            prodtitle = item['Product']
-            price = float(item['Price'])
-            vat = float(item['VAT'])
-            qty = float(item['Quantity'])
-            self.items.append({
-                'title': prodtitle,
-                'price': price,
-                'vat': vat,
-                'quantity': qty,
-                'totalprice': '%.2f' % (price * qty)
-            })
         self.items = sorted(self.items, key=itemgetter('title'))
-
-        self.kit_storage = {
-            'kitID': self.context.getId(),
-            'stored': self.context.getQtyStored(),
-            'qty': self.context.getQuantity(),
-            'all_stored': self.context.getQuantity() ==
-                          self.context.getQtyStored()
-        }
-
         if 'form.action.addKitAttachment' in self.request:
             self.addKitAttachment()
         elif 'form.action.delARAttachment' in self.request:
@@ -76,45 +54,6 @@ class KitView(BrowserView):
 
         # Render the template
         return self.template()
-
-    def get_product_storage_qtts(self, uid):
-        catalog = getToolByName(self.context, "bika_setup_catalog")
-        brains = catalog(
-            {'portal_type': 'StorageInventory', 'inactive_state': 'active',
-             'object_provides': 'bika.sanbi.interfaces.IInventoryAssignable'})
-
-        rc = getToolByName(self.context, REFERENCE_CATALOG)
-        references = rc.getBackReferences(uid, relationship="StockItemProduct")
-        stock_items = [ref.getSourceObject().getId() for ref in references if
-                       ref.getSourceObject().getIsStored()]
-
-        ret = {}
-        for brain in brains:
-            ret[brain.title] = [brain.UID, 0]
-
-        for si in stock_items:
-            brains = catalog({'portal_type': 'StorageInventory',
-                              'inactive_state': 'active',
-                              'getISID': si})
-
-            if brains:
-                storage = brains[0].getObject().aq_parent
-                ret[storage.title][1] += 1
-
-        results = []
-        for k in ret:
-            results.append([k, ret[k]])
-
-        return results
-
-    def storage_products(self):
-        results = []
-        items = self.context.getKitTemplate().kittemplate_lineitems
-        for item in items:
-            storages = self.get_product_storage_qtts(item['UID'])
-            results.append(([item['Product'], item['UID']], storages))
-
-        return results
 
     def delARAttachment(self):
         """ delete the attachment """
@@ -185,45 +124,6 @@ class KitView(BrowserView):
                 'UID': att.UID(),
             })
         return attachments
-
-
-class EditView(BrowserView):
-    template = ViewPageTemplateFile('templates/kit_edit.pt')
-
-    # field = ViewPageTemplateFile('templates/row_field.pt')
-
-    def __call__(self):
-        portal = self.portal
-        request = self.request
-        context = self.context
-        setup = portal.bika_setup
-
-        if 'submitted' in request:
-            # pdb.set_trace()
-            context.setConstrainTypesMode(constraintypes.DISABLED)
-            # This following line does the same as the precedent. Which one
-            # is the best?
-            # context.aq_parent.setConstrainTypesMode(constraintypes.DISABLED)
-            portal_factory = getToolByName(context, 'portal_factory')
-            context = portal_factory.doCreate(context, context.id)
-            context.processForm()
-
-            obj_url = context.absolute_url_path()
-            request.response.redirect(obj_url)
-            return
-
-        return self.template()
-
-    def get_fields_with_visibility(self, visibility, mode=None):
-        mode = mode if mode else 'edit'
-        schema = self.context.Schema()
-        fields = []
-        for field in schema.fields():
-            isVisible = field.widget.isVisible
-            v = isVisible(self.context, mode, default='invisible', field=field)
-            if v == visibility:
-                fields.append(field)
-        return fields
 
 
 class PrintView(KitView):
@@ -350,52 +250,3 @@ class PrintView(KitView):
         data['laboratory'] = self._lab_data()
 
         return data
-
-
-class StoreKitAssembly:
-    def __init__(self, context, request):
-        self.context = context
-        self.request = request
-
-    def __call__(self):
-        form = self.request.form
-        uc = getToolByName(self.context, 'uid_catalog')
-        bsc = getToolByName(self.context, 'bika_setup_catalog')
-        rc = getToolByName(self.context, REFERENCE_CATALOG)
-        storage = uc(UID=form['StorageInventory_uid'])[0].getObject()
-        brains = bsc(portal_type='StorageInventory', inactive_state='active',
-                     path={'query': "/".join(storage.getPhysicalPath()),
-                           'depth': 1})
-
-        brains = [brain for brain in brains if
-                  not brain.getObject().getIsOccupied()]
-        message = ''
-        number = int(form['number-kit'])
-        if len(brains) < number:
-            message = "No sufficient free positions availble."
-
-        if message:
-            self.context.plone_utils.addPortalMessage(_(message), 'error')
-        else:
-            positions = [brain.getObject() for brain in brains[:number]]
-            product_uid = self.context.UID()
-            references = rc.getBackReferences(product_uid,
-                                              relationship="StockItemProduct")
-            stock_items = [ref.getSourceObject() for ref in references if
-                           not ref.getSourceObject().getIsStored()]
-            assert len(stock_items) >= len(positions)
-            for i in range(len(positions)):
-                position = positions[i]
-                stock_item = stock_items[i]
-                stock_item.setStorageLevelID(position.getId())
-                stock_item.setIsStored(True)
-                position.setISID(stock_item.getId())
-                position.setIsOccupied(True)
-                # Decrement number of available children of parent
-                nac = position.aq_parent.getNumberOfAvailableChildren()
-                position.aq_parent.setNumberOfAvailableChildren(nac - 1)
-                # set number of kit stored
-                self.context.setQtyStored(self.context.getQtyStored() + 1)
-
-        self.request.response.redirect(self.context.absolute_url_path())
-        return

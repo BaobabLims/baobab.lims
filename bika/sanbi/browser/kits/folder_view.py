@@ -27,15 +27,12 @@ class KitsView(BikaListingView):
         self.pagesize = 50
 
         self.columns = {
-            'Prefix': {'title': _('Kit ID'),
-                       'index': 'sortable_title',
-                       'toggle': True},
+            'Title': {'title': _('Kit Name'),
+                      'index': 'sortable_title'},
+            'Project': {'title': _('Project'),
+                            'toggle': True},
             'kitTemplate': {'title': _('Kit template'),
                             'toggle': True},
-            'quantity': {'title': _('Quantity'),
-                         'toggle': True},
-            'expiryDate': {'title': _('Expiry Date'),
-                           'toggle': False},
         }
 
         self.review_states = [
@@ -43,59 +40,69 @@ class KitsView(BikaListingView):
                 'id': 'default',
                 'title': _('All'),
                 'contentFilter': {},
-                'columns': ['Prefix', 'kitTemplate', 'quantity', 'expiryDate']
+                'columns': [
+                    'Title',
+                    'Project',
+                    'kitTemplate',
+                ]
             },
             {
                 'id': 'pending',
                 'title': _('Pending'),
                 'contentFilter': {'review_state': 'pending'},
-                # 'transitions': [{'id':'complete'}, ],
-                'columns': ['Prefix', 'kitTemplate', 'quantity', 'expiryDate']
+                # 'transitions': [{'id', 'complete'}],
+                'columns': [
+                    'Title',
+                    'Project',
+                    'kitTemplate',
+                ]
             },
         ]
 
     def __call__(self):
         mtool = getToolByName(self.context, 'portal_membership')
-        if mtool.checkPermission(AddKit, self.context):
-            self.context_actions[_('Add')] = {
-                'url': 'createObject?type_name=Kit',
-                'icon': '++resource++bika.lims.images/add.png'
-            }
+        # if mtool.checkPermission(AddKit, self.context):
+        #     self.context_actions[_('Add')] = {
+        #         'url': 'createObject?type_name=Kit',
+        #         'icon': '++resource++bika.lims.images/add.png'
+        #     }
         if mtool.checkPermission(ManageKits, self.context):
-            # self.review_states[0]['transitions'].append({'id':'deactivate'})
             self.review_states.append(
                 {
                     'id': 'completed',
                     'title': _('Completed'),
                     'contentFilter': {'review_state': 'completed'},
-                    # 'transitions': [{'id':'store'}, ],
-                    'columns': ['Prefix', 'kitTemplate', 'quantity',
-                                'expiryDate']
+                    'transitions': [{'id': 'store'}],
+                    'columns': [
+                        'Title',
+                        'Project',
+                        'kitTemplate',
+                    ]
                 })
             self.review_states.append(
                 {
                     'id': 'stored',
                     'title': _('Stored'),
                     'contentFilter': {'review_state': 'stored'},
-                    # 'transitions': '',
-                    'columns': ['Prefix', 'kitTemplate', 'quantity',
-                                'expiryDate']
+                    'columns': [
+                        'Title',
+                        'Project',
+                        'kitTemplate',
+                    ]
                 })
-            # self.review_states.append() # remove it
             stat = self.request.get("%s_review_state" % self.form_id, 'default')
             self.show_select_column = stat != 'all'
         return super(KitsView, self).__call__()
 
     def folderitems(self):
         items = super(KitsView, self).folderitems()
-        # print items
-        # print '-----'
         for x in range(len(items)):
             if not items[x].has_key('obj'):
                 continue
             obj = items[x]['obj']
-            items[x]['kitTemplate'] = obj.getKitTemplateTitle()
-            items[x]['replace']['Prefix'] = "<a href='%s'>%s</a>" % \
-                                            (items[x]['url'], obj.getKitId())
+            items[x]['kitTemplate'] = obj.getKitTemplate().Title()
+            items[x]['Project'] = obj.getProject().Title()
+            items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
+                                            (items[x]['url'], obj.title)
 
         return items
