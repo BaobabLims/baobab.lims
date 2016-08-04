@@ -68,12 +68,12 @@ schema = BikaSchema.copy() + Schema((
     LinesField('Biospectypes',
         vocabulary='_getBiospecimensDisplayList',
         widget=MultiSelectionWidget(
-           modes=('edit',),
-           label=_("Biospecimen types"),
-           description=_(
-               "Multi-select widget. Use to select more than one biospecimen type. Selecting a biospecimen type import "
-               "the corresponding analysis services."),
-           visible={'edit': 'visible', 'view': 'visible'},
+            modes=('edit',),
+            label=_("Biospecimen types"),
+            description=_(
+                "Multi-select widget. Use to select more than one biospecimen type. Selecting a biospecimen type import "
+                "the corresponding analysis services."),
+            visible={'edit': 'visible', 'view': 'visible'},
         )),
 
     ReferenceField('Service',
@@ -88,6 +88,7 @@ schema = BikaSchema.copy() + Schema((
 ))
 schema['title'].required = True
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
+schema['title'].widget.size = 100
 schema['description'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 
 

@@ -6,7 +6,9 @@
 	i18n:domain="bika">
 
 <head>
-    <style></style>
+    <style>
+
+    </style>
 </head>
 
 <body>
@@ -31,7 +33,7 @@
             <span i18n:translate="">Info Project</span>:
         </tal:current_storage>
     </h3><br/>
-    <table class="storage" style="border-collapse: collapse; width: 400px;">
+    <table class="storage" style="border-collapse: collapse; width: 100%;">
         <tbody>
         <tr>
             <th i18n:translate="" style="border: 1px solid #cecfd5;
