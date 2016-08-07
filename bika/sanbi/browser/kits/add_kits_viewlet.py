@@ -81,7 +81,7 @@ class AddKitsSubmitHandler(BrowserView):
         if seq_start < 1:
             raise ValidationError(u'Sequence Start may not be < 1')
 
-        # verify StorageLevel
+        # verify number of kits
         if kit_count < 1:
             raise ValidationError(u'Kit count must not be < 1')
 

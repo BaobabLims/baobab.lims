@@ -41,6 +41,7 @@
                 }
 
                 function createStorageRow(idRefField, idUID, idTable, storageType){
+                    console.log($(idRefField));
                     var storageVal = $(idRefField).val();
                     var storageUID = $(idUID).val();
                     var html = '<tr id="'+ storageUID +'"><td>' + storageVal + '</td><td>' +
