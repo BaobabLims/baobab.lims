@@ -11,19 +11,20 @@
         layer="bika.lims.interfaces.IBikaLIMS"
     />
 
-    <browser:page
-        for="*"
-        name="available_positions"
-        class=".biospecimens.AjaxAvailablePositions"
-        permission="bika.lims.ManageBika"
+    <browser:viewlet
+        for="bika.sanbi.interfaces.IBiospecimens"
+        name="add_biospecimens_viewlet"
+        class=".add_biospecimens_viewlet.AddBiospecimensViewlet"
+        manager="plone.app.layout.viewlets.interfaces.IBelowContentTitle"
+        permission="zope2.View"
         layer="bika.lims.interfaces.IBikaLIMS"
     />
 
     <browser:page
-        for="*"
-        name="create_biospecimens"
-        class=".biospecimens.CreateBiospecimens"
-        permission="bika.lims.ManageBika"
+        for="bika.sanbi.interfaces.IBiospecimens"
+        name="add_biospecimens_submit"
+        class=".add_biospecimens_viewlet.AddBiospecimensSubmitHandler"
+        permission="zope2.View"
         layer="bika.lims.interfaces.IBikaLIMS"
     />
 

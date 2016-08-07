@@ -1,21 +1,16 @@
-import json
-
 from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone.utils import _createObjectByType
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone.app.content.browser.interfaces import IFolderContentsView
 from plone.app.layout.globals.interfaces import IViewView
 from zope.interface.declarations import implements
 
 from bika.lims.browser.bika_listing import BikaListingView
-from bika.lims.idserver import renameAfterCreation
-from bika.lims.utils import tmpID
 from bika.sanbi import bikaMessageFactory as _
 
 
 class BiospecimensView(BikaListingView):
-    template = ViewPageTemplateFile('templates/biospecimens.pt')
-    table_template = ViewPageTemplateFile("templates/biospecimens_table.pt")
+    # template = ViewPageTemplateFile('templates/biospecimens.pt')
+    # table_template = ViewPageTemplateFile("templates/biospecimens_table.pt")
     implements(IFolderContentsView, IViewView)
 
     def __init__(self, context, request):
@@ -61,18 +56,14 @@ class BiospecimensView(BikaListingView):
                 'title': _('Subject ID'),
                 'toggle': True
             },
-            'StockItem': {
-                'title': _('Stock Item'),
-                'toggle': True
-            },
             'Barcode': {
                 'title': _('Barcode'),
                 'toggle': True
             },
-            'Location': {
-                'title': _('Location'),
-                'toggle': True
-            },
+            # 'Location': {
+            #     'title': _('Location'),
+            #     'toggle': True
+            # },
         }
 
         self.review_states = [
@@ -87,9 +78,9 @@ class BiospecimensView(BikaListingView):
                          'Type',
                          'Volume',
                          'SubjectID',
-                         'StockItem',
                          'Barcode',
-                         'Location']},
+                         # 'Location'
+                         ]},
 
             {'id': 'due',
              'title': _('Due'),
@@ -102,9 +93,9 @@ class BiospecimensView(BikaListingView):
                          'Type',
                          'Volume',
                          'SubjectID',
-                         'StockItem',
                          'Barcode',
-                         'Location']},
+                         # 'Location'
+                         ]},
 
             {'id': 'received',
              'title': _('Received'),
@@ -117,9 +108,9 @@ class BiospecimensView(BikaListingView):
                          'Type',
                          'Volume',
                          'SubjectID',
-                         'StockItem',
                          'Barcode',
-                         'Location']},
+                         # 'Location'
+                         ]},
 
             {'id': 'stored',
              'title': _('Stored'),
@@ -131,9 +122,9 @@ class BiospecimensView(BikaListingView):
                          'Type',
                          'Volume',
                          'SubjectID',
-                         'StockItem',
                          'Barcode',
-                         'Location']},
+                         # 'Location'
+                         ]},
 
             {'id': 'inactive',
              'title': _('Dormant'),
@@ -145,9 +136,9 @@ class BiospecimensView(BikaListingView):
                          'Type',
                          'Volume',
                          'SubjectID',
-                         'StockItem',
                          'Barcode',
-                         'Location']},
+                         # 'Location'
+                         ]},
 
             {'id': 'all',
              'title': _('All'),
@@ -157,9 +148,9 @@ class BiospecimensView(BikaListingView):
                          'Type',
                          'Volume',
                          'SubjectID',
-                         'StockItem',
                          'Barcode',
-                         'Location']},
+                         # 'Location'
+                         ]},
         ]
 
     def __call__(self):
@@ -189,83 +180,12 @@ class BiospecimensView(BikaListingView):
             if not items[x].has_key('obj'):
                 continue
             obj = items[x]['obj']
-            items[x]['Type'] = obj.getType().Title()
+            items[x]['Type'] = obj.getType() and obj.getType().Title() or ''
             items[x]['Volume'] = obj.getVolume()
             items[x]['SubjectID'] = obj.getSubjectID()
-            items[x]['StockItem'] = obj.getKitStockItem()
             items[x]['Barcode'] = obj.getBarcode()
-            items[x]['Location'] = obj.getStorageLocation().Title()
+            # items[x]['Location'] = obj.getStorageLocation().Title()
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                            (items[x]['url'], items[x]['Title'])
 
         return items
-
-
-class AjaxAvailablePositions:
-    def __init__(self, context, request):
-        self.context = context
-        self.request = request
-
-    def __call__(self):
-        form = self.request.form
-        uc = getToolByName(self.context, 'uid_catalog')
-        brains = uc(UID=form['uid'])
-        box = brains[0].getObject()
-        positions = box.getPositions()
-        workflow = getToolByName(self.context, 'portal_workflow')
-        free = 0
-        for position in positions:
-            state = workflow.getInfoFor(position, 'review_state')
-            if state == 'position_free':
-                free += 1
-
-        return json.dumps({'free': free})
-
-
-class CreateBiospecimens:
-    def __init__(self, context, request):
-        self.context = context
-        self.request = request
-
-    def __call__(self):
-        form = self.request.form
-        biospecimens = json.loads([key for key in form][0])
-        project = self.context.aq_parent
-        uc = getToolByName(project, 'uid_catalog')
-        bsc = getToolByName(project, 'bika_setup_catalog')
-        kit = uc(UID=biospecimens[0]['kit'])[
-            0].getObject() if biospecimens else None
-        for b in biospecimens:
-            if b['type'] == 'None':
-                message = 'type should be specified!'
-                return json.dumps({'error': message})
-            type = uc(UID=b['type'])[0].getObject()
-            if b['box'] == 'Box':
-                message = 'Position should be specified!'
-                return json.dumps({'error': message})
-            box = uc(UID=b['box'])[0].getObject()
-            positions = box.get_free_positions()
-            if not positions:
-                message = "No free position available for \"%s\" in Storage " \
-                          "\"%s\"" % (
-                b['title'], box.id)
-                return json.dumps({'error': message})
-
-            # Create biospecimen
-            biospecimen = _createObjectByType('Biospecimen', project, tmpID())
-            biospecimen.edit(
-                title=b['title'],
-                Type=type,
-                SubjectID=b['subject'],
-                Volume=b['volume'],
-                KitStockItem=b['stockitem'],
-                Barcode=b['barcode'],
-                kit=kit,
-                StorageLocation=positions[0]
-            )
-            biospecimen.unmarkCreationFlag()
-            renameAfterCreation(biospecimen)
-            biospecimen.reindexObject()
-            biospecimen.at_post_create_script()
-
-        return json.dumps({'success': 'Aliquots Created'})
