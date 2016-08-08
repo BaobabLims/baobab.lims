@@ -48,8 +48,8 @@ class AddBiospecimensSubmitHandler(BrowserView):
             if barcodes:
                 barcodes = barcodes.split('\r\n')
             project_uid = form.get('Project_uid', None)
-            kits_range = form.get('kits_range', None)
-            min_range, max_range = map(int, kits_range.split('-'))
+            # kits_range = form.get('kits_range', None)
+            # min_range, max_range = map(int, kits_range.split('-'))
 
             bc = getToolByName(self.context, 'bika_catalog')
             # TODO: once kit workflow implemented, filter with kit state = received
@@ -57,10 +57,11 @@ class AddBiospecimensSubmitHandler(BrowserView):
             kits = [brain.getObject() for brain in brains
                                       if brain.getObject().getProject().UID() == project_uid]
 
-            kits = kits[min_range:max_range]
+            # kits = kits[min_range:max_range]
 
-            assert len(kits) == count
-            assert len(barcodes) == count * biospecimen_per_kit
+            # assert len(kits) == count
+
+            # assert len(barcodes) == count * biospecimen_per_kit
 
             biospecimens = []
             for x in range(seq_start, seq_start + count * biospecimen_per_kit):
@@ -70,7 +71,7 @@ class AddBiospecimensSubmitHandler(BrowserView):
                     id=id_template.format(id=x),
                     title=title_template.format(id=x),
                     SubjectID=subject_id,
-                    Barcode=barcodes[x - seq_start],
+                    Barcode='',
                     Volume=volume,
                     Unit=volume_unit
                 )
@@ -114,18 +115,22 @@ class AddBiospecimensSubmitHandler(BrowserView):
                     u'The ID %s exists, cannot be created.' % check)
 
         # Check the range of kits is correct
-        kits_range = form.get('kits_range', None)
-        if not kits_range:
-            raise ValidationError(u'Kit int range is required.')
-        min, max = kits_range.split('-')
-        try:
-            min = int(min)
-            max = int(max)
-        except:
-            raise ValidationError(
-                u'Kits min and max range must be integers')
+        # kits_range = form.get('kits_range', None)
+        # if not kits_range:
+        #     raise ValidationError(u'Kit int range is required.')
+        # min, max = kits_range.split('-')
+        # try:
+        #     min = int(min)
+        #     max = int(max)
+        # except:
+        #     raise ValidationError(
+        #         u'Kits min and max range must be integers')
 
         # Biospecimen type is required and should be diffrent of None.
         biospecimen_type = form.get('sel_type', None)
         if not biospecimen_count or biospecimen_type == 'None':
             raise ValidationError(u'Biospecimen type is required and should be not "None"')
+
+    def form_error(self, msg):
+        self.context.plone_utils.addPortalMessage(msg)
+        self.request.response.redirect(self.context.absolute_url())

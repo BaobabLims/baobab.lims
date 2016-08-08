@@ -199,31 +199,6 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Subject:
-                            <div class="discreet">The participant id.
-                            </div>
-                        </td>
-                        <td>
-                            <input type="text"
-                                   name="subject_id"
-                                   tabindex="9"
-                                   placeholder="Subject ID"/>
-                        </td>
-                        <td>Barcodes
-                            <div class="discreet">
-                                Paste your barcodes in the textarea. One line per barcode.
-                            </div>
-                        </td>
-                        <td>
-                            <textarea name="barcodes"
-                                      id="barcodes"
-                                      tabindex="10"
-                                      tal:attributes="value python: request.get('barcodes', '')"
-                                      style="width: 150px; height: 100px;">
-                            </textarea>
-                        </td>
-                    </tr>
-                    <tr>
                         <td class="bordertop">Project
                             <div class="discreet">Kit's project
                             </div>
@@ -262,17 +237,15 @@
                                 <input type="hidden" name="Project_uid" id="Project_uid">
                             </div>
                         </td>
-
-                        <td class="bordertop">Kits:
-                            <div class="discreet">Kits are the containers of the biospecimens.<br/> Enter a range, min
-                                and max values. The two values are used to search kits with id index is in between.
+                        <td>Subject:
+                            <div class="discreet">The participant id.
                             </div>
                         </td>
-                        <td class="bordertop">
+                        <td>
                             <input type="text"
-                                   name="kits_range"
-                                   tabindex="12"
-                                   placeholder="min-max"/>
+                                   name="subject_id"
+                                   tabindex="9"
+                                   placeholder="Subject ID"/>
                         </td>
                     </tr>
                 </table>

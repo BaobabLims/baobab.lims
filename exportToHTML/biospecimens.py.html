@@ -1,0 +1,239 @@
+<html>
+<head>
+<title>biospecimens.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.ln { color: rgb(0,0,0); font-weight: normal; font-style: normal; }
+.s0 { color: rgb(0,0,128); font-weight: bold; }
+.s1 { color: rgb(0,0,0); }
+.s2 { color: rgb(0,0,0); }
+.s3 { color: rgb(0,128,0); font-weight: bold; }
+.s4 { color: rgb(128,128,128); font-style: italic; }
+.s5 { color: rgb(0,0,255); }
+</style>
+</head>
+<BODY BGCOLOR="#ffffff">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#C0C0C0" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+biospecimens.py</FONT>
+</center></TD></TR></TABLE>
+<pre>
+<span class="s0">from </span><span class="s1">Products</span><span class="s2">.</span><span class="s1">CMFCore</span><span class="s2">.</span><span class="s1">utils </span><span class="s0">import </span><span class="s1">getToolByName 
+</span><span class="s0">from </span><span class="s1">Products</span><span class="s2">.</span><span class="s1">Five</span><span class="s2">.</span><span class="s1">browser</span><span class="s2">.</span><span class="s1">pagetemplatefile </span><span class="s0">import </span><span class="s1">ViewPageTemplateFile 
+</span><span class="s0">from </span><span class="s1">plone</span><span class="s2">.</span><span class="s1">app</span><span class="s2">.</span><span class="s1">content</span><span class="s2">.</span><span class="s1">browser</span><span class="s2">.</span><span class="s1">interfaces </span><span class="s0">import </span><span class="s1">IFolderContentsView 
+</span><span class="s0">from </span><span class="s1">plone</span><span class="s2">.</span><span class="s1">app</span><span class="s2">.</span><span class="s1">layout</span><span class="s2">.</span><span class="s1">globals</span><span class="s2">.</span><span class="s1">interfaces </span><span class="s0">import </span><span class="s1">IViewView 
+</span><span class="s0">from </span><span class="s1">zope</span><span class="s2">.</span><span class="s1">interface</span><span class="s2">.</span><span class="s1">declarations </span><span class="s0">import </span><span class="s1">implements 
+ 
+</span><span class="s0">from </span><span class="s1">bika</span><span class="s2">.</span><span class="s1">lims</span><span class="s2">.</span><span class="s1">browser</span><span class="s2">.</span><span class="s1">bika_listing </span><span class="s0">import </span><span class="s1">BikaListingView 
+</span><span class="s0">from </span><span class="s1">bika</span><span class="s2">.</span><span class="s1">sanbi </span><span class="s0">import </span><span class="s1">bikaMessageFactory </span><span class="s0">as </span><span class="s1">_ 
+</span><span class="s0">from </span><span class="s1">bika</span><span class="s2">.</span><span class="s1">lims</span><span class="s2">.</span><span class="s1">utils </span><span class="s0">import </span><span class="s1">isActive 
+</span><span class="s0">from </span><span class="s1">AccessControl </span><span class="s0">import </span><span class="s1">getSecurityManager 
+</span><span class="s0">from </span><span class="s1">bika</span><span class="s2">.</span><span class="s1">sanbi</span><span class="s2">.</span><span class="s1">permissions </span><span class="s0">import </span><span class="s1">EditFieldBarcode 
+ 
+ 
+</span><span class="s0">class </span><span class="s1">BiospecimensView</span><span class="s2">(</span><span class="s1">BikaListingView</span><span class="s2">)</span><span class="s1">: 
+    template = ViewPageTemplateFile</span><span class="s2">(</span><span class="s3">'templates/biospecimens.pt'</span><span class="s2">)</span><span class="s1"> 
+    </span><span class="s4"># table_template = ViewPageTemplateFile(&quot;templates/biospecimens_table.pt&quot;)</span><span class="s1"> 
+    implements</span><span class="s2">(</span><span class="s1">IFolderContentsView, IViewView</span><span class="s2">)</span><span class="s1"> 
+ 
+    </span><span class="s0">def </span><span class="s1">__init__</span><span class="s2">(</span><span class="s1">self, context, request</span><span class="s2">)</span><span class="s1">: 
+        super</span><span class="s2">(</span><span class="s1">BiospecimensView, self</span><span class="s2">).</span><span class="s1">__init__</span><span class="s2">(</span><span class="s1">context, request</span><span class="s2">)</span><span class="s1"> 
+        self</span><span class="s2">.</span><span class="s1">context = context 
+        self</span><span class="s2">.</span><span class="s1">catalog = </span><span class="s3">'bika_catalog'</span><span class="s1"> 
+        request</span><span class="s2">.</span><span class="s1">set</span><span class="s2">(</span><span class="s3">'disable_plone.rightcolumn'</span><span class="s1">, </span><span class="s5">1</span><span class="s2">)</span><span class="s1"> 
+        self</span><span class="s2">.</span><span class="s1">contentFilter = </span><span class="s2">{</span><span class="s1"> 
+            </span><span class="s3">'portal_type'</span><span class="s1">: </span><span class="s3">'Biospecimen'</span><span class="s1">, 
+            </span><span class="s3">'sort_on'</span><span class="s1">: </span><span class="s3">'created'</span><span class="s1">, 
+            </span><span class="s3">'sort_order'</span><span class="s1">: </span><span class="s3">'ascending'</span><span class="s1"> 
+        </span><span class="s2">}</span><span class="s1"> 
+        self</span><span class="s2">.</span><span class="s1">context_actions = </span><span class="s2">{</span><span class="s1"> 
+            </span><span class="s4"># _('Add'): {</span><span class="s1"> 
+            </span><span class="s4">#     'url': 'createObject?type_name=Biospecimen',</span><span class="s1"> 
+            </span><span class="s4">#     'icon': '++resource++bika.lims.images/add.png'</span><span class="s1"> 
+            </span><span class="s4"># }</span><span class="s1"> 
+        </span><span class="s2">}</span><span class="s1"> 
+        self</span><span class="s2">.</span><span class="s1">title = self</span><span class="s2">.</span><span class="s1">context</span><span class="s2">.</span><span class="s1">translate</span><span class="s2">(</span><span class="s1">_</span><span class="s2">(</span><span class="s3">&quot;Biospecimen&quot;</span><span class="s2">))</span><span class="s1"> 
+        self</span><span class="s2">.</span><span class="s1">icon = self</span><span class="s2">.</span><span class="s1">portal_url + \ 
+                    </span><span class="s3">&quot;/++resource++bika.sanbi.images/biospecimen_big.png&quot;</span><span class="s1"> 
+        self</span><span class="s2">.</span><span class="s1">description = </span><span class="s3">''</span><span class="s1"> 
+ 
+        self</span><span class="s2">.</span><span class="s1">show_sort_column = False 
+        self</span><span class="s2">.</span><span class="s1">show_select_row = False 
+        self</span><span class="s2">.</span><span class="s1">show_select_column = True 
+        self</span><span class="s2">.</span><span class="s1">pagesize = </span><span class="s5">25</span><span class="s1"> 
+ 
+        self</span><span class="s2">.</span><span class="s1">columns = </span><span class="s2">{</span><span class="s1"> 
+            </span><span class="s3">'Title'</span><span class="s1">: </span><span class="s2">{</span><span class="s1"> 
+                </span><span class="s3">'title'</span><span class="s1">: _</span><span class="s2">(</span><span class="s3">'Title'</span><span class="s2">)</span><span class="s1">, 
+                </span><span class="s3">'index'</span><span class="s1">: </span><span class="s3">'sortable_title'</span><span class="s1"> 
+            </span><span class="s2">}</span><span class="s1">, 
+            </span><span class="s3">'Type'</span><span class="s1">: </span><span class="s2">{</span><span class="s1"> 
+                </span><span class="s3">'title'</span><span class="s1">: _</span><span class="s2">(</span><span class="s3">'Type'</span><span class="s2">)</span><span class="s1">, 
+                </span><span class="s3">'toggle'</span><span class="s1">: True 
+            </span><span class="s2">}</span><span class="s1">, 
+            </span><span class="s3">'Volume'</span><span class="s1">: </span><span class="s2">{</span><span class="s1"> 
+                </span><span class="s3">'title'</span><span class="s1">: _</span><span class="s2">(</span><span class="s3">'Volume'</span><span class="s2">)</span><span class="s1">, 
+                </span><span class="s3">'toggle'</span><span class="s1">: True 
+            </span><span class="s2">}</span><span class="s1">, 
+            </span><span class="s3">'SubjectID'</span><span class="s1">: </span><span class="s2">{</span><span class="s1"> 
+                </span><span class="s3">'title'</span><span class="s1">: _</span><span class="s2">(</span><span class="s3">'Subject ID'</span><span class="s2">)</span><span class="s1">, 
+                </span><span class="s3">'toggle'</span><span class="s1">: True 
+            </span><span class="s2">}</span><span class="s1">, 
+            </span><span class="s3">'Kit'</span><span class="s1">: </span><span class="s2">{</span><span class="s1"> 
+                </span><span class="s3">'title'</span><span class="s1">: _</span><span class="s2">(</span><span class="s3">'Kit'</span><span class="s2">)</span><span class="s1">, 
+                </span><span class="s3">'toggle'</span><span class="s1">: True 
+            </span><span class="s2">}</span><span class="s1">, 
+            </span><span class="s3">'Barcode'</span><span class="s1">: </span><span class="s2">{</span><span class="s1"> 
+                </span><span class="s3">'title'</span><span class="s1">: _</span><span class="s2">(</span><span class="s3">'Barcode'</span><span class="s2">)</span><span class="s1">, 
+                </span><span class="s3">'toggle'</span><span class="s1">: True 
+            </span><span class="s2">}</span><span class="s1">, 
+            </span><span class="s4"># 'Location': {</span><span class="s1"> 
+            </span><span class="s4">#     'title': _('Location'),</span><span class="s1"> 
+            </span><span class="s4">#     'toggle': True</span><span class="s1"> 
+            </span><span class="s4"># },</span><span class="s1"> 
+        </span><span class="s2">}</span><span class="s1"> 
+ 
+        self</span><span class="s2">.</span><span class="s1">review_states = </span><span class="s2">[</span><span class="s1"> 
+            </span><span class="s2">{</span><span class="s3">'id'</span><span class="s1">: </span><span class="s3">'default'</span><span class="s1">, 
+             </span><span class="s3">'title'</span><span class="s1">: _</span><span class="s2">(</span><span class="s3">'Active'</span><span class="s2">)</span><span class="s1">, 
+             </span><span class="s3">'contentFilter'</span><span class="s1">: </span><span class="s2">{</span><span class="s3">'inactive_state'</span><span class="s1">: </span><span class="s3">'active'</span><span class="s1">, 
+                               </span><span class="s3">'sort_on'</span><span class="s1">: </span><span class="s3">'created'</span><span class="s1">, 
+                               </span><span class="s3">'sort_order'</span><span class="s1">: </span><span class="s3">'ascending'</span><span class="s2">}</span><span class="s1">, 
+             </span><span class="s3">'transitions'</span><span class="s1">: </span><span class="s2">[{</span><span class="s3">'id'</span><span class="s1">: </span><span class="s3">'deactivate'</span><span class="s2">}</span><span class="s1">, 
+                             </span><span class="s2">{</span><span class="s3">'id'</span><span class="s1">: </span><span class="s3">'complete'</span><span class="s2">}]</span><span class="s1">, 
+             </span><span class="s3">'columns'</span><span class="s1">: </span><span class="s2">[</span><span class="s3">'Title'</span><span class="s1">, 
+                         </span><span class="s3">'Type'</span><span class="s1">, 
+                         </span><span class="s3">'Volume'</span><span class="s1">, 
+                         </span><span class="s3">'SubjectID'</span><span class="s1">, 
+                         </span><span class="s3">'Kit'</span><span class="s1">, 
+                         </span><span class="s3">'Barcode'</span><span class="s1">, 
+                         </span><span class="s4"># 'Location'</span><span class="s1"> 
+                         </span><span class="s2">]}</span><span class="s1">, 
+ 
+            </span><span class="s2">{</span><span class="s3">'id'</span><span class="s1">: </span><span class="s3">'uncompleted'</span><span class="s1">, 
+             </span><span class="s3">'title'</span><span class="s1">: _</span><span class="s2">(</span><span class="s3">'Uncompleted'</span><span class="s2">)</span><span class="s1">, 
+             </span><span class="s3">'contentFilter'</span><span class="s1">: </span><span class="s2">{</span><span class="s3">'review_state'</span><span class="s1">: </span><span class="s3">'uncompleted'</span><span class="s1">, 
+                               </span><span class="s3">'sort_on'</span><span class="s1">: </span><span class="s3">'created'</span><span class="s1">, 
+                               </span><span class="s3">'sort_order'</span><span class="s1">: </span><span class="s3">'reverse'</span><span class="s2">}</span><span class="s1">, 
+             </span><span class="s3">'transitions'</span><span class="s1">: </span><span class="s2">[{</span><span class="s3">'id'</span><span class="s1">: </span><span class="s3">'deactivate'</span><span class="s2">}</span><span class="s1">, 
+                             </span><span class="s2">{</span><span class="s3">'id'</span><span class="s1">: </span><span class="s3">'complete'</span><span class="s2">}]</span><span class="s1">, 
+             </span><span class="s3">'columns'</span><span class="s1">: </span><span class="s2">[</span><span class="s3">'Title'</span><span class="s1">, 
+                         </span><span class="s3">'Type'</span><span class="s1">, 
+                         </span><span class="s3">'Volume'</span><span class="s1">, 
+                         </span><span class="s3">'SubjectID'</span><span class="s1">, 
+                         </span><span class="s3">'Kit'</span><span class="s1">, 
+                         </span><span class="s3">'Barcode'</span><span class="s1">, 
+                         </span><span class="s4"># 'Location'</span><span class="s1"> 
+                         </span><span class="s2">]}</span><span class="s1">, 
+ 
+            </span><span class="s2">{</span><span class="s3">'id'</span><span class="s1">: </span><span class="s3">'barcoded'</span><span class="s1">, 
+             </span><span class="s3">'title'</span><span class="s1">: _</span><span class="s2">(</span><span class="s3">'Barcoded'</span><span class="s2">)</span><span class="s1">, 
+             </span><span class="s3">'contentFilter'</span><span class="s1">: </span><span class="s2">{</span><span class="s3">'review_state'</span><span class="s1">: </span><span class="s3">'barcoded'</span><span class="s1">, 
+                               </span><span class="s3">'sort_on'</span><span class="s1">: </span><span class="s3">'created'</span><span class="s1">, 
+                               </span><span class="s3">'sort_order'</span><span class="s1">: </span><span class="s3">'reverse'</span><span class="s2">}</span><span class="s1">, 
+             </span><span class="s3">'transitions'</span><span class="s1">: </span><span class="s2">[{</span><span class="s3">'id'</span><span class="s1">: </span><span class="s3">'deactivate'</span><span class="s2">}]</span><span class="s1">, 
+             </span><span class="s3">'columns'</span><span class="s1">: </span><span class="s2">[</span><span class="s3">'Title'</span><span class="s1">, 
+                         </span><span class="s3">'Type'</span><span class="s1">, 
+                         </span><span class="s3">'Volume'</span><span class="s1">, 
+                         </span><span class="s3">'SubjectID'</span><span class="s1">, 
+                         </span><span class="s3">'Kit'</span><span class="s1">, 
+                         </span><span class="s3">'Barcode'</span><span class="s1">, 
+                         </span><span class="s4"># 'Location'</span><span class="s1"> 
+                         </span><span class="s2">]}</span><span class="s1">, 
+ 
+            </span><span class="s2">{</span><span class="s3">'id'</span><span class="s1">: </span><span class="s3">'inactive'</span><span class="s1">, 
+             </span><span class="s3">'title'</span><span class="s1">: _</span><span class="s2">(</span><span class="s3">'Dormant'</span><span class="s2">)</span><span class="s1">, 
+             </span><span class="s3">'contentFilter'</span><span class="s1">: </span><span class="s2">{</span><span class="s3">'inactive_state'</span><span class="s1">: </span><span class="s3">'inactive'</span><span class="s1">, 
+                               </span><span class="s3">'sort_on'</span><span class="s1">: </span><span class="s3">'created'</span><span class="s1">, 
+                               </span><span class="s3">'sort_order'</span><span class="s1">: </span><span class="s3">'ascending'</span><span class="s2">}</span><span class="s1">, 
+             </span><span class="s3">'transitions'</span><span class="s1">: </span><span class="s2">[{</span><span class="s3">'id'</span><span class="s1">: </span><span class="s3">'activate'</span><span class="s2">}</span><span class="s1">, </span><span class="s2">]</span><span class="s1">, 
+             </span><span class="s3">'columns'</span><span class="s1">: </span><span class="s2">[</span><span class="s3">'Title'</span><span class="s1">, 
+                         </span><span class="s3">'Type'</span><span class="s1">, 
+                         </span><span class="s3">'Volume'</span><span class="s1">, 
+                         </span><span class="s3">'SubjectID'</span><span class="s1">, 
+                         </span><span class="s3">'Kit'</span><span class="s1">, 
+                         </span><span class="s3">'Barcode'</span><span class="s1">, 
+                         </span><span class="s4"># 'Location'</span><span class="s1"> 
+                         </span><span class="s2">]}</span><span class="s1">, 
+ 
+            </span><span class="s2">{</span><span class="s3">'id'</span><span class="s1">: </span><span class="s3">'all'</span><span class="s1">, 
+             </span><span class="s3">'title'</span><span class="s1">: _</span><span class="s2">(</span><span class="s3">'All'</span><span class="s2">)</span><span class="s1">, 
+             </span><span class="s3">'contentFilter'</span><span class="s1">: </span><span class="s2">{</span><span class="s3">'sort_on'</span><span class="s1">: </span><span class="s3">'created'</span><span class="s1">, 
+                               </span><span class="s3">'sort_order'</span><span class="s1">: </span><span class="s3">'ascending'</span><span class="s2">}</span><span class="s1">, 
+             </span><span class="s3">'columns'</span><span class="s1">: </span><span class="s2">[</span><span class="s3">'Title'</span><span class="s1">, 
+                         </span><span class="s3">'Type'</span><span class="s1">, 
+                         </span><span class="s3">'Volume'</span><span class="s1">, 
+                         </span><span class="s3">'SubjectID'</span><span class="s1">, 
+                         </span><span class="s3">'Kit'</span><span class="s1">, 
+                         </span><span class="s3">'Barcode'</span><span class="s1">, 
+                         </span><span class="s4"># 'Location'</span><span class="s1"> 
+                         </span><span class="s2">]}</span><span class="s1">, 
+        </span><span class="s2">]</span><span class="s1"> 
+ 
+    </span><span class="s0">def </span><span class="s1">__call__</span><span class="s2">(</span><span class="s1">self</span><span class="s2">)</span><span class="s1">: 
+        </span><span class="s0">return </span><span class="s1">super</span><span class="s2">(</span><span class="s1">BiospecimensView, self</span><span class="s2">).</span><span class="s1">__call__</span><span class="s2">()</span><span class="s1"> 
+ 
+    </span><span class="s0">def </span><span class="s1">get_kit_quantity</span><span class="s2">(</span><span class="s1">self</span><span class="s2">)</span><span class="s1">: 
+        project = self</span><span class="s2">.</span><span class="s1">context 
+        bc = getToolByName</span><span class="s2">(</span><span class="s1">project, </span><span class="s3">'bika_catalog'</span><span class="s2">)</span><span class="s1"> 
+        qtys = </span><span class="s2">[]</span><span class="s1"> 
+        brains = bc</span><span class="s2">(</span><span class="s1">portal_type=</span><span class="s3">&quot;Kit&quot;</span><span class="s2">)</span><span class="s1"> 
+        </span><span class="s0">for </span><span class="s1">brain </span><span class="s0">in </span><span class="s1">brains: 
+            o = brain</span><span class="s2">.</span><span class="s1">getObject</span><span class="s2">()</span><span class="s1"> 
+            </span><span class="s0">if </span><span class="s1">o</span><span class="s2">.</span><span class="s1">getProject</span><span class="s2">() </span><span class="s1">== project: 
+                qtys</span><span class="s2">.</span><span class="s1">append</span><span class="s2">(</span><span class="s1">o</span><span class="s2">.</span><span class="s1">getQuantity</span><span class="s2">)</span><span class="s1"> 
+ 
+        </span><span class="s0">return </span><span class="s1">sum</span><span class="s2">(</span><span class="s1">qtys</span><span class="s2">)</span><span class="s1"> 
+ 
+    </span><span class="s0">def </span><span class="s1">get_kits</span><span class="s2">(</span><span class="s1">self</span><span class="s2">)</span><span class="s1">: 
+        bc = getToolByName</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">context, </span><span class="s3">'bika_catalog'</span><span class="s2">)</span><span class="s1"> 
+        brains = bc</span><span class="s2">(</span><span class="s1">portal_type=</span><span class="s3">'Kit'</span><span class="s1">, kit_project_uid=self</span><span class="s2">.</span><span class="s1">context</span><span class="s2">.</span><span class="s1">UID</span><span class="s2">())</span><span class="s1"> 
+ 
+        </span><span class="s0">return </span><span class="s2">[</span><span class="s1">brain</span><span class="s2">.</span><span class="s1">getObject</span><span class="s2">() </span><span class="s0">for </span><span class="s1">brain </span><span class="s0">in </span><span class="s1">brains</span><span class="s2">]</span><span class="s1"> 
+ 
+    </span><span class="s0">def </span><span class="s1">folderitems</span><span class="s2">(</span><span class="s1">self, full_objects=False</span><span class="s2">)</span><span class="s1">: 
+        items = BikaListingView</span><span class="s2">.</span><span class="s1">folderitems</span><span class="s2">(</span><span class="s1">self</span><span class="s2">)</span><span class="s1"> 
+        </span><span class="s0">for </span><span class="s1">x, item </span><span class="s0">in </span><span class="s1">enumerate</span><span class="s2">(</span><span class="s1">items</span><span class="s2">)</span><span class="s1">: 
+            </span><span class="s0">if not </span><span class="s1">items</span><span class="s2">[</span><span class="s1">x</span><span class="s2">].</span><span class="s1">has_key</span><span class="s2">(</span><span class="s3">'obj'</span><span class="s2">)</span><span class="s1">: 
+                </span><span class="s0">continue</span><span class="s1"> 
+            obj = items</span><span class="s2">[</span><span class="s1">x</span><span class="s2">][</span><span class="s3">'obj'</span><span class="s2">]</span><span class="s1"> 
+            items</span><span class="s2">[</span><span class="s1">x</span><span class="s2">][</span><span class="s3">'Type'</span><span class="s2">] </span><span class="s1">= obj</span><span class="s2">.</span><span class="s1">getType</span><span class="s2">() </span><span class="s0">and </span><span class="s1">obj</span><span class="s2">.</span><span class="s1">getType</span><span class="s2">().</span><span class="s1">Title</span><span class="s2">() </span><span class="s0">or </span><span class="s3">''</span><span class="s1"> 
+            items</span><span class="s2">[</span><span class="s1">x</span><span class="s2">][</span><span class="s3">'Volume'</span><span class="s2">] </span><span class="s1">= obj</span><span class="s2">.</span><span class="s1">getVolume</span><span class="s2">()</span><span class="s1"> 
+            items</span><span class="s2">[</span><span class="s1">x</span><span class="s2">][</span><span class="s3">'SubjectID'</span><span class="s2">] </span><span class="s1">= obj</span><span class="s2">.</span><span class="s1">getSubjectID</span><span class="s2">()</span><span class="s1"> 
+            items</span><span class="s2">[</span><span class="s1">x</span><span class="s2">][</span><span class="s3">'Kit'</span><span class="s2">] </span><span class="s1">= obj</span><span class="s2">.</span><span class="s1">getKit</span><span class="s2">()</span><span class="s1"> 
+            items</span><span class="s2">[</span><span class="s1">x</span><span class="s2">][</span><span class="s3">'replace'</span><span class="s2">][</span><span class="s3">'Kit'</span><span class="s2">] </span><span class="s1">= \ 
+                </span><span class="s3">'&lt;a href=&quot;%s&quot;&gt;%s&lt;/a&gt;' </span><span class="s1">% </span><span class="s2">(</span><span class="s1">obj</span><span class="s2">.</span><span class="s1">getKit</span><span class="s2">().</span><span class="s1">absolute_url</span><span class="s2">()</span><span class="s1">, obj</span><span class="s2">.</span><span class="s1">getKit</span><span class="s2">().</span><span class="s1">Title</span><span class="s2">())</span><span class="s1"> 
+            items</span><span class="s2">[</span><span class="s1">x</span><span class="s2">][</span><span class="s3">'Barcode'</span><span class="s2">] </span><span class="s1">= </span><span class="s3">''</span><span class="s1"> 
+            </span><span class="s4"># items[x]['Location'] = obj.getStorageLocation().Title()</span><span class="s1"> 
+            items</span><span class="s2">[</span><span class="s1">x</span><span class="s2">][</span><span class="s3">'replace'</span><span class="s2">][</span><span class="s3">'Title'</span><span class="s2">] </span><span class="s1">= </span><span class="s3">&quot;&lt;a href='%s'&gt;%s&lt;/a&gt;&quot; </span><span class="s1">% \ 
+                                           </span><span class="s2">(</span><span class="s1">items</span><span class="s2">[</span><span class="s1">x</span><span class="s2">][</span><span class="s3">'url'</span><span class="s2">]</span><span class="s1">, items</span><span class="s2">[</span><span class="s1">x</span><span class="s2">][</span><span class="s3">'Title'</span><span class="s2">])</span><span class="s1"> 
+ 
+            </span><span class="s4"># TODO: SPECIFY OBJ STATES WHERE USER CAN EDIT BARCODE</span><span class="s1"> 
+            allowed_method_state = </span><span class="s3">'uncompleted'</span><span class="s1"> 
+ 
+            can_edit_biospecimen = self</span><span class="s2">.</span><span class="s1">allow_edit </span><span class="s0">and </span><span class="s1">isActive</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">context</span><span class="s2">) </span><span class="s0">and </span><span class="s1">\ 
+                                   getSecurityManager</span><span class="s2">().</span><span class="s1">checkPermission</span><span class="s2">(</span><span class="s1">EditFieldBarcode, obj</span><span class="s2">) </span><span class="s0">and </span><span class="s1">\ 
+                                   item</span><span class="s2">[</span><span class="s3">'review_state'</span><span class="s2">] </span><span class="s0">in </span><span class="s1">allowed_method_state 
+ 
+            can_view_barcodes = False 
+            </span><span class="s0">if </span><span class="s1">can_view_barcodes: 
+                </span><span class="s0">if </span><span class="s1">can_edit_biospecimen: 
+                    barcode_html = </span><span class="s3">'&lt;input id=&quot;barcode.%s&quot; style=&quot;width: 70px;&quot; value=&quot;&quot; /&gt;' </span><span class="s1">%</span><span class="s2">(</span><span class="s1">obj</span><span class="s2">.</span><span class="s1">UID</span><span class="s2">())</span><span class="s1"> 
+                    item</span><span class="s2">[</span><span class="s3">'after'</span><span class="s2">][</span><span class="s3">'Barcode'</span><span class="s2">] </span><span class="s1">= barcode_html 
+                    </span><span class="s4"># items[x]['allow_edit'].extend(['Barcode'])</span><span class="s1"> 
+                    </span><span class="s4"># items[x]['Barcode'] = 'HHHH'</span><span class="s1"> 
+                    </span><span class="s4"># item['choices']['Barcode'] = [{'ResultValue': 'HB', 'ResultText': 'Hocine Bendou'},</span><span class="s1"> 
+                    </span><span class="s4">#                               {'ResultValue':'TTT', 'ResultText': 'Test User'}]</span><span class="s1"> 
+                </span><span class="s0">else</span><span class="s1">: 
+                    items</span><span class="s2">[</span><span class="s1">x</span><span class="s2">][</span><span class="s3">'Barcode'</span><span class="s2">] </span><span class="s1">= obj</span><span class="s2">.</span><span class="s1">getBarcode</span><span class="s2">()</span><span class="s1"> 
+            </span><span class="s0">else</span><span class="s1">: 
+                items</span><span class="s2">[</span><span class="s1">x</span><span class="s2">][</span><span class="s3">'before'</span><span class="s2">][</span><span class="s3">'Barcode'</span><span class="s2">] </span><span class="s1">= \ 
+                    </span><span class="s3">'&lt;img width=&quot;16&quot; height=&quot;16&quot; ' </span><span class="s1">+ \ 
+                    </span><span class="s3">'src=&quot;%s/++resource++bika.lims.images/to_follow.png&quot;/&gt;' </span><span class="s1">% \ 
+                    </span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">portal_url</span><span class="s2">)</span><span class="s1"> 
+ 
+        </span><span class="s0">return </span><span class="s1">items 
+</span></pre>
+</body>
+</html>

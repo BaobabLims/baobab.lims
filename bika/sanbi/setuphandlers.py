@@ -102,6 +102,8 @@ class BikaCustomGenerator:
         # Root permissions
         mp = portal.manage_permission
         mp(AddMultimage, ['Manager', 'LabManager', 'LabClerk'], 1)
+        mp(EditFieldBarcode, ['Manager', 'LabManager', 'LabClerk'], 1)
+        mp(ViewBarcode, ['Manager', 'LabManager', 'LabClerk'], 1)
 
         # kits
         mp = portal.kits.manage_permission

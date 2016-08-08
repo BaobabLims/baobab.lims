@@ -20,4 +20,9 @@
     <permission id="bika.sanbi.ManageAliquots" title="SANBI: Manage Aliquots"/>
     <permission id="bika.sanbi.permissions.AddMultimage" title="BIKA: Add Multimage"/>
     <permission id="bika.sanbi.permissions.AddStorageInventory" title="SANBI: Add Storage Inventory"/>
+
+    # Other
+    # ------
+    <permission id="bika.sanbi.EditFieldBarcode" title="BIKA: Edit Field Barcode"/>
+    <permission id="bika.sanbi.ViewBarcode" title="BIKA: View Barcode"/>
 </configure>

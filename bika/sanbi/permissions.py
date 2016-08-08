@@ -13,6 +13,8 @@ AddShipment = 'SANBI: Add Shipment'
 AddMultimage = 'BIKA: Add Multimage'
 AddAliquot = "BIKA: Add Aliquot"
 AddStorageInventory = "BIKA: Add Storage Inventory"
+EditFieldBarcode = "BIKA: Edit Field Barcode"
+ViewBarcode = "BIKA: View Barcode"
 
 # Add Permissions for specific types, if required
 ADD_CONTENT_PERMISSIONS = {

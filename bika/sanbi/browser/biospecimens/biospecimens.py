@@ -6,10 +6,13 @@ from zope.interface.declarations import implements
 
 from bika.lims.browser.bika_listing import BikaListingView
 from bika.sanbi import bikaMessageFactory as _
+from bika.lims.utils import isActive
+from AccessControl import getSecurityManager
+from bika.sanbi.permissions import EditFieldBarcode, ViewBarcode
 
 
 class BiospecimensView(BikaListingView):
-    # template = ViewPageTemplateFile('templates/biospecimens.pt')
+    template = ViewPageTemplateFile('templates/biospecimens.pt')
     # table_template = ViewPageTemplateFile("templates/biospecimens_table.pt")
     implements(IFolderContentsView, IViewView)
 
@@ -56,6 +59,10 @@ class BiospecimensView(BikaListingView):
                 'title': _('Subject ID'),
                 'toggle': True
             },
+            'Kit': {
+                'title': _('Kit'),
+                'toggle': True
+            },
             'Barcode': {
                 'title': _('Barcode'),
                 'toggle': True
@@ -73,55 +80,43 @@ class BiospecimensView(BikaListingView):
                                'sort_on': 'created',
                                'sort_order': 'ascending'},
              'transitions': [{'id': 'deactivate'},
-                             {'id': 'receive'}],
+                             {'id': 'complete'}],
              'columns': ['Title',
                          'Type',
                          'Volume',
                          'SubjectID',
+                         'Kit',
                          'Barcode',
                          # 'Location'
                          ]},
 
-            {'id': 'due',
-             'title': _('Due'),
-             'contentFilter': {'review_state': 'due',
+            {'id': 'uncompleted',
+             'title': _('Uncompleted'),
+             'contentFilter': {'review_state': 'uncompleted',
                                'sort_on': 'created',
                                'sort_order': 'reverse'},
              'transitions': [{'id': 'deactivate'},
-                             {'id': 'receive'}],
+                             {'id': 'complete'}],
              'columns': ['Title',
                          'Type',
                          'Volume',
                          'SubjectID',
+                         'Kit',
                          'Barcode',
                          # 'Location'
                          ]},
 
-            {'id': 'received',
-             'title': _('Received'),
-             'contentFilter': {'review_state': 'received',
+            {'id': 'barcoded',
+             'title': _('Barcoded'),
+             'contentFilter': {'review_state': 'barcoded',
                                'sort_on': 'created',
                                'sort_order': 'reverse'},
-             'transitions': [{'id': 'deactivate'},
-                             {'id': 'store'}],
+             'transitions': [{'id': 'deactivate'}],
              'columns': ['Title',
                          'Type',
                          'Volume',
                          'SubjectID',
-                         'Barcode',
-                         # 'Location'
-                         ]},
-
-            {'id': 'stored',
-             'title': _('Stored'),
-             'contentFilter': {'review_state': 'stored',
-                               'sort_on': 'created',
-                               'sort_order': 'reverse'},
-             'transitions': [{'id': 'deactivate'}, ],
-             'columns': ['Title',
-                         'Type',
-                         'Volume',
-                         'SubjectID',
+                         'Kit',
                          'Barcode',
                          # 'Location'
                          ]},
@@ -136,6 +131,7 @@ class BiospecimensView(BikaListingView):
                          'Type',
                          'Volume',
                          'SubjectID',
+                         'Kit',
                          'Barcode',
                          # 'Location'
                          ]},
@@ -148,6 +144,7 @@ class BiospecimensView(BikaListingView):
                          'Type',
                          'Volume',
                          'SubjectID',
+                         'Kit',
                          'Barcode',
                          # 'Location'
                          ]},
@@ -176,16 +173,44 @@ class BiospecimensView(BikaListingView):
 
     def folderitems(self, full_objects=False):
         items = BikaListingView.folderitems(self)
-        for x in range(len(items)):
+        for x, item in enumerate(items):
             if not items[x].has_key('obj'):
                 continue
             obj = items[x]['obj']
             items[x]['Type'] = obj.getType() and obj.getType().Title() or ''
             items[x]['Volume'] = obj.getVolume()
             items[x]['SubjectID'] = obj.getSubjectID()
-            items[x]['Barcode'] = obj.getBarcode()
+            items[x]['Kit'] = obj.getKit()
+            items[x]['replace']['Kit'] = \
+                '<a href="%s">%s</a>' % (obj.getKit().absolute_url(), obj.getKit().Title())
+            items[x]['Barcode'] = ''
             # items[x]['Location'] = obj.getStorageLocation().Title()
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                            (items[x]['url'], items[x]['Title'])
+
+            # TODO: SPECIFY OBJ STATES WHERE USER CAN EDIT BARCODE
+            allowed_method_state = 'uncompleted'
+
+            can_edit_biospecimen = self.allow_edit and isActive(self.context) and \
+                                   getSecurityManager().checkPermission(EditFieldBarcode, obj) and \
+                                   item['review_state'] in allowed_method_state
+
+            can_view_barcodes = getSecurityManager().checkPermission(ViewBarcode, obj)
+
+            if can_view_barcodes:
+                if can_edit_biospecimen:
+                    barcode_html = '<input id="barcode.%s" style="width: 70px;" value="" />' %(obj.UID())
+                    item['after']['Barcode'] = barcode_html
+                    # items[x]['allow_edit'].extend(['Barcode'])
+                    # items[x]['Barcode'] = 'HHHH'
+                    # item['choices']['Barcode'] = [{'ResultValue': 'HB', 'ResultText': 'Hocine Bendou'},
+                    #                               {'ResultValue':'TTT', 'ResultText': 'Test User'}]
+                else:
+                    items[x]['Barcode'] = obj.getBarcode()
+            else:
+                items[x]['before']['Barcode'] = \
+                    '<img width="16" height="16" ' + \
+                    'src="%s/++resource++bika.lims.images/to_follow.png"/>' % \
+                    (self.portal_url)
 
         return items
