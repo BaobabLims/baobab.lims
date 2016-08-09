@@ -1,8 +1,0 @@
-from ajax import InventoryItemInfo
-from ajax import InventoryPositionsInfo
-from ajax import StorageInventorySubmit
-from storageinventory import InventoryGraph
-from storageinventory import InventoryStorageEdit
-from storageinventory import InventoryStorageView
-from storageinventory import PositionsView
-

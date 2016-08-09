@@ -29,12 +29,6 @@
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>
 
-    <type type_id="StorageManagements"/>
-    <type type_id="StorageManagement">
-        <bound-workflow workflow_id="bika_one_state_workflow"/>
-        <bound-workflow workflow_id="bika_inactive_workflow"/>
-    </type>
-
     <type type_id="Projects"/>
     <type type_id="Project">
         <bound-workflow workflow_id="bika_one_state_workflow"/>
@@ -55,12 +49,6 @@
 
     <type type_id="Aliquots"/>
     <type type_id="Aliquot">
-        <bound-workflow workflow_id="bika_aliquot_storage_manage_workflow"/>
-        <bound-workflow workflow_id="bika_inactive_workflow"/>
-    </type>
-
-    <type type_id="StorageInventories"/>
-    <type type_id="StorageInventory">
         <bound-workflow workflow_id="bika_one_state_workflow"/>
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>

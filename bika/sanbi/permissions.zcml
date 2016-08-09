@@ -10,8 +10,6 @@
     <permission id="bika.sanbi.ManageKitTemplates" title="SANBI: Manage KitTemplates"/>
     <permission id="bika.sanbi.permissions.AddKit" title="SANBI: Add Kit"/>
     <permission id="bika.sanbi.ManageKits" title="SANBI: Manage Kits"/>
-    <permission id="bika.sanbi.permissions.AddStorageManagement" title="SANBI: Add Storage Management"/>
-    <permission id="bika.sanbi.ManageStoragePositions" title="SANBI: Manage Storage Positions"/>
     <permission id="bika.sanbi.permissions.AddProject" title="SANBI: Add Project"/>
     <permission id="bika.sanbi.ManageProjects" title="SANBI: Manage Projects"/>
     <permission id="bika.sanbi.permissions.AddShipment" title="SANBI: Add Shipment"/>
@@ -19,7 +17,6 @@
     <permission id="bika.sanbi.permissions.AddAliquot" title="SANBI: Add Aliquot"/>
     <permission id="bika.sanbi.ManageAliquots" title="SANBI: Manage Aliquots"/>
     <permission id="bika.sanbi.permissions.AddMultimage" title="BIKA: Add Multimage"/>
-    <permission id="bika.sanbi.permissions.AddStorageInventory" title="SANBI: Add Storage Inventory"/>
 
     # Other
     # ------

@@ -27,9 +27,7 @@ class BikaCustomGenerator:
 
         bika_setup = portal._getOb('bika_setup')
         for obj_id in ('bika_kittemplates',
-                       'bika_storagemanagements',
-                       'bika_biospectypes',
-                       'bika_storageinventories'):
+                       'bika_biospectypes'):
             obj = bika_setup._getOb(obj_id)
             obj.unmarkCreationFlag()
             obj.reindexObject()

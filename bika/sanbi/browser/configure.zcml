@@ -16,7 +16,6 @@
     <include package=".shipments"/>
     <include package=".shipment"/>
     <include package=".ajax"/>
-    <include package=".storagemanagement"/>
     <include package=".projects"/>
     <include package=".project"/>
     <include package=".biospectype"/>
@@ -25,7 +24,6 @@
     <include package=".aliquots"/>
     <include package=".aliquot"/>
     <include package=".multimage"/>
-    <include package=".storageinventory"/>
 
 
     <!-- This registration allows additional sticker templates.

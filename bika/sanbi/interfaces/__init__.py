@@ -1,4 +1,5 @@
 from zope.interface import Interface
+from bika.lims.interfaces import IStorageType
 
 class IKitTemplate(Interface):
     """Comment"""
@@ -11,12 +12,6 @@ class IKits(Interface):
 
 class IKit(Interface):
     """Package Supply"""
-
-class IStorageManagement(Interface):
-    """Interface for Storage management"""
-
-class IStorageManagements(Interface):
-    """Interface for Storage managements"""
 
 class IProject(Interface):
     """Interface for Project"""
@@ -51,27 +46,18 @@ class IAliquot(Interface):
 class IAliquots(Interface):
     """Interface for aliquots"""
 
-class IStorageInventory(Interface):
-    """Interface for StorageInventory"""
-
-class IStorageInventories(Interface):
-    """Interface for StorageInventories"""
-
-class IInventoryAssignable(Interface):
-    """Interface for StorageInventories"""
-
-class IStockItemStorageLocation(Interface):
+class IStockItemStorage(IStorageType):
     """A StorageLocation or StorageLevel that can store StockItems must
     provide this interface"""
 
-class IBioSpecimenStorageLocation(Interface):
+class IBioSpecimenStorage(IStorageType):
     """A StorageLocation or StorageLevel that can store BioSpecimen objects
      must provide this interface"""
 
-class IAliquotStorageLocation(Interface):
+class IAliquotStorage(IStorageType):
     """A StorageLocation or StorageLevel that can store Aliquots must
     provide this interface"""
 
-class IKitStorageLocation(Interface):
+class IKitStorage(IStorageType):
     """A StorageLocation or StorageLevel that can store Kits must
     provide this interface"""
