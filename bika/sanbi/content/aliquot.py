@@ -81,7 +81,7 @@ schema = BikaSchema.copy() + Schema((
             visible={'edit': 'visible', 'view': 'visible'},
             catalog_name='bika_setup_catalog',
             showOn=True,
-            base_query={'inactive_state': 'active', 'review_state': 'position_free'},
+            base_query={'inactive_state': 'active', 'review_state': 'available'},
             colModel=[{'columnName': 'UID', 'hidden': True},
                       {'columnName': 'Room', 'width': '15', 'label': _('Room')},
                       {'columnName': 'StorageType', 'width': '15', 'label': _('Type')},
@@ -236,7 +236,7 @@ class Aliquot(BaseContent):
         storage_location = self.getStorageLocation()
         if self.guard_store_transition():
             state = wftool.getInfoFor(storage_location, 'review_state')
-            if state == 'position_free':
+            if state == 'available':
                 wftool.doActionFor(storage_location, action='reserve', wf_id='bika_storageposition_workflow')
                 storage_location.edit(
                     IsReserved=True,
@@ -253,7 +253,7 @@ class Aliquot(BaseContent):
         storage_location = self.getStorageLocation()
         if self.guard_store_transition():
             state = wftool.getInfoFor(storage_location, 'review_state')
-            if state == 'position_free':
+            if state == 'available':
                 wftool.doActionFor(storage_location, action='reserve', wf_id='bika_storageposition_workflow')
                 storage_location.edit(
                     IsReserved=True,

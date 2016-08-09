@@ -6,9 +6,9 @@
 
     <adapter
             for="*"
-            provides="bika.lims.interfaces.IStorageTypeRegistration"
-            name="bika.sanbi.storagetypes"
+            provides="bika.lims.interfaces.IStorageTypeProvider"
             factory="bika.sanbi.adapters.storage.defaultStorageTypes"
+            name="bika.sanbi.storagetypes"
     />
 
 </configure>

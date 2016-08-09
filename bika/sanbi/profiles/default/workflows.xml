@@ -6,8 +6,6 @@
   Contains workflow definitions for your portal</property>
 
 <object name="bika_kit_assembly_workflow" meta_type="Workflow"/>
-<object name="bika_storageposition_workflow" meta_type="Workflow"/>
-<object name="bika_aliquot_storage_manage_workflow" meta_type="Workflow"/>
 <object name="bika_biospecime_workflow" meta_type="Workflow"/>
 
 <bindings>

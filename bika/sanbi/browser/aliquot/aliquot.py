@@ -32,15 +32,14 @@ class AliquotEdit(BrowserView):
             # too free
             if not form.get('StorageLocation', ''):
                 wftool = self.context.portal_workflow
-                location = self.context.getStorageLocation()
-                if location:
-                    state = wftool.getInfoFor(location, 'review_state')
-                    if state != 'position_free':
-                        if state == 'position_occupied' and \
-                                location.getSample():
-                            location.setAliquot(None)
-                        wftool.doActionFor(location, action='free',
-                                           wf_id='bika_storageposition_workflow')
+                locs = self.context.getBackRefs('ItemStorageLocation')
+                if locs:
+                    loc = locs[0]
+                    state = wftool.getInfoFor(loc, 'review_state')
+                    if state == 'occupied':
+                        loc.setAliquot(None)
+                        wftool.doActionFor(loc, action='liberate',
+                                           wf_id='bika_storage_workflow')
 
             portal_factory = getToolByName(context, 'portal_factory')
             context = portal_factory.doCreate(context, context.id)
@@ -212,7 +211,7 @@ class AjaxGetPositions:
         catalog = getToolByName(self.context, 'bika_setup_catalog')
         brains = catalog.searchResults(portal_type='StorageLocation',
                                        inactive_state='active',
-                                       review_state='position_free',
+                                       review_state='available',
                                        sort_on='created')
         storages = []
         for brain in brains:

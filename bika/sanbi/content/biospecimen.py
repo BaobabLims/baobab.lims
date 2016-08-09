@@ -6,7 +6,7 @@ from zope.interface import implements
 from bika.lims.content.bikaschema import BikaSchema, BikaFolderSchema
 from plone.app.folder.folder import ATFolder
 from bika.sanbi import bikaMessageFactory as _
-from bika.sanbi.interfaces import IBiospecimen
+from bika.sanbi.interfaces import IBiospecimen, IBioSpecimenStorage
 from bika.sanbi.config import PROJECTNAME
 from Products.CMFCore.utils import getToolByName
 from DateTime import DateTime
@@ -84,36 +84,24 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
               visible={'edit': 'invisible', 'view': 'invisible'}
           )),
 
-    ReferenceField('StorageUnits',
-        vocabulary='getStorageUnits',
-        allowed_types=('StorageUnit',),
-        relationship='AliquotUnit',
-        widget=SelectionWidget(
-            format='select',
-            label=_("Rooms"),
-            visible={'view': 'invisible', 'edit': 'invisible'}
-        )),
-
     ReferenceField(
         'StorageLocation',
-        allowed_types=('StorageLocation',),
-        relationship='AliquotStorageLocation',
+        allowed_types=('ManagedStorage','UnmanagedStorage','StoragePosition'),
+        relationship='ItemStorageLocation',
         widget=bika_ReferenceWidget(
             label=_("Storage Location"),
-            description=_("Location where sample is kept"),
+            description=_("Location where item is kept"),
             size=40,
             visible={'edit': 'visible', 'view': 'visible'},
             catalog_name='bika_setup_catalog',
             showOn=True,
             render_own_label=True,
-            base_query={'inactive_state': 'active', 'review_state': 'position_free'},
+            base_query={'inactive_state': 'active',
+                        'review_state': 'available',
+                        'object_provides': IBioSpecimenStorage.__identifier__},
             colModel=[{'columnName': 'UID', 'hidden': True},
-                      {'columnName': 'Room', 'width': '15', 'label': _('Room')},
-                      {'columnName': 'StorageType', 'width': '15', 'label': _('Type')},
-                      {'columnName': 'Shelf', 'width': '13', 'label': _('Sh./Ca.')},
-                      {'columnName': 'Box', 'width': '13', 'label': _('Box/Cane')},
-                      {'columnName': 'Position', 'width': '13', 'label': _('Pos.')},
-                      {'columnName': 'Title', 'width': '31', 'label': _('Address')},
+                      {'columnName': 'id', 'width': '30', 'label': _('ID')},
+                      {'columnName': 'Title', 'width': '50', 'label': _('Title')},
                       ],
         )),
 

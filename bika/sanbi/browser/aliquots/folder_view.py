@@ -210,7 +210,7 @@ class CreateAliquots:
             shelf = uc(UID=s['shelf'])[0].getObject()
             box = uc(UID=s['box'])[0].getObject()
             brains = bsc(portal_type='StorageLocation', parent_box_uid=s['box'],
-                         review_state='position_free')
+                         review_state='available')
             position = brains[0].getObject() if brains else None
             if not position:
                 storage = '.'.join([room.id, freezer.id, shelf.id, box.id])
