@@ -1,7 +1,7 @@
 [workflow],,,,,,,,,,
 Id:,bika_biospecimen_workflow,,,,,,,,,
 Title:,Bika Biospecimen storage Workflow,,,,,,,,,
-Description:,,,,,,,,,,,,
+Description:,,,,,,,,,,
 Initial state:,uncompleted,,,,,,,,,
 Type:,Workflow,,,,,,,,,
 State variable:,review_state,,,,,,,,,
