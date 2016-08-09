@@ -28,64 +28,54 @@ class AddBiospecimensSubmitHandler(BrowserView):
     def __call__(self):
 
         if "viewlet_submitted" in self.request.form:
+            data = {}
             try:
-                self.validate_form_inputs()
+                data = self.validate_form_inputs()
             except ValidationError as e:
                 self.form_error(e.message)
 
             # Validation is complete, now set local variables from form inputs.
-            form = self.request.form
-            title_template = form.get('titletemplate', None)
-            id_template = form.get('idtemplate', None)
-            seq_start = int(form.get('seq_start', None))
-            count = int(form.get('biospecimen_count', None))
-            type_uid = form.get('biospecimen_type', None)
-            biospecimen_per_kit = int(form.get('biospecimen_per_kit', None))
-            volume = form.get('biospecimen_volume', None)
-            volume_unit = form.get('volume_unit', None)
-            subject_id = form.get('subject_id', None)
-            barcodes = form.get('barcodes', None)
-            if barcodes:
-                barcodes = barcodes.split('\r\n')
-            project_uid = form.get('Project_uid', None)
-            # kits_range = form.get('kits_range', None)
-            # min_range, max_range = map(int, kits_range.split('-'))
+            if data:
 
-            bc = getToolByName(self.context, 'bika_catalog')
-            # TODO: once kit workflow implemented, filter with kit state = received
-            brains = bc(portal_type="Kit", inactive_state='active')
-            kits = [brain.getObject() for brain in brains
-                                      if brain.getObject().getProject().UID() == project_uid]
+                biospecimens = []
+                j = 0
+                for x in range(data['seq_start'], data['seq_start'] + data['biospecimen_count']):
+                    obj = api.content.create(
+                        container=self.context,
+                        type='Biospecimen',
+                        id=data['id_template'].format(id=x),
+                        title=data['title_template'].format(id=x),
+                        SubjectID=data['subject_id'],
+                        Barcode='',
+                        Volume=data['volume'],
+                        Unit=data['volume_unit']
+                    )
 
-            # kits = kits[min_range:max_range]
+                    self.context.manage_renameObject(obj.id, data['id_template'].format(id=x), )
+                    obj.setKit(data['kits'][j].UID)
+                    if j % data['biospecimen_per_kit'] == 0:
+                        j += 1
+                    obj.setType(data['type_uid'])
+                    biospecimens.append(obj)
 
-            # assert len(kits) == count
-
-            # assert len(barcodes) == count * biospecimen_per_kit
-
-            biospecimens = []
-            for x in range(seq_start, seq_start + count * biospecimen_per_kit):
-                obj = api.content.create(
-                    container=self.context,
-                    type='Biospecimen',
-                    id=id_template.format(id=x),
-                    title=title_template.format(id=x),
-                    SubjectID=subject_id,
-                    Barcode='',
-                    Volume=volume,
-                    Unit=volume_unit
-                )
-
-                self.context.manage_renameObject(obj.id, id_template.format(id=x), )
-                obj.setKit(kits[x - seq_start - (x-seq_start) % biospecimen_per_kit])
-                obj.setType(type_uid)
-                print obj.getType()
-                biospecimens.append(obj)
-
-            msg = u'%s Biospecimens created.' % len(kits)
+            msg = u'%s Biospecimens created.' % len(biospecimens)
             self.context.plone_utils.addPortalMessage(msg)
             self.request.response.redirect(self.context.absolute_url())
 
+    def kits_between_limits(self, first_limit_uid, last_limit_uid, project_uid):
+        """Retrieve kits between the two limits
+        """
+        bc = getToolByName(self.context, 'bika_catalog')
+        uc = getToolByName(self.context, 'uid_catalog')
+        first_kit_id = uc(UID=first_limit_uid)[0].id
+        last_kit_id = uc(UID=last_limit_uid)[0].id
+        brains = bc(portal_type='Kit', inactive_state='active', kit_project_uid=project_uid)
+        kits = []
+        for brain in brains:
+            if brain.id >= first_kit_id and brain.id <= last_kit_id:
+                kits.append(brain)
+
+        return kits
 
     def validate_form_inputs(self):
 
@@ -101,10 +91,23 @@ class AddBiospecimensSubmitHandler(BrowserView):
 
         try:
             seq_start = int(form.get('seq_start', None))
-            biospecimen_count = int(form.get('biospecimen_count', None))
         except:
             raise ValidationError(
                 u'Sequence start and all counts must be integers')
+
+        project_uid = form.get('Project_uid', None)
+        if not project_uid:
+            raise ValidationError(u'Project is required and should be not "None"')
+
+        first_kit_limit = form.get('first_kit_limit', None)
+        last_kit_limit = form.get('last_kit_limit', None)
+        if not first_kit_limit or not last_kit_limit:
+            raise ValidationError(u'Kits range is required. Or project select has no kits!')
+
+        kits = self.kits_between_limits(first_kit_limit, last_kit_limit, project_uid)
+        count = len(kits)
+        biospecimen_per_kit = int(form.get('biospecimen_per_kit', None))
+        biospecimen_count = count * biospecimen_per_kit
 
         # Check that none of the IDs conflict with existing items
         ids = [x.id for x in self.context.objectValues('Kit')]
@@ -114,22 +117,34 @@ class AddBiospecimensSubmitHandler(BrowserView):
                 raise ValidationError(
                     u'The ID %s exists, cannot be created.' % check)
 
-        # Check the range of kits is correct
-        # kits_range = form.get('kits_range', None)
-        # if not kits_range:
-        #     raise ValidationError(u'Kit int range is required.')
-        # min, max = kits_range.split('-')
-        # try:
-        #     min = int(min)
-        #     max = int(max)
-        # except:
-        #     raise ValidationError(
-        #         u'Kits min and max range must be integers')
-
-        # Biospecimen type is required and should be diffrent of None.
         biospecimen_type = form.get('sel_type', None)
         if not biospecimen_count or biospecimen_type == 'None':
             raise ValidationError(u'Biospecimen type is required and should be not "None"')
+
+        volume_unit = form.get('volume_unit', None)
+        volume = form.get('biospecimen_volume', None)
+        if not volume or volume <= 0:
+            raise ValidationError(u'Biospecimen volume is required and should not be positive.')
+
+        subject_id = form.get('subject_id', None)
+        if not subject_id:
+            raise ValidationError(u'Subject ID is required.')
+
+        return {
+            'title_template': title_template,
+            'id_template': id_template,
+            'seq_start': seq_start,
+            'project_uid': project_uid,
+            'first_kit_limit': first_kit_limit,
+            'last_kit_limit': last_kit_limit,
+            'kits': kits,
+            'biospecimen_per_kit': biospecimen_per_kit,
+            'biospecimen_count': biospecimen_count,
+            'type_uid': biospecimen_type,
+            'volume': volume,
+            'volume_unit': volume_unit,
+            'subject_id': subject_id
+        }
 
     def form_error(self, msg):
         self.context.plone_utils.addPortalMessage(msg)
