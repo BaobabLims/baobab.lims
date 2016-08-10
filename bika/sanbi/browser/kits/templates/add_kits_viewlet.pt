@@ -3,21 +3,21 @@
     <script tal:attributes="src python:context.absolute_url() + '/bika_widgets/referencewidget.js'"
             type="text/javascript"></script>
     <script type="text/javascript">
-        (function($) {
-            $(function() {
+        (function ($) {
+            $(function () {
 
                 var stockItemUIDs = [];
                 var kitUIDs = [];
 
                 /* Help functions */
 
-                function updateArrayUIDs(storageType, UID, operation){
+                function updateArrayUIDs(storageType, UID, operation) {
 
-                    if (storageType == "StockItem"){
+                    if (storageType == "StockItem") {
 
-                        if (operation == 'ADD'){
+                        if (operation == 'ADD') {
                             stockItemUIDs.push(UID);
-                        }else if (operation == 'REMOVE'){
+                        } else if (operation == 'REMOVE') {
                             stockItemUIDs = stockItemUIDs.filter(function (uid) {
                                 return uid != UID;
                             });
@@ -25,11 +25,11 @@
 
                         $("#si-storage-uids").val(stockItemUIDs);
 
-                    }else if (storageType == "Kit"){
+                    } else if (storageType == "Kit") {
 
-                        if (operation == 'ADD'){
+                        if (operation == 'ADD') {
                             kitUIDs.push(UID);
-                        }else if (operation == 'REMOVE'){
+                        } else if (operation == 'REMOVE') {
                             kitUIDs = kitUIDs.filter(function (uid) {
                                 return uid != UID;
                             });
@@ -40,13 +40,13 @@
 
                 }
 
-                function createStorageRow(idRefField, idUID, idTable, storageType){
+                function createStorageRow(idRefField, idUID, idTable, storageType) {
                     console.log($(idRefField));
                     var storageVal = $(idRefField).val();
                     var storageUID = $(idUID).val();
-                    var html = '<tr id="'+ storageUID +'"><td>' + storageVal + '</td><td>' +
-                               '<img src="++resource++bika.lims.images/delete.png" class="remove-tr">' +
-                               '</td></tr>';
+                    var html = '<tr id="' + storageUID + '"><td>' + storageVal + '</td><td>' +
+                            '<img src="++resource++bika.lims.images/delete.png" class="remove-tr">' +
+                            '</td></tr>';
                     $(html).appendTo(idTable);
 
                     updateArrayUIDs(storageType, storageUID, 'ADD');
@@ -90,12 +90,13 @@
 </head>
 <body>
 <style type="text/css">
-    .add-kits .discreet{
-      font-size:50%;
-      color:#ddd;
+    .add-kits .discreet {
+        font-size: 50%;
+        color: #ddd;
     }
-    .add-kits input{
-      margin-bottom:5px;
+
+    .add-kits input {
+        margin-bottom: 5px;
     }
 
     /*The collapse-header is positioned upwards, compensate here with margin.
@@ -103,23 +104,34 @@
     position it away from the green-bar.
     */
     .collapsible {
-      margin-top: 2em !important;
+        margin-top: 2em !important;
     }
 
-    .discreet li {padding:0;margin:0;line-height:1em !important;}
+    .discreet li {
+        padding: 0;
+        margin: 0;
+        line-height: 1em !important;
+    }
 
-    table {width:100%;}
-    td {padding:5px 10px 5px 0;}
+    table {
+        width: 100%;
+    }
 
-    td.bordertop {border-top: 1px solid #ddd;}
+    td {
+        padding: 5px 10px 5px 0;
+    }
+
+    td.bordertop {
+        border-top: 1px solid #ddd;
+    }
 
     input.add-button {
-        padding:2px 15px;
-        border:none;
-        color:#fff;
-        font-size:1.1em;
-        cursor:pointer;
-        background-color:#0B486B;
+        padding: 2px 15px;
+        border: none;
+        color: #fff;
+        font-size: 1.1em;
+        cursor: pointer;
+        background-color: #0B486B;
     }
 </style>
 
@@ -148,7 +160,7 @@
                                    class="titletemplate"
                                    placeholder="Title For {id}"
                                    tabindex="1"
-                                   tal:attributes="value python: request.get('titletemplate', '')"/>
+                                tal:attributes="value python: request.get('titletemplate', '')"/>
                         </td>
                         <td>ID Sequence Start:</td>
                         <td>
@@ -156,7 +168,7 @@
                                    type="number"
                                    class="seq_start"
                                    tabindex="3"
-                                   tal:attributes="value python: request.get('seq_start', '1')"/>
+                                    tal:attributes="value python: request.get('seq_start', '1')"/>
                         </td>
                     <tr>
                     <tr>
@@ -170,7 +182,7 @@
                                    class="idtemplate"
                                    placeholder="prefix-{id}"
                                    tabindex="2"
-                                   tal:attributes="value python: request.get('idtemplate', '')"/>
+                                    tal:attributes="value python: request.get('idtemplate', '')"/>
                         </td>
                         <td>Number of Kits to assemble
                         </td>
@@ -179,7 +191,7 @@
                                    type="number"
                                    class="kit_count"
                                    tabindex="4"
-                                   tal:attributes="value python: request.get('kit_count', '1')"/>
+                                    tal:attributes="value python: request.get('kit_count', '1')"/>
                         </td>
                     </tr>
                     <tr>
@@ -272,7 +284,8 @@
                             <span></span>
                         </fieldset>
                         <div class="discreet" class="helptext">
-                            Select Stock-Item storage to use in kit assembling. In case of more than one storage selected, storages are
+                            Select Stock-Item storage to use in kit assembling. In case of more than one storage
+                            selected, storages are
                             searched in the order they are specified.
                         </div>
                         <div style="width:100%" class="field ArchetypesReferenceWidget">
@@ -283,19 +296,21 @@
                                     required="True"
                                     class="blurrable firstToFocus referencewidget"
                                     value=""
-                                    base_query='{"portal_type": "StorageLevel", "inactive_state": "active"}'
+                                    base_query='{"portal_type": ["ManagedStorage", "UnmanagedStorage"], "object_provides": "bika.lims.interfaces.IStockItemStorage", "review_state": "available", "inactive_state": "active"}'
                                     search_query='{}'
                                     catalog_name="bika_setup_catalog"
                                     ui_item="Title"
                                     autocomplete="false"
                                     tabindex="6"
-                                    combogrid_options='{"colModel": [{"columnName": "Title", "align": "left", "label": "Template Title", "width": "50"},
-                                                                     {"columnName": "UID", "hidden": true}],
+                                    combogrid_options='{"colModel": [{"columnName": "Title", "align": "left", "label": "Title", "width": "30"},
+                                                                 {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "50"},
+                                                                 {"columnName": "FreePositions", "align": "left", "label": "Free", "width": "20"},
+                                                                 {"columnName": "UID", "hidden": true}],
                                                         "search_fields": ["Title"],
                                                         "catalog_name": "bika_setup_catalog",
                                                         "url": "referencewidget_search",
                                                         "discard_empty": [],
-                                                        "popup_width": "550px",
+                                                        "popup_width": "650px",
                                                         "showOn": true,
                                                         "searchIcon": true,
                                                         "minLength": "0",
@@ -319,7 +334,8 @@
                             <span></span>
                         </fieldset>
                         <div class="discreet" class="helptext">
-                            Select Kit storage to store the generated kits. In case of more than one storage selected, storages are
+                            Select Kit storage to store the generated kits. In case of more than one storage selected,
+                            storages are
                             filled in the order they are specified.
                         </div>
                         <div style="width:100%" class="field ArchetypesReferenceWidget">
@@ -330,19 +346,21 @@
                                     required="True"
                                     class="blurrable firstToFocus referencewidget"
                                     value=""
-                                    base_query='{"portal_type": "StorageLevel", "inactive_state": "active"}'
+                                    base_query='{"portal_type": ["ManagedStorage", "UnmanagedStorage"], "object_provides": "bika.sanbi.interfaces.IKitStorage", "review_state": "available", "inactive_state": "active"}'
                                     search_query='{}'
                                     catalog_name="bika_setup_catalog"
                                     ui_item="Title"
                                     autocomplete="false"
                                     tabindex="6"
-                                    combogrid_options='{"colModel": [{"columnName": "Title", "align": "left", "label": "Template Title", "width": "50"},
+                                    combogrid_options='{"colModel": [{"columnName": "Title", "align": "left", "label": "Title", "width": "30"},
+                                                                     {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "50"},
+                                                                     {"columnName": "FreePositions", "align": "left", "label": "Free", "width": "20"},
                                                                      {"columnName": "UID", "hidden": true}],
                                                         "search_fields": ["Title"],
                                                         "catalog_name": "bika_setup_catalog",
                                                         "url": "referencewidget_search",
                                                         "discard_empty": [],
-                                                        "popup_width": "550px",
+                                                        "popup_width": "650px",
                                                         "showOn": true,
                                                         "searchIcon": true,
                                                         "minLength": "0",
@@ -362,8 +380,8 @@
                     </div>
                 </div>
 
-                <input type="hidden" name="si_uids" id="si-storage-uids" />
-                <input type="hidden" name="k_uids" id="kit-storage-uids" />
+                <input type="hidden" name="si_storage_uids" id="si-storage-uids"/>
+                <input type="hidden" name="kit_storage_uids" id="kit-storage-uids"/>
 
                 <input name="viewlet_submitted"
                        type="submit"

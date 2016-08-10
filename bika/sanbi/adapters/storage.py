@@ -1,4 +1,4 @@
-from bika.sanbi.interfaces import IStockItemStorage, IBioSpecimenStorage, \
+from bika.sanbi.interfaces import IBioSpecimenStorage, \
     IAliquotStorage, IKitStorage
 
 
@@ -6,9 +6,6 @@ def defaultStorageTypes(context):
     """Return the storage types provided directly by bika.sanbi
     """
     return [
-        {'interface': IStockItemStorage,
-         'identifier': IStockItemStorage.__identifier__,
-         'title': 'Stock Item'},
         {'interface': IBioSpecimenStorage,
          'identifier': IBioSpecimenStorage.__identifier__,
          'title': 'Bio Specimen'},

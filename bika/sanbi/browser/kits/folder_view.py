@@ -22,7 +22,7 @@ class KitsView(BikaListingView):
             'sort_order': 'ascending'
         }
         self.context_actions = {}
-        self.title = self.context.translate(_("Biospecimen"))
+        self.title = self.context.translate(_("Kits"))
         self.icon = self.portal_url + \
                     "/++resource++bika.sanbi.images/kit_big.png"
         self.description = ''
