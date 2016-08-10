@@ -281,7 +281,12 @@
                                 required="True"
                                 class="blurrable firstToFocus referencewidget"
                                 value=""
+<<<<<<< f52d2176184cefb22c1b534c8e440d1380e9692a
                                 base_query='{"portal_type": ["ManagedStorage", "UnmanagedStorage"], "object_provides": "bika.sanbi.interfaces.IBioSpecimenStorage", "review_state": "available", "inactive_state": "active"}'
+=======
+                                base_query='{"portal_type": "StorageLevel", "inactive_state": "active",
+                                             "object_provides": "bika.lims.interfaces.IBioSpecimenStorageLocation"}'
+>>>>>>> 83d8ed960a1664497087e364b2a6077a9013b30a
                                 search_query='{}'
                                 catalog_name="bika_setup_catalog"
                                 ui_item="Title"
@@ -318,7 +323,7 @@
                     <table id="biospecimen-table-storages" style="width: 35%;"></table>
                 </div>
 
-                <input type="hidden" name="b_uids" id="b-storage-uids" />
+                <input type="hidden" name="b_storage_uids" id="b-storage-uids" />
 
                 <input name="viewlet_submitted"
                        type="submit"

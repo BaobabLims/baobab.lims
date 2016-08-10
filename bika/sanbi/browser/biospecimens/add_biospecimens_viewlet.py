@@ -26,7 +26,6 @@ class AddBiospecimensSubmitHandler(BrowserView):
     """
     """
     def __call__(self):
-
         if "viewlet_submitted" in self.request.form:
             data = {}
             try:
@@ -53,7 +52,7 @@ class AddBiospecimensSubmitHandler(BrowserView):
 
                     self.context.manage_renameObject(obj.id, data['id_template'].format(id=x), )
                     obj.setKit(data['kits'][j].UID)
-                    if j % data['biospecimen_per_kit'] == 0:
+                    if j % data['biospecimen_per_kit'] == 0 and j != 0:
                         j += 1
                     obj.setType(data['type_uid'])
                     biospecimens.append(obj)
@@ -117,8 +116,8 @@ class AddBiospecimensSubmitHandler(BrowserView):
                 raise ValidationError(
                     u'The ID %s exists, cannot be created.' % check)
 
-        biospecimen_type = form.get('sel_type', None)
-        if not biospecimen_count or biospecimen_type == 'None':
+        biospecimen_type = form.get('biospecimen_type', None)
+        if not biospecimen_type or biospecimen_type == 'None':
             raise ValidationError(u'Biospecimen type is required and should be not "None"')
 
         volume_unit = form.get('volume_unit', None)
