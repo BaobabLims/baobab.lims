@@ -118,7 +118,7 @@
         <span i18n:translate="">Add new biospecimens</span>
     </dt>
     <dd class="collapsibleContent">
-        <div class="discreet" class="helptext">
+        <div class="discreet helptext">
             Biospecimens are materials taken from human body, such as tissue, blood, plasma, stool and urine
             that can be used for diagnosis and analysis.<br/> Biobank's clients collect the biospecimen from
             participants and send them in kits to the biobank for storage or for further down stream analysis.
@@ -276,24 +276,26 @@
                     <div style="width:100%" class="field ArchetypesReferenceWidget">
                         <input
                                 type="text"
-                                name="Biospecimen"
-                                id="Biospecimen"
+                                name="StorageLevel"
+                                id="StorageLevel"
                                 required="True"
                                 class="blurrable firstToFocus referencewidget"
                                 value=""
-                                base_query='{"portal_type": "StorageLevel", "inactive_state": "active"}'
+                                base_query='{"portal_type": ["ManagedStorage", "UnmanagedStorage"], "object_provides": "bika.sanbi.interfaces.IBioSpecimenStorage", "review_state": "available", "inactive_state": "active"}'
                                 search_query='{}'
                                 catalog_name="bika_setup_catalog"
                                 ui_item="Title"
                                 autocomplete="false"
                                 tabindex="13"
-                                combogrid_options='{"colModel": [{"columnName": "Title", "align": "left", "label": "Template Title", "width": "50"},
+                                combogrid_options='{"colModel": [{"columnName": "Title", "align": "left", "label": "Title", "width": "30"},
+                                                                 {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "50"},
+                                                                 {"columnName": "FreePositions", "align": "left", "label": "Free", "width": "20"},
                                                                  {"columnName": "UID", "hidden": true}],
                                                     "search_fields": ["Title"],
                                                     "catalog_name": "bika_setup_catalog",
                                                     "url": "referencewidget_search",
                                                     "discard_empty": [],
-                                                    "popup_width": "550px",
+                                                    "popup_width": "650px",
                                                     "showOn": true,
                                                     "searchIcon": true,
                                                     "minLength": "0",
@@ -309,8 +311,8 @@
                     </div>
                     </div>
                     <div class="discreet helptext" style="display: inline-block; margin-left: 100px;">
-                        Select storage(s) for the generated biospecimens. <br/> In case of more than one storage is
-                        selected, the storages are filled in the order they are specified.
+                        Select storage(s) for the generated biospecimens.<br/>In case more than one storage is
+                        selected, the storages are filled in the order they are specified.<br/>
                     </div>
 
                     <table id="biospecimen-table-storages" style="width: 35%;"></table>
