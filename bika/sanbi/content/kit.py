@@ -7,7 +7,7 @@ from Products.Archetypes.public import *
 from Products.Archetypes.references import HoldingReference
 import sys
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
-from bika.sanbi.interfaces import IKit
+from bika.sanbi.interfaces import IKit, IKitStorage
 from Products.CMFPlone.interfaces import IConstrainTypes
 
 from Products.CMFCore import permissions
@@ -36,19 +36,39 @@ schema = BikaSchema.copy() + Schema((
     ),
 
     ReferenceField('KitTemplate',
-        required=1,
-        vocabulary_display_path_bound = sys.maxint,
-        allowed_types=('KitTemplate',),
-        relationship='KitAssemblyTemplate',
-        referenceClass=HoldingReference,
+                   required=1,
+                   vocabulary_display_path_bound = sys.maxint,
+                   allowed_types=('KitTemplate',),
+                   relationship='KitAssemblyTemplate',
+                   referenceClass=HoldingReference,
+                   widget=bika_ReferenceWidget(
+                       label = _("Kit template"),
+                       size=30,
+                       catalog_name='bika_setup_catalog',
+                       showOn=True,
+                       description=_("Start typing to filter the list of available kit templates."),
+                   )
+                   ),
+    ReferenceField(
+        'StorageLocation',
+        allowed_types=('UnmanagedStorage', 'StoragePosition'),
+        relationship='ItemStorageLocation',
         widget=bika_ReferenceWidget(
-            label = _("Kit template"),
-            size=30,
+            label=_("Storage Location"),
+            description=_("Location where item is kept"),
+            size=40,
+            visible={'edit': 'visible', 'view': 'visible'},
             catalog_name='bika_setup_catalog',
             showOn=True,
-            description=_("Start typing to filter the list of available kit templates."),
-        )
-    ),
+            render_own_label=True,
+            base_query={'inactive_state': 'active',
+                        'review_state': 'available',
+                        'object_provides': IKitStorage.__identifier__},
+            colModel=[{'columnName': 'UID', 'hidden': True},
+                      {'columnName': 'id', 'width': '30', 'label': _('ID')},
+                      {'columnName': 'Title', 'width': '50', 'label': _('Title')},
+                      ],
+        )),
 
     BooleanField(
         'IsStored',
