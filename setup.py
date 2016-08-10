@@ -31,6 +31,18 @@ setup(name='bika.sanbi',
           'collective.wtf',
           'plone.formwidget.datetime',
       ],
+      extras_require={
+          'test': [
+              'plone.app.testing',
+              'robotsuite',
+              'robotframework-selenium2library',
+              'plone.app.robotframework',
+              'Products.PloneTestCase',
+              'robotframework-debuglibrary',
+              'plone.resource',
+              'plone.app.textfield',
+          ]
+      },
       entry_points="""
       # -*- Entry points: -*-
 

@@ -1,6 +1,5 @@
 *** Settings ***
 
-Resource   keywords_analysisrequest.txt
 Documentation    Generally useful keywords for Bika tests.
 ...              To include this file, use this:
 ...              *** settings ***
@@ -10,7 +9,6 @@ Documentation    Generally useful keywords for Bika tests.
 *** Keywords ***
 
 Start browser
-#    Open browser  ${PLONEURL}/login_form
     Open browser  ${PLONEURL}/login_form   browser=chrome
     Set selenium speed  ${SELENIUM_SPEED}
     # A large window, so that debug screenshots are sensibly sized

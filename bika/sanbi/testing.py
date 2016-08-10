@@ -1,25 +1,23 @@
-from plone.app.testing import FunctionalTesting
-from plone.app.testing import login
-from plone.app.testing import logout
-from plone.app.testing import PLONE_FIXTURE
-from plone.app.testing import PloneSandboxLayer
-from plone.app.testing import SITE_OWNER_NAME
-from plone.app.testing import applyProfile
-from plone.testing import z2
-from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone.setuphandlers import setupPortalContent
-from Testing.makerequest import makerequest
-
 import Products.ATExtensions
 import Products.PloneTestCase.setup
 import collective.js.jqueryui
 import plone.app.iterate
+from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.setuphandlers import setupPortalContent
+from plone.app.testing import FunctionalTesting
+from plone.app.testing import PLONE_FIXTURE
+from plone.app.testing import PloneSandboxLayer
+from plone.app.testing import SITE_OWNER_NAME
+from plone.app.testing import applyProfile
+from plone.app.testing import login
+from plone.app.testing import logout
+from plone.testing import z2
+from bika.lims.testing import getBrowser, RemoteKeywords
+from plone.app.robotframework.remote import RemoteLibraryLayer
+from plone.app.robotframework import AutoLogin, Content
 
-from bika.lims.exportimport.load_setup_data import LoadSetupData
 
-
-class BikaTestLayer(PloneSandboxLayer):
-
+class SanbiTestLayer(PloneSandboxLayer):
     defaultBases = (PLONE_FIXTURE,)
 
     def setUpZope(self, app, configurationContext):
@@ -85,21 +83,39 @@ class BikaTestLayer(PloneSandboxLayer):
                     group.addMember(username)
                 # Add user to all specified roles
                 member._addRole(role)
-                # If user is in LabManagers, add Owner local role on clients folder
+                # If user is in LabManagers, add Owner local role on clients
+                # folder
                 if role == 'LabManager':
                     portal.clients.manage_setLocalRoles(username, ['Owner', ])
 
-        # load test data
-        self.request = makerequest(portal.aq_parent).REQUEST
-        self.request.form['setupexisting'] = 1
-        self.request.form['existing'] = "bika.sanbi:test"
-        lsd = LoadSetupData(portal, self.request)
-        lsd()
+        ## load test data
+        # from bika.lims.exportimport.load_setup_data import LoadSetupData
+        # self.request = makerequest(portal.aq_parent).REQUEST
+        # self.request.form['setupexisting'] = 1
+        # self.request.form['existing'] = "bika.sanbi:test"
+        # lsd = LoadSetupData(portal, self.request)
+        # lsd()
 
         logout()
 
-CUSTOM_TEST_FIXTURE = BikaTestLayer()
 
-BIKA_CUSTOM_TESTING = FunctionalTesting(
-    bases=(CUSTOM_TEST_FIXTURE, z2.ZSERVER_FIXTURE),
-    name="CustomTestingLayer:Robot")
+SANBIO_TEST_FIXTURE = SanbiTestLayer()
+
+SANBI_FUNCTIONAL_FIXTURE = SanbiTestLayer()
+SANBI_FUNCTIONAL_FIXTURE['getBrowser'] = getBrowser
+SANBI_FUNCTIONAL_TESTING = FunctionalTesting(
+    bases=(SANBI_FUNCTIONAL_FIXTURE,),
+    name="SanbiTestingLayer:Functional"
+)
+
+REMOTE_FIXTURE = RemoteLibraryLayer(
+    libraries=(AutoLogin, Content, RemoteKeywords,),
+    name="RemoteLibrary:RobotRemote"
+)
+
+SANBI_ROBOT_TESTING = FunctionalTesting(
+    bases=(SANBI_FUNCTIONAL_FIXTURE,
+           REMOTE_FIXTURE,
+           z2.ZSERVER_FIXTURE),
+    name="SanbiTestingLayer:Robot"
+)
