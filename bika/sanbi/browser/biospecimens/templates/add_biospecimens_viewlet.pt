@@ -45,7 +45,7 @@
                 /* Process */
 
                 $("#b-button").on("click", function (e) {
-                    createStorageRow('#Biospecimen', '#biospecimen_uid', '#biospecimen-table-storages');
+                    createStorageRow('#StorageLevel', '#biospecimen_uid', '#biospecimen-table-storages');
                 });
 
                 $("#biospecimen-table-storages").on("click", ".remove-tr", function (e) {
@@ -167,7 +167,7 @@
                             <input name="biospecimen_per_kit"
                                    type="number"
                                    class="biospecimen_per_kit"
-                                   tabindex="6"
+                                   tabindex="5"
                                    min="1"
                                    tal:attributes="value python: request.get('biospecimen_per_kit', '1')"/>
                         </td>
@@ -177,7 +177,7 @@
                         <td>
                             <select id="biospecimen-type" name="biospecimen_type" tabindex="3">
                                 <option selected>None</option>
-                                <tal:types tal:repeat="type python:view.getBiospecimenTypes()">
+                                <tal:types tal:repeat="type python:view.get_biospecimen_types()">
                                     <option
                                             tal:attributes="value python:type[0]"
                                             tal:content="python:type[1]">
@@ -192,7 +192,7 @@
                         <td>
                             <input type="text"
                                    name="subject_id"
-                                   tabindex="9"
+                                   tabindex="6"
                                    placeholder="Subject ID"/>
                         </td>
                     </tr>
@@ -236,7 +236,7 @@
                                         catalog_name="bika_catalog"
                                         ui_item="Title"
                                         autocomplete="false"
-                                        tabindex="11"
+                                        tabindex="9"
                                         combogrid_options='{"colModel": [{"columnName": "Title", "align": "left", "label": "Project Title", "width": "100"},
                                                                         {"columnName": "UID", "hidden": true}],
                                                             "search_fields": ["Title"],
@@ -261,8 +261,8 @@
                             the two limits included,<br> are used in computing the number of biospecimens to generate.</div>
                         </td>
                         <td>
-                            From: <select name="first_kit_limit" id="first-kit-limit"></select>
-                            To: <select name="last_kit_limit" id="last-kit-limit"></select>
+                            From: <select tabindex="10" name="first_kit_limit" id="first-kit-limit"></select>
+                            To: <select tabindex="11" name="last_kit_limit" id="last-kit-limit"></select>
                         </td>
                     </tr>
                 </table>
@@ -286,7 +286,7 @@
                                 catalog_name="bika_setup_catalog"
                                 ui_item="Title"
                                 autocomplete="false"
-                                tabindex="13"
+                                tabindex="12"
                                 combogrid_options='{"colModel": [{"columnName": "Title", "align": "left", "label": "Title", "width": "30"},
                                                                  {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "50"},
                                                                  {"columnName": "FreePositions", "align": "left", "label": "Free", "width": "20"},
@@ -323,7 +323,7 @@
                 <input name="viewlet_submitted"
                        type="submit"
                        class="biospecimens-add"
-                       tabindex="14"
+                       tabindex="13"
                        value="Add Biospecimens">
 
             </form>

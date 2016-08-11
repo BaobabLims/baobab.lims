@@ -15,6 +15,9 @@ from Products.Archetypes.references import HoldingReference
 
 import sys
 
+@indexer(IBiospecimen)
+def get_biospecimen_kit_uid(instance):
+    return instance.getKit().UID()
 
 schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
 
@@ -119,11 +122,6 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
 schema['title'].widget.visible = {'edit': 'visible', 'view': 'visible'}
 schema['description'].widget.visible = {'edit': 'visible', 'view': 'visible'}
 schema['description'].schemata = 'default'
-
-
-@indexer(IBiospecimen)
-def getBiospecimenID(instance):
-    return instance.id
 
 
 class Biospecimen(ATFolder):

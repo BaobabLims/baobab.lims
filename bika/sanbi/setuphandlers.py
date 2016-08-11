@@ -63,6 +63,7 @@ class BikaCustomGenerator:
         at.setCatalogsByType('Aliquot', ['bika_catalog'])
         at.setCatalogsByType('Biospecimen', ['bika_catalog', ])
         addIndex(bc, 'kit_project_uid', 'FieldIndex')
+        addIndex(bc, 'biospecimen_kit_uid', 'FieldIndex')
 
         # _______________________________#
         #      BIKA_SETUP_CATALOG        #

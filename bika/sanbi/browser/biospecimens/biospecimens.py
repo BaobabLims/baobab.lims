@@ -181,8 +181,9 @@ class BiospecimensView(BikaListingView):
             items[x]['Volume'] = obj.getVolume()
             items[x]['SubjectID'] = obj.getSubjectID()
             items[x]['Kit'] = obj.getKit()
-            items[x]['replace']['Kit'] = \
-                '<a href="%s">%s</a>' % (obj.getKit().absolute_url(), obj.getKit().Title())
+            if obj.getKit():
+                items[x]['replace']['Kit'] = \
+                    '<a href="%s">%s</a>' % (obj.getKit().absolute_url(), obj.getKit().Title())
             items[x]['Barcode'] = ''
             # items[x]['Location'] = obj.getStorageLocation().Title()
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \

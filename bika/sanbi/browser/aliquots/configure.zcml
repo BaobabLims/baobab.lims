@@ -12,28 +12,21 @@
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
-    <browser:page
-      for="*"
-      name="get_sample_types"
-      class=".folder_view.AjaxSampleTypes"
-      permission="zope.Public"
-      layer="bika.lims.interfaces.IBikaLIMS"
+    <browser:viewlet
+        for="bika.sanbi.interfaces.IAliquots"
+        name="add_kits_viewlet"
+        class=".add_aliquots_viewlet.AddAliquotsViewlet"
+        manager="plone.app.layout.viewlets.interfaces.IBelowContentTitle"
+        permission="zope2.View"
+        layer="bika.lims.interfaces.IBikaLIMS"
     />
 
     <browser:page
-      for="*"
-      name="get_rooms"
-      class=".folder_view.AjaxGetRooms"
-      permission="zope.Public"
-      layer="bika.lims.interfaces.IBikaLIMS"
-    />
-
-    <browser:page
-      for="*"
-      name="create"
-      class=".folder_view.CreateAliquots"
-      permission="zope.Public"
-      layer="bika.lims.interfaces.IBikaLIMS"
+        for="bika.sanbi.interfaces.IAliquots"
+        name="add_aliquots_submit"
+        class=".add_aliquots_viewlet.AddAliquotsSubmitHandler"
+        permission="zope2.View"
+        layer="bika.lims.interfaces.IBikaLIMS"
     />
 
 </configure>

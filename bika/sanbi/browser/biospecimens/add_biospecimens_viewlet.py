@@ -3,14 +3,13 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone import api
 from plone.app.layout.viewlets import ViewletBase
 from zope.schema import ValidationError
-from Products.ATContentTypes.lib import constraintypes
 from Products.CMFCore.utils import getToolByName
 
 
 class AddBiospecimensViewlet(ViewletBase):
     index = ViewPageTemplateFile("templates/add_biospecimens_viewlet.pt")
 
-    def getBiospecimenTypes(self):
+    def get_biospecimen_types(self):
         bsc = getToolByName(self, 'bika_setup_catalog')
         items = [(c.UID, c.Title) \
                  for c in bsc(portal_type='BiospecType',
@@ -26,6 +25,7 @@ class AddBiospecimensSubmitHandler(BrowserView):
     """
     """
     def __call__(self):
+
         if "viewlet_submitted" in self.request.form:
             data = {}
             try:
@@ -34,28 +34,31 @@ class AddBiospecimensSubmitHandler(BrowserView):
                 self.form_error(e.message)
 
             # Validation is complete, now set local variables from form inputs.
-            if data:
 
-                biospecimens = []
-                j = 0
-                for x in range(data['seq_start'], data['seq_start'] + data['biospecimen_count']):
-                    obj = api.content.create(
-                        container=self.context,
-                        type='Biospecimen',
-                        id=data['id_template'].format(id=x),
-                        title=data['title_template'].format(id=x),
-                        SubjectID=data['subject_id'],
-                        Barcode='',
-                        Volume=data['volume'],
-                        Unit=data['volume_unit']
-                    )
+            biospecimens = []
+            j = 0
+            for x in range(data['seq_start'], data['seq_start'] + data['biospecimen_count']):
+                obj = api.content.create(
+                    container=self.context,
+                    type='Biospecimen',
+                    id=data['id_template'].format(id=x),
+                    title=data['title_template'].format(id=x),
+                    SubjectID=data['subject_id'],
+                    Barcode='',
+                    Volume=data['volume'],
+                    Unit=data['volume_unit']
+                    # Kit=data['kits'][j].getObject()
+                )
+                obj.setKit(data['kits'][j].UID)
+                obj.setType(data['type_uid'])
+                self.context.manage_renameObject(obj.id, data['id_template'].format(id=x), )
+                obj.reindexObject(idxs=['biospecimen_kit_uid'])
+                if (x-data['seq_start']+1) % data['biospecimen_per_kit'] == 0 and (x-data['seq_start']+1) != 0:
+                    j += 1
 
-                    self.context.manage_renameObject(obj.id, data['id_template'].format(id=x), )
-                    obj.setKit(data['kits'][j].UID)
-                    if j % data['biospecimen_per_kit'] == 0 and j != 0:
-                        j += 1
-                    obj.setType(data['type_uid'])
-                    biospecimens.append(obj)
+                biospecimens.append(obj)
+
+
 
             msg = u'%s Biospecimens created.' % len(biospecimens)
             self.context.plone_utils.addPortalMessage(msg)
