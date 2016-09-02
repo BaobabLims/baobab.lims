@@ -62,5 +62,8 @@ class BiospecimenWorkflowAction(WorkflowAction):
 
         for biospecimen in biospecimens:
             doActionFor(biospecimen, 'complete')
+
         self.destination_url = self.context.absolute_url()
+        if self.context.portal_type == 'Project':
+            self.destination_url += '/biospecimens'
         self.request.response.redirect(self.destination_url)

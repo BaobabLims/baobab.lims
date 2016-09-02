@@ -1,15 +1,16 @@
 from Products.ATContentTypes.lib import constraintypes
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from AccessControl import getSecurityManager
 
 from bika.lims.browser import BrowserView
 from bika.lims.controlpanel.bika_analysisservices import AnalysisServicesView
+from bika.lims.utils import isActive
 from bika.sanbi import bikaMessageFactory as _
 from bika.sanbi.browser.aliquots.folder_view import AliquotsView
 from bika.sanbi.browser.biospecimens.biospecimens import BiospecimensView
 from bika.sanbi.controlpanel.bika_biospectypes import BiospecTypesView
-from bika.lims.utils import isActive
-from AccessControl import getSecurityManager
+from bika.sanbi.config import VOLUME_UNITS
 
 class ProjectEdit(BrowserView):
     template = ViewPageTemplateFile('templates/project_edit.pt')
@@ -202,6 +203,15 @@ class ProjectBiospecimensView(BiospecimensView):
 
     def folderitems(self, full_objects=False):
         items = super(BiospecimensView, self).folderitems(self)
+        bsc = getToolByName(self.context, 'bika_setup_catalog')
+        brains = bsc(portal_type='BiospecType', inactive_state='active')
+        biospecimen_types = [
+            {
+                'ResultValue': brain.UID,
+                'ResultText': brain.title
+            }
+            for brain in brains
+        ]
         out_items = []
         for x in range(len(items)):
             if not items[x].has_key('obj'):
@@ -225,7 +235,9 @@ class ProjectBiospecimensView(BiospecimensView):
             if self.allow_edit and isActive(self.context) and \
                getSecurityManager().checkPermission("Modify portal content", obj) and \
                items[x]['review_state'] == "uncompleted":
-                items[x]['allow_edit'] = ['SubjectID', 'Barcode']
+                items[x]['allow_edit'] = ['Type', 'SubjectID', 'Barcode', 'Volume', 'Unit']
+                items[x]['choices']['Type'] = biospecimen_types
+                items[x]['choices']['Unit'] = VOLUME_UNITS
 
             out_items.append(items[x])
 

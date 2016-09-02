@@ -36,4 +36,13 @@
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
+    <!-- Workflow action button clicked in Biospecimens folder list -->
+    <browser:page
+      for="bika.sanbi.interfaces.IProject"
+      name="workflow_action"
+      class="bika.sanbi.browser.biospecimen.workflow.BiospecimenWorkflowAction"
+      permission="zope.Public"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
 </configure>
