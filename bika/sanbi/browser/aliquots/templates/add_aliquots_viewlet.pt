@@ -296,7 +296,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td> Biospecimens type</td>
+                        <td> Aliquot type</td>
                         <td>
                             <select id="aliquot-type" name="aliquot_type" tabindex="9">
                                 <option selected>None</option>
