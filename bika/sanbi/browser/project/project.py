@@ -8,7 +8,8 @@ from bika.sanbi import bikaMessageFactory as _
 from bika.sanbi.browser.aliquots.folder_view import AliquotsView
 from bika.sanbi.browser.biospecimens.biospecimens import BiospecimensView
 from bika.sanbi.controlpanel.bika_biospectypes import BiospecTypesView
-
+from bika.lims.utils import isActive
+from AccessControl import getSecurityManager
 
 class ProjectEdit(BrowserView):
     template = ViewPageTemplateFile('templates/project_edit.pt')
@@ -192,30 +193,41 @@ class ProjectBiospecimensView(BiospecimensView):
     def __init__(self, context, request):
         super(ProjectBiospecimensView, self).__init__(context, request)
         self.context = context
-        self.context_actions = {
-            _('Add'): {
-                'url': 'createObject?type_name=Biospecimen',
-                'icon': '++resource++bika.lims.images/add.png'
-            }
-        }
+        self.context_actions = {}
+
+        # Filter biospecimens by project uid
+        for state in self.review_states:
+            state['contentFilter']['biospecimen_project_uid'] = self.context.UID()
+
 
     def folderitems(self, full_objects=False):
-        items = BiospecimensView.folderitems(self)
+        items = super(BiospecimensView, self).folderitems(self)
         out_items = []
         for x in range(len(items)):
             if not items[x].has_key('obj'):
                 continue
             obj = items[x]['obj']
-            project = obj.aq_parent
-            if project == self.context:
-                items[x]['Type'] = obj.getType().Title()
-                items[x]['Condition'] = obj.getCondition()
-                items[x]['SubjectID'] = obj.getSubjectID()
-                items[x]['Volume'] = obj.getVolume()
-                items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
-                                               (items[x]['url'],
-                                                items[x]['Title'])
-                out_items.append(items[x])
+
+            items[x]['Type'] = obj.getType() and obj.getType().Title() or ''
+            items[x]['Volume'] = obj.getVolume()
+            items[x]['SubjectID'] = obj.getSubjectID()
+            items[x]['Kit'] = obj.getKit()
+            items[x]['Project'] = self.context
+            if obj.getKit():
+                items[x]['replace']['Kit'] = \
+                    '<a href="%s">%s</a>' % (obj.getKit().absolute_url(), obj.getKit().Title())
+                items[x]['replace']['Project'] = \
+                    '<a href="%s">%s</a>' % (self.context.absolute_url(), self.context.Title())
+
+            items[x]['Barcode'] = obj.getBarcode()
+            items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
+                                           (items[x]['url'], items[x]['Title'])
+            if self.allow_edit and isActive(self.context) and \
+               getSecurityManager().checkPermission("Modify portal content", obj) and \
+               items[x]['review_state'] == "uncompleted":
+                items[x]['allow_edit'] = ['SubjectID', 'Barcode']
+
+            out_items.append(items[x])
 
         return out_items
 

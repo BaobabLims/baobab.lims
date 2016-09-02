@@ -12,5 +12,6 @@
     <adapter name="getClientTitle" factory=".project.getClientTitle" />
     <adapter name="kit_project_uid" factory=".kit.get_kit_project_uid" />
     <adapter name="biospecimen_kit_uid" factory=".biospecimen.get_biospecimen_kit_uid" />
+    <adapter name="biospecimen_project_uid" factory=".biospecimen.get_biospecimen_project_uid" />
 
 </configure>

@@ -15,7 +15,6 @@ from bika.sanbi.interfaces import IKitTemplate
 
 schema = BikaSchema.copy() + Schema((
     RecordsField('ProductList',
-        schemata="Product List",
         type='productList',
         subfields=('product', 'quantity', 'product_uid'),
         subfield_hidden = {'product_uid': True},

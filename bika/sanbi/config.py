@@ -18,3 +18,8 @@ DIMENSION_OPTIONS = DisplayList((
     ('f', _('One Dimension\t')),
     ('s', _('Two Dimension\t')),
 ))
+
+VOLUME_UNITS = [
+    {'ResultValue': '1', 'ResultText': 'ml'},
+    {'ResultValue': '2', 'ResultText': 'kg'}
+]

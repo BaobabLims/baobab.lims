@@ -8,6 +8,7 @@ from bika.lims.browser.bika_listing import BikaListingView
 from bika.sanbi import bikaMessageFactory as _
 from bika.lims.utils import isActive
 from AccessControl import getSecurityManager
+from bika.sanbi.config import VOLUME_UNITS
 from bika.sanbi.permissions import EditFieldBarcode, ViewBarcode
 
 
@@ -41,7 +42,7 @@ class BiospecimensView(BikaListingView):
         self.show_select_row = False
         self.show_select_column = True
         self.pagesize = 25
-
+        self.allow_edit = True
         self.columns = {
             'Title': {
                 'title': _('Title'),
@@ -49,23 +50,38 @@ class BiospecimensView(BikaListingView):
             },
             'Type': {
                 'title': _('Type'),
-                'toggle': True
+                'toggle': True,
+                'type': 'choices'
             },
             'Volume': {
                 'title': _('Volume'),
-                'toggle': True
+                'toggle': True,
+                'input_width': '10'
+            },
+            'Unit': {
+                'title': _('Unit'),
+                'toggle': True,
+                'input_width': '10'
             },
             'SubjectID': {
                 'title': _('Subject ID'),
+                'allow_edit': True,
+                'input_class': 'text',
                 'toggle': True
             },
             'Kit': {
                 'title': _('Kit'),
-                'toggle': True
+                'index': 'sortable_title'
             },
             'Barcode': {
                 'title': _('Barcode'),
+                'allow_edit': True,
+                'input_class': 'text',
                 'toggle': True
+            },
+            'Project': {
+                'title': _('Project'),
+                'index': 'sortable_title'
             },
             # 'Location': {
             #     'title': _('Location'),
@@ -74,144 +90,162 @@ class BiospecimensView(BikaListingView):
         }
 
         self.review_states = [
-            {'id': 'default',
-             'title': _('Active'),
-             'contentFilter': {'inactive_state': 'active',
-                               'sort_on': 'created',
-                               'sort_order': 'ascending'},
-             'transitions': [{'id': 'deactivate'},
-                             {'id': 'complete'}],
-             'columns': ['Title',
-                         'Type',
-                         'Volume',
-                         'SubjectID',
-                         'Kit',
-                         'Barcode',
-                         # 'Location'
-                         ]},
+            {
+                'id': 'default',
+                'title': _('Active'),
+                'contentFilter': {
+                    'inactive_state': 'active',
+                    'sort_on': 'created',
+                    'sort_order': 'ascending'
+                },
+                'transitions': [
+                    {'id': 'deactivate'},
+                    {'id': 'complete'}
+                ],
+                'columns': [
+                    'Title',
+                    'Project',
+                    'Kit',
+                    'Type',
+                    'Volume',
+                    'Unit',
+                    'SubjectID',
+                    'Barcode',
+                    # 'Location'
+                ]
+            },
 
-            {'id': 'uncompleted',
-             'title': _('Uncompleted'),
-             'contentFilter': {'review_state': 'uncompleted',
-                               'sort_on': 'created',
-                               'sort_order': 'reverse'},
-             'transitions': [{'id': 'deactivate'},
-                             {'id': 'complete'}],
-             'columns': ['Title',
-                         'Type',
-                         'Volume',
-                         'SubjectID',
-                         'Kit',
-                         'Barcode',
-                         # 'Location'
-                         ]},
+            {
+                'id': 'uncompleted',
+                'title': _('Uncompleted'),
+                'contentFilter': {
+                    'review_state': 'uncompleted',
+                    'sort_on': 'created',
+                    'sort_order': 'reverse'
+                },
+                'transitions': [
+                    {'id': 'deactivate'},
+                    {'id': 'complete'}
+                ],
+                'columns': [
+                    'Title',
+                    'Project',
+                    'Kit',
+                    'Type',
+                    'Volume',
+                    'SubjectID',
+                    'Barcode',
+                    # 'Location'
+                ]
+            },
 
-            {'id': 'barcoded',
-             'title': _('Barcoded'),
-             'contentFilter': {'review_state': 'barcoded',
-                               'sort_on': 'created',
-                               'sort_order': 'reverse'},
-             'transitions': [{'id': 'deactivate'}],
-             'columns': ['Title',
-                         'Type',
-                         'Volume',
-                         'SubjectID',
-                         'Kit',
-                         'Barcode',
-                         # 'Location'
-                         ]},
+            {
+                'id': 'barcoded',
+                'title': _('Barcoded'),
+                'contentFilter': {
+                    'review_state': 'barcoded',
+                    'sort_on': 'created',
+                    'sort_order': 'reverse'
+                },
+                'transitions': [
+                    {'id': 'deactivate'}
+                ],
+                'columns': [
+                    'Title',
+                    'Project',
+                    'Kit',
+                    'Type',
+                    'Volume',
+                    'SubjectID',
+                    'Barcode',
+                    # 'Location'
+                ]
+            },
 
-            {'id': 'inactive',
-             'title': _('Dormant'),
-             'contentFilter': {'inactive_state': 'inactive',
-                               'sort_on': 'created',
-                               'sort_order': 'ascending'},
-             'transitions': [{'id': 'activate'}, ],
-             'columns': ['Title',
-                         'Type',
-                         'Volume',
-                         'SubjectID',
-                         'Kit',
-                         'Barcode',
-                         # 'Location'
-                         ]},
+            {
+                'id': 'inactive',
+                'title': _('Dormant'),
+                'contentFilter': {
+                    'inactive_state': 'inactive',
+                    'sort_on': 'created',
+                    'sort_order': 'ascending'
+                },
+                'transitions': [
+                    {'id': 'activate'}
+                ],
+                'columns': [
+                    'Title',
+                    'Project',
+                    'Kit',
+                    'Type',
+                    'Volume',
+                    'SubjectID',
+                    'Barcode',
+                    # 'Location'
+                ]
+            },
 
-            {'id': 'all',
-             'title': _('All'),
-             'contentFilter': {'sort_on': 'created',
-                               'sort_order': 'ascending'},
-             'columns': ['Title',
-                         'Type',
-                         'Volume',
-                         'SubjectID',
-                         'Kit',
-                         'Barcode',
-                         # 'Location'
-                         ]},
+            {
+                'id': 'all',
+                'title': _('All'),
+                'contentFilter': {
+                    'sort_on': 'created',
+                    'sort_order': 'ascending'
+                },
+                'columns': [
+                    'Title',
+                    'Project',
+                    'Kit',
+                    'Type',
+                    'Volume',
+                    'Unit',
+                    'SubjectID',
+                    'Barcode',
+                    # 'Location'
+                ]
+            },
         ]
 
     def __call__(self):
         return super(BiospecimensView, self).__call__()
 
-    def get_kit_quantity(self):
-        project = self.context
-        bc = getToolByName(project, 'bika_catalog')
-        qtys = []
-        brains = bc(portal_type="Kit")
-        for brain in brains:
-            o = brain.getObject()
-            if o.getProject() == project:
-                qtys.append(o.getQuantity)
-
-        return sum(qtys)
-
-    def get_kits(self):
-        bc = getToolByName(self.context, 'bika_catalog')
-        brains = bc(portal_type='Kit', kit_project_uid=self.context.UID())
-
-        return [brain.getObject() for brain in brains]
-
     def folderitems(self, full_objects=False):
         items = BikaListingView.folderitems(self)
+        bsc = getToolByName(self.context, 'bika_setup_catalog')
+        brains = bsc(portal_type='BiospecType', inactive_state='active')
+        biospecimen_types = [
+            {
+                'ResultValue': brain.UID,
+                'ResultText': brain.title
+            }
+            for brain in brains
+        ]
         for x, item in enumerate(items):
             if not items[x].has_key('obj'):
                 continue
             obj = items[x]['obj']
             items[x]['Type'] = obj.getType() and obj.getType().Title() or ''
             items[x]['Volume'] = obj.getVolume()
+            items[x]['Unit'] = VOLUME_UNITS[0]['ResultText']
             items[x]['SubjectID'] = obj.getSubjectID()
             items[x]['Kit'] = obj.getKit()
+            items[x]['Project'] = obj.getKit().getProject()
             if obj.getKit():
                 items[x]['replace']['Kit'] = \
                     '<a href="%s">%s</a>' % (obj.getKit().absolute_url(), obj.getKit().Title())
-            items[x]['Barcode'] = ''
-            # items[x]['Location'] = obj.getStorageLocation().Title()
+                items[x]['replace']['Project'] = \
+                    '<a href="%s">%s</a>' % (obj.getKit().getProject().absolute_url(),
+                                             obj.getKit().getProject().Title())
+            items[x]['Barcode'] = obj.getBarcode()
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                            (items[x]['url'], items[x]['Title'])
-
+            # items[x]['choices']['Type'] = biospecimen_types
             # TODO: SPECIFY OBJ STATES WHERE USER CAN EDIT BARCODE
-            allowed_method_state = 'uncompleted'
-
-            can_edit_biospecimen = self.allow_edit and isActive(self.context) and \
-                                   getSecurityManager().checkPermission(EditFieldBarcode, obj) and \
-                                   item['review_state'] in allowed_method_state
-
-            can_view_barcodes = getSecurityManager().checkPermission(ViewBarcode, obj)
-
-            if can_view_barcodes:
-                if can_edit_biospecimen:
-                    barcode_html = '<input id="barcode.%s" style="width: 70px;" value="" />' %(obj.UID())
-                    item['after']['Barcode'] = barcode_html
-                    # items[x]['allow_edit'].extend(['Barcode'])
-                    # items[x]['Barcode'] = 'HHHH'
-                    # item['choices']['Barcode'] = [{'ResultValue': 'HB', 'ResultText': 'Hocine Bendou'},
-                    #                               {'ResultValue':'TTT', 'ResultText': 'Test User'}]
-                else:
-                    items[x]['Barcode'] = obj.getBarcode()
-            else:
-                items[x]['before']['Barcode'] = \
-                    '<img width="16" height="16" ' + \
-                    'src="%s/++resource++bika.lims.images/to_follow.png"/>' % \
-                    (self.portal_url)
+            if self.allow_edit and isActive(self.context) and \
+                                   getSecurityManager().checkPermission("Modify portal content", obj) and \
+                                   items[x]['review_state'] == "uncompleted":
+                items[x]['allow_edit'] = ['Type', 'SubjectID', 'Barcode', 'Volume', 'Unit']
+                items[x]['choices']['Type'] = biospecimen_types
+                items[x]['choices']['Unit'] = VOLUME_UNITS
 
         return items
