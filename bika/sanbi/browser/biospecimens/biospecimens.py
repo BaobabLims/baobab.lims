@@ -115,33 +115,33 @@ class BiospecimensView(BikaListingView):
                 ]
             },
 
-            {
-                'id': 'uncompleted',
-                'title': _('Uncompleted'),
-                'contentFilter': {
-                    'review_state': 'uncompleted',
-                    'sort_on': 'created',
-                    'sort_order': 'reverse'
-                },
-                'transitions': [
-                    {'id': 'deactivate'},
-                    {'id': 'complete'}
-                ],
-                'columns': [
-                    'Title',
-                    'Project',
-                    'Kit',
-                    'Type',
-                    'Volume',
-                    'SubjectID',
-                    'Barcode',
-                    # 'Location'
-                ]
-            },
+            # {
+            #     'id': 'uncompleted',
+            #     'title': _('To-Complete'),
+            #     'contentFilter': {
+            #         'review_state': 'uncompleted',
+            #         'sort_on': 'created',
+            #         'sort_order': 'reverse'
+            #     },
+            #     'transitions': [
+            #         {'id': 'deactivate'},
+            #         {'id': 'complete'}
+            #     ],
+            #     'columns': [
+            #         'Title',
+            #         'Project',
+            #         'Kit',
+            #         'Type',
+            #         'Volume',
+            #         'SubjectID',
+            #         'Barcode',
+            #         # 'Location'
+            #     ]
+            # },
 
             {
                 'id': 'barcoded',
-                'title': _('Barcoded'),
+                'title': _('Completed'),
                 'contentFilter': {
                     'review_state': 'barcoded',
                     'sort_on': 'created',
@@ -164,7 +164,7 @@ class BiospecimensView(BikaListingView):
 
             {
                 'id': 'inactive',
-                'title': _('Dormant'),
+                'title': _('Deactivated'),
                 'contentFilter': {
                     'inactive_state': 'inactive',
                     'sort_on': 'created',
