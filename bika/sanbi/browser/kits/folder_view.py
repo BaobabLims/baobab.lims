@@ -49,7 +49,8 @@ class KitsView(BikaListingView):
                                'sort_on': 'created',
                                'sort_order': 'ascending'},
                 'transitions': [{'id': 'deactivate'},
-                             {'id': 'ship'}],
+                                # {'id': 'ship'}
+                                ],
                 'columns': [
                     'Title',
                     'Project',
@@ -59,7 +60,7 @@ class KitsView(BikaListingView):
             {
                 'id': 'shipped',
                 'title': _('Shipped'),
-                'contentFilter': {'inactive_state': 'active',
+                'contentFilter': {'review_state': 'shipped',
                                   'sort_on': 'created',
                                   'sort_order': 'ascending'},
                 'transitions': [{'id': 'deactivate'},
@@ -73,7 +74,7 @@ class KitsView(BikaListingView):
             {
                 'id': 'received',
                 'title': _('Received'),
-                'contentFilter': {'inactive_state': 'active',
+                'contentFilter': {'review_state': 'received',
                                   'sort_on': 'created',
                                   'sort_order': 'ascending'},
                 'transitions': [{'id': 'deactivate'},
@@ -87,7 +88,7 @@ class KitsView(BikaListingView):
             {
                 'id': 'processed',
                 'title': _('Processed'),
-                'contentFilter': {'inactive_state': 'active',
+                'contentFilter': {'review_state': 'processed',
                                   'sort_on': 'created',
                                   'sort_order': 'ascending'},
                 'transitions': [{'id': 'deactivate'}],
