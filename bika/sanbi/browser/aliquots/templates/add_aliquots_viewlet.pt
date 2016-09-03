@@ -7,7 +7,6 @@
             $(function () {
 
                 var biospecimens = [];
-
                 function setBiospecimenFirstLastLimits() {
                     $("#first-biospecimen-limit").html('');
                     $("#last-biospecimen-limit").html('');
@@ -17,6 +16,7 @@
                         $("#last-biospecimen-limit").append(option);
                     })
                 }
+
 
                 function orderBiospecimensArray() {
                     biospecimens = biospecimens.sort(function (item1, item2) {
@@ -28,10 +28,11 @@
                     var request_data = {
                         catalog_name: "bika_catalog",
                         portal_type: "Biospecimen",
-                        inactive_active: "active",
+                        inactive_state: "active",
                         biospecimen_kit_uid: uid
                     };
                     window.bika.lims.jsonapi_read(request_data, function (data) {
+                        console.log(data);
                         $.each(data.objects, function (i, biospecimenObject) {
                             biospecimens.push({
                                 'Title': biospecimenObject.Title,
@@ -46,7 +47,7 @@
                 $("#Project_uid").on("focus", function (e) {
                     var uid = $(this).val();
 
-                    // Project's analyses
+                    /* Project's analyses
                     var request_data = {
                         catalog_name: "bika_catalog",
                         portal_type: "Project",
@@ -54,13 +55,12 @@
                         UID: uid
                     };
                     window.bika.lims.jsonapi_read(request_data, function (data) {
-                        console.log(data);
                         $("#porject-analyses").html('');
                         $.each(data.objects[0].Service, function (i, value) {
                             var option = '<option value="' + data.objects[0].Service_uid[i] + '">'+ value +'</option>';
                             $("#porject-analyses").append(option);
                         });
-                    });
+                    });*/
 
                     // Project's kits
                     request_data = {
@@ -69,7 +69,8 @@
                         inactive_state: "active",
                         kit_project_uid: uid
                     };
-                    $("#first-kit-limit").html('');
+                    $("#first_biosepcimen_limit").html('');
+                    $("#last_biosepcimen_limit").html('');
                     window.bika.lims.jsonapi_read(request_data, function (data) {
                         $.each(data.objects, function (i, object) {
                             kit_biospecimens(object.UID)
@@ -227,26 +228,6 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Volume:
-                            <div class="discreet">float Pointing number</div>
-                        </td>
-                        <td>
-                            <input name="aliquot_volume"
-                                   type="number"
-                                   step="0.01"
-                                   min="0"
-                                   tabindex="3"
-                                    tal:attributes="value python: request.get('aliquot_volume', '0')"/>
-                        </td>
-                        <td>Volume unit:</td>
-                        <td>
-                            <select name="volume_unit" tabindex="6">
-                                <option selected>ml</option>
-                                <option>kg</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
                         <td class="bordertop">Project
                             <div class="discreet">Selecting a project will import the received kits of this project <br>
                                 from the client.
@@ -285,28 +266,6 @@
 
                                 <input type="hidden" name="Project_uid" id="Project_uid">
                             </div>
-                        </td>
-                        <td class="bordertop"> Analysis Services
-                            <div class="discreet">Analysis services to apply to aliquots during analysis requests.
-                            </div>
-                        </td>
-                        <td class="bordertop">
-                            <select id="porject-analyses" tabindex="8" name="porject_analyses" size="6" style="width: 150px;" multiple>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td> Aliquot type</td>
-                        <td>
-                            <select id="aliquot-type" name="aliquot_type" tabindex="9">
-                                <option selected>None</option>
-                                <tal:types tal:repeat="type python:view.get_biospecimen_types()">
-                                    <option
-                                            tal:attributes="value python:type[0]"
-                                            tal:content="python:type[1]">
-                                    </option>
-                                </tal:types>
-                            </select>
                         </td>
                         <td>Biospecimens
                             <div class="discreet">Select first and last Biospecimen limits. <br>The number of

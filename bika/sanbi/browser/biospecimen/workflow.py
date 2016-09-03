@@ -47,15 +47,6 @@ class BiospecimenWorkflowAction(WorkflowAction):
             biospecimen.setUnit(unit)
             
             biospecimens.append(biospecimen)
-        #barcodes
-        # barcode_dict = dict(form['Barcode'][0])
-        # for uid, barcode in barcode_dict.iteritems():
-        #     biospecimen = selected_biospecimens.get(uid, None)
-        #     if biospecimen:
-        #         biospecimen.setBarcode(barcode)
-        #         biospecimens.append(biospecimen)
-        #     else:
-        #         continue
 
         message = PMF("Changes saved.")
         self.context.plone_utils.addPortalMessage(message, 'info')

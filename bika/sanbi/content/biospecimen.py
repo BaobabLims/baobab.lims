@@ -84,13 +84,6 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
             visible={'edit': 'visible', 'view': 'visible'}
         )),
 
-    ComputedField('VolumeUsed',
-          expression='context.getVolumeUsed()',
-          widget=ComputedWidget(
-              label=_("Volume Used"),
-              visible={'edit': 'invisible', 'view': 'invisible'}
-          )),
-
     ReferenceField(
         'StorageLocation',
         allowed_types=('UnmanagedStorage', 'StoragePosition'),

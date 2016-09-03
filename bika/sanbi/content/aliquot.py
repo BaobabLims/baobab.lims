@@ -12,7 +12,8 @@ from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from Products.CMFCore import permissions
 
 schema = BikaSchema.copy() + Schema((
-    ReferenceField('Biospecimen',
+    ReferenceField(
+        'Biospecimen',
         required=1,
         allowed_types=('Biospecimen',),
         relationship='BiospecimenAliquot',
@@ -21,24 +22,35 @@ schema = BikaSchema.copy() + Schema((
         widget=bika_ReferenceWidget(
            checkbox_bound=0,
            label=_("Biospecimen"),
-           description=_("Select the biospecimen from where the sample is derived"),
+           description=_("Select the biospecimen from the aliquot is extracted."),
            size=40,
            catalog_name='bika_setup_catalog',
            showOn=True,
            visible={'edit': 'visible', 'view': 'visible'},
-        )),
+        )
+    ),
 
-    FixedPointField('Volume',
+    FixedPointField(
+        'Volume',
         required=1,
         default="0.00",
         widget=DecimalWidget(
             label=_("Volume"),
             size=15,
             description=_("The volume of the sample taken from the biospecimen."),
-        )),
+        )
+    ),
 
-    ReferenceField('AliquotType',
-        required=1,
+    StringField(
+        'Unit',
+        widget=StringWidget(
+            label=_("Unit"),
+            visible={'edit': 'visible', 'view': 'visible'}
+        )
+    ),
+
+    ReferenceField(
+        'AliquotType',
         allowed_types=('AliquotType',),
         relationship='AliquotTypeAliquot',
         vocabulary_display_path_bound=sys.maxsize,
@@ -51,7 +63,8 @@ schema = BikaSchema.copy() + Schema((
            catalog_name='bika_setup_catalog',
            showOn=True,
            visible={'edit': 'visible', 'view': 'visible'},
-        )),
+        )
+    ),
 
     ReferenceField(
         'StorageLocation',

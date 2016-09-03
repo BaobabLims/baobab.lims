@@ -27,12 +27,7 @@ class BiospecimensView(BikaListingView):
             'sort_on': 'created',
             'sort_order': 'ascending'
         }
-        self.context_actions = {
-            # _('Add'): {
-            #     'url': 'createObject?type_name=Biospecimen',
-            #     'icon': '++resource++bika.lims.images/add.png'
-            # }
-        }
+        self.context_actions = {}
         self.title = self.context.translate(_("Biospecimen"))
         self.icon = self.portal_url + \
                     "/++resource++bika.sanbi.images/biospecimen_big.png"
@@ -114,30 +109,6 @@ class BiospecimensView(BikaListingView):
                     # 'Location'
                 ]
             },
-
-            # {
-            #     'id': 'uncompleted',
-            #     'title': _('To-Complete'),
-            #     'contentFilter': {
-            #         'review_state': 'uncompleted',
-            #         'sort_on': 'created',
-            #         'sort_order': 'reverse'
-            #     },
-            #     'transitions': [
-            #         {'id': 'deactivate'},
-            #         {'id': 'complete'}
-            #     ],
-            #     'columns': [
-            #         'Title',
-            #         'Project',
-            #         'Kit',
-            #         'Type',
-            #         'Volume',
-            #         'SubjectID',
-            #         'Barcode',
-            #         # 'Location'
-            #     ]
-            # },
 
             {
                 'id': 'barcoded',

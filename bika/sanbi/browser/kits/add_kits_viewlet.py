@@ -53,12 +53,12 @@ class AddKitsSubmitHandler(BrowserView):
         kit_template_uid = form.get('KitTemplate_uid', None)
         kits = []
 
-        kit_storages = self.get_kit_storages()
-        nr_positions = self.count_storage_positions(kit_storages)
-        if nr_positions > -1 and kit_count > nr_positions:
-            raise ValidationError(
-                u"Not enough kit storage positions available.  Please select "
-                u"or create additional storages for kits.")
+        # kit_storages = self.get_kit_storages()
+        # nr_positions = self.count_storage_positions(kit_storages)
+        # if nr_positions > -1 and kit_count > nr_positions:
+        #     raise ValidationError(
+        #         u"Not enough kit storage positions available.  Please select "
+        #         u"or create additional storages for kits.")
 
         for x in range(seq_start, seq_start + kit_count):
             obj = api.content.create(
@@ -69,8 +69,8 @@ class AddKitsSubmitHandler(BrowserView):
                 Project=project_uid,
                 KitTemplate=kit_template_uid
             )
-            self.assign_stockitems_to_kit(obj)
-            self.assign_kit_to_storage(obj)
+            # self.assign_stockitems_to_kit(obj)
+            # self.assign_kit_to_storage(obj)
             self.context.manage_renameObject(obj.id, id_template.format(id=x))
             kits.append(obj)
 
@@ -180,7 +180,7 @@ class AddKitsSubmitHandler(BrowserView):
         kit_storages = []
         form_uids = form['kit_storage_uids'].split(',')
         for uid in form_uids:
-            brain = uc(UID=uid)
+            brain = uc(UID=uid)[0]
             instance = brain.getObject()
             # last-minute check if this storage is available
             if IUnmanagedStorage.providedBy(instance) \
