@@ -73,7 +73,7 @@ class AliquotsView(BikaListingView):
                     'sort_order': 'reverse'
                 },
                 'transitions': [
-                    {'id': 'store'}
+                    {'id': 'empty'},
                 ],
                 'columns': [
                     'Title',
@@ -96,10 +96,32 @@ class AliquotsView(BikaListingView):
 
         if mtool.checkPermission(ManageAliquots, self.context):
             self.review_states[0]['transitions'].append({'id': 'deactivate'})
+            self.review_states[0]['transitions'].append({'id': 'complete'})
+            self.review_states.append(
+                {
+                    'id': 'completed',
+                    'title': _('Completed'),
+                    'contentFilter': {
+                        'review_state': 'completed'
+                    },
+                    'transitions': [
+                        {'id': 'deactivate'},
+                    ],
+                    'columns': [
+                        'Title',
+                        'Biospecimen',
+                        'AliquotType',
+                        'Volume',
+                        'Unit',
+                        # 'Location'
+                    ]
+                }
+            )
+
             self.review_states.append(
                 {
                     'id': 'inactive',
-                    'title': _('Dormant'),
+                    'title': _('Deactivated'),
                     'contentFilter': {
                         'inactive_state': 'inactive'
                     },
@@ -116,15 +138,11 @@ class AliquotsView(BikaListingView):
                     ]
                 }
             )
-
             self.review_states.append(
                 {
                     'id': 'all',
                     'title': _('All'),
                     'contentFilter': {},
-                    'transitions': [
-                        {'id': 'empty'}
-                    ],
                     'columns': [
                         'Title',
                         'Biospecimen',

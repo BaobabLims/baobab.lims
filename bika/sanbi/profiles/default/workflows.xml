@@ -6,7 +6,8 @@
   Contains workflow definitions for your portal</property>
 
 <object name="bika_kit_assembly_workflow" meta_type="Workflow"/>
-<object name="bika_biospecime_workflow" meta_type="Workflow"/>
+<object name="bika_biospecimen_workflow" meta_type="Workflow"/>
+<object name="bika_aliquot_workflow" meta_type="Workflow"/>
 
 <bindings>
     <type type_id="KitTemplates"/>
@@ -47,7 +48,7 @@
 
     <type type_id="Aliquots"/>
     <type type_id="Aliquot">
-        <bound-workflow workflow_id="bika_one_state_workflow"/>
+        <bound-workflow workflow_id="bika_aliquot_workflow"/>
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>
 
