@@ -133,7 +133,7 @@
                       var quantity = parseFloat($(this).val());
                       var volume = parseFloat($("input#Volume").val());
                       var element = $("#archetypes-fieldname-Quantity");
-                      var html = "<div class=\"err-vol\" id=\"error-volume\"></div>";
+                      var html = "<div class='err-vol' id='error-volume'></div>";
                       if((quantity * volume + totalVolume) > biospecVolume){
                           element.addClass("info-volume");
                           $(html).insertBefore($("div#archetypes-fieldname-Quantity > div.fieldErrorBox"));
