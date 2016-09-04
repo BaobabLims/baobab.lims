@@ -43,8 +43,6 @@ class AddAliquotsSubmitHandler(BrowserView):
                     id=data['id_template'].format(id=x),
                     title=data['title_template'].format(id=x),
                     type='Aliquot',
-                    # Volume=data['volume'],
-                    # Unit=data['volume_unit']
                 )
 
                 # obj.setAliquotType(data['aliquot_type_uid'])
@@ -120,15 +118,6 @@ class AddAliquotsSubmitHandler(BrowserView):
                 raise ValidationError(
                     u'The ID %s exists, cannot be created.' % check)
 
-        # aliquot_type = form.get('aliquot_type', None)
-        # if not aliquot_type or aliquot_type == 'None':
-        #     raise ValidationError(u'Aliquot type is required and should be not "None"')
-        #
-        # volume_unit = form.get('volume_unit', None)
-        # volume = form.get('aliquot_volume', None)
-        # if not volume or volume <= 0:
-        #     raise ValidationError(u'Aliquot volume is required and should not be positive.')
-
         return {
             'title_template': title_template,
             'id_template': id_template,
@@ -139,9 +128,6 @@ class AddAliquotsSubmitHandler(BrowserView):
             'biospecimens': biospecimens,
             'count': count,
             'aliquot_count': aliquot_count,
-            # 'aliquot_type_uid': aliquot_type,
-            # 'volume': volume,
-            # 'volume_unit': volume_unit,
         }
 
     def form_error(self, msg):

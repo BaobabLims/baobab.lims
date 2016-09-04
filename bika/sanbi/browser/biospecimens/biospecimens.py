@@ -213,8 +213,8 @@ class BiospecimensView(BikaListingView):
             # items[x]['choices']['Type'] = biospecimen_types
             # TODO: SPECIFY OBJ STATES WHERE USER CAN EDIT BARCODE
             if self.allow_edit and isActive(self.context) and \
-                                   getSecurityManager().checkPermission("Modify portal content", obj) and \
-                                   items[x]['review_state'] == "uncompleted":
+                   getSecurityManager().checkPermission("Modify portal content", obj) and \
+                   items[x]['review_state'] == "uncompleted":
                 items[x]['allow_edit'] = ['Type', 'SubjectID', 'Barcode', 'Volume', 'Unit']
                 items[x]['choices']['Type'] = biospecimen_types
                 items[x]['choices']['Unit'] = VOLUME_UNITS

@@ -183,7 +183,7 @@ class AliquotsView(BikaListingView):
 
             if self.allow_edit and isActive(self.context) and \
                     getSecurityManager().checkPermission("Modify portal content", obj) and \
-                            items[x]['inactive_state'] == "active":
+                    items[x]['review_state'] == "to_complete":
                 items[x]['allow_edit'] = ['AliquotType', 'Volume', 'Unit']
                 items[x]['choices']['AliquotType'] = aliquot_types
                 items[x]['choices']['Unit'] = VOLUME_UNITS
