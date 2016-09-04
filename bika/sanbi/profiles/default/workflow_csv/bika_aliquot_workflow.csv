@@ -10,7 +10,7 @@ State variable:,review_state,,,,,,,,,
 Id:,to_complete,,,,,,,,,
 Title:,To-Complete,,,,,,,,,
 Description:,,,,,,,,,,
-Transitions,"complete",,,,,,,,,
+Transitions,"complete_aliquot",,,,,,,,,
 Permissions,Acquire,Anonymous,Manager,Owner,Reader,Editor,Contributor,Analyst,LabClerk,LabManager
 View,N,N,Y,Y,N,N,N,Y,Y,Y
 Modify portal content,N,N,Y,N,N,N,N,N,N,Y
@@ -25,7 +25,7 @@ Modify portal content,N,N,Y,N,N,N,N,N,Y,Y
 Delete objects,N,N,Y,N,N,N,N,N,Y,Y
 ,,,,,,,,,,
 [Transition],,,,,,,,,,
-Id:,complete,,,,,,,,,
+Id:,complete_aliquot,,,,,,,,,
 Title:,Complete,,,,,,,,,
 Description:,Complete,,,,,,,,,
 Target state:,completed,,,,,,,,,

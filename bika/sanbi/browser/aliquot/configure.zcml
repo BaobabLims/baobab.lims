@@ -4,13 +4,13 @@
     xmlns:i18n="http://namespaces.zope.org/i18n"
     i18n_domain="bika.sanbi">
 
-    <browser:page
+    <!--<browser:page
       for="bika.sanbi.interfaces.IAliquot"
       name="base_edit"
       class="bika.sanbi.browser.aliquot.AliquotEdit"
       permission="cmf.ModifyPortalContent"
       layer="bika.lims.interfaces.IBikaLIMS"
-    />
+    />-->
 
     <browser:page
       for="bika.sanbi.interfaces.IAliquots"

@@ -52,12 +52,17 @@ class AliquotsView(BikaListingView):
             },
             'Volume': {
                 'title': _('Volume'),
-                'toggle': True
+                'toggle': True,
+                'input_width': '7'
             },
             'Unit': {
                 'title': _('Unit'),
                 'toggle': True,
-                'input_width': '10'
+                'input_width': '15'
+            },
+            'Project': {
+                'title': _('Project'),
+                'index': 'sortable_title'
             },
             # 'Location': {'title': _('Location'),
             #              'toggle': True},
@@ -77,6 +82,7 @@ class AliquotsView(BikaListingView):
                 ],
                 'columns': [
                     'Title',
+                    'Project',
                     'Biospecimen',
                     'AliquotType',
                     'Volume',
@@ -96,7 +102,7 @@ class AliquotsView(BikaListingView):
 
         if mtool.checkPermission(ManageAliquots, self.context):
             self.review_states[0]['transitions'].append({'id': 'deactivate'})
-            self.review_states[0]['transitions'].append({'id': 'complete'})
+            self.review_states[0]['transitions'].append({'id': 'complete_aliquot'})
             self.review_states.append(
                 {
                     'id': 'completed',
@@ -109,6 +115,7 @@ class AliquotsView(BikaListingView):
                     ],
                     'columns': [
                         'Title',
+                        'Project',
                         'Biospecimen',
                         'AliquotType',
                         'Volume',
@@ -130,6 +137,7 @@ class AliquotsView(BikaListingView):
                     ],
                     'columns': [
                         'Title',
+                        'Project',
                         'Biospecimen',
                         'AliquotType',
                         'Volume',
@@ -145,6 +153,7 @@ class AliquotsView(BikaListingView):
                     'contentFilter': {},
                     'columns': [
                         'Title',
+                        'Project',
                         'Biospecimen',
                         'AliquotType',
                         'Volume',
@@ -180,6 +189,9 @@ class AliquotsView(BikaListingView):
             items[x]['Unit'] = obj.getUnit()
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                            (items[x]['url'], items[x]['Title'])
+            items[x]['replace']['Project'] = \
+                '<a href="%s">%s</a>' % (obj.getBiospecimen().getKit().getProject().absolute_url(),
+                                         obj.getBiospecimen().getKit().getProject().Title())
 
             if self.allow_edit and isActive(self.context) and \
                     getSecurityManager().checkPermission("Modify portal content", obj) and \

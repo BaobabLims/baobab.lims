@@ -7,7 +7,7 @@ from bika.sanbi import bikaMessageFactory as _
 
 
 class AliquotEdit(BrowserView):
-    template = ViewPageTemplateFile('templates/aliquot_edit.pt')
+    # template = ViewPageTemplateFile('templates/aliquot_edit.pt')
     title = _("Sample Add/Edit")
 
     def __init__(self, context, request):

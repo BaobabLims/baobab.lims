@@ -95,26 +95,26 @@ class BiospecimensView(BikaListingView):
                 },
                 'transitions': [
                     {'id': 'deactivate'},
-                    {'id': 'complete'}
+                    {'id': 'complete_biospecimen'}
                 ],
                 'columns': [
                     'Title',
                     'Project',
                     'Kit',
                     'Type',
-                    'Volume',
-                    'Unit',
                     'SubjectID',
                     'Barcode',
+                    'Volume',
+                    'Unit',
                     # 'Location'
                 ]
             },
 
             {
-                'id': 'barcoded',
+                'id': 'completed',
                 'title': _('Completed'),
                 'contentFilter': {
-                    'review_state': 'barcoded',
+                    'review_state': 'completed',
                     'sort_on': 'created',
                     'sort_order': 'reverse'
                 },
@@ -126,9 +126,10 @@ class BiospecimensView(BikaListingView):
                     'Project',
                     'Kit',
                     'Type',
-                    'Volume',
                     'SubjectID',
                     'Barcode',
+                    'Volume',
+                    'Unit',
                     # 'Location'
                 ]
             },
@@ -149,9 +150,10 @@ class BiospecimensView(BikaListingView):
                     'Project',
                     'Kit',
                     'Type',
-                    'Volume',
                     'SubjectID',
                     'Barcode',
+                    'Volume',
+                    'Unit',
                     # 'Location'
                 ]
             },
@@ -168,10 +170,10 @@ class BiospecimensView(BikaListingView):
                     'Project',
                     'Kit',
                     'Type',
-                    'Volume',
-                    'Unit',
                     'SubjectID',
                     'Barcode',
+                    'Volume',
+                    'Unit',
                     # 'Location'
                 ]
             },
@@ -214,7 +216,7 @@ class BiospecimensView(BikaListingView):
             # TODO: SPECIFY OBJ STATES WHERE USER CAN EDIT BARCODE
             if self.allow_edit and isActive(self.context) and \
                    getSecurityManager().checkPermission("Modify portal content", obj) and \
-                   items[x]['review_state'] == "uncompleted":
+                   items[x]['review_state'] == "to_complete":
                 items[x]['allow_edit'] = ['Type', 'SubjectID', 'Barcode', 'Volume', 'Unit']
                 items[x]['choices']['Type'] = biospecimen_types
                 items[x]['choices']['Unit'] = VOLUME_UNITS

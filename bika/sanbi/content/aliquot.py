@@ -4,12 +4,15 @@ from Products.Archetypes.references import HoldingReference
 from bika.sanbi import bikaMessageFactory as _
 from AccessControl import ClassSecurityInfo
 from zope.interface import implements
-from Products.CMFCore.utils import getToolByName
+from plone.indexer import indexer
 from bika.sanbi.interfaces import IAliquot
 from bika.sanbi import config
 import sys
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
-from Products.CMFCore import permissions
+
+@indexer(IAliquot)
+def get_aliquot_project_uid(instance):
+    return instance.getBiospecimen().getKit().getProject().UID()
 
 schema = BikaSchema.copy() + Schema((
     ReferenceField(
@@ -51,7 +54,7 @@ schema = BikaSchema.copy() + Schema((
 
     ReferenceField(
         'AliquotType',
-        allowed_types=('AliquotType',),
+        allowed_types=('BiospecType'), # It was befor 'AliquotType'
         relationship='AliquotTypeAliquot',
         vocabulary_display_path_bound=sys.maxsize,
         referenceClass=HoldingReference,

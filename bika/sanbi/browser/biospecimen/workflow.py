@@ -22,7 +22,7 @@ class BiospecimenWorkflowAction(WorkflowAction):
         else:
             WorkflowAction.__call__(self)
 
-    def workflow_action_complete(self):
+    def workflow_action_complete_biospecimen(self):
         form = self.request.form
         # print form
         selected_biospecimens = WorkflowAction._get_selected_items(self)
@@ -52,7 +52,7 @@ class BiospecimenWorkflowAction(WorkflowAction):
         self.context.plone_utils.addPortalMessage(message, 'info')
 
         for biospecimen in biospecimens:
-            doActionFor(biospecimen, 'complete')
+            doActionFor(biospecimen, 'complete_biospecimen')
 
         self.destination_url = self.context.absolute_url()
         if self.context.portal_type == 'Project':

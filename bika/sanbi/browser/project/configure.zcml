@@ -40,7 +40,7 @@
     <browser:page
       for="bika.sanbi.interfaces.IProject"
       name="workflow_action"
-      class="bika.sanbi.browser.biospecimen.workflow.BiospecimenWorkflowAction"
+      class=".workflow.ProjectWorkflowAction"
       permission="zope.Public"
       layer="bika.lims.interfaces.IBikaLIMS"
     />

@@ -212,6 +212,12 @@ class ProjectBiospecimensView(BiospecimensView):
             }
             for brain in brains
         ]
+
+        # It's not necessary to show column 'Project' in Project biospecimens list.
+        self.columns.pop('Project', None)
+        for state in self.review_states:
+            state['columns'].remove('Project')
+
         out_items = []
         for x in range(len(items)):
             if not items[x].has_key('obj'):
@@ -234,7 +240,7 @@ class ProjectBiospecimensView(BiospecimensView):
                                            (items[x]['url'], items[x]['Title'])
             if self.allow_edit and isActive(self.context) and \
                getSecurityManager().checkPermission("Modify portal content", obj) and \
-               items[x]['review_state'] == "uncompleted":
+               items[x]['review_state'] == "to_complete":
                 items[x]['allow_edit'] = ['Type', 'SubjectID', 'Barcode', 'Volume', 'Unit']
                 items[x]['choices']['Type'] = biospecimen_types
                 items[x]['choices']['Unit'] = VOLUME_UNITS
@@ -248,8 +254,9 @@ class BiospecimenAliquotsView(AliquotsView):
     def __init__(self, context, request):
         super(BiospecimenAliquotsView, self).__init__(context, request)
         self.context = context
-        # mtool = getToolByName(self.context, 'portal_membership')
-        self.context_actions[_('Add')] = {
-            'url': 'createObject?type_name=Aliquot',
-            'icon': '++resource++bika.lims.images/add.png'
-        }
+
+        # Filter biospecimens by project uid
+        for state in self.review_states:
+            state['contentFilter']['aliquot_project_uid'] = self.context.UID()
+
+        self.context_actions = {}

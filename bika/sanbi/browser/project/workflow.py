@@ -1,0 +1,16 @@
+from bika.lims.browser.bika_listing import WorkflowAction
+from bika.sanbi.browser.biospecimen.workflow import BiospecimenWorkflowAction
+from bika.sanbi.browser.aliquot.workflow import AliquotWorkflowAction
+import plone
+
+class ProjectWorkflowAction(WorkflowAction, BiospecimenWorkflowAction, AliquotWorkflowAction):
+    def __call__(self):
+        form = self.request.form
+        plone.protect.CheckAuthenticator(form)
+        action, _ = WorkflowAction._get_form_workflow_action(self)
+        if action == 'complete_biospecimen':
+            BiospecimenWorkflowAction.__call__(self)
+        elif action == 'complete_aliquot':
+            AliquotWorkflowAction.__call__(self)
+        else:
+            WorkflowAction.__call__(self)

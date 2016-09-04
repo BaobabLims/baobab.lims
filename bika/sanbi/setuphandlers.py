@@ -65,6 +65,7 @@ class BikaCustomGenerator:
         addIndex(bc, 'kit_project_uid', 'FieldIndex')
         addIndex(bc, 'biospecimen_kit_uid', 'FieldIndex')
         addIndex(bc, 'biospecimen_project_uid', 'FieldIndex')
+        addIndex(bc, 'aliquot_project_uid', 'FieldIndex')
 
         # _______________________________#
         #      BIKA_SETUP_CATALOG        #
