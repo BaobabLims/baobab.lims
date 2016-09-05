@@ -1,3 +1,5 @@
+from Products.Archetypes.exceptions import ReferenceException
+
 from bika.lims.browser.bika_listing import WorkflowAction
 from bika.lims import PMF
 from bika.lims.workflow import doActionFor
@@ -35,18 +37,21 @@ class BiospecimenWorkflowAction(WorkflowAction):
                not form['SubjectID'][0][uid]:
                 continue
 
-            biospecimen = selected_biospecimens.get(uid, None)
-            biospecimen.setBarcode(form['Barcode'][0][uid])
-            biospecimen.setType(form['Type'][0][uid])
-            biospecimen.setVolume(form['Volume'][0][uid])
-            biospecimen.setSubjectID(form['SubjectID'][0][uid])
-            unit = 'ml'
-            for u in VOLUME_UNITS:
-                if u['ResultValue'] == form['Unit'][0][uid]:
-                    unit = u['ResultText']
-            biospecimen.setUnit(unit)
-            
-            biospecimens.append(biospecimen)
+            try:
+                biospecimen = selected_biospecimens.get(uid, None)
+                biospecimen.setBarcode(form['Barcode'][0][uid])
+                biospecimen.setType(form['Type'][0][uid])
+                biospecimen.setVolume(form['Volume'][0][uid])
+                biospecimen.setSubjectID(form['SubjectID'][0][uid])
+                unit = 'ml'
+                for u in VOLUME_UNITS:
+                    if u['ResultValue'] == form['Unit'][0][uid]:
+                        unit = u['ResultText']
+                biospecimen.setUnit(unit)
+
+                biospecimens.append(biospecimen)
+            except ReferenceException:
+                continue
 
         message = PMF("Changes saved.")
         self.context.plone_utils.addPortalMessage(message, 'info')

@@ -78,7 +78,8 @@ class AliquotsView(BikaListingView):
                     'sort_order': 'reverse'
                 },
                 'transitions': [
-                    {'id': 'empty'},
+                    {'id': 'complete_aliquot'},
+                    {'id': 'deactivate'}
                 ],
                 'columns': [
                     'Title',
@@ -90,6 +91,58 @@ class AliquotsView(BikaListingView):
                     # 'Location'
                 ]
             },
+            {
+                'id': 'completed',
+                'title': _('Completed'),
+                'contentFilter': {
+                    'review_state': 'completed'
+                },
+                'transitions': [
+                    {'id': 'deactivate'},
+                ],
+                'columns': [
+                    'Title',
+                    'Project',
+                    'Biospecimen',
+                    'AliquotType',
+                    'Volume',
+                    'Unit',
+                    # 'Location'
+                ]
+            },
+            {
+                'id': 'inactive',
+                'title': _('Deactivated'),
+                'contentFilter': {
+                    'inactive_state': 'inactive'
+                },
+                'transitions': [
+                    {'id': 'activate'},
+                ],
+                'columns': [
+                    'Title',
+                    'Project',
+                    'Biospecimen',
+                    'AliquotType',
+                    'Volume',
+                    'Unit',
+                    # 'Location'
+                ]
+            },
+            {
+                'id': 'all',
+                'title': _('All'),
+                'contentFilter': {},
+                'columns': [
+                    'Title',
+                    'Project',
+                    'Biospecimen',
+                    'AliquotType',
+                    'Volume',
+                    'Unit',
+                    # 'Location'
+                ]
+            }
         ]
 
     def __call__(self):
@@ -101,68 +154,6 @@ class AliquotsView(BikaListingView):
         #     }
 
         if mtool.checkPermission(ManageAliquots, self.context):
-            self.review_states[0]['transitions'].append({'id': 'deactivate'})
-            self.review_states[0]['transitions'].append({'id': 'complete_aliquot'})
-            self.review_states.append(
-                {
-                    'id': 'completed',
-                    'title': _('Completed'),
-                    'contentFilter': {
-                        'review_state': 'completed'
-                    },
-                    'transitions': [
-                        {'id': 'deactivate'},
-                    ],
-                    'columns': [
-                        'Title',
-                        'Project',
-                        'Biospecimen',
-                        'AliquotType',
-                        'Volume',
-                        'Unit',
-                        # 'Location'
-                    ]
-                }
-            )
-
-            self.review_states.append(
-                {
-                    'id': 'inactive',
-                    'title': _('Deactivated'),
-                    'contentFilter': {
-                        'inactive_state': 'inactive'
-                    },
-                    'transitions': [
-                        {'id': 'activate'},
-                    ],
-                    'columns': [
-                        'Title',
-                        'Project',
-                        'Biospecimen',
-                        'AliquotType',
-                        'Volume',
-                        'Unit',
-                        # 'Location'
-                    ]
-                }
-            )
-            self.review_states.append(
-                {
-                    'id': 'all',
-                    'title': _('All'),
-                    'contentFilter': {},
-                    'columns': [
-                        'Title',
-                        'Project',
-                        'Biospecimen',
-                        'AliquotType',
-                        'Volume',
-                        'Unit',
-                        # 'Location'
-                    ]
-                }
-            )
-
             stat = self.request.get("%s_review_state" % self.form_id, 'default')
             self.show_select_column = stat != 'all'
 
@@ -179,6 +170,13 @@ class AliquotsView(BikaListingView):
             }
             for brain in brains
         ]
+
+        # It's not necessary to show column 'Project' in Project biospecimens list.
+        if self.context.portal_type == 'Project':
+            self.columns.pop('Project', None)
+            for state in self.review_states:
+                state['columns'].remove('Project')
+
         for x in range(len(items)):
             if not items[x].has_key('obj'):
                 continue
@@ -189,9 +187,10 @@ class AliquotsView(BikaListingView):
             items[x]['Unit'] = obj.getUnit()
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                            (items[x]['url'], items[x]['Title'])
-            items[x]['replace']['Project'] = \
-                '<a href="%s">%s</a>' % (obj.getBiospecimen().getKit().getProject().absolute_url(),
-                                         obj.getBiospecimen().getKit().getProject().Title())
+            if self.context.portal_type == 'Aliquots':
+                items[x]['replace']['Project'] = \
+                    '<a href="%s">%s</a>' % (obj.getBiospecimen().getKit().getProject().absolute_url(),
+                                             obj.getBiospecimen().getKit().getProject().Title())
 
             if self.allow_edit and isActive(self.context) and \
                     getSecurityManager().checkPermission("Modify portal content", obj) and \

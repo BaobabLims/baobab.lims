@@ -255,7 +255,7 @@ class BiospecimenAliquotsView(AliquotsView):
         super(BiospecimenAliquotsView, self).__init__(context, request)
         self.context = context
 
-        # Filter biospecimens by project uid
+        # Filter aliquots by project uid
         for state in self.review_states:
             state['contentFilter']['aliquot_project_uid'] = self.context.UID()
 
