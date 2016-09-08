@@ -67,7 +67,9 @@ window.bika.sanbi.initialized = false;
  */
 window.bika.sanbi.initialize = function() {
     if (bika.lims.initialized == true) {
-        return window.bika.sanbi.initview();
+        var len = window.bika.sanbi.initview();
+        window.bika.sanbi.initialized = true;
+        return len;
     }
     // We should wait after bika.lims being initialized
     setTimeout(function() {
@@ -80,7 +82,5 @@ $(document).ready(function(){
 
     // Initializes bika.sanbi
     var length = window.bika.sanbi.initialize();
-    window.bika.sanbi.initialized = true;
-
 });
 }(jQuery));

@@ -24,9 +24,9 @@ schema = BikaSchema.copy() + Schema((
                          'quantity': _('Quantity'),
         },
         widget=RecordsWidget(
-         label = _("Product List"),
-         description=_("Select complete list of the components required to create this kit"),
-         combogrid_options={
+            label = _("Product List"),
+            description=_("Select complete list of the components required to create this kit"),
+            combogrid_options={
                  'product': {
                      'colModel': [{'columnName':'product', 'width':'30', 'label':_('Title')},
                                   {'columnName':'Description', 'width':'70', 'label':_('Description')},
@@ -35,7 +35,7 @@ schema = BikaSchema.copy() + Schema((
                      'showOn': True,
                      'width': '550px'
                  },
-         },
+            },
         ),
     ),
     FixedPointField('Price',

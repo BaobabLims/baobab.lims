@@ -8,5 +8,6 @@
   <type portal_type="BiospecType"/>
   <type portal_type="Biospecimen"/>
   <type portal_type="Aliquot"/>
+  <type portal_type="StorageType"/>
  </factorytypes>
 </object>

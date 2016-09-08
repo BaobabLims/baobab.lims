@@ -62,7 +62,6 @@ StorageLocation = ReferenceField(
         visible={'edit': 'visible', 'view': 'visible'},
         catalog_name='bika_setup_catalog',
         showOn=True,
-        render_own_label=True,
         base_query={'inactive_state': 'active',
                     'review_state': 'available',
                     'object_provides': IKitStorage.__identifier__},

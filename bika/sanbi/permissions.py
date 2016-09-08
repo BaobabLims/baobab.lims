@@ -13,6 +13,7 @@ AddMultimage = 'BIKA: Add Multimage'
 AddAliquot = "BIKA: Add Aliquot"
 EditFieldBarcode = "BIKA: Edit Field Barcode"
 ViewBarcode = "BIKA: View Barcode"
+AddStorageType = "BIKA: Add Storage Type"
 
 # Add Permissions for specific types, if required
 ADD_CONTENT_PERMISSIONS = {
@@ -22,6 +23,7 @@ ADD_CONTENT_PERMISSIONS = {
     'Shipment': AddShipment,
     'Multimage': AddMultimage,
     'Sample': AddAliquot,
+    'StorageType': AddStorageType,
 }
 
 ManageStoragePositions = "SANBI: Manage Storage Positions"

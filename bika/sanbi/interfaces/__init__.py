@@ -60,3 +60,9 @@ class IAliquotStorage(Interface):
 class IKitStorage(Interface):
     """A StorageLocation or StorageLevel that can store Kits must
     provide this interface"""
+
+class IStorageType(Interface):
+    """Marker interface for StorageType"""
+
+class IStorageTypes(Interface):
+    """Marker interface for StorageTypes"""

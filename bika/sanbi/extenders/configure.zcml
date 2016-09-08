@@ -11,5 +11,21 @@
 
     <adapter name='bika.sanbi' factory=".analysisrequest.AnalysisRequestSchemaExtender" />
     <adapter name='bika.sanbi' factory=".analysisrequest.AnalysisRequestSchemaModifier" />
+    <adapter name='bika.sanbi' factory=".bikasetup.BikaSetupSchemaExtender" />
+    <adapter name='bika.sanbi' factory=".pricelist.PricelistSchemaExtender" />
+
+    <browser:page
+      for="bika.lims.interfaces.IBikaSetup"
+      name="getstoragetypes"
+      class=".bikasetup.ajaxGetStorageTypes"
+      permission="zope.Public"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <subscriber
+      for="bika.lims.interfaces.IPricelist
+           zope.lifecycleevent.interfaces.IObjectModifiedEvent"
+      handler=".pricelist.ObjectModifiedEventHandler"
+    />
 
 </configure>

@@ -17,6 +17,7 @@
     <permission id="bika.sanbi.permissions.AddAliquot" title="SANBI: Add Aliquot"/>
     <permission id="bika.sanbi.ManageAliquots" title="SANBI: Manage Aliquots"/>
     <permission id="bika.sanbi.permissions.AddMultimage" title="BIKA: Add Multimage"/>
+    <permission id="bika.sanbi.permissions.AddStorageType" title="BIKA: Add Storage Type"/>
 
     # Other
     # ------

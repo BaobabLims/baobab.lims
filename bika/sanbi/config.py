@@ -23,3 +23,9 @@ VOLUME_UNITS = [
     {'ResultValue': '1', 'ResultText': 'ml'},
     {'ResultValue': '2', 'ResultText': 'kg'}
 ]
+
+PRICELIST_TYPES = DisplayList((
+    ('AnalysisService', _('Analysis Services')),
+    ('LabProduct', _('Lab Products')),
+    ('StorageType', _('Sample Storage')),
+))

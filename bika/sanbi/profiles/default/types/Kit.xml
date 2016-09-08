@@ -62,7 +62,7 @@
          action_id="log"
          category="object"
          condition_expr=""
-         icon_expr=""
+         icon_expr="string:${object_url}/++resource++bika.sanbi.images/kit_big.png"
          link_target=""
          url_expr="string:${object_url}/log"
          i18n:attributes="title"

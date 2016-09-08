@@ -13,11 +13,12 @@ class Empty:
 class BikaCustomGenerator:
     def setupPortalContent(self, portal):
         # remove undesired content objects
-        for obj_id in ('kits',
-                       'projects',
-                       'shipments',
-                       'aliquots',
-                       'biospecimens'):
+        for obj_id in (
+                'kits',
+                'projects',
+                'shipments',
+                'aliquots',
+                'biospecimens'):
             try:
                 obj = portal._getOb(obj_id)
                 obj.unmarkCreationFlag()
@@ -26,8 +27,11 @@ class BikaCustomGenerator:
                 pass
 
         bika_setup = portal._getOb('bika_setup')
-        for obj_id in ('bika_kittemplates',
-                       'bika_biospectypes'):
+        for obj_id in (
+                'bika_kittemplates',
+                'bika_biospectypes',
+                'bika_storagetypes'):
+
             obj = bika_setup._getOb(obj_id)
             obj.unmarkCreationFlag()
             obj.reindexObject()
@@ -81,7 +85,8 @@ class BikaCustomGenerator:
         at.setCatalogsByType('StorageManagement', ['bika_setup_catalog', ])
         at.setCatalogsByType('BiospecType', ['bika_setup_catalog', ])
         at.setCatalogsByType('Multimage', ['bika_setup_catalog', ])
-        at.setCatalogsByType('StorageInventory', ['bika_setup_catalog', ])
+        at.setCatalogsByType('StorageType', ['bika_setup_catalog', ])
+        # at.setCatalogsByType('StorageInventory', ['bika_setup_catalog', ])
 
         # addIndex(bsc, 'getStorageUnit', 'FieldIndex')
         addIndex(bsc, 'getUnitID', 'FieldIndex')
@@ -105,6 +110,7 @@ class BikaCustomGenerator:
         mp(AddMultimage, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(EditFieldBarcode, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(ViewBarcode, ['Manager', 'LabManager', 'LabClerk'], 1)
+        mp(AddStorageType, ['Manager', 'LabManager', 'LabClerk'], 1)
 
         # kits
         mp = portal.kits.manage_permission
@@ -139,7 +145,7 @@ def setupCustomVarious(context):
               'batches',
               'worksheets',
               'methods',
-              'pricelists',
+              'inventoryorders',
               'invoices',
               'arimports', ]:
         obj = portal[x]
