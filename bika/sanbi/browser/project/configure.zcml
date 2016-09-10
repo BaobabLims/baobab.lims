@@ -45,4 +45,12 @@
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
+    <browser:page
+      for="bika.sanbi.interfaces.IProject"
+      name="invoice_create"
+      class=".project.InvoiceCreate"
+      permission="bika.lims.ManageInvoices"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
 </configure>

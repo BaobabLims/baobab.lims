@@ -11,30 +11,6 @@ import plone.protect
 from operator import itemgetter
 import json
 
-# class StoragePricingField(ExtensionField, RecordsField):
-#     """a list of prefixes per portal_type"""
-#     _properties = RecordsField._properties.copy()
-#     _properties.update({
-#         'type' : 'prefixes',
-#         'subfields' : ('storage_type', 'price'),
-#         'subfield_labels':{
-#             'storage_type': 'Storage type',
-#             'price': 'Price per Sample',
-#         },
-#
-#         'subfield_readonly':{
-#             'storage_type': False,
-#             'price': False,
-#         },
-#
-#         'subfield_sizes':{
-#             'storage_type': 32,
-#             'price': 12,
-#         },
-#         'subfield_types':{'price': 'float'},
-#     })
-#     security = ClassSecurityInfo()
-
 
 class BikaSetupSchemaExtender(object):
     adapts(IBikaSetup)
@@ -73,12 +49,6 @@ class BikaSetupSchemaExtender(object):
     def getFields(self):
         return self.fields
 
-    # def getOrder(self, schematas):
-    #     sch = schematas['Accounting']
-    #     sch.remove('StoragePricing')
-    #     sch.insert(sch.index('VAT'), 'StoragePricing')
-    #     schematas['Accounting'] = sch
-    #     return schematas
 
 class ajaxGetStorageTypes:
     catalog_name = 'bika_setup_catalog'
@@ -118,10 +88,11 @@ class ajaxGetStorageTypes:
             rows.reverse()
         pages = len(rows) / int(nr_rows)
         pages += divmod(len(rows), int(nr_rows))[1] and 1 or 0
-        ret = {'page': page,
-               'total': pages,
-               'records': len(rows),
-               'rows': rows[(int(page) - 1) * int(nr_rows): int(page) * int(
-                   nr_rows)]}
+        ret = {
+            'page': page,
+            'total': pages,
+            'records': len(rows),
+            'rows': rows[(int(page) - 1) * int(nr_rows): int(page) * int(nr_rows)]
+        }
 
         return json.dumps(ret)

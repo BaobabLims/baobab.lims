@@ -125,12 +125,12 @@
 <body>
 
 <style type="text/css">
-    .add-kits .discreet {
+    .add-aliquots .discreet {
         font-size: 50%;
         color: #ddd;
     }
 
-    .add-kits input {
+    .add-aliquots input {
         margin-bottom: 5px;
     }
 
@@ -337,7 +337,7 @@
 
                 <input name="viewlet_submitted"
                        type="submit"
-                       class="biospecimens-add"
+                       class="aliquots-add"
                        tabindex="13"
                        value="Add Aliquots">
 

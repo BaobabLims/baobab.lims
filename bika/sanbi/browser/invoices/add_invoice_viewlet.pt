@@ -1,0 +1,165 @@
+<html>
+<head>
+    <script tal:attributes="src python:context.absolute_url() + '/bika_widgets/referencewidget.js'"
+            type="text/javascript"></script>
+    <script type="text/javascript"></script>
+</head>
+<body>
+<style type="text/css">
+    .add-invoice .discreet {
+        font-size: 50%;
+        color: #ddd;
+    }
+
+    .add-invoice input {
+        margin-bottom: 5px;
+    }
+
+    /*The collapse-header is positioned upwards, compensate here with margin.
+    extra compensation since we only use the one collapsible, and we want to
+    position it away from the green-bar.
+    */
+    .collapsible {
+        margin-top: 2em !important;
+    }
+
+    .discreet li {
+        padding: 0;
+        margin: 0;
+        line-height: 1em !important;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    td {
+        padding: 5px 10px 5px 0;
+    }
+
+    td.bordertop {
+        border-top: 1px solid #ddd;
+    }
+
+    input.add-button {
+        padding: 2px 15px;
+        border: none;
+        color: #fff;
+        font-size: 1.1em;
+        cursor: pointer;
+        background-color: #0B486B;
+    }
+</style>
+
+<dl class="collapsible collapsedOnLoad">
+    <dt class="collapsibleHeader">
+        &nbsp;<img src="++resource++bika.lims.images/add.png">&nbsp;
+        <span i18n:translate="">Add new Invoices</span>
+    </dt>
+    <dd class="collapsibleContent">
+        <div class="discreet" class="helptext">
+            The invoices are grouped by project. A user can select a service, for example kit, and an invoice
+            will be generated.
+        </div>
+
+        <div class="add-invoice" style="padding: 10px 0px;">
+            <form name="add-invoice" action="add_invoice_submit" method="POST">
+                <table>
+                    <tr>
+                        <td>Invoice Title:
+                            <div class="discreet">It's common to use as title the mounth and year.</div>
+                        </td>
+                        <td><input name="invoicetitle"
+                                   class="invoicetitle"
+                                   placeholder="Invoice Title"
+                                   tabindex="1"
+                                tal:attributes="value python: request.get('invoicetitle', '')"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Project
+                            <div class="discreet">A Project belong to one and only one client.</div>
+                        </td>
+                        <td>
+                            <div style="width:100%" class="field ArchetypesReferenceWidget">
+                                <input
+                                        type="text"
+                                        name="Project"
+                                        id="Project"
+                                        required="True"
+                                        class="blurrable firstToFocus referencewidget"
+                                        value=""
+                                        base_query='{"portal_type": "Project", "inactive_state": "active"}'
+                                        search_query='{}'
+                                        catalog_name="bika_catalog"
+                                        ui_item="Title"
+                                        autocomplete="false"
+                                        tabindex="2"
+                                        combogrid_options='{"colModel": [{"columnName": "Title", "align": "left", "label": "Project Title", "width": "100"},
+                                                                        {"columnName": "UID", "hidden": true}],
+                                                            "search_fields": ["Title"],
+                                                            "catalog_name": "bika_catalog",
+                                                            "url": "referencewidget_search",
+                                                            "discard_empty": [],
+                                                            "popup_width": "550px",
+                                                            "showOn": true,
+                                                            "searchIcon": true,
+                                                            "minLength": "0",
+                                                            "resetButton": false,
+                                                            "sord": "asc",
+                                                            "sidx": "Title",
+                                                            "force_all": true,
+                                                            "portal_types": {}}'/>
+
+                                <input type="hidden" name="Project_uid" id="Project_uid">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> Service
+                            <div class="discreet">Select the service to invoice the client.</div>
+                        </td>
+                        <td>
+                            <select id="invoice_service" name="invoice_service">
+                                <tal:services tal:repeat="service python:view.invoice_services">
+                                    <option tal:attributes="value python:service[0]"
+                                            tal:content="python:service[1]"></option>
+                                </tal:services>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="bordertop">
+                            Start Date
+                        </td>
+                        <td class="bordertop">
+                            <input type="datetime-local"
+                                   name="startdate"
+                                   tabindex="2"
+                                   tal:attributes="value python: request.get('startdate', '')">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            End Date
+                        </td>
+                        <td>
+                            <input type="datetime-local"
+                                   name="enddate"
+                                   tabindex="2"
+                                   tal:attributes="value python: request.get('enddate', '')">
+                        </td>
+                    </tr>
+                </table>
+
+                <input name="viewlet_submitted"
+                       type="submit"
+                       class="invoice-add"
+                       tabindex="13"
+                       value="Add Invoice">
+            </form>
+        </div>
+    </dd>
+</dl>
+</body>
+</html>

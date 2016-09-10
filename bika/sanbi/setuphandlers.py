@@ -146,7 +146,7 @@ def setupCustomVarious(context):
               'worksheets',
               'methods',
               'inventoryorders',
-              'invoices',
+              # 'invoices',
               'arimports', ]:
         obj = portal[x]
         obj.schema['excludeFromNav'].set(obj, True)

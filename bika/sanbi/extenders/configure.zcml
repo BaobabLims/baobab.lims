@@ -13,6 +13,7 @@
     <adapter name='bika.sanbi' factory=".analysisrequest.AnalysisRequestSchemaModifier" />
     <adapter name='bika.sanbi' factory=".bikasetup.BikaSetupSchemaExtender" />
     <adapter name='bika.sanbi' factory=".pricelist.PricelistSchemaExtender" />
+    <adapter name='bika.sanbi' factory=".invoicebatch.InvoiceBatchSchemaExtender" />
 
     <browser:page
       for="bika.lims.interfaces.IBikaSetup"

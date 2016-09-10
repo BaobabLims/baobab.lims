@@ -75,4 +75,15 @@
     <permission value="Modify portal content"/>
  </action>
 
+ <action title="Create Invoice"
+         action_id="Create Invoice"
+         category="object"
+         condition_expr=""
+         link_target=""
+         url_expr="string:${object_url}/invoice_create"
+         i18n:attributes="title"
+         visible="True">
+     <permission value="BIKA: Manage Invoices"/>
+ </action>
+
 </object>

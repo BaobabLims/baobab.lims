@@ -29,3 +29,8 @@ PRICELIST_TYPES = DisplayList((
     ('LabProduct', _('Lab Products')),
     ('StorageType', _('Sample Storage')),
 ))
+
+INVOICE_SERVICES = DisplayList((
+    ('Kit', _('Kit')),
+    ('Storage', _('Sample Storage')),
+))

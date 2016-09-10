@@ -12,6 +12,12 @@ from bika.sanbi.browser.biospecimens.biospecimens import BiospecimensView
 from bika.sanbi.controlpanel.bika_biospectypes import BiospecTypesView
 from bika.sanbi.config import VOLUME_UNITS
 
+from bika.lims.browser.invoicefolder import InvoiceFolderContentsView
+from bika.sanbi import bikaMessageFactory as _
+from bika.lims.interfaces import IInvoiceFolder
+from zope.interface.declarations import implements
+
+
 class ProjectEdit(BrowserView):
     template = ViewPageTemplateFile('templates/project_edit.pt')
     title = _("Project Registration")
@@ -260,3 +266,20 @@ class BiospecimenAliquotsView(AliquotsView):
             state['contentFilter']['aliquot_project_uid'] = self.context.UID()
 
         self.context_actions = {}
+
+
+class InvoiceCreate(InvoiceFolderContentsView):
+    """List project's invoices
+    """
+
+    def __init__(self, context, request):
+        super(InvoiceCreate, self).__init__(context, request)
+        self.context = context
+        self.columns['service'] = {'title': _('Service')}
+
+        # Add column 'service' to the lising table columns
+        for state in self.review_states:
+            state['columns'].insert(state['columns'].index('start'), 'service')
+
+    # def __call__(self):
+    #     super(InvoiceCreate, self).__call__()

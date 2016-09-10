@@ -8,6 +8,7 @@ from bika.sanbi.config import PRICELIST_TYPES
 from bika.lims.config import PROJECTNAME as BIKALIMS_PROJECTNAME
 from Products.Archetypes import atapi
 from bika.lims.content.pricelist import Pricelist as BasePricelist
+from bika.lims.content.pricelist import PricelistLineItem
 
 
 class PricelistSchemaExtender(object):
@@ -32,7 +33,6 @@ class Pricelist(BasePricelist):
 
 atapi.registerType(Pricelist, BIKALIMS_PROJECTNAME)
 
-from bika.lims.content.pricelist import PricelistLineItem
 
 def ObjectModifiedEventHandler(instance, event):
     """Various types need automation on edit.
