@@ -1,17 +1,21 @@
 from Products.Archetypes.public import *
 from plone.indexer import indexer
-
-from bika.lims.content.bikaschema import BikaSchema
+from Products.CMFCore import permissions
 from Products.Archetypes.references import HoldingReference
-from bika.sanbi import bikaMessageFactory as _
 from AccessControl import ClassSecurityInfo
-from zope.interface import implements
 from Products.CMFCore.utils import getToolByName
+from zope.interface import implements
+
+from bika.lims.browser.widgets import DateTimeWidget
+from bika.lims.browser.fields import DateTimeField
+from bika.lims.content.bikaschema import BikaSchema
+from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
+from bika.sanbi import bikaMessageFactory as _
 from bika.sanbi.interfaces import IProject
 from bika.sanbi import config
-import sys
-from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from bika.sanbi.browser.widgets import ProjectAnalysesWidget
+import sys
+
 
 @indexer(IProject)
 def getClientTitle(instance):
@@ -85,6 +89,16 @@ schema = BikaSchema.copy() + Schema((
            label=_("Analyses"),
            description="",
         )),
+
+    DateTimeField(
+        'DateCreated',
+        mode="rw",
+        read_permission=permissions.View,
+        write_permission=permissions.ModifyPortalContent,
+        widget=DateTimeWidget(
+            label=_("Date Created"),
+            visible={'edit': 'invisible', 'view': 'invisible'},
+    )),
 ))
 schema['title'].required = True
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
