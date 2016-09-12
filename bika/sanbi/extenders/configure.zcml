@@ -29,4 +29,10 @@
       handler=".pricelist.ObjectModifiedEventHandler"
     />
 
+    <subscriber
+      for="bika.lims.interfaces.IInvoiceBatch
+           zope.lifecycleevent.interfaces.IObjectModifiedEvent"
+      handler=".invoicebatch.ObjectModifiedEventHandler"
+    />
+
 </configure>
