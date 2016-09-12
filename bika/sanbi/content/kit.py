@@ -1,5 +1,4 @@
 from AccessControl import ClassSecurityInfo
-
 from Products.Archetypes.public import *
 from Products.Archetypes.references import HoldingReference
 from Products.CMFCore import permissions
@@ -7,8 +6,10 @@ from Products.CMFPlone.interfaces import IConstrainTypes
 from plone.indexer import indexer
 from zope.interface import implements
 
+from bika.lims.browser.widgets import DateTimeWidget
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from bika.lims.content.bikaschema import BikaSchema
+from bika.lims.browser.fields import DateTimeField
 from bika.sanbi import bikaMessageFactory as _
 from bika.sanbi import config
 from bika.sanbi.interfaces import IKit, IKitStorage
@@ -95,9 +96,7 @@ Attachment = ReferenceField(
     read_permission=permissions.View,
     write_permission=permissions.ModifyPortalContent,
     widget=ComputedWidget(
-        visible={'edit': 'invisible',
-                 'view': 'invisible',
-                 },
+        visible={'edit': 'invisible', 'view': 'invisible'},
     )
 )
 
@@ -113,13 +112,24 @@ FormsThere = BooleanField(
     )
 )
 
+DateCreated = DateTimeField(
+    'DateCreated',
+    mode="rw",
+    read_permission=permissions.View,
+    write_permission=permissions.ModifyPortalContent,
+    widget=DateTimeWidget(
+        label=_("Date Created"),
+        visible={'edit': 'invisible', 'view': 'invisible'},
+    ),
+)
+
 schema = BikaSchema.copy() + Schema((
     Project,
     KitTemplate,
     StorageLocation,
     Attachment,
-    FormsThere
-
+    FormsThere,
+    DateCreated
 ))
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 schema['description'].widget.visible = {'view': 'visible', 'edit': 'visible'}

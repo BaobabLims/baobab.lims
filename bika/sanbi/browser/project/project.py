@@ -2,20 +2,17 @@ from Products.ATContentTypes.lib import constraintypes
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from AccessControl import getSecurityManager
+from DateTime import DateTime
 
 from bika.lims.browser import BrowserView
 from bika.lims.controlpanel.bika_analysisservices import AnalysisServicesView
 from bika.lims.utils import isActive
-from bika.sanbi import bikaMessageFactory as _
+from bika.lims.browser.invoicefolder import InvoiceFolderContentsView
 from bika.sanbi.browser.aliquots.folder_view import AliquotsView
 from bika.sanbi.browser.biospecimens.biospecimens import BiospecimensView
 from bika.sanbi.controlpanel.bika_biospectypes import BiospecTypesView
 from bika.sanbi.config import VOLUME_UNITS
-
-from bika.lims.browser.invoicefolder import InvoiceFolderContentsView
 from bika.sanbi import bikaMessageFactory as _
-from bika.lims.interfaces import IInvoiceFolder
-from zope.interface.declarations import implements
 
 
 class ProjectEdit(BrowserView):
@@ -45,7 +42,7 @@ class ProjectEdit(BrowserView):
             brains = uc(UID=form['Client_uid'])
             if brains:
                 context.setClient(brains[0].getObject())
-
+            context.setDateCreated(DateTime())
             obj_url = context.absolute_url_path()
             request.response.redirect(obj_url)
             return
