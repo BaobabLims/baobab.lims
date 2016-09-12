@@ -22,6 +22,7 @@ class AddAliquotsViewlet(ViewletBase):
     def render(self):
         return self.index()
 
+
 class AddAliquotsSubmitHandler(BrowserView):
     """
     """
@@ -78,10 +79,9 @@ class AddAliquotsSubmitHandler(BrowserView):
         return bios
 
     def validate_form_inputs(self):
-
+        """Validate form inputs
+        """
         form = self.request.form
-        # print form
-        # print '--------'
         title_template = form.get('titletemplate', None)
         id_template = form.get('idtemplate', None)
         if not (title_template and id_template):

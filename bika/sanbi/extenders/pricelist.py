@@ -26,12 +26,12 @@ class PricelistSchemaExtender(object):
     def fiddle(self, schema):
         schema['Type'].vocabulary = PRICELIST_TYPES
 
-class Pricelist(BasePricelist):
-    """ Inherits from bika.content.analysisspec.AnalysisSpec
-    """
-    pass
-
-atapi.registerType(Pricelist, BIKALIMS_PROJECTNAME)
+# class Pricelist(BasePricelist):
+#     """ Inherits from bika.content.analysisspec.AnalysisSpec
+#     """
+#     pass
+#
+# atapi.registerType(Pricelist, BIKALIMS_PROJECTNAME)
 
 
 def ObjectModifiedEventHandler(instance, event):

@@ -135,7 +135,7 @@
                         <td class="bordertop">
                             <input type="datetime-local"
                                    name="startdate"
-                                   tabindex="2"
+                                   tabindex="3"
                                    tal:attributes="value python: request.get('startdate', '')">
                         </td>
                     </tr>
@@ -146,7 +146,7 @@
                         <td>
                             <input type="datetime-local"
                                    name="enddate"
-                                   tabindex="2"
+                                   tabindex="4"
                                    tal:attributes="value python: request.get('enddate', '')">
                         </td>
                     </tr>

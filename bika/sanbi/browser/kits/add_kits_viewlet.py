@@ -5,6 +5,7 @@ from bika.lims.browser import BrowserView
 from plone import api
 from plone.app.layout.viewlets import ViewletBase
 from zope.schema import ValidationError
+from DateTime import DateTime
 
 from bika.lims.interfaces import IUnmanagedStorage, IStoragePosition, \
     IManagedStorage
@@ -67,7 +68,8 @@ class AddKitsSubmitHandler(BrowserView):
                 id=id_template.format(id=x),
                 title=title_template.format(id=x),
                 Project=project_uid,
-                KitTemplate=kit_template_uid
+                KitTemplate=kit_template_uid,
+                DateCreated=DateTime()
             )
             # self.assign_stockitems_to_kit(obj)
             # self.assign_kit_to_storage(obj)
