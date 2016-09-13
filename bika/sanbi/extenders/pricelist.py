@@ -27,7 +27,7 @@ class PricelistSchemaExtender(object):
         schema['Type'].vocabulary = PRICELIST_TYPES
 
 # class Pricelist(BasePricelist):
-#     """ Inherits from bika.content.analysisspec.AnalysisSpec
+#     """ Inherits from bika.content.pricelist.Pricelist
 #     """
 #     pass
 #
@@ -43,19 +43,20 @@ def ObjectModifiedEventHandler(instance, event):
     if instance.portal_type == 'Pricelist':
         """ Create price list line items
         """
-        instance.pricelist_lineitems = []
         storage_princing = instance.bika_setup.StoragePricing
         storage_types = [t['storage_type'] for t in storage_princing]
-        if instance.getType() == 'StorageType':
-            for p in instance.bika_setup_catalog(portal_type=instance.getType(),
-                                                 inactive_state="active"):
-                obj = p.getObject()
-                itemDescription = None
-                itemAccredited = False
+        instance.pricelist_lineitems = []
 
-                itemTitle = obj.Title()
+        for p in instance.bika_setup_catalog(portal_type=instance.getType(),
+                                             inactive_state="active"):
+            obj = p.getObject()
+            itemDescription = None
+            itemAccredited = False
+            itemTitle = obj.Title()
+            cat = None
 
-                cat = None
+            if instance.getType() == 'StorageType':
+
                 if itemTitle in storage_types:
                     storage_type = filter(lambda t: t['storage_type'] == itemTitle, storage_princing)
                     price = float(storage_type[0]['price'])
@@ -66,15 +67,26 @@ def ObjectModifiedEventHandler(instance, event):
                     totalprice = 0
                     vat = 0
 
-                if instance.getDescriptions():
-                    itemDescription = obj.Description()
+            elif instance.getType() == 'KitTemplate':
 
-                li = PricelistLineItem()
-                li['title'] = itemTitle
-                li['ItemDescription'] = itemDescription
-                li['CategoryTitle'] = cat
-                li['Accredited'] = itemAccredited
-                li['Subtotal'] = "%0.2f" % price
-                li['VATAmount'] = "%0.2f" % vat
-                li['Total'] = "%0.2f" % totalprice
-                instance.pricelist_lineitems.append(li)
+                if obj.getCost():
+                    price = float(obj.getCost())
+                    totalprice = float(obj.getPrice())
+                    vat = float(obj.getVAT())
+                else:
+                    price = 0
+                    totalprice = 0
+                    vat = 0
+
+            if instance.getDescriptions():
+                itemDescription = obj.Description()
+
+            li = PricelistLineItem()
+            li['title'] = itemTitle
+            li['ItemDescription'] = itemDescription
+            li['CategoryTitle'] = cat
+            li['Accredited'] = itemAccredited
+            li['Subtotal'] = "%0.2f" % price
+            li['VATAmount'] = "%0.2f" % vat
+            li['Total'] = "%0.2f" % totalprice
+            instance.pricelist_lineitems.append(li)

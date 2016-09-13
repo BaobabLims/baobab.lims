@@ -27,6 +27,7 @@ VOLUME_UNITS = [
 PRICELIST_TYPES = DisplayList((
     ('AnalysisService', _('Analysis Services')),
     ('LabProduct', _('Lab Products')),
+    ('KitTemplate', _('Kits')),
     ('StorageType', _('Sample Storage')),
 ))
 
