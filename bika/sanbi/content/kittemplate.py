@@ -38,33 +38,55 @@ schema = BikaSchema.copy() + Schema((
             },
         ),
     ),
-    FixedPointField('Price',
-        schemata='Price',
-        widget = DecimalWidget(
-            label=_("Price excluding VAT"),
-            description=_("This is the price will be charged for each completed kit."),
-        )
-    ),
-    FixedPointField('VAT',
-        schemata='Price',
-        default_method='getDefaultVAT',
-        widget = DecimalWidget(
-            label=_("VAT %"),
-            description=_("Enter percentage value eg. 14.0"),
-        ),
-    ),
-    FixedPointField('Cost',
-        schemata='Price',
-        default_method='getTotal',
-        widget = DecimalWidget(
+    FixedPointField(
+        'Cost',
+        schemata='Accounting',
+        widget=DecimalWidget(
             label=_("Cost"),
             size=10,
             description=_("This is the base cost of the components required for each completed kit."),
         ),
     ),
+    FixedPointField(
+        'Discount',
+        schemata='Accounting',
+        default='0.00',
+        widget=DecimalWidget(
+            label=_("Discount %"),
+            description=_("Enter percentage discount value eg. 2.0"),
+        )
+    ),
+    FixedPointField(
+        'VAT',
+        schemata='Accounting',
+        default_method='getDefaultVAT',
+        widget=DecimalWidget(
+            label=_("VAT %"),
+            description=_("Enter percentage value eg. 14.0"),
+        )
+    ),
+    FixedPointField(
+        'DeliveryFee',
+        schemata='Accounting',
+        default='0.00',
+        widget=DecimalWidget(
+            label=_("Delivery Fee"),
+            description=_("The delivery cost per kit."),
+        )
+    ),
+    ComputedField(
+        'Price',
+        schemata='Price',
+        expression='context.getTotal()',
+        widget = DecimalWidget(
+            label=_("Price excluding VAT"),
+            description=_("This is the price will be charged for each completed kit. "
+                          "The price will be set automatically"),
+        )
+    ),
     ComputedField('VATAmount',
-        expression = 'context.getVATAmount()',
-        widget = ComputedWidget(
+        expression='context.getVATAmount()',
+        widget=ComputedWidget(
             label=_("VAT"),
             visible = {'edit':'hidden', }
         ),
@@ -73,6 +95,7 @@ schema = BikaSchema.copy() + Schema((
 
 schema['description'].schemata = 'default'
 schema['description'].widget.visible = True
+
 
 class KitTemplate(BaseContent):
     security = ClassSecurityInfo()
@@ -108,15 +131,32 @@ class KitTemplate(BaseContent):
                 [(Decimal(obj['quantity']) * Decimal(obj['price'])) for obj in self.kittemplate_lineitems])
         return 0
 
+    security.declareProtected(View, '_compute_cost')
+    def _compute_cost(self):
+        """Return dictionary product with price
+        """
+        product_list = self.getProductList()
+        uc = getToolByName(self, 'uid_catalog')
+        cost = 0
+        for p in product_list:
+            product = uc(UID=p['product_uid'])[0].getObject()
+            cost += Decimal(product.getPrice()) * Decimal(p['quantity'])
+
+        return cost
+
     security.declareProtected(View, 'getTotal')
     def getTotal(self):
         """Compute total price
         """
-        total = 0
-        for lineitem in self.kittemplate_lineitems:
-            total += Decimal(lineitem['quantity']) * \
-                     Decimal(lineitem['price']) * \
-                     ((Decimal(lineitem['VAT']) /100) + 1)
+        field = self.bika_setup.getField('LevyVAT')
+        cost = self._compute_cost()
+        delivery = Decimal(self.getDeliveryFee())
+        discount = cost * Decimal(self.getDiscount()) / 100
+        levy = cost * Decimal(field.getAccessor(self.bika_setup)()) / 100
+        vat = Decimal(self.getVAT())
+        total = cost - discount + delivery + levy
+        total *= vat / 100 + 1
+
         return str(total)
 
     security.declareProtected(View, 'getVATAmount')
@@ -158,6 +198,8 @@ class KitTemplate(BaseContent):
                 'title': product.Title(),
                 'price': product.getPrice(),
                 'VAT': product.getVAT(),
+                'Discount': self.getDiscount(),
+                'DeliveryFee': self.getDeliveryFee(),
                 'quantity': product_ref['quantity'],
                 'total_price': '%.2f' % (float(product.getPrice()) * float(product_ref['quantity']))
             })

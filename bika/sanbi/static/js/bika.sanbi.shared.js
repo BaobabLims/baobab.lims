@@ -3,7 +3,7 @@ function ComputeKitTemplatePrice() {
         // disable browser auto-complete
         $('input[type=text]').prop('autocomplete', 'off');
         init();
-    }
+    };
     function init(){
         productQuantityChanged()
     }
@@ -11,29 +11,10 @@ function ComputeKitTemplatePrice() {
     function productQuantityChanged(){
         $("input.records_inputstring").on("click", function(event) {
             var inputID = $(this)[0].id;
-            // console.log($(this))
         });
-        /*var inputs = $(".ArchetypesRecordsWidget [combogrid_options]").not('.has_combogrid_widget');
-        for (var i = inputs.length - 1; i >= 0; i--) {
-            var element = inputs[i];
-            var options = $.parseJSON($(element).attr('combogrid_options'));
-            if(options == '' || options == undefined || options == null){
-                continue;
-            }
-            options.select = function(event, ui){
-                event.preventDefault();
-                // Set value in activated element (must exist in colModel!)
-                var fieldName = $(this).attr('name').split(".")[0];
-                var key = "";
-                if ($(this).attr('name').split(".").length > 1) {
-                    key = $(this).attr('name').split(".")[1].split(":")[0];
-                }
-                console.log(key);
-            }
-        }*/
 
-        $("#fieldsetlegend-price").on("click", function (e) {
-            var productTitles = [];
+        $("#fieldsetlegend-accounting").on("click", function (e) {
+            var productUIDs = [];
             var productQuantities = [];
             var inputs = $(".ArchetypesRecordsWidget [combogrid_options]");
             for (var i = 0; i < inputs.length; i++) {
@@ -49,32 +30,32 @@ function ComputeKitTemplatePrice() {
                         break;
                     case 'product':
                         if($(inputs[i]).val()){
-                            productTitles.push($(inputs[i]).val());
+                            // productTitles.push($(inputs[i]).val());
+                            productUIDs.push($('#ProductList-product_uid-' + i).val());
                         }
                         break;
                 }
             }
-            console.log(productQuantities);
-            if(productTitles){
+            if(productUIDs){
                 var path = window.location.href.split('/edit')[0] + '/template_total_price';
                 $.ajax({
                     type: 'POST',
                     dataType: 'json',
                     url: path,
-                    data: {'titles': productTitles}
+                    data: {'uids': productUIDs}
                 }).done(function (data) {
-                    setPriceExcludingTVA(data, productTitles, productQuantities);
+                    setPriceExcludingTVA(data, productQuantities);
                 })
             } 
         });
 
     }
-    function setPriceExcludingTVA(data, titles, productQuantities){
+    function setPriceExcludingTVA(data, productQuantities){
         var totalPrice = 0;
         for(var i=0; i<data.length; i++){
             console.log(productQuantities[i]);
             totalPrice += parseFloat(data[i].price) * parseInt(productQuantities[i])
         }
-        $("input#Price").val(totalPrice);
+        $("input#Cost").val(totalPrice);
     }
 }
