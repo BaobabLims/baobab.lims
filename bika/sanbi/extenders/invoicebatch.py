@@ -142,10 +142,6 @@ def ObjectModifiedEventHandler(instance, event):
             }
 
             brains = instance.bika_catalog(query)
-            # for k in kits:
-            #     kit = k.getObject()
-            #     kit_template = kit.getKitTemplate()
-            #     cost = kit_template.getCost()
 
         invoicing = Invoicing(instance, project, service, brains)
         invoicing.create_invoice()
