@@ -3,8 +3,9 @@ from zope.interface import implements
 from zope.component import adapts
 from bika.lims.browser.widgets import RecordsWidget
 from Products.CMFCore.utils import getToolByName
+from Products.Archetypes.public import *
 
-from bika.lims.fields import ExtRecordsField
+from bika.lims.fields import ExtRecordsField, ExtensionField
 from bika.lims.interfaces import IBikaSetup
 from bika.sanbi import bikaMessageFactory as _
 import plone.protect
@@ -12,11 +13,23 @@ from operator import itemgetter
 import json
 
 
+class ExtFixedPointField(ExtensionField, FixedPointField):
+    "Field extender"
+
 class BikaSetupSchemaExtender(object):
     adapts(IBikaSetup)
     implements(ISchemaExtender)
 
     fields = [
+        ExtFixedPointField(
+            'LevyVAT',
+            schemata='Accounting',
+            default='0.00',
+            widget=DecimalWidget(
+                label=_("Levy VAT"),
+                description=_("The levy the university raises."),
+            )
+        ),
         ExtRecordsField(
             'StoragePricing',
             schemata='Accounting',
