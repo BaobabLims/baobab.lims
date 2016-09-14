@@ -1,14 +1,19 @@
 from Products.Archetypes.public import *
-from bika.lims.content.bikaschema import BikaSchema
 from Products.Archetypes.references import HoldingReference
-from bika.sanbi import bikaMessageFactory as _
+from Products.CMFCore import permissions
 from AccessControl import ClassSecurityInfo
 from zope.interface import implements
 from plone.indexer import indexer
-from bika.sanbi.interfaces import IAliquot
-from bika.sanbi import config
-import sys
+
+from bika.lims.browser.widgets import DateTimeWidget
+from bika.lims.content.bikaschema import BikaSchema
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
+from bika.sanbi.interfaces import IAliquot, IAliquotStorage
+from bika.sanbi import config
+from bika.sanbi import bikaMessageFactory as _
+
+import sys
+
 
 @indexer(IAliquot)
 def get_aliquot_project_uid(instance):
@@ -25,7 +30,7 @@ schema = BikaSchema.copy() + Schema((
         widget=bika_ReferenceWidget(
            checkbox_bound=0,
            label=_("Biospecimen"),
-           description=_("Select the biospecimen from the aliquot is extracted."),
+           description=_("The biospecimen the aliquot is extracted from."),
            size=40,
            catalog_name='bika_setup_catalog',
            showOn=True,
@@ -71,25 +76,35 @@ schema = BikaSchema.copy() + Schema((
 
     ReferenceField(
         'StorageLocation',
-        allowed_types=('StorageLocation',),
+        allowed_types=('UnmanagedStorage', 'StoragePosition'),
         relationship='AliquotStorageLocation',
         widget=bika_ReferenceWidget(
             label=_("Storage Location"),
-            description=_("Location where sample is kept"),
+            description=_("Location where item is kept"),
             size=40,
             visible={'edit': 'visible', 'view': 'visible'},
             catalog_name='bika_setup_catalog',
             showOn=True,
-            base_query={'inactive_state': 'active', 'review_state': 'available'},
+            render_own_label=True,
+            base_query={'inactive_state': 'active',
+                        'review_state': 'available',
+                        'object_provides': IAliquotStorage.__identifier__},
             colModel=[{'columnName': 'UID', 'hidden': True},
-                      {'columnName': 'Room', 'width': '15', 'label': _('Room')},
-                      {'columnName': 'StorageType', 'width': '15', 'label': _('Type')},
-                      {'columnName': 'Shelf', 'width': '13', 'label': _('Sh./Ca.')},
-                      {'columnName': 'Box', 'width': '13', 'label': _('Box/Cane')},
-                      {'columnName': 'Position', 'width': '13', 'label': _('Pos.')},
-                      {'columnName': 'Title', 'width': '31', 'label': _('Address')},
+                      {'columnName': 'id', 'width': '30', 'label': _('ID')},
+                      {'columnName': 'Title', 'width': '50', 'label': _('Title')},
                       ],
-        ),
+        )
+    ),
+
+    DateTimeField(
+        'DateCreated',
+        mode="rw",
+        read_permission=permissions.View,
+        write_permission=permissions.ModifyPortalContent,
+        widget=DateTimeWidget(
+            label=_("Date Created"),
+            visible={'edit': 'invisible', 'view': 'invisible'},
+        )
     ),
 ))
 

@@ -3,15 +3,18 @@ from Products.ATContentTypes.content import schemata
 from Products.Archetypes.atapi import *
 from plone.indexer import indexer
 from zope.interface import implements
-from bika.lims.content.bikaschema import BikaSchema, BikaFolderSchema
+from Products.CMFCore import permissions
 from plone.app.folder.folder import ATFolder
+from Products.CMFCore.utils import getToolByName
+from Products.Archetypes.references import HoldingReference
+from DateTime import DateTime
+
+from bika.lims.browser.widgets import DateTimeWidget
+from bika.lims.content.bikaschema import BikaSchema, BikaFolderSchema
+from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from bika.sanbi import bikaMessageFactory as _
 from bika.sanbi.interfaces import IBiospecimen, IBioSpecimenStorage
 from bika.sanbi.config import PROJECTNAME
-from Products.CMFCore.utils import getToolByName
-from DateTime import DateTime
-from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
-from Products.Archetypes.references import HoldingReference
 
 import sys
 
@@ -87,7 +90,7 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
     ReferenceField(
         'StorageLocation',
         allowed_types=('UnmanagedStorage', 'StoragePosition'),
-        relationship='ItemStorageLocation',
+        relationship='BiospecimenStorageLocation',
         widget=bika_ReferenceWidget(
             label=_("Storage Location"),
             description=_("Location where item is kept"),
@@ -103,7 +106,8 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
                       {'columnName': 'id', 'width': '30', 'label': _('ID')},
                       {'columnName': 'Title', 'width': '50', 'label': _('Title')},
                       ],
-        )),
+        )
+    ),
 
     DateTimeField(
         'DatetimeReceived',
@@ -113,7 +117,19 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
             description='Select the date and time the biospecimen is received.',
             ampm=1,
             visible={'edit': 'visible', 'view': 'visible'}
-        )),
+        )
+    ),
+
+    DateTimeField(
+        'DateCreated',
+        mode="rw",
+        read_permission=permissions.View,
+        write_permission=permissions.ModifyPortalContent,
+        widget=DateTimeWidget(
+            label=_("Date Created"),
+            visible={'edit': 'invisible', 'view': 'invisible'},
+        )
+    ),
 ))
 
 schema['title'].widget.visible = {'edit': 'visible', 'view': 'visible'}

@@ -91,29 +91,64 @@ class Invoicing(InvoiceBatch):
         invoice.invoice_lineitems = []
         start = self.instance.getBatchStartDate()
         end = self.instance.getBatchEndDate()
+        sub_total, vat, total = 0, 0, 0
+        message = ''
         if self.service == 'Kit':
-            sub_total, vat = 0, 0
             for brain in self.brains:
                 kit = brain.getObject()
                 kit_template = kit.getKitTemplate()
                 sub_total += float(kit_template.getPrice())
                 vat = float(kit_template.getVAT())
             total = sub_total + (sub_total * vat / 100)
+            message = 'Kit invoicing for the period {} to {}'
 
-            lineitem = InvoiceLineItem()
-            lineitem['ItemDate'] = self.project.getDateCreated()
-            lineitem['OrderNumber'] = self.project.getId()
-            lineitem['AnalysisRequest'] = ''
-            lineitem['SupplyOrder'] = ''
-            lineitem['Project'] = self.project
-            lineitem['ItemDescription'] = 'Kit invoicing for the period {} to {}'.format(start.strftime('%Y-%m-%d'),
-                                                                                         end.strftime('%Y-%m-%d'))
-            lineitem['Subtotal'] = sub_total
-            lineitem['VATAmount'] = vat
-            lineitem['Total'] = total
-            invoice.invoice_lineitems.append(lineitem)
+        elif self.service == 'Storage':
+            field = self.instance.bika_setup.getField('StoragePricing')
+            storage_pricing = self._pricing_dict_format(field.getAccessor(self.instance.bika_setup)())
+            for brain in self.brains:
+                sample = brain.getObject()
+                days = int(end - sample.getDateCreated())
+                storage_location = sample.getStorageLocation()
+                if storage_location and storage_location.portal_type == 'StoragePosition':
+                    id = storage_location.getHierarchy().split('.')[0]
+                    unit_brains = self.instance.bika_setup_catalog(portal_type='StorageUnit', id=id)
+                    if unit_brains:
+                        storage_type = unit_brains[0].getObject().getUnitType()
+                        if storage_type:
+                            sub_total += float(storage_pricing[storage_type.UID()])
+                    else:
+                        continue
+            vat = float(self.instance.bika_setup.getVAT())
+            total = sub_total + (sub_total * vat / 100)
+            message = 'Sample storage invoicing for the period {} to {}'
+
+        lineitem = InvoiceLineItem()
+        lineitem['ItemDate'] = self.project.getDateCreated()
+        lineitem['OrderNumber'] = self.project.getId()
+        lineitem['AnalysisRequest'] = ''
+        lineitem['SupplyOrder'] = ''
+        lineitem['Project'] = self.project
+        lineitem['ItemDescription'] = message.format(start.strftime('%Y-%m-%d'),
+                                                     end.strftime('%Y-%m-%d'))
+        lineitem['Subtotal'] = sub_total
+        lineitem['VATAmount'] = vat
+        lineitem['Total'] = total
+        invoice.invoice_lineitems.append(lineitem)
         invoice.reindexObject()
         return invoice
+
+    security.declareProtected(ManageInvoices, '_pricing_dict_format')
+
+    @staticmethod
+    def _pricing_dict_format(pricing_list):
+        """From the list of dicts containing the pricing objects, return a simple
+           dict with uid as key and price as value.
+        """
+        ret = {}
+        for d in pricing_list:
+            ret[d['storage_type_uid']] = d['price']
+
+        return ret
 
 def ObjectModifiedEventHandler(instance, event):
     """Create kit and storage invoices
@@ -134,14 +169,28 @@ def ObjectModifiedEventHandler(instance, event):
             query = {
                 'portal_type': 'Kit',
                 'inactive_state': 'active',
-                'kit_project_uid': project.UID(),
-                'getDateCreated': {
-                    'range': 'min:max',
-                    'query': [start, end]
-                }
+                'kit_project_uid': project.UID()
             }
+            kit_brains = instance.bika_catalog(query)
+            brains = [b for b in kit_brains if start < b.getObject().getDateCreated() < end]
+        elif service == 'Storage':
+            bio_query = {
+                'portal_type': 'Biospecimen',
+                'inactive_state': 'active',
+                'biospecimen_project_uid': project.UID()
+            }
+            bio_brains = instance.bika_catalog(bio_query)
+            bio_brains = [b for b in bio_brains if b.getObject().getDateCreated() < end]
 
-            brains = instance.bika_catalog(query)
+            aliquot_query = {
+                'portal_type': 'Biospecimen',
+                'inactive_state': 'active',
+                'aliquot_project_uid': project.UID()
+            }
+            aliquot_brains = instance.bika_catalog(aliquot_query)
+            aliquot_brains = [b for b in aliquot_brains if b.getObject().getDateCreated() < end]
+
+            brains = bio_brains + aliquot_brains
 
         invoicing = Invoicing(instance, project, service, brains)
         invoicing.create_invoice()

@@ -54,7 +54,8 @@
         </tr>
         <tr>
             <th i18n:translate="">Quantity: &nbsp;&nbsp;
-            <span style="color: #26c7ff" tal:content="view/quantity"></span>
+            <!--?<span style="color: #26c7ff" tal:content="view/quantity"></span>-->
+            <span style="color: #26c7ff">1</span>
             </th>
         </tr>
         </tbody>

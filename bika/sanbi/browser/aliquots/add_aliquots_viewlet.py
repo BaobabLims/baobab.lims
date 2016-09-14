@@ -4,7 +4,7 @@ from plone import api
 from plone.app.layout.viewlets import ViewletBase
 from Products.CMFCore.utils import getToolByName
 from zope.schema import ValidationError
-from Products.ATContentTypes.lib import constraintypes
+from DateTime import DateTime
 
 
 class AddAliquotsViewlet(ViewletBase):
@@ -44,6 +44,7 @@ class AddAliquotsSubmitHandler(BrowserView):
                     id=data['id_template'].format(id=x),
                     title=data['title_template'].format(id=x),
                     type='Aliquot',
+                    DateCreated=DateTime()
                 )
 
                 # obj.setAliquotType(data['aliquot_type_uid'])

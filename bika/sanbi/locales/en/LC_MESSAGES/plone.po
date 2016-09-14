@@ -23,3 +23,8 @@ msgstr "Complete"
 #: ../profiles/default/workflows/bika_aliquot_workflow/definition.xml
 msgid "complete_biospecimen_transition_title"
 msgstr "Complete"
+
+#. Default: "Occupy"
+#: ../profiles/default/workflows/bika_storage_workflow/definition.xml
+msgid "occupy_transition_title"
+msgstr "Occupy"

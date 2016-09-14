@@ -1,3 +1,4 @@
+from DateTime import DateTime
 from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone import api
@@ -43,7 +44,8 @@ class AddBiospecimensSubmitHandler(BrowserView):
                         container=self.context,
                         type='Biospecimen',
                         id=data['id_template'].format(id=x),
-                        title=data['title_template'].format(id=x)
+                        title=data['title_template'].format(id=x),
+                        DateCreated = DateTime()
                     )
                     obj.setKit(data['kits'][j].UID)
                     # obj.setType(data['type_uid'])

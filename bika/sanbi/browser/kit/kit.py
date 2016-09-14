@@ -132,17 +132,19 @@ class PrintView(KitView):
 
     def __call__(self):
         self.kit_name = self.context.getKitTemplate().Title()
-        self.quantity = self.context.getQuantity()
+        # self.quantity = self.context.getQuantity()
         items = self.context.getKitTemplate().kittemplate_lineitems
         self.items = []
         self.items = []
+        print items
+        print '--------'
         for item in items:
-            prodtitle = item['Product']
-            price = float(item['Price'])
+            product_title = item['title']
+            price = float(item['price'])
             vat = float(item['VAT'])
-            qty = float(item['Quantity'])
+            qty = float(item['quantity'])
             self.items.append({
-                'title': prodtitle,
+                'title': product_title,
                 'price': price,
                 'vat': vat,
                 'quantity': qty,
