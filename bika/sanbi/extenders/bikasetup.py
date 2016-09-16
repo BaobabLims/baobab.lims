@@ -22,7 +22,7 @@ class BikaSetupSchemaExtender(object):
 
     fields = [
         ExtFixedPointField(
-            'LevyVAT',
+            'LevyAmount',
             schemata='Accounting',
             default='0.00',
             widget=DecimalWidget(

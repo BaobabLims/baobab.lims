@@ -148,7 +148,7 @@ class KitTemplate(BaseContent):
     def getTotal(self):
         """Compute total price
         """
-        field = self.bika_setup.getField('LevyVAT')
+        field = self.bika_setup.getField('LevyAmount')
         cost = self._compute_cost()
         delivery = Decimal(self.getDeliveryFee())
         discount = cost * Decimal(self.getDiscount()) / 100
