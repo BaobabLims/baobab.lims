@@ -20,39 +20,56 @@ Library          DebugLibrary
 
 BioBank High-level Demo
     Enable autologin as  LabManager
+    ${contact_andrew_uid}=  Create object  bika_setup/bika_labcontacts  LabContact  contact-1  Firstname=Andrew  Surname=Dobson  EmailAddress=asdf1@example.com
+    ${contact_robert_uid}=  Create object  bika_setup/bika_labcontacts  LabContact  contact-2  Firstname=Robert  Surname=Roy     EmailAddress=asdf2@example.com
+    ${dept_micro_uid}=      Create object  bika_setup/bika_departments  Department   department-1  Title=Micro-biology  Manager=${contact_andrew_uid}
+    ${dept_metals_uid}=      Create object  bika_setup/bika_departments  Department   department-2  Title=Metals         Manager=${contact_robert_uid}
+    ${cat_micro_uid}=      Create Object  bika_setup/bika_analysiscategories  AnalysisCategory  category-1  title=Micro-biology
+    ${cat_metals_uid}=     Create Object  bika_setup/bika_analysiscategories  AnalysisCategory  category-2  title=Metals
+    ${service_ecoli_uid}=    Create Object   bika_setup/bika_analysisservices  AnalysisService  service-1  title=EColi  Keyword=ecoli  Category=${cat_micro_uid}
+    ${service_calcium_uid}=  Create Object   bika_setup/bika_analysisservices  AnalysisService  service-2  title=Calcium  Keyword=calcium  Category=${cat_metals_uid}
+    ${client1_uid}=  Create Object   clients  Client  client-1   title=Happy Hills
+    ${client1_uid}=  Create Object   clients  Client  client-2   title=Klaymore
+    ${client1_contact1_uid}=  Create object    clients/client-1    Contact   contact-1   Firstname=Contact 1  Surname=Client 1  EmailAddress=CL1CO1@example.com
+    ${client1_contact2_uid}=  Create object    clients/client-1    Contact   contact-2   Firstname=Contact 2  Surname=Client 1  EmailAddress=CL1CO2@example.com
+    ${client2_contact1_uid}=  Create object    clients/client-2    Contact   contact-1   Firstname=Contact 1  Surname=Client 2  EmailAddress=CL2CO1@example.com
+    ${client2_contact2_uid}=  Create object    clients/client-2    Contact   contact-2   Firstname=Contact 2  Surname=Client 2  EmailAddress=CL2CO2@example.com
 
-    Create Client
-    Create Client Contact
+    Configure Storage Levy
+    Configure Storage Type Pricing
 
     Create Storages
 
-    Create Project
     Create Product Categories
     Create Products
+
+    Create pricelists for kit    # levy is added?    remove discount fields from pricelists
+    Create pricelists for storage    # levy is added?    remove discount fields from pricelists
+
     Create Stock Items
+
+    Create Biospecimen Types
+    Create Project
 
 *** Keywords ***
 
-Create Client
-    Go to                             ${PLONEURL}/clients
-    Click link                        Add
-    Wait Until Page Contains Element  Name
-    Input Text                        Name                    First Client
-    Input Text                        ClientID                CLIENT1
+Configure Storage Levy
+    go to  ${PLONEURL}/bika_setup/edit
+    Click link                        css=#fieldsetlegend-accounting
+    debug
+    wait until page contains          Storage Levy
     Click Button                      Save
     Page should contain               Changes saved.
 
-Create Client Contact
-    Go to                             ${PLONEURL}/clients/client-1
-    Click link                        Contacts
-    Click link                        Add
-    Wait Until Page Contains Element  Firstname
-    Input Text                        Salutation              Mr
-    Input Text                        Firstname               Bob
-    Input Text                        Surname                 Dobbs
-    Input Text                        JobTitle                Slacker
+Create Storage Unit Types
+    go to  ${PLONEURL}/bika_setup/edit
+    Click link                        css=#fieldsetlegend-accounting
+    debug
+    wait until page contains          Storage Pricing
     Click Button                      Save
     Page should contain               Changes saved.
+
+
 
 Create Storages
     Create 2 Rooms
@@ -67,7 +84,7 @@ Create Storages
     Create Unmanaged Cabinet in R2 with type Kit
 
 Create ${nr} Rooms
-    Go to                             ${PLONEURL}/storage
+    Go to  ${PLONEURL}/storage
     input text                        units_titletemplate     Room {id}
     input text                        units_idtemplate        R{id}
     input text                        units_start             1
@@ -78,7 +95,7 @@ Create ${nr} Rooms
     wait until page contains          Storage units created.
 
 Create ${nr} Freezers in ${room}
-    Go to                             ${PLONEURL}/storage/${room}
+    Go to  ${PLONEURL}/storage/${room}
     input text                        units_titletemplate     Freezer {id}
     input text                        units_idtemplate        F{id}
     input text                        units_start             1
@@ -88,7 +105,7 @@ Create ${nr} Freezers in ${room}
     wait until page contains          Storage units created.
 
 Create ${nr} Shelves in ${loc}
-    Go to                             ${PLONEURL}/storage/${loc}
+    Go to  ${PLONEURL}/storage/${loc}
     input text                        units_titletemplate     Shelf {id}
     input text                        units_idtemplate        S{id}
     input text                        units_start             1
@@ -97,7 +114,7 @@ Create ${nr} Shelves in ${loc}
     wait until page contains          Storage units created.
 
 Create ${nr} Boxes in ${loc} with type ${type}
-    Go to                             ${PLONEURL}/storage/${loc}
+    Go to  ${PLONEURL}/storage/${loc}
     run keyword and ignore error      Click element        css=.collapsedOnLoad
     Click element                     css=#fieldsetlegend-managed
     input text                        managed_titletemplate     ${type} Box {id}
@@ -113,7 +130,7 @@ Create ${nr} Boxes in ${loc} with type ${type}
     wait until page contains          Managed storages created
 
 Create Unmanaged Cabinet in ${room} with type ${type}
-    Go to                             ${PLONEURL}/storage/${room}
+    Go to  ${PLONEURL}/storage/${room}
     run keyword and ignore error      Click element        css=.collapsedOnLoad
     Click element                     css=#fieldsetlegend-unmanaged
     input text                        unmanaged_titletemplate     Stock Cabinet {id}
@@ -124,20 +141,30 @@ Create Unmanaged Cabinet in ${room} with type ${type}
     click element                     addstorage_unmanaged_submitted
     wait until page contains          Unmanaged storages created
 
+Create Biospecimen Types
+    Go to  ${PLONEURL}/bika_setup/bika_biospectypes
+    Click link                        Add
+    Wait Until Page Contains Element  Add Biospecimen Type
+    Input Text                        title              BST Blood
+    Input Text                        description        Metals and some microbiology
+    debug
+    Click Button                      Save
+    Page should contain               Changes saved.
+
 Create Project
-    Go to                             ${PLONEURL}/projects
+    Go to  ${PLONEURL}/projects
     debug
 
 Create Product Categories
-    Go to                             ${PLONEURL}/bika_setup/bika_productcategories
+    Go to  ${PLONEURL}/bika_setup/bika_productcategories
     debug
 
 Create Products
-    Go to                             ${PLONEURL}/bika_setup/bika_productcategories
+    Go to  ${PLONEURL}/bika_setup/bika_productcategories
     debug
 
 Create Stock Items
-    Go to                             ${PLONEURL}/bika_setup/bika_productcategories
+    Go to  ${PLONEURL}/bika_setup/bika_productcategories
     debug
 
 Start browser
