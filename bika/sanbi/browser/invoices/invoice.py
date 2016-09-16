@@ -32,6 +32,7 @@ class AddInvoiceSubmitHandler(BrowserView):
                 data = self.validate_form_inputs()
             except ValidationError as e:
                 self.form_error(e.message)
+                return
 
             obj = api.content.create(
                 container=self.context,
