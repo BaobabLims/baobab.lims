@@ -32,7 +32,7 @@ class BikaSetupSchemaExtender(object):
         ),
         ExtRecordsField(
             'StoragePricing',
-            schemata='Accounting',
+            schemata='Storage',
             subfields=('storage_type', 'price', 'storage_type_uid'),
             subfield_hidden={'storage_type_uid': True},
             required_subfields=('storage_type', 'price', 'storage_type_uid'),
