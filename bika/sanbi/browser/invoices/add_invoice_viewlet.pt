@@ -69,11 +69,11 @@
                         <td>Invoice Title:
                             <div class="discreet">It's common to use as title the mounth and year.</div>
                         </td>
-                        <td><input name="invoicetitle"
-                                   class="invoicetitle"
+                        <td><input name="title"
+                                   class="title"
                                    placeholder="Invoice Title"
                                    tabindex="1"
-                                tal:attributes="value python: request.get('invoicetitle', '')"/>
+                                tal:attributes="value python: request.get('title', '')"/>
                         </td>
                     </tr>
                     <tr>
