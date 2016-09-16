@@ -27,7 +27,7 @@ class BikaSetupSchemaExtender(object):
             default='0.00',
             widget=DecimalWidget(
                 label=_("Levy Amount"),
-                description=_("The levy the university or parent organisation raises on all invoiced amounts"),
+                description=_("The levy percentage the university or parent organisation raises on all invoiced amounts"),
             )
         ),
         ExtRecordsField(
