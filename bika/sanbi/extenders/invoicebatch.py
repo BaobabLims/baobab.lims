@@ -169,7 +169,7 @@ def ObjectModifiedEventHandler(instance, event):
             query = {
                 'portal_type': 'Kit',
                 'inactive_state': 'active',
-                'kit_project_uid': project.UID()
+                'project_uid': project.UID()
             }
             kit_brains = instance.bika_catalog(query)
             brains = [b for b in kit_brains if start < b.getObject().getDateCreated() < end]
@@ -177,7 +177,7 @@ def ObjectModifiedEventHandler(instance, event):
             bio_query = {
                 'portal_type': 'Biospecimen',
                 'inactive_state': 'active',
-                'biospecimen_project_uid': project.UID()
+                'project_uid': project.UID()
             }
             bio_brains = instance.bika_catalog(bio_query)
             bio_brains = [b for b in bio_brains if b.getObject().getDateCreated() < end]
@@ -185,7 +185,7 @@ def ObjectModifiedEventHandler(instance, event):
             aliquot_query = {
                 'portal_type': 'Biospecimen',
                 'inactive_state': 'active',
-                'aliquot_project_uid': project.UID()
+                'project_uid': project.UID()
             }
             aliquot_brains = instance.bika_catalog(aliquot_query)
             aliquot_brains = [b for b in aliquot_brains if b.getObject().getDateCreated() < end]

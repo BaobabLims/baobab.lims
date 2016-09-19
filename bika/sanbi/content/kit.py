@@ -16,7 +16,7 @@ from bika.sanbi.interfaces import IKit, IKitStorage
 
 
 @indexer(IKit)
-def get_kit_project_uid(instance):
+def project_uid(instance):
     return instance.getProject().UID()
 
 

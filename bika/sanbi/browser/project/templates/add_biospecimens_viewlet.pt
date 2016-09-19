@@ -54,25 +54,6 @@
                     updateArrayUIDs(uid, 'REMOVE')
                 });
 
-                // Fetch project's kits
-                $("#Project_uid").on("focus", function (e) {
-                    var uid = $(this).val();
-                    var request_data = {
-                        catalog_name: "bika_catalog",
-                        portal_type: "Kit",
-                        inactive_state: "active",
-                        kit_project_uid: uid
-                    };
-                    $("#first-kit-limit").html('');
-                    $("#last-kit-limit").html('');
-                    window.bika.lims.jsonapi_read(request_data, function (data) {
-                        $.each(data.objects, function (i, object) {
-                            $("#first-kit-limit").append('<option value="'+ object.UID +'">'+ object.Title +'</option>');
-                            $("#last-kit-limit").append('<option value="'+ object.UID +'">'+ object.Title +'</option>')
-                        })
-                    });
-                });
-
             });
         })(jQuery);
     </script>
@@ -174,45 +155,6 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="bordertop">Project
-                            <div class="discreet">Selecting a project will import the received kits of this project <br>
-                                from the client.
-                            </div>
-                        </td>
-                        <td colspan="1" class="bordertop">
-                            <div style="width:100%" class="field ArchetypesReferenceWidget">
-                                <input
-                                        type="text"
-                                        name="Project"
-                                        id="Project"
-                                        required="True"
-                                        class="blurrable firstToFocus referencewidget"
-                                        value=""
-                                        base_query='{"portal_type": "Project", "inactive_state": "active"}'
-                                        search_query='{}'
-                                        catalog_name="bika_catalog"
-                                        ui_item="Title"
-                                        autocomplete="false"
-                                        tabindex="5"
-                                        combogrid_options='{"colModel": [{"columnName": "Title", "align": "left", "label": "Project Title", "width": "100"},
-                                                                        {"columnName": "UID", "hidden": true}],
-                                                            "search_fields": ["Title"],
-                                                            "catalog_name": "bika_catalog",
-                                                            "url": "referencewidget_search",
-                                                            "discard_empty": [],
-                                                            "popup_width": "550px",
-                                                            "showOn": true,
-                                                            "searchIcon": true,
-                                                            "minLength": "0",
-                                                            "resetButton": false,
-                                                            "sord": "asc",
-                                                            "sidx": "Title",
-                                                            "force_all": true,
-                                                            "portal_types": {}}'/>
-
-                                <input type="hidden" name="Project_uid" id="Project_uid">
-                            </div>
-                        </td>
                         <td class="bordertop">Kits
                             <div class="discreet">Select first and last kit
                                 limits. The number of kits between the two

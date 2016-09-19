@@ -10,9 +10,10 @@
     <include package="archetypes.schemaextender" />
 
     <adapter name="getClientTitle" factory=".project.getClientTitle" />
-    <adapter name="kit_project_uid" factory=".kit.get_kit_project_uid" />
+    <adapter for="bika.sanbi.interfaces.IKit" name="project_uid" factory=".kit.project_uid" />
+    <adapter for="bika.sanbi.interfaces.IBiospecimen" name="project_uid" factory=".biospecimen.project_uid" />
+    <adapter for="bika.sanbi.interfaces.IAliquot" name="project_uid" factory=".aliquot.project_uid" />
+
     <adapter name="biospecimen_kit_uid" factory=".biospecimen.get_biospecimen_kit_uid" />
-    <adapter name="biospecimen_project_uid" factory=".biospecimen.get_biospecimen_project_uid" />
-    <adapter name="aliquot_project_uid" factory=".aliquot.get_aliquot_project_uid" />
 
 </configure>

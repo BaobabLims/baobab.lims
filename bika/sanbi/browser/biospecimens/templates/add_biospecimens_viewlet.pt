@@ -61,7 +61,7 @@
                         catalog_name: "bika_catalog",
                         portal_type: "Kit",
                         inactive_state: "active",
-                        kit_project_uid: uid
+                        project_uid: uid
                     };
                     $("#first-kit-limit").html('');
                     $("#last-kit-limit").html('');
