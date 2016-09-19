@@ -111,6 +111,8 @@ class BikaCustomGenerator:
         mp(EditFieldBarcode, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(ViewBarcode, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(AddStorageType, ['Manager', 'LabManager', 'LabClerk'], 1)
+        mp(AddKitTemplate, ['Manager', 'LabManager', 'LabClerk'], 1)
+        mp(AddProject, ['Manager', 'LabManager', 'LabClerk'], 1)
 
         # kits
         mp = portal.kits.manage_permission

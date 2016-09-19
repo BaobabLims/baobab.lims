@@ -79,13 +79,11 @@ class KitTemplatesView(BikaListingView):
         """
         """
         mtool = getToolByName(self.context, 'portal_membership')
-        if mtool.checkPermission(AddKitTemplate, self.context):
+        if mtool.checkPermission("Modify portal content", self.context):
             self.context_actions[_('Add')] = {
                 'url': 'createObject?type_name=KitTemplate',
                 'icon': '++resource++bika.lims.images/add.png'
             }
-
-        if mtool.checkPermission(ManageKitTemplates, self.context):
             self.review_states.append(
                 {'id':'inactive',
                  'title': _('Dormant'),

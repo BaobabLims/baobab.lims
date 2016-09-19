@@ -1,7 +1,7 @@
 from Products.Archetypes.public import DisplayList
 from bika.sanbi import bikaMessageFactory as _
 
-PROJECTNAME = "bika.sanbi"
+PROJECTNAME = "SANBI"
 
 GLOBALS = globals()
 

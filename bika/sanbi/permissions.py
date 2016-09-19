@@ -5,7 +5,7 @@ The two files must be kept in sync.
 """
 from bika.lims.permissions import ADD_CONTENT_PERMISSION
 
-AddKitTemplate = 'SANBI: Add kit template'
+AddKitTemplate = 'SANBI: Add KitTemplate'
 AddKit = 'SANBI: Add Kit'
 AddProject = 'SANBI: Add Project'
 AddShipment = 'SANBI: Add Shipment'
@@ -22,7 +22,7 @@ ADD_CONTENT_PERMISSIONS = {
     'Project': AddProject,
     'Shipment': AddShipment,
     'Multimage': AddMultimage,
-    'Sample': AddAliquot,
+    'Aliquot': AddAliquot,
     'StorageType': AddStorageType,
 }
 
