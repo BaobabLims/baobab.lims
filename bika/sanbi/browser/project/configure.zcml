@@ -36,6 +36,16 @@
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
+    <browser:viewlet
+            for="bika.sanbi.interfaces.IProject"
+            name="add_biospecimens_viewlet"
+            class="bika.sanbi.browser.project.add_biospecimens_viewlet.AddBiospecimensViewlet"
+            manager="plone.app.layout.viewlets.interfaces.IBelowContentTitle"
+            permission="zope2.View"
+            layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+
     <!-- Workflow action button clicked in Biospecimens folder list -->
     <browser:page
       for="bika.sanbi.interfaces.IProject"
