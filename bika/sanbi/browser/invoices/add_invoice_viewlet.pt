@@ -120,13 +120,14 @@
                             <div class="discreet">Select the service to invoice the client.</div>
                         </td>
                         <td>
-                            <select id="invoice_service" name="invoice_service">
+                            <select id="invoice_services" tabindex="3" name="invoice_services" size="5" multiple>
                                 <tal:services tal:repeat="service python:view.invoice_services">
                                     <option tal:attributes="value python:service[0]"
                                             tal:content="python:service[1]"></option>
                                 </tal:services>
                             </select>
                         </td>
+
                     </tr>
                     <tr>
                         <td class="bordertop">
@@ -135,7 +136,7 @@
                         <td class="bordertop">
                             <input type="datetime-local"
                                    name="startdate"
-                                   tabindex="3"
+                                   tabindex="4"
                                    tal:attributes="value python: request.get('startdate', '')">
                         </td>
                     </tr>
@@ -146,7 +147,7 @@
                         <td>
                             <input type="datetime-local"
                                    name="enddate"
-                                   tabindex="4"
+                                   tabindex="5"
                                    tal:attributes="value python: request.get('enddate', '')">
                         </td>
                     </tr>
@@ -155,7 +156,7 @@
                 <input name="viewlet_submitted"
                        type="submit"
                        class="invoice-add"
-                       tabindex="13"
+                       tabindex="6"
                        value="Add Invoice">
             </form>
         </div>

@@ -304,7 +304,6 @@
                                     tabindex="6"
                                     combogrid_options='{"colModel": [{"columnName": "Title", "align": "left", "label": "Title", "width": "30"},
                                                                  {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "50"},
-                                                                 {"columnName": "FreePositions", "align": "left", "label": "Free", "width": "20"},
                                                                  {"columnName": "UID", "hidden": true}],
                                                         "search_fields": ["Title"],
                                                         "catalog_name": "bika_setup_catalog",

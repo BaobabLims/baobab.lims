@@ -14,4 +14,12 @@
         layer="bika.lims.interfaces.IBikaLIMS"
     />
 
+    <unconfigure>
+        <subscriber
+            for="bika.lims.interfaces.IInvoiceBatch
+                zope.lifecycleevent.interfaces.IObjectModifiedEvent"
+            handler="bika.lims.content.invoicebatch.ObjectModifiedEventHandler"
+        />
+    </unconfigure>
+
 </configure>

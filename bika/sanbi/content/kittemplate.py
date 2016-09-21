@@ -14,7 +14,9 @@ from Products.CMFCore.permissions import View
 from bika.sanbi.interfaces import IKitTemplate
 
 schema = BikaSchema.copy() + Schema((
-    RecordsField('ProductList',
+    RecordsField(
+        'ProductList',
+        schemata='Product List',
         type='productList',
         subfields=('product', 'quantity', 'product_uid'),
         subfield_hidden = {'product_uid': True},
@@ -139,8 +141,10 @@ class KitTemplate(BaseContent):
         uc = getToolByName(self, 'uid_catalog')
         cost = 0
         for p in product_list:
-            product = uc(UID=p['product_uid'])[0].getObject()
-            cost += Decimal(product.getPrice()) * Decimal(p['quantity'])
+            brains = uc(UID=p['product_uid'])
+            if brains:
+                product = brains[0].getObject()
+                cost += Decimal(product.getPrice()) * Decimal(p['quantity'])
 
         return cost
 

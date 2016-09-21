@@ -66,3 +66,6 @@ class IStorageType(Interface):
 
 class IStorageTypes(Interface):
     """Marker interface for StorageTypes"""
+
+class IProjectBiospecimenView(Interface):
+    """Marker interface for StorageTypes"""

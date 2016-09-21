@@ -124,5 +124,8 @@ class KitsView(BikaListingView):
             items[x]['Project'] = obj.getProject().Title()
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                             (items[x]['url'], obj.title)
+            items[x]['replace']['Project'] = \
+                '<a href="%s">%s</a>' % (obj.getProject().absolute_url(),
+                                         obj.getProject().Title())
 
         return items

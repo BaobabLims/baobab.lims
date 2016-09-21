@@ -4,6 +4,7 @@ from plone.app.layout.viewlets import ViewletBase
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.schema import ValidationError
 from plone import api
+from Products.CMFCore.utils import getToolByName
 
 from bika.lims.idserver import renameAfterCreation
 from bika.sanbi.config import INVOICE_SERVICES
@@ -33,19 +34,27 @@ class AddInvoiceSubmitHandler(BrowserView):
             except ValidationError as e:
                 self.form_error(e.message)
                 return
+            # services = ', '.join(data['services'])
 
-            obj = api.content.create(
-                container=self.context,
-                title=data['title'],
-                type='InvoiceBatch',
+            from Products.CMFPlone.utils import _createObjectByType
+            from bika.lims.utils import tmpID
+            instance = _createObjectByType('InvoiceBatch', self.context, tmpID(), title=data['title'])
+            # print "after create"
+            # import pdb
+            # pdb.set_trace()
+            instance.unmarkCreationFlag()
+            instance.edit(
                 Project=data['project_uid'],
-                Service=data['service'],
+                Services=data['services'],
                 BatchStartDate=data['start_date'],
                 BatchEndDate=data['end_date']
             )
-            renameAfterCreation(obj)
-            obj.reindexObject()
 
+            # print "after edit"
+            # import pdb
+            # pdb.set_trace()
+            renameAfterCreation(instance)
+            instance.processForm()
             msg = u'Invoice for period "%s" to "%s" created.' % (data['start_date'], data['end_date'])
             self.context.plone_utils.addPortalMessage(msg)
             self.request.response.redirect(self.context.absolute_url())
@@ -54,18 +63,18 @@ class AddInvoiceSubmitHandler(BrowserView):
         """Validate form inputs
         """
         form = self.request.form
-        if not form['invoicetitle']:
+        if not form['title']:
             raise ValidationError('Title should be specified for this invoice!')
-        if not form['invoice_service']:
+        if not form['invoice_services']:
             raise ValidationError('Invoice service is required!')
         if form['startdate'] and form['enddate']:
             if form['enddate'] < form['startdate']:
                 raise ValidationError(u"Start date, '%s', shouldn't be greater than End date, '%s'!" %(form['startdate'], form['enddate']))
 
         return {
-            'title': form['invoicetitle'],
+            'title': form['title'],
             'project_uid': form['Project_uid'],
-            'service': form['invoice_service'],
+            'services': form['invoice_services'],
             'start_date': form['startdate'],
             'end_date': form['enddate']
         }

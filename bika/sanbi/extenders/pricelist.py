@@ -40,7 +40,9 @@ def ObjectModifiedEventHandler(instance, event):
     if not hasattr(instance, 'portal_type'):
         return
 
-    if instance.portal_type == 'Pricelist':
+    if instance.portal_type == 'Pricelist' and \
+                    instance.getType() in ['StorageType', 'KitTemplate']:
+
         """ Create price list line items
         """
         storage_princing = instance.bika_setup.StoragePricing
@@ -81,12 +83,13 @@ def ObjectModifiedEventHandler(instance, event):
             if instance.getDescriptions():
                 itemDescription = obj.Description()
 
-            li = PricelistLineItem()
-            li['title'] = itemTitle
-            li['ItemDescription'] = itemDescription
-            li['CategoryTitle'] = cat
-            li['Accredited'] = itemAccredited
-            li['Subtotal'] = "%0.2f" % price
-            li['VATAmount'] = "%0.2f" % vat
-            li['Total'] = "%0.2f" % totalprice
-            instance.pricelist_lineitems.append(li)
+
+                li = PricelistLineItem()
+                li['title'] = itemTitle
+                li['ItemDescription'] = itemDescription
+                li['CategoryTitle'] = cat
+                li['Accredited'] = itemAccredited
+                li['Subtotal'] = "%0.2f" % price
+                li['VATAmount'] = "%0.2f" % vat
+                li['Total'] = "%0.2f" % totalprice
+                instance.pricelist_lineitems.append(li)

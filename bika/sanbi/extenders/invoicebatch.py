@@ -2,14 +2,15 @@ from archetypes.schemaextender.interfaces import IOrderableSchemaExtender
 from zope.interface import implements
 from zope.component import adapts
 from Products.Archetypes.references import HoldingReference
-from Products.Archetypes.atapi import SelectionWidget
+from Products.Archetypes.atapi import SelectionWidget, MultiSelectionWidget
 from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
 from Products.CMFPlone.utils import _createObjectByType
 from zope.container.contained import ContainerModifiedEvent
 
+from bika.lims.utils import get_invoice_item_description
 from bika.lims.content.invoice import InvoiceLineItem
-from bika.lims.fields import ExtReferenceField, ExtStringField
+from bika.lims.fields import ExtReferenceField, ExtStringField, ExtLinesField
 from bika.lims.interfaces import IInvoiceBatch
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from bika.lims.config import ManageInvoices
@@ -45,7 +46,15 @@ class InvoiceBatchSchemaExtender(object):
                 label=_("Service"),
                 description=_("Select the service to invoice."),
             )
-        )
+        ),
+        ExtLinesField(
+            'Services',
+            vocabulary=INVOICE_SERVICES,
+            widget=MultiSelectionWidget(
+                label=_("Invoice Services"),
+                description=_("Select the services to invoice."),
+            ),
+        ),
     ]
 
     def __init__(self, context):
@@ -57,9 +66,9 @@ class InvoiceBatchSchemaExtender(object):
     def getOrder(self, schematas):
         sch = schematas['default']
         sch.remove('Project')
-        sch.remove('Service')
+        sch.remove('Services')
         sch.insert(sch.index('BatchStartDate'), 'Project')
-        sch.insert(sch.index('BatchStartDate'), 'Service')
+        sch.insert(sch.index('BatchStartDate'), 'Services')
         schematas['default'] = sch
         return schematas
 
@@ -92,7 +101,6 @@ class Invoicing(InvoiceBatch):
         start = self.instance.getBatchStartDate()
         end = self.instance.getBatchEndDate()
         sub_total, vat, total = 0, 0, 0
-        message = ''
         if self.service == 'Kit':
             for brain in self.brains:
                 kit = brain.getObject()
@@ -101,6 +109,9 @@ class Invoicing(InvoiceBatch):
                 vat = float(kit_template.getVAT())
             total = sub_total + (sub_total * vat / 100)
             message = 'Kit invoicing for the period {} to {}'
+            line_item = self._create_lineitem(self.project, self.service, message, start, end,
+                                              sub_total, vat, total)
+            invoice.invoice_lineitems.append(line_item)
 
         elif self.service == 'Storage':
             field = self.instance.bika_setup.getField('StoragePricing')
@@ -121,21 +132,49 @@ class Invoicing(InvoiceBatch):
             vat = float(self.instance.bika_setup.getVAT())
             total = sub_total + (sub_total * vat / 100)
             message = 'Sample storage invoicing for the period {} to {}'
+            line_item = self._create_lineitem(self.project, self.service, message, start, end,
+                                              sub_total, vat, total)
+            invoice.invoice_lineitems.append(line_item)
 
+        elif self.service == 'LabProduct':
+            # for client_uid, orders in self.brains.items():
+            for order in self.brains:
+                sub_total = order.getSubtotal()
+                vat = order.getVATAmount()
+                total = order.getTotal()
+                line_item = self._create_lineitem(order, self.service, sub_total=sub_total,
+                                                  vat=vat, total=total)
+                invoice.invoice_lineitems.append(line_item)
+
+        invoice.reindexObject()
+        return invoice
+
+    security.declareProtected(ManageInvoices, '_create_lineitem')
+
+    @staticmethod
+    def _create_lineitem(obj, service, message='', start='', end='', sub_total=0, vat=0, total=0):
         lineitem = InvoiceLineItem()
-        lineitem['ItemDate'] = self.project.getDateCreated()
-        lineitem['OrderNumber'] = self.project.getId()
-        lineitem['AnalysisRequest'] = ''
-        lineitem['SupplyOrder'] = ''
-        lineitem['Project'] = self.project
-        lineitem['ItemDescription'] = message.format(start.strftime('%Y-%m-%d'),
-                                                     end.strftime('%Y-%m-%d'))
+        if service in ('Kit', 'Storage'):
+            lineitem['ItemDate'] = obj.getDateCreated()
+            lineitem['OrderNumber'] = obj.getId()
+            lineitem['AnalysisRequest'] = ''
+            lineitem['SupplyOrder'] = ''
+            lineitem['Project'] = obj
+            lineitem['ItemDescription'] = message.format(start.strftime('%Y-%m-%d'),
+                                                         end.strftime('%Y-%m-%d'))
+        elif service == 'LabProduct':
+            lineitem['ItemDate'] = obj.getDateDispatched()
+            lineitem['OrderNumber'] = obj.getOrderNumber()
+            lineitem['AnalysisRequest'] = ''
+            lineitem['SupplyOrder'] = obj
+            description = get_invoice_item_description(obj)
+            lineitem['ItemDescription'] = description
+
         lineitem['Subtotal'] = sub_total
         lineitem['VATAmount'] = vat
         lineitem['Total'] = total
-        invoice.invoice_lineitems.append(lineitem)
-        invoice.reindexObject()
-        return invoice
+
+        return lineitem
 
     security.declareProtected(ManageInvoices, '_pricing_dict_format')
 
@@ -156,41 +195,73 @@ def ObjectModifiedEventHandler(instance, event):
     if not isinstance(event, ContainerModifiedEvent):
         start = instance.getBatchStartDate()
         end = instance.getBatchEndDate()
-        field = instance.getField('Service')
-        service = field.getAccessor(instance)()
+        field = instance.getField('Services')
+        # services = field.getAccessor(instance)()
+
+        services = instance.Schema()['Services'].get(instance)
         field = instance.getField('Project')
         project = field.getAccessor(instance)()
-
         # field.getMutator(instance)('Storage')
 
         # Query for kits in date range
-        brains = []
-        if service == 'Kit':
-            query = {
-                'portal_type': 'Kit',
-                'inactive_state': 'active',
-                'project_uid': project.UID()
-            }
-            kit_brains = instance.bika_catalog(query)
-            brains = [b for b in kit_brains if start < b.getObject().getDateCreated() < end]
-        elif service == 'Storage':
-            bio_query = {
-                'portal_type': 'Biospecimen',
-                'inactive_state': 'active',
-                'project_uid': project.UID()
-            }
-            bio_brains = instance.bika_catalog(bio_query)
-            bio_brains = [b for b in bio_brains if b.getObject().getDateCreated() < end]
+        for service in services:
+            if service == 'Kit':
+                query = {
+                    'portal_type': 'Kit',
+                    'inactive_state': 'active',
+                    'kit_project_uid': project.UID()
+                }
+                kit_brains = instance.bika_catalog(query)
+                brains = [b for b in kit_brains if start < b.getObject().getDateCreated() < end]
+                invoicing = Invoicing(instance, project, service, brains)
+                invoicing.create_invoice()
+            elif service == 'Storage':
+                bio_query = {
+                    'portal_type': 'Biospecimen',
+                    'inactive_state': 'active',
+                    'biospecimen_project_uid': project.UID()
+                }
+                bio_brains = instance.bika_catalog(bio_query)
+                bio_brains = [b for b in bio_brains if b.getObject().getDateCreated() < end]
 
-            aliquot_query = {
-                'portal_type': 'Biospecimen',
-                'inactive_state': 'active',
-                'project_uid': project.UID()
-            }
-            aliquot_brains = instance.bika_catalog(aliquot_query)
-            aliquot_brains = [b for b in aliquot_brains if b.getObject().getDateCreated() < end]
+                aliquot_query = {
+                    'portal_type': 'Biospecimen',
+                    'inactive_state': 'active',
+                    'aliquot_project_uid': project.UID()
+                }
+                aliquot_brains = instance.bika_catalog(aliquot_query)
+                aliquot_brains = [b for b in aliquot_brains if b.getObject().getDateCreated() < end]
 
-            brains = bio_brains + aliquot_brains
+                brains = bio_brains + aliquot_brains
 
-        invoicing = Invoicing(instance, project, service, brains)
-        invoicing.create_invoice()
+                invoicing = Invoicing(instance, project, service, brains)
+                invoicing.create_invoice()
+            elif service == 'LabProduct':
+                # Query for Orders in date range
+                query = {
+                    'portal_type': 'SupplyOrder',
+                    'review_state': 'dispatched',
+                    'getDateDispatched': {
+                        'range': 'min:max',
+                        'query': [start, end]
+                    }
+                }
+                orders = instance.portal_catalog(query)
+
+                clients = {}
+                for p in orders:
+                    obj = p.getObject()
+                    if obj.getInvoiced():
+                        continue
+                    client_uid = obj.aq_parent.UID()
+                    l = clients.get(client_uid, [])
+                    l.append(obj)
+                    clients[client_uid] = l
+
+                for client_uid, lab_products in clients.items():
+                    brains = lab_products
+                    # import pdb
+                    # pdb.set_trace()
+                    if project.getClient().UID() == client_uid:
+                        invoicing = Invoicing(instance, project, service, brains)
+                        invoicing.create_invoice()
