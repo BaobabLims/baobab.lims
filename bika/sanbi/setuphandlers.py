@@ -66,8 +66,10 @@ class BikaCustomGenerator:
         at.setCatalogsByType('Shipment', ['bika_catalog'])
         at.setCatalogsByType('Aliquot', ['bika_catalog'])
         at.setCatalogsByType('Biospecimen', ['bika_catalog'])
-        addIndex(bc, 'project_uid', 'FieldIndex')
+        addIndex(bc, 'kit_project_uid', 'FieldIndex')
+        addIndex(bc, 'biospecimen_project_uid', 'FieldIndex')
         addIndex(bc, 'biospecimen_kit_uid', 'FieldIndex')
+        addIndex(bc, 'aliquot_project_uid', 'FieldIndex')
 
         # _______________________________#
         #      BIKA_SETUP_CATALOG        #
@@ -87,10 +89,10 @@ class BikaCustomGenerator:
         # at.setCatalogsByType('StorageInventory', ['bika_setup_catalog', ])
 
         # addIndex(bsc, 'getStorageUnit', 'FieldIndex')
-        addIndex(bsc, 'getUnitID', 'FieldIndex')
-        addIndex(bsc, 'getParentBox', 'FieldIndex')
-        addIndex(bsc, 'getHasChildren', 'FieldIndex')
-        addIndex(bsc, 'getLocation', 'FieldIndex')
+        # addIndex(bsc, 'getUnitID', 'FieldIndex')
+        # addIndex(bsc, 'getParentBox', 'FieldIndex')
+        # addIndex(bsc, 'getHasChildren', 'FieldIndex')
+        # addIndex(bsc, 'getLocation', 'FieldIndex')
         addIndex(bsc, 'getISID', 'FieldIndex')
 
         bac = getToolByName(portal, 'bika_analysis_catalog', None)

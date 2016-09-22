@@ -260,8 +260,6 @@ def ObjectModifiedEventHandler(instance, event):
 
                 for client_uid, lab_products in clients.items():
                     brains = lab_products
-                    # import pdb
-                    # pdb.set_trace()
                     if project.getClient().UID() == client_uid:
                         invoicing = Invoicing(instance, project, service, brains)
                         invoicing.create_invoice()

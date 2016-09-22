@@ -16,7 +16,7 @@ import sys
 
 
 @indexer(IAliquot)
-def project_uid(instance):
+def get_aliquot_project_uid(instance):
     return instance.getBiospecimen().getKit().getProject().UID()
 
 schema = BikaSchema.copy() + Schema((

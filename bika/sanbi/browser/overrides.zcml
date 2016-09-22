@@ -6,13 +6,7 @@
 
     <include package="z3c.unconfigure" file="meta.zcml" />
 
-    <browser:page
-        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-        name="bika-frontpage"
-        class="bika.sanbi.browser.bika-frontpage.FrontPageView"
-        permission="zope2.View"
-        layer="bika.lims.interfaces.IBikaLIMS"
-    />
+    <include package=".browser.invoices" file="overrides.zcml" />
 
     <unconfigure>
         <subscriber

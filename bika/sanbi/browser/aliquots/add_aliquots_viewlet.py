@@ -65,7 +65,7 @@ class AddAliquotsSubmitHandler(BrowserView):
         uc = getToolByName(self.context, 'uid_catalog')
         first_bio_id = uc(UID=first_limit_uid)[0].id
         last_bio_id = uc(UID=last_limit_uid)[0].id
-        kit_brains = bc(portal_type='Kit', inactive_state='active', project_uid=project_uid)
+        kit_brains = bc(portal_type='Kit', inactive_state='active', kit_project_uid=project_uid)
         biospecimens = []
         for brain in kit_brains:
             bio_brains = bc(portal_type='Biospecimen', inactive_state='active', biospecimen_kit_uid=brain.UID)

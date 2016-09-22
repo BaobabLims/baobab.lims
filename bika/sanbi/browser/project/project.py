@@ -201,7 +201,7 @@ class ProjectBiospecimensView(BiospecimensView):
 
         # Filter biospecimens by project uid
         for state in self.review_states:
-            state['contentFilter']['project_uid'] = self.context.UID()
+            state['contentFilter']['biospecimen_project_uid'] = self.context.UID()
 
 
     def folderitems(self, full_objects=False):
@@ -260,7 +260,7 @@ class BiospecimenAliquotsView(AliquotsView):
 
         # Filter aliquots by project uid
         for state in self.review_states:
-            state['contentFilter']['project_uid'] = self.context.UID()
+            state['contentFilter']['aliquot_project_uid'] = self.context.UID()
 
         self.context_actions = {}
 

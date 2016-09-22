@@ -67,7 +67,7 @@ class AddBiospecimensSubmitHandler(BrowserView):
         uc = getToolByName(self.context, 'uid_catalog')
         first_kit_id = uc(UID=first_limit_uid)[0].id
         last_kit_id = uc(UID=last_limit_uid)[0].id
-        brains = bc(portal_type='Kit', inactive_state='active', project_uid=project_uid)
+        brains = bc(portal_type='Kit', inactive_state='active', kit_project_uid=project_uid)
         kits = []
         for brain in brains:
             if brain.id >= first_kit_id and brain.id <= last_kit_id:

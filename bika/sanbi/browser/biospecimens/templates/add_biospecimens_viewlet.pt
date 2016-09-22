@@ -61,11 +61,13 @@
                         catalog_name: "bika_catalog",
                         portal_type: "Kit",
                         inactive_state: "active",
-                        project_uid: uid
+                        kit_project_uid: uid
                     };
+                    console.log(request_data);
                     $("#first-kit-limit").html('');
                     $("#last-kit-limit").html('');
                     window.bika.lims.jsonapi_read(request_data, function (data) {
+                        console.log(data);
                         $.each(data.objects, function (i, object) {
                             $("#first-kit-limit").append('<option value="'+ object.UID +'">'+ object.Title +'</option>');
                             $("#last-kit-limit").append('<option value="'+ object.UID +'">'+ object.Title +'</option>')

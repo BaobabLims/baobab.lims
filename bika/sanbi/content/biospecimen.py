@@ -23,7 +23,7 @@ def get_biospecimen_kit_uid(instance):
     return instance.getKit().UID()
 
 @indexer(IBiospecimen)
-def project_uid(instance):
+def get_biospecimen_project_uid(instance):
     return instance.getKit().getProject().UID()
 
 schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
@@ -162,7 +162,7 @@ class Biospecimen(ATFolder):
         items = [(c.UID, c.Title) \
                  for c in bc(portal_type='Kit',
                              inactive_state='active',
-                             project_uid=self.aq_parent)]
+                             kit_project_uid=self.aq_parent)]
         items.sort(lambda x, y: cmp(x[1], y[1]))
         return DisplayList(items)
 

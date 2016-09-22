@@ -82,3 +82,14 @@ class AddInvoiceSubmitHandler(BrowserView):
     def form_error(self, msg):
         self.context.plone_utils.addPortalMessage(msg)
         self.request.response.redirect(self.context.absolute_url())
+
+
+class InvoicePrintView(BrowserView):
+    template = ViewPageTemplateFile("templates/invoice_print.pt")
+
+    def __call__(self):
+        """Entry point to the class
+        """
+
+
+        return self.template()
