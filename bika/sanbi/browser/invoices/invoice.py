@@ -1,13 +1,17 @@
+import traceback
 from zope.interface.declarations import implements
 from Products.Five import BrowserView
 from plone.app.layout.viewlets import ViewletBase
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.schema import ValidationError
-from plone import api
-from Products.CMFCore.utils import getToolByName
+from DateTime import DateTime
 
+from bika.lims.browser.invoice import InvoiceView
 from bika.lims.idserver import renameAfterCreation
+from bika.sanbi.browser import _createdby_data, _printedby_data, _lab_data
 from bika.sanbi.config import INVOICE_SERVICES
+from bika.sanbi import bikaMessageFactory as _
+import os
 
 
 class AddInvoiceViewlet(ViewletBase):
@@ -84,12 +88,56 @@ class AddInvoiceSubmitHandler(BrowserView):
         self.request.response.redirect(self.context.absolute_url())
 
 
-class InvoicePrintView(BrowserView):
+class InvoicePrintView(InvoiceView):
+    """Print invoice
+    """
     template = ViewPageTemplateFile("templates/invoice_print.pt")
+    _TEMPLATES_DIR = 'templates/invoice'
 
     def __call__(self):
         """Entry point to the class
         """
+        return InvoiceView.__call__(self)
+        # return self.template()
 
+    def get_css(self):
+        """Import the template accompanying css file
+        """
+        template_name = 'invoice.pt'
+        this_dir = os.path.dirname(os.path.abspath(__file__))
+        templates_dir = os.path.join(this_dir, self._TEMPLATES_DIR)
+        path = '%s/%s.css' % (templates_dir, template_name[:-3])
+        with open(path, 'r') as content_file:
+            content = content_file.read()
 
-        return self.template()
+        return content
+
+    def render_invoice(self):
+        """Render template
+        """
+        templates_dir = self._TEMPLATES_DIR
+        template_name = 'invoice.pt'
+
+        template_file = ViewPageTemplateFile(os.path.join(templates_dir, template_name))
+        embed = template_file
+        try:
+            rep_template = embed(self)
+        except:
+            tbex = traceback.format_exc()
+            ktid = self.context.id
+            rep_template = "<div class='error-print'>%s - %s " \
+                           "'%s':<pre>%s</pre></div>" % (
+                              ktid, _("Unable to load the template"), template_name, tbex)
+
+        return rep_template
+
+    def get_invoice_info(self):
+        data = {}
+        data['date_printed'] = self.ulocalized_time(DateTime(), long_format=1)
+        data['date_created'] = self.ulocalized_time(self.context.created(),
+                                                    long_format=1)
+        data['createdby'] = _createdby_data(self)
+        data['printedby'] = _printedby_data(self)
+        data['laboratory'] = _lab_data(self)
+
+        return data

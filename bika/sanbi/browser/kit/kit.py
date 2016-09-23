@@ -3,8 +3,6 @@ import traceback
 from operator import itemgetter
 
 from DateTime import DateTime
-from Products.ATContentTypes.lib import constraintypes
-from Products.Archetypes.config import REFERENCE_CATALOG
 from Products.Archetypes.public import BaseFolder
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import _createObjectByType
@@ -13,6 +11,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from bika.lims.browser import BrowserView
 from bika.lims.utils import to_utf8
 from bika.sanbi import bikaMessageFactory as _
+from bika.sanbi.browser import _lab_data, _printedby_data, _createdby_data
 
 
 class KitView(BrowserView):
@@ -135,9 +134,6 @@ class PrintView(KitView):
         # self.quantity = self.context.getQuantity()
         items = self.context.getKitTemplate().kittemplate_lineitems
         self.items = []
-        self.items = []
-        print items
-        print '--------'
         for item in items:
             product_title = item['title']
             price = float(item['price'])
@@ -183,72 +179,14 @@ class PrintView(KitView):
 
         return reptemplate
 
-    def _createdby_data(self):
-        """ Returns a dict that represents the user who created the ws
-            Keys: username, fullmame, email
-        """
-        username = self.context.getOwner().getUserName()
-        return {'username': username,
-                'fullname': to_utf8(self.user_fullname(username)),
-                'email': to_utf8(self.user_email(username))}
-
-    def _printedby_data(self):
-        """ Returns a dict that represents the user who prints the ws
-            Keys: username, fullname, email
-        """
-        data = {}
-        member = self.context.portal_membership.getAuthenticatedMember()
-        if member:
-            username = member.getUserName()
-            data['username'] = username
-            data['fullname'] = to_utf8(self.user_fullname(username))
-            data['email'] = to_utf8(self.user_email(username))
-
-            c = [x for x in self.bika_setup_catalog(portal_type='LabContact')
-                 if x.getObject().getUsername() == username]
-            if c:
-                sf = c[0].getObject().getSignature()
-                if sf:
-                    data['signature'] = sf.absolute_url() + "/Signature"
-
-        return data
-
-    def _lab_data(self):
-        """ Returns a dictionary that represents the lab object
-            Keys: obj, title, url, address, confidence, accredited,
-                  accreditation_body, accreditation_logo, logo
-        """
-        portal = self.context.portal_url.getPortalObject()
-        lab = self.context.bika_setup.laboratory
-        lab_address = lab.getPostalAddress() \
-                      or lab.getBillingAddress() \
-                      or lab.getPhysicalAddress()
-        if lab_address:
-            _keys = ['address', 'city', 'state', 'zip', 'country']
-            _list = ["<div>%s</div>" % lab_address.get(v) for v in _keys
-                     if lab_address.get(v)]
-            lab_address = "".join(_list)
-        else:
-            lab_address = ''
-
-        return {'obj': lab,
-                'title': to_utf8(lab.Title()),
-                'url': to_utf8(lab.getLabURL()),
-                'address': to_utf8(lab_address),
-                'confidence': lab.getConfidence(),
-                'accredited': lab.getLaboratoryAccredited(),
-                'accreditation_body': to_utf8(lab.getAccreditationBody()),
-                'accreditation_logo': lab.getAccreditationBodyLogo(),
-                'logo': "%s/logo_print.png" % portal.absolute_url()}
-
     def getKitInfo(self):
         data = {
             'date_printed': self.ulocalized_time(DateTime(), long_format=1),
             'date_created': self.ulocalized_time(self.context.created(),
                                                  long_format=1),
         }
-        data['createdby'] = self._createdby_data()
-        data['printedby'] = self._printedby_data()
-        data['laboratory'] = self._lab_data()
+        data['createdby'] = _createdby_data(self)
+        data['printedby'] = _printedby_data(self)
+        data['laboratory'] = _lab_data(self)
 
         return data

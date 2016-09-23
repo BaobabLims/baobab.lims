@@ -1,20 +1,14 @@
-.barcode-container {
-    width:100%;
-}
-div#header .barcode {
-    float: right;
-}
-div.kit {
+div.invoice {
     font-size: 0.8em;
 }
-div.kit a {
+div.invoice a {
     color: #000;
     text-decoration: none;
 }
 div.created-by a, div.prited-by a{
     color: blue;
 }
-span.ktext{
+span.itext{
     font-weight: bold;
 }
 
@@ -39,20 +33,21 @@ fieldset {
 }
 
 
-div.section-kit table tbody th {
+div.section-invoice table tbody th {
     padding:4px 0;
     text-align: left;
 }
 
 
-div.section-items table {
+table.invoice-items {
     border: solid 1px #DDEEEE;
     border-collapse: collapse;
     border-spacing: 0;
     font: normal 13px Arial, sans-serif;
     width:100%;
 }
-div.section-items table thead th {
+
+table.invoice-items thead th, table.invoice-items thead tr.header-bottom-total {
     background-color: #DDEFEF;
     border: solid 1px #DDEEEE;
     color: #336B6B;
@@ -60,7 +55,7 @@ div.section-items table thead th {
     text-align: left;
     text-shadow: 1px 1px 1px #fff;
 }
-div.section-items table tbody td {
+table.invoice-items tbody td {
     border: solid 1px #DDEEEE;
     color: #333;
     padding: 10px;
@@ -68,10 +63,7 @@ div.section-items table tbody td {
 }
 
 @media print {
-    div.kit {
-    }
-    div.barcode-container {
-        margin-left:-0.2in;
+    div.invoice {
     }
     div.section-items table thead th {
         text-align:center;
@@ -82,4 +74,19 @@ div.section-items table tbody td {
     div.content table div.barcode {
         margin: 0 -10px;
     }
+}
+
+table.invoice-header th {
+    align: left;
+    background-color: lightgray;
+    padding-right: 5px !important;
+    width: 70px;;
+}
+
+table.invoice-header{
+    width: 100%;
+}
+
+div.lab-logo {
+    border: 1px dashed #cdcdcd;
 }
