@@ -64,15 +64,27 @@
  </action>
 
  <action title="Aliquots"
-        action_id="aliquots"
-        category="object"
-        condition_expr=""
-        icon_expr=""
-        link_target=""
-        url_expr="string:${object_url}/aliquots"
-        i18n:attributes="title"
-        visible="True">
-    <permission value="Modify portal content"/>
+         action_id="aliquots"
+         category="object"
+         condition_expr=""
+         icon_expr=""
+         link_target=""
+         url_expr="string:${object_url}/aliquots"
+         i18n:attributes="title"
+         visible="True">
+  <permission value="Modify portal content"/>
+ </action>
+
+ <action title="Analysis Requests"
+         action_id="analysisrequests"
+         category="object"
+         condition_expr=""
+         icon_expr=""
+         link_target=""
+         url_expr="string:${object_url}/analysisrequests"
+         i18n:attributes="title"
+         visible="True">
+  <permission value="Modify portal content"/>
  </action>
 
  <action title="Create Invoice"

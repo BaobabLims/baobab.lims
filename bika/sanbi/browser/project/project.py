@@ -14,6 +14,8 @@ from bika.sanbi.controlpanel.bika_biospectypes import BiospecTypesView
 from bika.sanbi.config import VOLUME_UNITS
 from bika.sanbi import bikaMessageFactory as _
 
+from bika.lims.browser.analysisrequest.analysisrequests \
+    import AnalysisRequestsView
 
 class ProjectEdit(BrowserView):
     template = ViewPageTemplateFile('templates/project_edit.pt')
@@ -280,3 +282,22 @@ class InvoiceCreate(InvoiceFolderContentsView):
 
     # def __call__(self):
     #     super(InvoiceCreate, self).__call__()
+
+
+class ProjectAnalysisRequestsView(AnalysisRequestsView):
+    """Show ARs in this project, and display a viewlet for creating
+    ARs from samples located inside this project
+    """
+
+    def __init__(self, context, request):
+        super(ProjectAnalysisRequestsView, self).__init__(context, request)
+
+        self.catalog = "bika_catalog"
+        path = '/'.join(self.context.getPhysicalPath())
+        self.contentFilter = {'portal_type': 'AnalysisRequest',
+                              'sort_on': 'created',
+                              'sort_order': 'reverse',
+                              'path': {"query": path, "level": 0},
+                              'cancellation_state': 'active',
+                              }
+        self.context_actions = {}
