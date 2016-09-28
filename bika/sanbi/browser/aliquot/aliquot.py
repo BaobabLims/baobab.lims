@@ -30,7 +30,7 @@ class AliquotEdit(BrowserView):
             # too free
             if not form.get('StorageLocation', ''):
                 wftool = self.context.portal_workflow
-                locs = self.context.getBackRefs('ItemStorageLocation')
+                locs = self.context.getBackReferences('ItemStorageLocation')
                 if locs:
                     loc = locs[0]
                     state = wftool.getInfoFor(loc, 'review_state')
