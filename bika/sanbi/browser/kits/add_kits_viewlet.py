@@ -165,7 +165,7 @@ class AddKitsSubmitHandler(BrowserView):
                                   u'stock items will be taken from.')
 
         # Check that none of the IDs conflict with existing items
-        ids = [x.id for x in self.context.objectValues('Kit')]
+        ids = [x.id for x in self.context.objectValues()]
         for x in range(kit_count):
             check = id_template.format(id=seq_start + x)
             if check in ids:

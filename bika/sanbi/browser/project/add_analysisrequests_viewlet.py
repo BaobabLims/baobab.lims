@@ -108,7 +108,7 @@ class AddAnalysisRequestsSubmitHandler(BrowserView):
         biospecimen_count = count * biospecimen_per_kit
 
         # Check that none of the IDs conflict with existing items
-        ids = [x.id for x in self.context.objectValues('Kit')]
+        ids = [x.id for x in self.context.objectValues()]
         for x in range(biospecimen_count):
             check = id_template.format(id=seq_start + x)
             if check in ids:
