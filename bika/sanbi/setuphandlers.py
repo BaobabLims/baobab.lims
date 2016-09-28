@@ -143,7 +143,6 @@ def setupCustomVarious(context):
     # Hide some NAV folders that BioBank may not need.
     for x in ['samples',
               'referencesamples',
-              'analysisrequests',
               'batches',
               'worksheets',
               'methods',
@@ -160,6 +159,7 @@ def setupCustomVarious(context):
                           'kits',
                           'biospecimens',
                           'aliquots',
+                          'analysisrequests',
                           'shipments',
                           'supplyorders']):
         portal.moveObjectsToTop([item])
