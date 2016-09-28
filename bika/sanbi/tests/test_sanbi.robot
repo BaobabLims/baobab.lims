@@ -167,7 +167,6 @@ Bio Bank Demo
     input text                        units_nr_items          1
     input text                        units_temperature       18
     input text                        units_address           Building Address
-    select from dropdown              units_type              Room temperature storage
     select from dropdown              units_department        Storage
     click element                     add_units_submitted
     wait until page contains          Storage units created.
@@ -306,12 +305,10 @@ Bio Bank Demo
     select checkbox                   css=input[item_title="Ecoli"]
     Click Button                      Save
     wait until page contains          Changes saved.
-    debug
 
     # Create Project
     Go to  ${PLONEURL}/projects
     click link                        Add
-    wait until element is visible     css=.titletemplate
     wait until page contains element  css=#title
     input text                        title                    Storage project
     select from dropdown              Client                   Happy Hills
@@ -319,27 +316,26 @@ Bio Bank Demo
     input text                        AgeLow                   10
     input text                        AgeHigh                  20
     input text                        NumParticipants          1000
-    select from list                  css=#BiospecTypes        Human blood
+    select from list                  css=#Biospectypes        Human blood      Human flesh
     select checkbox                   css=input[item_title="Calcium"]
     select checkbox                   css=input[item_title="Ecoli"]
-    debug
     Click Button                      Save
-    wait until page contains          Changes saved.
+    wait until page contains          Biospecimen Types
 
+    debug
 
-    # biospecimens
-    go to   ${PLONEURL}/projects/
-    input text                        unmanaged_titletemplate     Stock Cabinet {id}
-    input text                        unmanaged_idtemplate        stock-cabinet-{id}
-    input text                        unmanaged_seq_start             1
-    input text                        unmanaged_biospecimen_per_kit   2
-    select from list                  unmanaged_storage_types     Stock Item
-    click element                     addstorage_unmanaged_submitted
-    wait until page contains          Unmanaged storages created
-
-    Go to  ${PLONEURL}/projects
-
-    Create Kits
+    go to   ${PLONEURL}/kits
+    run keyword and ignore error      Click element        css=.collapsedBlockCollapsible
+    wait until element is visible     css=.titletemplate
+    input text                        titletemplate        TwoBottle-Kit{id}
+    input text                        idtemplate           tbk{id}
+    input text                        seq_start            1
+    input text                        kit_count            10
+    select from dropdown              css=#stockItem       Cabinet
+    select from dropdown              css=#Project         Storage
+    select from dropdown              css=#KitTemplate     Three
+    click element                     addstorage_managed_submitted
+    wait until page contains          Managed storages created
 
     Create Biospecimens
 
