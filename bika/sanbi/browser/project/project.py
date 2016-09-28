@@ -17,51 +17,6 @@ from bika.sanbi import bikaMessageFactory as _
 from bika.lims.browser.analysisrequest.analysisrequests \
     import AnalysisRequestsView
 
-class ProjectEdit(BrowserView):
-    template = ViewPageTemplateFile('templates/project_edit.pt')
-    title = _("Project Registration")
-
-    def __init__(self, context, request):
-        self.context = context
-        self.request = request
-
-        super(ProjectEdit, self).__init__(context, request)
-        self.icon = self.portal_url + \
-                    "/++resource++bika.sanbi.images/project_big.png"
-
-    def __call__(self):
-        portal = self.portal
-        request = self.request
-        context = self.context
-        form = self.request.form
-        if 'submit' in request:
-            context.setConstrainTypesMode(constraintypes.DISABLED)
-            portal_factory = getToolByName(context, 'portal_factory')
-            context = portal_factory.doCreate(context, context.id)
-            context.processForm()
-
-            uc = getToolByName(context, 'uid_catalog')
-            brains = uc(UID=form['Client_uid'])
-            if brains:
-                context.setClient(brains[0].getObject())
-            context.setDateCreated(DateTime())
-            obj_url = context.absolute_url_path()
-            request.response.redirect(obj_url)
-            return
-
-        return self.template()
-
-    def get_fields_with_visibility(self, visibility, mode=None):
-        mode = mode if mode else 'edit'
-        schema = self.context.Schema()
-        fields = []
-        for field in schema.fields():
-            isVisible = field.widget.isVisible
-            v = isVisible(self.context, mode, default='invisible', field=field)
-            if v == visibility:
-                fields.append(field)
-        return fields
-
 
 class ProjectAnalysisServicesView(AnalysisServicesView):
     def __init__(self, context, request, uids):

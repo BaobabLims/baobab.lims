@@ -6,14 +6,6 @@
 
     <browser:page
       for="bika.sanbi.interfaces.IProject"
-      name="base_edit"
-      class="bika.sanbi.browser.project.ProjectEdit"
-      permission="cmf.ModifyPortalContent"
-      layer="bika.lims.interfaces.IBikaLIMS"
-    />
-
-    <browser:page
-      for="bika.sanbi.interfaces.IProject"
       name="base_view"
       class="bika.sanbi.browser.project.ProjectView"
       permission="cmf.ModifyPortalContent"
