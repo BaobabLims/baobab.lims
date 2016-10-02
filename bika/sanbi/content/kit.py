@@ -127,6 +127,7 @@ schema = BikaSchema.copy() + Schema((
     Project,
     KitTemplate,
     StorageLocation,
+    StockItems,
     Attachment,
     FormsThere,
     DateCreated
