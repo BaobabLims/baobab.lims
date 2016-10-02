@@ -78,7 +78,7 @@ table.invoice-items tbody td {
 
 table.invoice-header th {
     align: left;
-    background-color: lightgray;
+    background-color: transparent;
     padding-right: 5px !important;
     width: 70px;;
 }
