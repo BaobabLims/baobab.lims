@@ -14,6 +14,7 @@ class KitsView(BikaListingView):
     def __init__(self, context, request):
         super(KitsView, self).__init__(context, request)
         self.context = context
+        self.request = request
         self.catalog = 'bika_catalog'
         request.set('disable_plone.rightcolumn', 1)
         self.contentFilter = {
@@ -31,6 +32,7 @@ class KitsView(BikaListingView):
         self.show_select_row = False
         self.show_select_column = True
         self.pagesize = 25
+        self.request.set('disable_border', 1)
 
         self.columns = {
             'Title': {'title': _('Kit Name'),
@@ -121,11 +123,15 @@ class KitsView(BikaListingView):
                 continue
             obj = items[x]['obj']
             items[x]['kitTemplate'] = obj.getKitTemplate().Title()
-            items[x]['Project'] = obj.getProject().Title()
+            items[x]['Project'] = ''
+            if obj.aq_parent.portal_type == 'Project':
+                items[x]['Project'] = obj.aq_parent.Title()
+                items[x]['replace']['Project'] = \
+                    '<a href="%s">%s</a>' % (obj.aq_parent.absolute_url(),
+                                             obj.aq_parent.Title())
+
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                             (items[x]['url'], obj.title)
-            items[x]['replace']['Project'] = \
-                '<a href="%s">%s</a>' % (obj.getProject().absolute_url(),
-                                         obj.getProject().Title())
+
 
         return items
