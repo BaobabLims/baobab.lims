@@ -12,7 +12,7 @@
         layer="bika.lims.interfaces.IBikaLIMS"
     />
 
-    <browser:viewlet
+    <!--<browser:viewlet
         for="bika.sanbi.interfaces.IKits"
         name="add_kits_viewlet"
         class=".add_kits_viewlet.AddKitsViewlet"
@@ -27,6 +27,6 @@
         class=".add_kits_viewlet.AddKitsSubmitHandler"
         permission="zope2.View"
         layer="bika.lims.interfaces.IBikaLIMS"
-    />
+    />-->
 
 </configure>

@@ -37,7 +37,7 @@ class KitView(BrowserView):
                        "/++resource++bika.sanbi.images/inventory.png"
         self.id = context.getId()
         self.title = context.Title()
-        self.project = context.getProject().Title()
+        self.project = context.aq_parent.Title()
         kit_template = context.getKitTemplate()
         self.kit_template_title = kit_template.Title()
         self.items = kit_template.kit_components()

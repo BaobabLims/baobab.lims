@@ -10,6 +10,7 @@ from bika.lims.utils import isActive
 from bika.lims.browser.invoicefolder import InvoiceFolderContentsView
 from bika.sanbi.browser.aliquots.folder_view import AliquotsView
 from bika.sanbi.browser.biospecimens.biospecimens import BiospecimensView
+from bika.sanbi.browser.kits.folder_view import KitsView
 from bika.sanbi.controlpanel.bika_biospectypes import BiospecTypesView
 from bika.sanbi.config import VOLUME_UNITS
 from bika.sanbi import bikaMessageFactory as _
@@ -150,6 +151,26 @@ class ProjectView(BrowserView):
         return self.template()
 
 
+class ProjectKitsView(KitsView):
+    """
+    """
+    def __init__(self, context, request):
+        super(ProjectKitsView, self).__init__(context, request)
+        self.context = context
+        self.request = request
+        # Filter kits by project uid
+        self.columns.pop('Project', None)
+        path = '/'.join(self.context.getPhysicalPath())
+        for state in self.review_states:
+            state['contentFilter']['path'] = {'query': path, 'depth': 1}
+            state['columns'].remove('Project')
+
+    def folderitems(self, full_objects=False):
+        items = KitsView.folderitems(self)
+
+        return items
+
+
 class ProjectBiospecimensView(BiospecimensView):
     def __init__(self, context, request):
         super(ProjectBiospecimensView, self).__init__(context, request)
@@ -159,7 +180,6 @@ class ProjectBiospecimensView(BiospecimensView):
         # Filter biospecimens by project uid
         for state in self.review_states:
             state['contentFilter']['biospecimen_project_uid'] = self.context.UID()
-
 
     def folderitems(self, full_objects=False):
         items = super(BiospecimensView, self).folderitems(self)

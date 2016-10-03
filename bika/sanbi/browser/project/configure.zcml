@@ -14,6 +14,14 @@
 
     <browser:page
       for="bika.sanbi.interfaces.IProject"
+      name="kits"
+      class=".project.ProjectKitsView"
+      permission="zope2.View"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="bika.sanbi.interfaces.IProject"
       name="biospecimens"
       class=".project.ProjectBiospecimensView"
       permission="zope2.View"
@@ -36,15 +44,31 @@
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
+    <browser:page
+        for="bika.sanbi.interfaces.IProject"
+        name="add_kits_submit"
+        class=".add_kits_viewlet.AddKitsSubmitHandler"
+        permission="zope2.View"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:viewlet
+        for="bika.sanbi.interfaces.IProject"
+        name="add_kits_viewlet"
+        class=".add_kits_viewlet.AddKitsViewlet"
+        manager="plone.app.layout.viewlets.interfaces.IBelowContentTitle"
+        permission="zope2.View"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
     <browser:viewlet
             for="bika.sanbi.interfaces.IProject"
             name="add_biospecimens_viewlet"
-            class="bika.sanbi.browser.project.add_biospecimens_viewlet.AddBiospecimensViewlet"
+            class=".add_biospecimens_viewlet.AddBiospecimensViewlet"
             manager="plone.app.layout.viewlets.interfaces.IBelowContentTitle"
             permission="zope2.View"
             layer="bika.lims.interfaces.IBikaLIMS"
     />
-
 
     <!-- Workflow action button clicked in Biospecimens folder list -->
     <browser:page
