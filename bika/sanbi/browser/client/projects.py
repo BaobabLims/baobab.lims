@@ -10,6 +10,8 @@ class ClientProjectsView(ProjectsView):
 
     def __init__(self, context, request):
         super(ClientProjectsView, self).__init__(context, request)
+        self.context = context
+        self.request = request
         self.contentFilter['getClientTitle'] = context.Title()
 
         self.columns = {
