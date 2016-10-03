@@ -139,6 +139,7 @@ schema['description'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 class Kit(BaseContent):
     security = ClassSecurityInfo()
     implements(IKit, IConstrainTypes)
+    displayContentsTab = False
     schema = schema
     _at_rename_after_creation = True
 
