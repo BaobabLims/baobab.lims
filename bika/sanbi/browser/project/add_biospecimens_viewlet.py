@@ -29,7 +29,7 @@ class AddBiospecimensViewlet(ViewletBase):
 
     def render(self):
         if self.request.URL.endswith('biospecimens'):
-            return self.index( )
+            return self.index()
         else:
             return ''
 
