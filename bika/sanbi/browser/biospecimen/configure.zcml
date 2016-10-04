@@ -12,13 +12,13 @@
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
-    <browser:page
+    <!--<browser:page
       for="bika.sanbi.interfaces.IBiospecimen"
       name="base_edit"
       class=".biospecimen.BiospecimenEdit"
       permission="zope.Public"
       layer="bika.lims.interfaces.IBikaLIMS"
-    />
+    />-->
 
     <browser:page
       for="bika.sanbi.interfaces.IBiospecimen"
