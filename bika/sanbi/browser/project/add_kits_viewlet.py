@@ -66,7 +66,7 @@ class AddKitsSubmitHandler(BrowserView):
         return kit_storages
 
     @staticmethod
-    def count_storage_positions(self, storages):
+    def count_storage_positions(storages):
         """Return the number of items that can be stored in storages.
 
         If any of these storages are "UnmanagedStorage" objects, then the
@@ -84,7 +84,7 @@ class AddKitsSubmitHandler(BrowserView):
             # If storage is a ManagedStorage, increment count for each
             # available StoragePosition
             elif IManagedStorage.providedBy(storage):
-                count += storage.get_free_positions()
+                count += storage.getFreePositions()
             else:
                 raise ValidationError("Storage %s is not a valid storage type" %
                                       storage)
@@ -174,7 +174,7 @@ class AddKitsSubmitHandler(BrowserView):
                 else:
                     for i, position in enumerate(free_positions):
                         kits[i].setStorageLocation(position)
-                        wf.doActionFor(position)
+                        wf.doActionFor(position, 'occupy')
                     kits = kits[len(free_positions):]
             elif IUnmanagedStorage.providedBy(storage):
                 # Case of unmanaged storage there is no limit in storage until
@@ -192,14 +192,7 @@ class AddKitsSubmitHandler(BrowserView):
         project_uid = self.form.get('Project_uid', None)
         kit_template_uid = self.form.get('KitTemplate_uid', None)
         kits = []
-
         kit_storages = self.get_kit_storages()
-        if all([IStoragePosition.providedBy(storage) for storage in kit_storages]):
-            nr_positions = self.count_storage_positions(kit_storages)
-            if kit_count > nr_positions:
-                raise ValidationError(
-                    u"Not enough kit storage positions available.  Please select "
-                    u"or create additional storages for kits.")
 
         for x in range(seq_start, seq_start + kit_count):
             obj = api.content.create(
@@ -265,6 +258,14 @@ class AddKitsSubmitHandler(BrowserView):
             if check in ids:
                 raise ValidationError(
                     u'The ID %s exists, cannot be created.' % check)
+
+        kit_storages = self.get_kit_storages()
+        if all([IManagedStorage.providedBy(storage) for storage in kit_storages]):
+            nr_positions = self.count_storage_positions(kit_storages)
+            if kit_count > nr_positions:
+                raise ValidationError(
+                    u"Not enough kit storage positions available.  Please select "
+                    u"or create additional storages for kits.")
 
     def form_error(self, msg):
         self.context.plone_utils.addPortalMessage(msg)
