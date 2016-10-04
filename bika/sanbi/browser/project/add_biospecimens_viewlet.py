@@ -6,6 +6,8 @@ from plone.app.layout.viewlets import ViewletBase
 from zope.schema import ValidationError
 from Products.CMFCore.utils import getToolByName
 
+from bika.lims.interfaces import IUnmanagedStorage, IManagedStorage
+
 
 class AddBiospecimensViewlet(ViewletBase):
     index = ViewPageTemplateFile("templates/add_biospecimens_viewlet.pt")
@@ -45,6 +47,35 @@ class AddBiospecimensViewlet(ViewletBase):
 class AddBiospecimensSubmitHandler(BrowserView):
     """
     """
+
+    def __init__(self, context, request):
+        super(AddBiospecimensSubmitHandler, self).__init__(context, request)
+        self.context = context
+        self.request = request
+        self.form = request.form
+
+    def assign_biospecimens_to_storages(self, biospecimens, storages):
+        """ Assign positions to biospecimens inside storages
+        """
+        wf = getToolByName(self.context, 'portal_workflow')
+        for storage in storages:
+            if IManagedStorage.providedBy(storage):
+                free_positions = storage.get_free_positions()
+                if len(biospecimens) <= len(free_positions):
+                    for i, biospecimen in enumerate(biospecimens):
+                        biospecimen.setStorageLocation(free_positions[i])
+                        wf.doActionFor(free_positions[i], 'occupy')
+                else:
+                    for i, position in enumerate(free_positions):
+                        biospecimens[i].setStorageLocation(position)
+                        wf.doActionFor(position, 'occupy')
+                    biospecimens = biospecimens[len(free_positions):]
+            elif IUnmanagedStorage.providedBy(storage):
+                # Case of unmanaged storage there is no limit in storage until
+                # user manually set the storage as full.
+                for biospecimen in biospecimens:
+                    biospecimen.setStorageLocation(storage)
+
     def __call__(self):
         # import pdb;pdb.set_trace()
         if "viewlet_submitted" in self.request.form:
@@ -76,6 +107,9 @@ class AddBiospecimensSubmitHandler(BrowserView):
 
                     biospecimens.append(obj)
 
+                #store the created biospecimens
+                self.assign_biospecimens_to_storages(biospecimens, data['storages'])
+
                 msg = u'%s Biospecimens created.' % len(biospecimens)
                 self.context.plone_utils.addPortalMessage(msg)
             self.request.response.redirect(self.context.absolute_url())
@@ -99,6 +133,38 @@ class AddBiospecimensSubmitHandler(BrowserView):
                 kits.append(kit)
 
         return kits
+
+    def get_biospecimen_storages(self):
+        """Take a list of UIDs from the form, and resolve to a list of Storages.
+        Accepts ManagedStorage, UnmanagedStorage, or StoragePosition UIDs.
+        """
+        uc = getToolByName(self.context, 'uid_catalog')
+        bio_storages = []
+        form_uids = self.form['biospecimen_storage_uids'].split(',')
+        for uid in form_uids:
+            brain = uc(UID=uid)[0]
+            instance = brain.getObject()
+            if IUnmanagedStorage.providedBy(instance) \
+                    or len(instance.get_free_positions()) > 0:
+                bio_storages.append(instance)
+
+        return bio_storages
+
+    @staticmethod
+    def count_storage_positions(storages):
+        """"Return the number of items that can be stored in storages.
+        This method is called in case all the storages are of type Managed.
+        """
+        count = 0
+        for storage in storages:
+            # If storage is a ManagedStorage, increment count for each
+            # available StoragePosition
+            if IManagedStorage.providedBy(storage):
+                count += storage.getFreePositions()
+            else:
+                raise ValidationError("Storage %s is not a valid storage type" %
+                                      storage)
+        return count
 
     def validate_form_inputs(self):
 
@@ -136,6 +202,16 @@ class AddBiospecimensSubmitHandler(BrowserView):
                 raise ValidationError(
                     u'The ID %s exists, cannot be created.' % check)
 
+        # Check that the storages selected has sufficient positions to contain
+        # the biospecimen to generate.
+        bio_storages = self.get_biospecimen_storages()
+        if all([IManagedStorage.providedBy(storage) for storage in bio_storages]):
+            nr_positions = self.count_storage_positions(bio_storages)
+            if biospecimen_count > nr_positions:
+                raise ValidationError(
+                    u"Not enough kit storage positions available.  Please select "
+                    u"or create additional storages for kits.")
+
         return {
             'title_template': title_template,
             'id_template': id_template,
@@ -144,7 +220,8 @@ class AddBiospecimensSubmitHandler(BrowserView):
             'last_kit_limit': last_kit_limit,
             'kits': kits,
             'biospecimen_per_kit': biospecimen_per_kit,
-            'biospecimen_count': biospecimen_count
+            'biospecimen_count': biospecimen_count,
+            'storages': bio_storages
         }
 
     def form_error(self, msg):
