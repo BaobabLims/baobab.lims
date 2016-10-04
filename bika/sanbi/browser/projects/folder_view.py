@@ -22,7 +22,9 @@ class ProjectsView(BikaListingView):
         self.show_select_row = False
         self.show_select_column = False
         self.pagesize = 50
-        self.request.set('disable_border', 1)
+
+        if self.context.portal_type == 'Projects':
+            self.request.set('disable_border', 1)
 
         self.columns = {
             'Title': {'title': _('Project'),
