@@ -90,7 +90,7 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
     ReferenceField(
         'StorageLocation',
         allowed_types=('UnmanagedStorage', 'StoragePosition'),
-        relationship='BiospecimenStorageLocation',
+        relationship='ItemStorageLocation',
         widget=bika_ReferenceWidget(
             label=_("Storage Location"),
             description=_("Location where item is kept"),
@@ -103,8 +103,8 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
                         'review_state': 'available',
                         'object_provides': IBioSpecimenStorage.__identifier__},
             colModel=[{'columnName': 'UID', 'hidden': True},
-                      {'columnName': 'id', 'width': '30', 'label': _('ID')},
                       {'columnName': 'Title', 'width': '50', 'label': _('Title')},
+                      {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "50"}
                       ],
         )
     ),
