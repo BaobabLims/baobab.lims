@@ -32,7 +32,9 @@ class KitsView(BikaListingView):
         self.show_select_row = False
         self.show_select_column = True
         self.pagesize = 25
-        self.request.set('disable_border', 1)
+
+        if self.context.portal_type == 'Kits':
+            self.request.set('disable_border', 1)
 
         self.columns = {
             'Title': {'title': _('Kit Name'),
