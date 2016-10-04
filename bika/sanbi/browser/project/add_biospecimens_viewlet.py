@@ -19,12 +19,20 @@ class AddBiospecimensViewlet(ViewletBase):
         return items
 
     def kits(self):
+        """ Return only project's kits with status generated and active
+        """
         items = []
-        objects = self.context.objectValues('Kit')
-        import pdb;pdb.set_trace()
-        for k in objects:
-            items.append({'uid':k.UID(), 'title':k.Title()})
-        items.sort(lambda x, y: cmp(x['Title'], y['Title']))
+        w_tool = getToolByName(self.context, 'portal_workflow')
+        kits = self.context.objectValues('Kit')
+        # import pdb;pdb.set_trace()
+        for kit in kits:
+            st1 = w_tool.getStatusOf("bika_kit_assembly_workflow", kit)
+            st2 = w_tool.getStatusOf("bika_inactive_workflow", kit)
+            if st1.get('review_state', None) == 'generated' and \
+                            st2.get('inactive_state', None) == 'active':
+                items.append({'uid':kit.UID(), 'title':kit.Title()})
+        items.sort(lambda x, y: cmp(x['title'], y['title']))
+
         return items
 
     def render(self):
@@ -38,7 +46,7 @@ class AddBiospecimensSubmitHandler(BrowserView):
     """
     """
     def __call__(self):
-
+        # import pdb;pdb.set_trace()
         if "viewlet_submitted" in self.request.form:
             data = {}
             try:
@@ -59,7 +67,7 @@ class AddBiospecimensSubmitHandler(BrowserView):
                         title=data['title_template'].format(id=x),
                         DateCreated = DateTime()
                     )
-                    obj.setKit(data['kits'][j].UID)
+                    obj.setKit(data['kits'][j].UID())
                     # obj.setType(data['type_uid'])
                     self.context.manage_renameObject(obj.id, data['id_template'].format(id=x), )
                     obj.reindexObject(idxs=['biospecimen_kit_uid'])
@@ -72,18 +80,23 @@ class AddBiospecimensSubmitHandler(BrowserView):
                 self.context.plone_utils.addPortalMessage(msg)
             self.request.response.redirect(self.context.absolute_url())
 
-    def kits_between_limits(self, first_limit_uid, last_limit_uid, project_uid):
+    def kits_between_limits(self, first_limit_uid, last_limit_uid):
         """Retrieve kits between the two limits
         """
-        bc = getToolByName(self.context, 'bika_catalog')
+        w_tool = getToolByName(self.context, 'portal_workflow')
         uc = getToolByName(self.context, 'uid_catalog')
         first_kit_id = uc(UID=first_limit_uid)[0].id
         last_kit_id = uc(UID=last_limit_uid)[0].id
-        brains = bc(portal_type='Kit', inactive_state='active', project_uid=project_uid)
+        p_kits = self.context.objectValues('Kit')
+        # Filter kits by workflow state active
         kits = []
-        for brain in brains:
-            if brain.id >= first_kit_id and brain.id <= last_kit_id:
-                kits.append(brain)
+        for kit in p_kits:
+            st1 = w_tool.getStatusOf("bika_kit_assembly_workflow", kit)
+            st2 = w_tool.getStatusOf("bika_inactive_workflow", kit)
+            if st1.get('review_state', None) == 'generated' and \
+                    st2.get('inactive_state', None) == 'active' and \
+                        first_kit_id <= kit.getId() <= last_kit_id:
+                kits.append(kit)
 
         return kits
 
@@ -105,16 +118,12 @@ class AddBiospecimensSubmitHandler(BrowserView):
             raise ValidationError(
                 u'Sequence start and all counts must be integers')
 
-        project_uid = form.get('Project_uid', None)
-        if not project_uid:
-            raise ValidationError(u'Project is required and should be not "None"')
-
         first_kit_limit = form.get('first_kit_limit', None)
         last_kit_limit = form.get('last_kit_limit', None)
         if not first_kit_limit or not last_kit_limit:
             raise ValidationError(u'Kits range is required. Or project select has no kits!')
 
-        kits = self.kits_between_limits(first_kit_limit, last_kit_limit, project_uid)
+        kits = self.kits_between_limits(first_kit_limit, last_kit_limit)
         count = len(kits)
         biospecimen_per_kit = int(form.get('biospecimen_per_kit', None))
         biospecimen_count = count * biospecimen_per_kit
@@ -131,7 +140,6 @@ class AddBiospecimensSubmitHandler(BrowserView):
             'title_template': title_template,
             'id_template': id_template,
             'seq_start': seq_start,
-            'project_uid': project_uid,
             'first_kit_limit': first_kit_limit,
             'last_kit_limit': last_kit_limit,
             'kits': kits,
