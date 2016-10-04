@@ -37,6 +37,9 @@ class AliquotsView(BikaListingView):
         request.set('disable_plone.rightcolumn', 1)
         self.allow_edit = True
 
+        if self.context.portal_type == 'Aliquots':
+            self.request.set('disable_border', 1)
+
         self.columns = {
             'Title': {
                 'title': _('Aliquot'),
@@ -147,12 +150,6 @@ class AliquotsView(BikaListingView):
 
     def __call__(self):
         mtool = getToolByName(self.context, 'portal_membership')
-        # if mtool.checkPermission(AddAliquot, self.context):
-        #     self.context_actions[_('Add')] = {
-        #         'url': 'createObject?type_name=Aliquot',
-        #         'icon': '++resource++bika.lims.images/add.png'
-        #     }
-
         if mtool.checkPermission(ManageAliquots, self.context):
             stat = self.request.get("%s_review_state" % self.form_id, 'default')
             self.show_select_column = stat != 'all'
@@ -171,12 +168,6 @@ class AliquotsView(BikaListingView):
             for brain in brains
         ]
 
-        # It's not necessary to show column 'Project' in Project biospecimens list.
-        if self.context.portal_type == 'Project':
-            self.columns.pop('Project', None)
-            for state in self.review_states:
-                state['columns'].remove('Project')
-
         for x in range(len(items)):
             if not items[x].has_key('obj'):
                 continue
@@ -189,8 +180,8 @@ class AliquotsView(BikaListingView):
                                            (items[x]['url'], items[x]['Title'])
             if self.context.portal_type == 'Aliquots':
                 items[x]['replace']['Project'] = \
-                    '<a href="%s">%s</a>' % (obj.getBiospecimen().getKit().getProject().absolute_url(),
-                                             obj.getBiospecimen().getKit().getProject().Title())
+                    '<a href="%s">%s</a>' % (obj.aq_parent.absolute_url(),
+                                             obj.aq_parent.Title())
 
             if self.allow_edit and isActive(self.context) and \
                     getSecurityManager().checkPermission("Modify portal content", obj) and \
