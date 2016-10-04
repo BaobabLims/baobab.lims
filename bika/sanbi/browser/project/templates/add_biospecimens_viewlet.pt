@@ -232,7 +232,7 @@
                     <table id="biospecimen-table-storages" style="width: 35%;"></table>
                 </div>
 
-                <input type="hidden" name="b_storage_uids" id="b-storage-uids" />
+                <input type="hidden" name="biospecimen_storage_uids" id="b-storage-uids" />
 
                 <input name="viewlet_submitted"
                        type="submit"
