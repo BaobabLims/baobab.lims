@@ -32,12 +32,15 @@ class BiospecimensView(BikaListingView):
         self.icon = self.portal_url + \
                     "/++resource++bika.sanbi.images/biospecimen_big.png"
         self.description = ''
-
         self.show_sort_column = False
         self.show_select_row = False
         self.show_select_column = True
         self.pagesize = 25
         self.allow_edit = True
+
+        if self.context.portal_type == 'Biospecimens':
+            self.request.set('disable_border', 1)
+            
         self.columns = {
             'Title': {
                 'title': _('Title'),
@@ -51,17 +54,17 @@ class BiospecimensView(BikaListingView):
             'Volume': {
                 'title': _('Volume'),
                 'toggle': True,
-                'input_width': '10'
+                'input_width': '7'
             },
             'Unit': {
                 'title': _('Unit'),
-                'toggle': True,
-                'input_width': '10'
+                'toggle': True
             },
             'SubjectID': {
                 'title': _('Subject ID'),
                 'allow_edit': True,
                 'input_class': 'text',
+                'input_width': '10',
                 'toggle': True
             },
             'Kit': {
@@ -72,6 +75,7 @@ class BiospecimensView(BikaListingView):
                 'title': _('Barcode'),
                 'allow_edit': True,
                 'input_class': 'text',
+                'input_width': '10',
                 'toggle': True
             },
             'Project': {
@@ -202,13 +206,13 @@ class BiospecimensView(BikaListingView):
             items[x]['Unit'] = VOLUME_UNITS[0]['ResultText']
             items[x]['SubjectID'] = obj.getSubjectID()
             items[x]['Kit'] = obj.getKit()
-            items[x]['Project'] = obj.getKit().getProject()
+            items[x]['Project'] = obj.getKit().aq_parent
             if obj.getKit():
                 items[x]['replace']['Kit'] = \
                     '<a href="%s">%s</a>' % (obj.getKit().absolute_url(), obj.getKit().Title())
                 items[x]['replace']['Project'] = \
-                    '<a href="%s">%s</a>' % (obj.getKit().getProject().absolute_url(),
-                                             obj.getKit().getProject().Title())
+                    '<a href="%s">%s</a>' % (obj.getKit().aq_parent.absolute_url(),
+                                             obj.getKit().aq_parent.Title())
             items[x]['Barcode'] = obj.getBarcode()
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                            (items[x]['url'], items[x]['Title'])
