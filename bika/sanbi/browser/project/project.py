@@ -190,16 +190,23 @@ class ProjectBiospecimensView(BiospecimensView):
         return items
 
 
-class BiospecimenAliquotsView(AliquotsView):
+class ProjectAliquotsView(AliquotsView):
     def __init__(self, context, request):
-        super(BiospecimenAliquotsView, self).__init__(context, request)
+        super(ProjectAliquotsView, self).__init__(context, request)
         self.context = context
-
-        # Filter aliquots by project uid
-        for state in self.review_states:
-            state['contentFilter']['aliquot_project_uid'] = self.context.UID()
-
         self.context_actions = {}
+
+        # Filter biospecimens by project uid
+        self.columns.pop('Project', None)
+        path = '/'.join(self.context.getPhysicalPath())
+        for state in self.review_states:
+            state['contentFilter']['path'] = {'query': path, 'depth': 1}
+            state['columns'].remove('Project')
+
+    def folderitems(self, full_objects=False):
+        items = AliquotsView.folderitems(self)
+
+        return items
 
 
 class InvoiceCreate(InvoiceFolderContentsView):
