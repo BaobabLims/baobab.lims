@@ -70,13 +70,12 @@ class AddAliquotsSubmitHandler(BrowserView):
                 # obj.setAliquotType(data['aliquot_type_uid'])
                 obj.setBiospecimen(data['biospecimens'][j].UID())
                 self.context.manage_renameObject(obj.id, data['id_template'].format(id=x), )
-                obj.reindexObject()
                 if (x-data['seq_start']+1) % data['aliquot_count'] == 0 and (x-data['seq_start']+1) != 0:
                     j += 1
                 aliquots.append(obj)
 
             # store the created biospecimens
-                assign_items_to_storages(self.context, aliquots, data['storages'])
+            assign_items_to_storages(self.context, aliquots, data['storages'])
 
             msg = u'%s Aliquots created.' % len(aliquots)
             self.context.plone_utils.addPortalMessage(msg)
