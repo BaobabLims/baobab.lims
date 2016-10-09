@@ -6,115 +6,74 @@
       i18n:domain="bika">
 
 <head>
-    <metal:css fill-slot="style_slot">
-        <tal:css>
-            <style type="text/css"
-                   media="all">
-                table {
-                    border-collapse: collapse;
-                    width: 40em;
-                }
-
-                tr {
-                    padding-top: 2em;
-                    padding-bottom: 2em;
-
-                }
-
-                th {
-                    background-color: #8E8E8E;
-                    border: 1px solid black;
-                }
-
-                div.print_document {
-                    display: inline-block;
-                    margin-right: 20px;
-                    margin-top: 5px;
-                    float: right;
-                }
-            </style>
-        </tal:css>
-    </metal:css>
 </head>
 
 <body>
 <metal:title fill-slot="content-title">
-    <div style="display:inline-block;">
-        <h1>
-            <span class="documentFirstHeading" tal:content="view/header_text"/>
-        </h1>
-    </div>
-    <div class="print_document">
-        <a tal:attributes="href python:context.absolute_url()+'/print';" i18n:translate=""
-           class="print_button">Print</a>
-    </div>
+    <h1>
+        <img tal:condition="view/icon | nothing"
+            src="" tal:attributes="src view/icon"/>
+        <span class="documentFirstHeading" tal:content="view/id" />
+    </h1>
+    <hr/>
 </metal:title>
+
+<metal:content-description fill-slot="content-description">
+</metal:content-description>
+
 <metal:core fill-slot="content-core"
             tal:define="
-                    portal context/@@plone_portal_state/portal;
-                    attachments python:view.getAttachments();
-                    review_state python: context.portal_workflow.getInfoFor(context, 'review_state');
-                    attachments_allowed here/bika_setup/getAttachmentsPermitted;
-                    delete_attachments python:True;
-                    update_attachments python:True;">
-    <table class="invoice-header">
+                portal context/@@plone_portal_state/portal;
+                review_state python: context.portal_workflow.getInfoFor(context, 'review_state');
+                ">
+    <h3 style="margin-top:1em;">
+        <tal:current_storage>
+            <img title="Project"
+                tal:attributes="src string:${view/portal_url}/++resource++bika.sanbi.images/shipment.png">
+            <span i18n:translate="">Info Shipment</span>:
+        </tal:current_storage>
+    </h3><br/>
+    <table class="storage" style="border-collapse: collapse; width: 100%;">
         <tbody>
         <tr>
-            <th i18n:translate="" colspan="2">Shipment Sent By</th>
-        </tr>
-        <tr>
-            <td>Study Name</td>
-            <td tal:content="view/study_name"></td>
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                                     padding: 10px 15px;">Study Name</th>
+            <td tal:content="view/study_name" style="border: 1px solid #cecfd5;
+                                                     padding: 10px 15px;"></td>
             </tr>
         <tr>
-            <td>From Contact</td>
-            <td tal:content="view/from_contact"></td>
-            </tr>
         <tr>
-            <td>To Contact</td>
-            <td tal:content="view/to_contact"></td>
-            </tr>
-        <tr>
-            <td>Address</td>
-            <td tal:content="view/sender_address"></td>
-        </tr>
-
-        <tr>
-            <th i18n:translate="" colspan="2">Kit</th>
-        </tr>
-
-        <tr>
-            <td>Kit Template Name</td>
-            <td tal:content="view/kit_name"></td>
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;">From Contact</th>
+            <td tal:content="view/from_contact" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
         </tr>
         <tr>
-            <td>Number of kits</td>
-            <td tal:content="view/kit_quantity"></td>
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;">To Contact</th>
+            <td tal:content="view/to_contact" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
         </tr>
         <tr>
-            <td>Date Assembled</td>
-            <td tal:content="view/kit_assembled_date"></td>
-        </tr>
-
-        <tr>
-            <td>Expiration Date</td>
-            <td tal:content="view/kit_expiration_date"></td>
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;">Delivery Address</th>
+            <td tal:content="view/sender_address" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
         </tr>
         <tr>
-            <th i18n:translate="" colspan="2">Courier</th>
-        </tr>
-        <tr>
-            <td>Courier</td>
-            <td tal:content="view/courier_name"></td>
-        </tr>
-        <tr>
-            <td>Date Dispatched</td>
-            <td tal:content="view/date_dispatched"></td>
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;">Courier</th>
+            <td tal:content="view/courier_name" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
         </tr>
         </tbody>
     </table>
-
+    <h3 style="margin-top:1em;">
+        <img title="Kits"
+             tal:attributes="src string:${view/portal_url}/++resource++bika.sanbi.images/kit.png">
+        <span i18n:translate="">Kits to ship</span>
+    </h3>
+    <tal:parts replace="structure view/kits_table"/>
 </metal:core>
 </body>
-
 </html>
