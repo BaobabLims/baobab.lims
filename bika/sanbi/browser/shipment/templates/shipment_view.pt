@@ -42,7 +42,7 @@
                                                      padding: 10px 15px;"></td>
             </tr>
         <tr>
-        <tr>
+        <tr style="background: #f0f0f2;">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;">From Contact</th>
             <td tal:content="view/from_contact" style="border: 1px solid #cecfd5;
@@ -54,7 +54,7 @@
             <td tal:content="view/to_contact" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
-        <tr>
+        <tr style="background: #f0f0f2;">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;">Delivery Address</th>
             <td tal:content="view/sender_address" style="border: 1px solid #cecfd5;

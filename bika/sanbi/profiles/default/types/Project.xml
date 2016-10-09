@@ -15,6 +15,7 @@
  <property name="filter_content_types">True</property>
  <property name="allowed_content_types">
   <element value="Kit"/>
+  <element value="Shipment"/>
   <element value="Biospecimen"/>
   <element value="Aliquot"/>
  </property>
@@ -64,6 +65,19 @@
   <permission value="Modify portal content"/>
  </action>
 
+ <action title="Shipments"
+         action_id="shipments"
+         category="object"
+         condition_expr=""
+         icon_expr=""
+         link_target=""
+         url_expr="string:${object_url}/shipments"
+         i18n:attributes="title"
+         i18n:domain="plone"
+         visible="True">
+  <permission value="Modify portal content"/>
+ </action>
+
  <action title="Biospecimens"
          action_id="biospecimens"
          category="object"
@@ -101,15 +115,15 @@
   <permission value="Modify portal content"/>
  </action>
 
- <action title="Create Invoice"
-         action_id="Create Invoice"
-         category="object"
-         condition_expr=""
-         link_target=""
-         url_expr="string:${object_url}/invoice_create"
-         i18n:attributes="title"
-         visible="True">
-     <permission value="BIKA: Manage Invoices"/>
- </action>
+ <!--<action title="Create Invoice"-->
+         <!--action_id="Create Invoice"-->
+         <!--category="object"-->
+         <!--condition_expr=""-->
+         <!--link_target=""-->
+         <!--url_expr="string:${object_url}/invoice_create"-->
+         <!--i18n:attributes="title"-->
+         <!--visible="True">-->
+     <!--<permission value="BIKA: Manage Invoices"/>-->
+ <!--</action>-->
 
 </object>

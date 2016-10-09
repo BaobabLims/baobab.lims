@@ -11,6 +11,7 @@ from bika.lims.browser.invoicefolder import InvoiceFolderContentsView
 from bika.sanbi.browser.aliquots.folder_view import AliquotsView
 from bika.sanbi.browser.biospecimens.biospecimens import BiospecimensView
 from bika.sanbi.browser.kits.folder_view import KitsView
+from bika.sanbi.browser.shipments.folder_view import ShipmentsView
 from bika.sanbi.controlpanel.bika_biospectypes import BiospecTypesView
 from bika.sanbi.config import VOLUME_UNITS
 from bika.sanbi import bikaMessageFactory as _
@@ -171,7 +172,29 @@ class ProjectKitsView(KitsView):
         return items
 
 
+class ProjectShipmentsView(ShipmentsView):
+    """ Shipments view from project view.
+    """
+    def __init__(self, context, request):
+        super(ProjectShipmentsView, self).__init__(context, request)
+        self.context = context
+        self.request = request
+        # Filter shipments by project uid
+        self.columns.pop('Project', None)
+        path = '/'.join(self.context.getPhysicalPath())
+        for state in self.review_states:
+            state['contentFilter']['path'] = {'query': path, 'depth': 1}
+            state['columns'].remove('Project')
+
+    def folderitems(self, full_objects=False):
+        items = ShipmentsView.folderitems(self)
+
+        return items
+
+
 class ProjectBiospecimensView(BiospecimensView):
+    """ Biospecimens veiw from project view.
+    """
     def __init__(self, context, request):
         super(ProjectBiospecimensView, self).__init__(context, request)
         self.context = context

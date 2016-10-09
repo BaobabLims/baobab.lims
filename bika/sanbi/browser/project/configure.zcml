@@ -22,6 +22,14 @@
 
     <browser:page
       for="bika.sanbi.interfaces.IProject"
+      name="shipments"
+      class=".project.ProjectShipmentsView"
+      permission="zope2.View"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="bika.sanbi.interfaces.IProject"
       name="biospecimens"
       class=".project.ProjectBiospecimensView"
       permission="zope2.View"

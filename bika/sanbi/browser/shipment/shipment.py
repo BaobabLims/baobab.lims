@@ -7,123 +7,107 @@ from Products.Archetypes.public import BaseFolder
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import _createObjectByType
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from plone.app.content.browser.interfaces import IFolderContentsView
+from plone.app.layout.globals.interfaces import IViewView
+from zope.interface import implements
 
 from bika.lims.browser import BrowserView
+from bika.lims.browser.bika_listing import BikaListingView
+from bika.lims.browser.multifile import MultifileView
 from bika.lims.utils import to_utf8
 from bika.sanbi import bikaMessageFactory as _
 
 
-class ShipmentView(BrowserView):
+class ShipmentView(BikaListingView):
     template = ViewPageTemplateFile('templates/shipment_view.pt')
-    title = _("Shipment Info")
+
+    def __init__(self, context, request):
+        super(ShipmentView, self).__init__(context, request)
+        self.context = context
+        self.request = request
 
     def __call__(self):
-
-        context = self.context
-        portal = self.portal
-
-        self.absolute_url = context.absolute_url()
-        setup = portal.bika_setup
-        # Disable the add new menu item
-        # context.setConstrainTypesMode(1)
-        # context.setLocallyAllowedTypes(())
-        # Collect general data
-        self.id = context.getId()
-        self.title = context.Title()
-        self.sender_address = context.getDeliveryAddress()
-        self.header_text = "{0} : {1}".format(context.getProjectID(),
-                                              context.getOwnShippingId())
-        self.from_contact = context.getFromContact()
-        self.to_contact = context.getToContact()
-        self.study_name = context.getProjectID()
-        kit = context.getKit()
-        kit_template = kit.getKitTemplate()
-        self.kit_name = kit_template.Title()
-        self.kit_quantity = kit_template.getQuantity()
-        self.kit_assembled_date = kit.CreationDate()
-        self.kit_expiration_date = self.ulocalized_time(kit.getExpiryDate())
-
-        self.date_dispatched = self.ulocalized_time(context.getDateDispatched())
-        self.courier_name = context.getCourier().Title()
-
-        self.user = context.getOwner()
+        self.absolute_url = self.context.absolute_url()
+        self.id = self.context.getId()
+        self.title = self.context.Title()
+        self.study_name = self.context.aq_parent.Title()
+        self.from_contact = self.context.getFromContact()
+        self.to_contact = self.context.getToContact().Title()
+        self.sender_address = self.context.getDeliveryAddress()
+        self.courier_name = self.context.getCourier()
+        uids = [kit.UID() for kit in self.context.getKits()]
+        Kits = ShipmentKitsView(self.context, self.request, uids)
+        self.kits_table = Kits.contents_table(table_only=True)
 
         return self.template()
 
-    def delARAttachment(self):
-        """ delete the attachment """
-        tool = getToolByName(self, "reference_catalog")
-        if 'Attachment' in self.request.form:
-            attachment_uid = self.request.form['Attachment']
-            attachment = tool.lookupObject(attachment_uid)
+class ShipmentKitsView(BikaListingView):
 
-        others = self.context.getAttachment()
-        attachments = []
-        for other in others:
-            if not other.UID() == attachment_uid:
-                attachments.append(other.UID())
-        self.context.setAttachment(attachments)
-        ships = attachment.aq_parent
-        ids = [attachment.getId(), ]
-        BaseFolder.manage_delObjects(ships, ids, self.request)
+    implements(IFolderContentsView, IViewView)
 
-        # self.request.RESPONSE.redirect(self.context.absolute_url())
-        self.request.RESPONSE.redirect(
-            self.request.REQUEST.get_header('referer'))
+    def __init__(self, context, request, kit_uids):
+        super(ShipmentKitsView, self).__init__(context, request)
+        self.context = context
+        self.request = request
+        self.uids = kit_uids
+        self.catalog = 'bika_catalog'
+        path = path = '/'.join(context.aq_parent.getPhysicalPath())
+        self.contentFilter = {
+            'portal_type': 'Kit',
+            'UID': self.uids,
+            'sort_on': 'sortable_title',
+            'path': {'query': path, 'depth': 1, 'level': 0}
+        }
+        self.context_actions = {}
+        self.title = ''
+        self.description = ''
+        self.icon = ''
+        self.show_sort_column = False
+        self.show_select_row = False
+        self.show_select_column = False
+        self.show_column_toggles = False
+        self.context_actions = {}
+        self.allow_edit = False
+        self.pagesize = 999999
+        self.columns = {
+            'Title': {'title': _('Kit Name'),
+                      'index': 'sortable_title'},
+            'kitTemplate': {'title': _('Kit template'),
+                            'toggle': True},
+            'state_title': {'title': _('State'),
+                            'index': 'review_state'},
+        }
 
-    def getPreferredCurrencyAbreviation(self):
-        return self.context.bika_setup.getCurrency()
+        self.review_states = [
+            {
+                'id': 'default',
+                'title': _('All'),
+                'contentFilter': {'sort_on': 'created',
+                                  'sort_order': 'ascending'},
+                'transitions': [],
+                'columns': [
+                    'Title',
+                    'kitTemplate',
+                    'state_title'
+                ]
+            }
+        ]
 
-    def addShipAttachment(self, REQUEST=None, RESPONSE=None):
-        workflow = getToolByName(self, 'portal_workflow')
-        this_file = self.request.form['AttachmentFile_file']
-        attachmentid = self.context.generateUniqueId('Attachment')
-        attachment = _createObjectByType("Attachment", self.context.aq_parent,
-                                         attachmentid)
-        attachment.edit(
-            AttachmentFile=this_file,
-            AttachmentType=self.request.form.get('AttachmentType', ''),
-            AttachmentKeys=self.request.form['AttachmentKeys'])
-        attachment.processForm()
-        attachment.reindexObject()
-
-        other_attachs = self.context.getAttachment()
-        attachments = []
-        for other in other_attachs:
-            attachments.append(other.UID())
-        attachments.append(attachment.UID())
-
-        self.context.setAttachment(attachments)
-
-        self.request.RESPONSE.redirect(self.context.absolute_url())
-
-    def getAttachments(self):
-        attachments = []
-        ship_atts = self.context.getAttachment()
-        for att in ship_atts:
-            file = att.getAttachmentFile()
-            fsize = file.getSize() if file else 0
-            if fsize < 1024:
-                fsize = '%s b' % fsize
-            else:
-                fsize = '%s Kb' % (fsize / 1024)
-            attachments.append({
-                'keywords': att.getAttachmentKeys(),
-                'analysis': '',
-                'size': fsize,
-                'name': file.filename,
-                'Icon': file.getBestIcon(),
-                'type': att.getAttachmentType().Title() if
-                att.getAttachmentType() else '',
-                'absolute_url': att.absolute_url(),
-                'UID': att.UID(),
-            })
-        return attachments
+    def folderitem(self, obj, item, index):
+        if not item.has_key('obj'):
+            return item
+        obj = item['obj']
+        item['kitTemplate'] = obj.getKitTemplate().Title()
+        item['replace']['Title'] = "<a href='%s'>%s</a>" % \
+                                    (item['url'], obj.title)
+        item['replace']['kitTemplate'] = "<a href='%s'>%s</a>" % \
+                                         (obj.getKitTemplate().absolute_url(), obj.getKitTemplate().Title())
+        return item
 
 
 class EditView(BrowserView):
     template = ViewPageTemplateFile('templates/shipment_edit.pt')
-    field = ViewPageTemplateFile('templates/row_field.pt')
+    # field = ViewPageTemplateFile('templates/row_field.pt')
 
     def __call__(self):
         portal = self.portal
@@ -159,6 +143,14 @@ class EditView(BrowserView):
                 fields.append(field)
         return fields
 
+class ShipmentMultifileView(MultifileView):
+    implements(IFolderContentsView, IViewView)
+
+    def __init__(self, context, request):
+        super(ShipmentMultifileView, self).__init__(context, request)
+        self.show_workflow_action_buttons = False
+        self.title = self.context.translate(_("Shipment Files"))
+        self.description = "Different interesting documents and files to be attached to the shipment"
 
 class PrintView(ShipmentView):
     template = ViewPageTemplateFile('templates/print.pt')

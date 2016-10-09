@@ -1,5 +1,6 @@
 """ Bika setup handlers. """
 
+from Products.CMFCore import permissions
 from Products.CMFCore.utils import getToolByName
 
 from bika.lims import logger
@@ -86,14 +87,7 @@ class BikaCustomGenerator:
         at.setCatalogsByType('BiospecType', ['bika_setup_catalog', ])
         at.setCatalogsByType('Multimage', ['bika_setup_catalog', ])
         at.setCatalogsByType('StorageType', ['bika_setup_catalog', ])
-        # at.setCatalogsByType('StorageInventory', ['bika_setup_catalog', ])
-
-        # addIndex(bsc, 'getStorageUnit', 'FieldIndex')
-        # addIndex(bsc, 'getUnitID', 'FieldIndex')
-        # addIndex(bsc, 'getParentBox', 'FieldIndex')
-        # addIndex(bsc, 'getHasChildren', 'FieldIndex')
-        # addIndex(bsc, 'getLocation', 'FieldIndex')
-        addIndex(bsc, 'getISID', 'FieldIndex')
+        # addIndex(bsc, 'getISID', 'FieldIndex')
 
         bac = getToolByName(portal, 'bika_analysis_catalog', None)
         if bsc is None:
@@ -118,6 +112,11 @@ class BikaCustomGenerator:
         mp = portal.kits.manage_permission
         mp(AddKit, ['Manager', 'LabManager', 'Owner'], 1)
         mp(ManageKits, ['Manager', 'LabManager', 'Owner'], 1)
+        mp(permissions.ListFolderContents, ['LabClerk', ''], 1)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'Owner', 'LabClerk'], 0)
+        mp(permissions.DeleteObjects, ['Manager', 'LabManager', 'Owner'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk'], 0)
+
         portal.kits.reindexObject()
 
         # shipments

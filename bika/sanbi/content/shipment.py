@@ -1,34 +1,23 @@
 from AccessControl import ClassSecurityInfo
 from zope.interface import implements
-from bika.sanbi import bikaMessageFactory as _
-from bika.sanbi import config
-from bika.lims.content.bikaschema import BikaSchema
+from Products.CMFCore import permissions
+from Products.CMFCore.utils import getToolByName
 from Products.Archetypes.public import *
 from Products.Archetypes.references import HoldingReference
-import sys
-from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
-from bika.sanbi.interfaces import IShipment
 from Products.CMFPlone.interfaces import IConstrainTypes
+from plone.app.folder.folder import ATFolder
+from Products.ATContentTypes.content import schemata
 
+from bika.lims.content.bikaschema import BikaSchema, BikaFolderSchema
 from bika.lims.browser.widgets import DateTimeWidget as bika_DateTimeWidget
+from bika.sanbi.interfaces import IShipment
+from bika.sanbi import bikaMessageFactory as _
+from bika.sanbi import config
+
+import sys
 
 
-from Products.CMFCore import permissions
-
-schema = BikaSchema.copy() + Schema((
-    StringField(
-        'ShipmentID',
-        searchable=True,
-        mode='rw',
-        required=1,
-        validators=('uniquefieldvalidator',),
-        widget=StringWidget(
-            label=_("Shipment ID"),
-            size=30,
-            visible={'view': 'visible', 'edit': 'visible'},
-        )
-
-    ),
+schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
 
     #Temporary fields for data to be collected/obtained from the project
     StringField(
@@ -41,89 +30,67 @@ schema = BikaSchema.copy() + Schema((
             size=30,
             visible={'view': 'visible', 'edit': 'visible'},
         )
-
     ),
 
-    StringField(
+    ReferenceField(
         'ToContact',
-        searchable=True,
-        mode='rw',
         required=1,
-        widget=StringWidget(
-            label=_("To Contact"),
+        vocabulary='get_project_client_contacts',
+        vocabulary_display_path_bound=sys.maxsize,
+        allowed_types=('Contact',),
+        referenceClass=HoldingReference,
+        relationship='ShipmentContact',
+        mode="rw",
+        read_permission=permissions.View,
+        widget=SelectionWidget(
+            format="select",
+            label=_("Contact"),
+            render_own_label=True,
             size=30,
-            visible={'view': 'visible', 'edit': 'visible'},
-        )
-
+            base_query={'inactive_state': 'active'},
+            showOn=True,
+            popup_width='400px',
+            colModel=[{'columnName': 'UID', 'hidden': True},
+                      {'columnName': 'Fullname', 'width': '50', 'label': _('Name')},
+                      {'columnName': 'EmailAddress', 'width': '50', 'label': _('Email Address')},
+                      ],
+        ),
     ),
-
-    StringField(
-        'ProjectID',
-        searchable=True,
-        mode='rw',
-        required=1,
-        widget=StringWidget(
-            label=_("ProjectID"),
-            size=30,
-            visible={'view': 'visible', 'edit': 'visible'},
-        )
-
-    ),
-
-    #End of project data
 
     TextField('DeliveryAddress',
+        schemata='Correspondence',
         required=1,
-        searchable=True,
-        default_content_type='text/x-web-intelligent',
         allowable_content_types = ('text/plain', ),
         default_output_type="text/plain",
         mode="rw",
         widget=TextAreaWidget(
-            macro="bika_widgets/remarks",
             label=_("Delivery Address"),
-            append_only=True,
+            description=_("Indicate the client address to send the shipment to.")
         ),
     ),
     TextField('ShippingAddress',
+        schemata='Correspondence',
         searchable=True,
-        default_content_type='text/x-web-intelligent',
         allowable_content_types = ('text/plain', ),
         default_output_type="text/plain",
         mode="rw",
         widget=TextAreaWidget(
-            macro="bika_widgets/remarks",
             label=_("Shipping Address"),
-            append_only=True,
         ),
     ),
     TextField('BillingAddress',
+        schemata='Correspondence',
         searchable=True,
-        default_content_type='text/x-web-intelligent',
         allowable_content_types = ('text/plain', ),
         default_output_type="text/plain",
         mode="rw",
         widget=TextAreaWidget(
-            macro="bika_widgets/remarks",
             label=_("Billing Address"),
-            append_only=True,
-        ),
-    ),
-
-    TextField('CourierInstructions',
-        searchable=True,
-        default_content_type='text/x-web-intelligent',
-        allowable_content_types = ('text/plain', ),
-        default_output_type="text/plain",
-        mode="rw",
-        widget=TextAreaWidget(
-            macro="bika_widgets/remarks",
-            label=_("Courier Instructions"),
-            append_only=True,
         ),
     ),
 
     StringField('ShipmentConditions',
+        schemata='Shipping Information',
         widget = StringWidget(
             label=_("Shipment Conditions"),
             description=_("Eg: Fragile, chilled, room temp"),
@@ -131,130 +98,104 @@ schema = BikaSchema.copy() + Schema((
 
         )
     ),
-    ReferenceField(
-        'Attachment',
-        multiValued=1,
-        allowed_types=('Attachment',),
-        referenceClass=HoldingReference,
-        relationship='PackagingOutline',
-        mode="rw",
-        read_permission=permissions.View,
-        write_permission=permissions.ModifyPortalContent,
-        widget=ComputedWidget(
-            label=_("Packaging Outline"),
-            visible={'edit': 'invisible',
-                     'view': 'invisible',
-                     },
-        )
-    ),
+
     DateTimeField('ShippingDate',
         searchable=1,
+        schemata="Dates",
         widget=bika_DateTimeWidget(
             label='Shipping Date',
             size=20
         ),
     ),
 
-    DateTimeField('DateAssembled',
+    DateTimeField(
+        'DateDispatched',
         searchable=1,
-        widget=bika_DateTimeWidget(
-            label='Date Assembled',
-            description=_("Provide the date for when the kit was assembled."),
-            size=20
-        ),
-    ),
-
-    DateTimeField('DateDispatched',
-        searchable=1,
+        schemata="Dates",
         widget=bika_DateTimeWidget(
             label='Date Dispatched',
             size=20
         ),
     ),
 
-    DateTimeField('DateDelivered',
+    DateTimeField(
+        'DateDelivered',
         searchable=1,
+        schemata="Dates",
         widget=bika_DateTimeWidget(
             label='Date Delivered',
             description=_("Provide the expected expiry date of the kit product."),
             size=20
         ),
     ),
-    ReferenceField('Courier',
-       vocabulary_display_path_bound = sys.maxint,
-       allowed_types=('Supplier',),
-       relationship='ShipmentSupplier',
-       referenceClass=HoldingReference,
-       required=True,
-       widget=bika_ReferenceWidget(
+
+    StringField(
+        'Courier',
+        required=1,
+        schemata="Correspondence",
+        widget=StringWidget(
+            format="select",
             label = _("Courier"),
             size=30,
-            catalog_name='bika_setup_catalog',
-            showOn=True,
             description=_("Start typing to filter the list of available couriers."),
         ),
     ),
 
-
-    # ReferenceField(
-    #     'FromContact',
-    #     required=0,
-    #     default_method='getContactUIDForUser',
-    #     vocabulary_display_path_bound=sys.maxsize,
-    #     allowed_types=('Contact',),
-    #     referenceClass=HoldingReference,
-    #     relationship='ShipmentFromContact',
-    #     mode="rw",
-    #     read_permission=permissions.View,
-    #     #write_permission=EditARContact,
-    #     widget=ReferenceWidget(
-    #         label = _("Contact"),
-    #         render_own_label=True,
-    #         size=20,
-    #         helper_js=("bika_widgets/referencewidget.js", "++resource++bika.lims.js/contact.js"),
-    #         showOn=True,
-    #         popup_width='400px',
-    #         colModel=[{'columnName': 'UID', 'hidden': True},
-    #                   {'columnName': 'Fullname', 'width': '50', 'label': _('Name')},
-    #                   {'columnName': 'EmailAddress', 'width': '50', 'label': _('Email Address')},
-    #                  ],
-    #     ),
-    # ),
-
-    ReferenceField('Kit',
-       allowed_types=('Kit',),
-       relationship='ShipmentKit',
-       required=True,
-       widget=bika_ReferenceWidget(
-            label = _("Kit"),
-            size=30,
-            showOn=True,
-            description=_("Start typing to filter the list of available kits to ship."),
-            colModel=[{'columnName': 'UID', 'hidden': True},
-                      {'columnName': 'id', 'width': '20', 'label': _('Kit ID'), 'align': 'left'},
-                      {'columnName': 'location', 'width': '20', 'label': _('Location'), 'align': 'left'},
-                      ],
+    TextField(
+        'CourierInstructions',
+        schemata="Correspondence",
+        allowable_content_types=('text/plain',),
+        default_output_type="text/plain",
+        mode="rw",
+        widget=TextAreaWidget(
+            label=_("Courier Instructions"),
         ),
     ),
-    StringField('TrackingURL',
+
+    ReferenceField(
+        'Kits',
+        required=1,
+        multiValued=1,
+        vocabulary_display_path_bound=sys.maxint,
+        vocabulary='get_project_kits',
+        allowed_types=('Kit',),
+        relationship='ShipmentKits',
+        referenceClass=HoldingReference,
+        widget=MultiSelectionWidget(
+            label = _("Kits"),
+            description=_("Start typing to filter the list of available kits to ship."),
+        ),
+    ),
+
+    StringField(
+        'TrackingURL',
+        schemata='Shipping Information',
         widget = StringWidget(
             label=_("Tracking URL"),
             size=30,
         )
     ),
-    FixedPointField('ShippingCost',
+
+    FixedPointField(
+        'ShippingCost',
+        schemata='Shipping Information',
         widget=DecimalWidget(
             label=_("Shipping Cost"),
         ),
     ),
 
-    FixedPointField('Weight',
+    FixedPointField(
+        'Weight',
+        schemata='Shipping Information',
         widget=DecimalWidget(
             label=_("Weight"),
             description=_("Enter the weight in Kg"),
         ),
     ),
-    StringField('Volume',
+
+    StringField(
+        'Volume',
+        schemata='Shipping Information',
         widget = StringWidget(
             label=_("Volume"),
             description=_("Enter dimensions of the package (lxbxh) in CM"),
@@ -263,26 +204,58 @@ schema = BikaSchema.copy() + Schema((
     ),
 
 ))
-schema['title'].required = False
-schema['title'].widget.visible = False
-schema.moveField('ShipmentID', before='description')
-schema.moveField('Courier', before='description')
-schema.moveField('Kit', after='Courier')
-schema.moveField('TrackingURL', before='description')
-schema.moveField('ShippingDate', before='description')
 
+schema['description'].widget.visible = True
 
-class Shipment(BaseContent):
+class Shipment(ATFolder):
     security = ClassSecurityInfo()
-    implements(IShipment, IConstrainTypes)
+    implements(IShipment)
+    displayContentsTab = False
     schema = schema
 
     _at_rename_after_creation = True
 
-    def getOwnShippingId(self):
-        return self.ShipmentID
+    def _renameAfterCreation(self, check_auto_id=False):
+        from bika.lims.idserver import renameAfterCreation
+        renameAfterCreation(self)
 
-    def getShipmentId(self):
-        return self.getId()
+    def get_project_kits(self):
+        """ List of all kits belonging to the current project
+        """
+        items = []
+        w_tool = getToolByName(self, 'portal_workflow')
+        kits = self.aq_parent.objectValues('Kit')
+        for kit in kits:
+            st1 = w_tool.getStatusOf("bika_kit_assembly_workflow", kit)
+            st2 = w_tool.getStatusOf("bika_inactive_workflow", kit)
+            if st1.get('review_state', None) == 'generated' and \
+                            st2.get('inactive_state', None) == 'active':
+                items.append((kit.UID(), kit.Title()))
+        items.sort(lambda x, y: cmp(x[1], y[1]))
+        return DisplayList(list(items))
+
+    def get_project_client_contacts(self):
+        """ get the UID of the contact associated with the authenticated
+            user
+        """
+        # import pdb;pdb.set_trace()
+        client = self.aq_parent.getClient()
+        pc = getToolByName(self, 'portal_catalog')
+        brains = pc(portal_type='Contact', path={'query': "/".join(client.getPhysicalPath()), 'level': 0})
+        contacts = []
+        for brain in brains:
+            obj = brain.getObject()
+            contacts.append((obj.UID(), obj.Title(), obj.getEmailAddress()))
+        contacts.sort(lambda x, y: cmp(x[1], y[1]))
+
+        return contacts
+
+    def getDocuments(self):
+        """
+        Return all the multifile objects related with the instrument
+        """
+        return self.objectValues('Multifile')
+
+schemata.finalizeATCTSchema(schema, folderish = True, moveDiscussion = False)
 
 registerType(Shipment, config.PROJECTNAME)
