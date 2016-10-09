@@ -6,14 +6,6 @@
 
     <browser:page
       for="bika.sanbi.interfaces.IShipment"
-      name="base_edit"
-      class="bika.sanbi.browser.shipment.EditView"
-      permission="cmf.ModifyPortalContent"
-      layer="bika.lims.interfaces.IBikaLIMS"
-    />
-
-    <browser:page
-      for="bika.sanbi.interfaces.IShipment"
       name="base_view"
       class="bika.sanbi.browser.shipment.ShipmentView"
       permission="cmf.ModifyPortalContent"
@@ -25,6 +17,14 @@
       name="print"
       class="bika.sanbi.browser.shipment.PrintView"
       permission="cmf.ModifyPortalContent"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="bika.sanbi.interfaces.IShipment"
+      name="multifile"
+      class="bika.sanbi.browser.shipment.shipment.ShipmentMultifileView"
+      permission="zope.Public"
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
