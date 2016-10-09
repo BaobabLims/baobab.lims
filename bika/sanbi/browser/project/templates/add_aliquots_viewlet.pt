@@ -156,14 +156,14 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Biospecimens
+                        <td class="bordertop">Biospecimens
                             <div class="discreet">Select first and last Biospecimen limits. <br>The number of
                                 biospecimens
                                 between the two limits included,<br> are used in computing the number of biospecimens to
                                 generate.
                             </div>
                         </td>
-                        <td colspan="2">
+                        <td colspan="3" class="bordertop">
                             From:
                             <select tabindex="10" name="first_biosepcimen_limit" id="first-biospecimen-limit">
                                 <tal:x tal:repeat="biospecimen view/biospecimens">
