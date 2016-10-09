@@ -22,9 +22,7 @@ window.bika.sanbi.controllers =  {
     "#project-base-edit":
         ['CustomProjectAddView'],
     "#kittemplate-base-edit":
-        ['ComputeKitTemplatePrice'],
-    ".template-base_edit #storageinventory_edit":
-        ['CustomStorageInventoryAddView']
+        ['ComputeKitTemplatePrice']
 };
 
 /**
