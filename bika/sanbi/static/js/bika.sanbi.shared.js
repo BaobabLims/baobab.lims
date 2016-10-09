@@ -7,7 +7,7 @@ function ComputeKitTemplatePrice() {
     function init(){
         productQuantityChanged()
     }
-
+    
     function productQuantityChanged(){
         $("input.records_inputstring").on("click", function(event) {
             var inputID = $(this)[0].id;
@@ -53,7 +53,6 @@ function ComputeKitTemplatePrice() {
     function setPriceExcludingTVA(data, productQuantities){
         var totalPrice = 0;
         for(var i=0; i<data.length; i++){
-            console.log(productQuantities[i]);
             totalPrice += parseFloat(data[i].price) * parseInt(productQuantities[i])
         }
         $("input#Cost").val(totalPrice);
