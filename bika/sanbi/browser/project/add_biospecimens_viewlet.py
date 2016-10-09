@@ -12,14 +12,6 @@ from bika.lims.interfaces import IUnmanagedStorage, IManagedStorage
 class AddBiospecimensViewlet(ViewletBase):
     index = ViewPageTemplateFile("templates/add_biospecimens_viewlet.pt")
 
-    def get_biospecimen_types(self):
-        bsc = getToolByName(self, 'bika_setup_catalog')
-        items = [(c.UID, c.Title) \
-                 for c in bsc(portal_type='BiospecType',
-                              inactive_state='active')]
-        items.sort(lambda x, y: cmp(x[1], y[1]))
-        return items
-
     def kits(self):
         """ Return only project's kits with status generated and active
         """
