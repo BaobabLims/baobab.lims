@@ -170,27 +170,27 @@ class PrintView(ShipmentView):
         self.id = context.getId()
         self.title = context.Title()
         self.sender_address = context.getDeliveryAddress()
-        self.header_text = "{0} : {1}".format(context.getProjectID(),
-                                              context.getOwnShippingId())
+        self.header_text = "{0} : {1}".format(context.aq_parent,
+                                              context.aq_parent.getId())
         self.from_contact = context.getFromContact()
-        self.to_contact = context.getToContact()
-        self.study_name = context.getProjectID()
-        kit = context.getKit()
-        kit_template = kit.getKitTemplate()
+        self.to_contact = context.getToContact().Title()
+        self.study_name = context.aq_parent.Title()
+        kits = context.getKits()
+        kit_template = kits[0].getKitTemplate()
         self.kit_name = kit_template.Title()
-        self.kit_quantity = kit_template.getQuantity()
-        self.kit_assembled_date = kit.CreationDate()
-        self.kit_expiration_date = self.ulocalized_time(kit.getExpiryDate())
+        self.kit_quantity = len(kits)
+        # self.kit_assembled_date = kit.CreationDate()
+        # self.kit_expiration_date = self.ulocalized_time(kit.getExpiryDate())
 
         self.date_dispatched = self.ulocalized_time(context.getDateDispatched())
-        self.courier_name = context.getCourier().Title()
+        self.courier_name = context.getCourier()
 
         self.user = context.getOwner()
 
         return self.template()
 
     def getCSS(self):
-        template_name = 'kit_print.pt'
+        template_name = 'shipment_print.pt'
         this_dir = os.path.dirname(os.path.abspath(__file__))
         templates_dir = os.path.join(this_dir, self._TEMPLATES_DIR)
         path = '%s/%s.css' % (templates_dir, template_name[:-3])
@@ -199,11 +199,11 @@ class PrintView(ShipmentView):
 
         return content
 
-    def renderKTemplate(self):
+    def render_shipment(self):
         templates_dir = self._TEMPLATES_DIR
-        template_name = 'kit_print.pt'
-        self.header_text = "{0} : {1}".format(self.context.getProjectID(),
-                                              self.context.getOwnShippingId())
+        template_name = 'shipment_print.pt'
+        self.header_text = "{0} : {1}".format(self.context.aq_parent,
+                                              self.context.aq_parent.getId())
         embed = ViewPageTemplateFile(os.path.join(templates_dir, template_name))
         reptemplate = ""
         try:

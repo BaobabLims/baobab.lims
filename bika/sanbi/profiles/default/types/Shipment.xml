@@ -57,4 +57,15 @@
     <permission value="Modify portal content"/>
  </action>
 
+ <action title="Print"
+         action_id="print"
+         category="document_actions"
+         condition_expr=""
+         url_expr="string:${object_url}/print"
+         i18n:attributes="title"
+         i18n:domain="plone"
+         visible="True">
+  <permission value="Modify portal content"/>
+ </action>
+
 </object>
