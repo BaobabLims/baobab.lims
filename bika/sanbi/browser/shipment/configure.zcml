@@ -7,7 +7,7 @@
     <browser:page
       for="bika.sanbi.interfaces.IShipment"
       name="base_view"
-      class="bika.sanbi.browser.shipment.ShipmentView"
+      class=".shipment.ShipmentView"
       permission="cmf.ModifyPortalContent"
       layer="bika.lims.interfaces.IBikaLIMS"
     />
@@ -15,7 +15,7 @@
     <browser:page
       for="bika.sanbi.interfaces.IShipment"
       name="print"
-      class="bika.sanbi.browser.shipment.PrintView"
+      class=".shipment.PrintView"
       permission="cmf.ModifyPortalContent"
       layer="bika.lims.interfaces.IBikaLIMS"
     />
@@ -23,7 +23,7 @@
     <browser:page
       for="bika.sanbi.interfaces.IShipment"
       name="multifile"
-      class="bika.sanbi.browser.shipment.shipment.ShipmentMultifileView"
+      class=".shipment.ShipmentMultifileView"
       permission="zope.Public"
       layer="bika.lims.interfaces.IBikaLIMS"
     />
