@@ -44,6 +44,8 @@ class ShipmentsView(BikaListingView):
                             'toggle': True},
             'ShippingDate': {'title': _('Shipping Date'),
                              'toggle': True},
+            'state_title': {'title': _('State'),
+                            'index': 'review_state'},
         }
 
         self.review_states = [
@@ -51,24 +53,60 @@ class ShipmentsView(BikaListingView):
                 'id': 'default',
                 'title': _('All'),
                 'contentFilter': {},
+                'transitions': [{'id': 'deactivate'},
+                                {'id': 'dispatch_shipment'},
+                                {'id': 'receive_shipment'}],
                 'columns': [
                     'ShipmentID',
                     'Project',
                     'Courier',
                     'TrackingURL',
-                    'ShippingDate'
+                    'ShippingDate',
+                    'state_title'
                 ]
             },
             {
                 'id': 'pending',
                 'title': _('Pending'),
                 'contentFilter': {'review_state': 'pending'},
+                'transitions': [{'id': 'deactivate'},
+                                {'id': 'dispatch_shipment'}],
                 'columns': [
                     'ShipmentID',
                     'Project',
                     'Courier',
                     'TrackingURL',
-                    'ShippingDate'
+                    'ShippingDate',
+                    'state_title'
+                ]
+            },
+            {
+                'id': 'dispatched',
+                'title': _('Dispatched'),
+                'contentFilter': {'review_state': 'dispatched'},
+                'transitions': [{'id': 'deactivate'},
+                                {'id': 'receive_shipment'}],
+                'columns': [
+                    'ShipmentID',
+                    'Project',
+                    'Courier',
+                    'TrackingURL',
+                    'ShippingDate',
+                    'state_title'
+                ]
+            },
+            {
+                'id': 'received',
+                'title': _('Received'),
+                'contentFilter': {'review_state': 'received'},
+                'transitions': [{'id': 'deactivate'}],
+                'columns': [
+                    'ShipmentID',
+                    'Project',
+                    'Courier',
+                    'TrackingURL',
+                    'ShippingDate',
+                    'state_title'
                 ]
             },
         ]

@@ -61,6 +61,7 @@
          action_id="print"
          category="document_actions"
          condition_expr=""
+         icon_expr="string:${object_url}/print_icon.png"
          url_expr="string:${object_url}/print"
          i18n:attributes="title"
          i18n:domain="plone"

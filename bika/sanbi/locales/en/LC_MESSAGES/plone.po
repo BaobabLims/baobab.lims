@@ -28,3 +28,13 @@ msgstr "Complete"
 #: ../profiles/default/workflows/bika_storage_workflow/definition.xml
 msgid "occupy_transition_title"
 msgstr "Occupy"
+
+#. Default: "Dispatch"
+#: ../profiles/default/workflows/bika_shipments_workflow/definition.xml
+msgid "dispatch_shipment_transition_title"
+msgstr "Dispatch"
+
+#. Default: "Receive"
+#: ../profiles/default/workflows/bika_shipments_workflow/definition.xml
+msgid "receive_shipment_transition_title"
+msgstr "Receive"

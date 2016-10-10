@@ -4,9 +4,9 @@ from Products.CMFCore import permissions
 from Products.CMFCore.utils import getToolByName
 from Products.Archetypes.public import *
 from Products.Archetypes.references import HoldingReference
-from Products.CMFPlone.interfaces import IConstrainTypes
 from plone.app.folder.folder import ATFolder
 from Products.ATContentTypes.content import schemata
+from bika.lims.workflow import doActionFor
 
 from bika.lims.content.bikaschema import BikaSchema, BikaFolderSchema
 from bika.lims.browser.widgets import DateTimeWidget as bika_DateTimeWidget
@@ -251,10 +251,21 @@ class Shipment(ATFolder):
         return contacts
 
     def getDocuments(self):
-        """
-        Return all the multifile objects related with the instrument
+        """Return all the multifile objects related with the instrument
         """
         return self.objectValues('Multifile')
+
+    def workflow_script_dispatch_shipment(self):
+        """
+        """
+        # free positions kits occupy
+        kits = self.getKits()
+        w_tool = getToolByName(self, 'portal_workflow')
+        for kit in kits:
+            kit.setStorageLocation('')
+            w_tool.doActionFor(kit, 'ship')
+            kit.reindexObject()
+
 
 schemata.finalizeATCTSchema(schema, folderish = True, moveDiscussion = False)
 

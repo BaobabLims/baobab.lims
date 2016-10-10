@@ -43,6 +43,8 @@ class KitsView(BikaListingView):
                             'toggle': True},
             'kitTemplate': {'title': _('Kit template'),
                             'toggle': True},
+            'state_title': {'title': _('State'),
+                            'index': 'review_state'}
         }
 
         self.review_states = [
@@ -59,6 +61,7 @@ class KitsView(BikaListingView):
                     'Title',
                     'Project',
                     'kitTemplate',
+                    'state_title'
                 ]
             },
             {
@@ -73,6 +76,7 @@ class KitsView(BikaListingView):
                     'Title',
                     'Project',
                     'kitTemplate',
+                    'state_title'
                 ]
             },
             {
@@ -87,6 +91,7 @@ class KitsView(BikaListingView):
                     'Title',
                     'Project',
                     'kitTemplate',
+                    'state_title'
                 ]
             },
             {
@@ -100,6 +105,7 @@ class KitsView(BikaListingView):
                     'Title',
                     'Project',
                     'kitTemplate',
+                    'state_title'
                 ]
             },
             {
@@ -111,6 +117,7 @@ class KitsView(BikaListingView):
                     'Title',
                     'Project',
                     'kitTemplate',
+                    'state_title'
                 ]
             },
         ]
