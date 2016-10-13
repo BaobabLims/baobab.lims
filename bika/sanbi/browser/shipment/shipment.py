@@ -35,6 +35,8 @@ class ShipmentView(BikaListingView):
         self.to_contact = self.context.getToContact().Title()
         self.sender_address = self.context.getDeliveryAddress()
         self.courier_name = self.context.getCourier()
+        self.icon = self.portal_url + \
+                    "/++resource++bika.sanbi.images/shipment_big.png"
         uids = [kit.UID() for kit in self.context.getKits()]
         Kits = ShipmentKitsView(self.context, self.request, uids)
         self.kits_table = Kits.contents_table(table_only=True)
