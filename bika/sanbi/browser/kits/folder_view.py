@@ -1,8 +1,10 @@
+from AccessControl import getSecurityManager
 from Products.CMFCore.utils import getToolByName
 from plone.app.content.browser.interfaces import IFolderContentsView
 from plone.app.layout.globals.interfaces import IViewView
 from zope.interface.declarations import implements
 
+from bika.lims import ManageClients
 from bika.lims.browser.bika_listing import BikaListingView
 from bika.sanbi import bikaMessageFactory as _
 from bika.sanbi.permissions import *
@@ -30,7 +32,7 @@ class KitsView(BikaListingView):
 
         self.show_sort_column = False
         self.show_select_row = False
-        self.show_select_column = True
+        self.show_select_column = False
         self.pagesize = 25
 
         if self.context.portal_type == 'Kits':
@@ -123,6 +125,9 @@ class KitsView(BikaListingView):
         ]
 
     def __call__(self):
+        if getSecurityManager().checkPermission(AddProject, self.context):
+            self.show_select_row = True
+            self.show_select_column = True
         return super(KitsView, self).__call__()
 
     def folderitems(self):
