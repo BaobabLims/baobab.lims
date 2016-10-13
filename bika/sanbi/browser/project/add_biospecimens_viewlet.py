@@ -22,7 +22,7 @@ class AddBiospecimensViewlet(ViewletBase):
         for kit in kits:
             st1 = w_tool.getStatusOf("bika_kit_assembly_workflow", kit)
             st2 = w_tool.getStatusOf("bika_inactive_workflow", kit)
-            if st1.get('review_state', None) == 'generated' and \
+            if st1.get('review_state', None) == 'shipped' and \
                             st2.get('inactive_state', None) == 'active':
                 items.append({'uid':kit.UID(), 'title':kit.Title()})
         items.sort(lambda x, y: cmp(x['title'], y['title']))
@@ -119,7 +119,7 @@ class AddBiospecimensSubmitHandler(BrowserView):
         for kit in p_kits:
             st1 = w_tool.getStatusOf("bika_kit_assembly_workflow", kit)
             st2 = w_tool.getStatusOf("bika_inactive_workflow", kit)
-            if st1.get('review_state', None) == 'generated' and \
+            if st1.get('review_state', None) == 'shipped' and \
                     st2.get('inactive_state', None) == 'active' and \
                         first_kit_id <= kit.getId() <= last_kit_id:
                 kits.append(kit)
