@@ -9,7 +9,7 @@ from bika.sanbi import bikaMessageFactory as _
 from bika.lims.utils import isActive
 from AccessControl import getSecurityManager
 from bika.sanbi.config import VOLUME_UNITS
-from bika.sanbi.permissions import EditFieldBarcode, ViewBarcode
+from bika.sanbi.permissions import ManageAliquots, AddProject
 
 
 class BiospecimensView(BikaListingView):
@@ -34,7 +34,7 @@ class BiospecimensView(BikaListingView):
         self.description = ''
         self.show_sort_column = False
         self.show_select_row = False
-        self.show_select_column = True
+        self.show_select_column = False
         self.pagesize = 25
         self.allow_edit = True
 
@@ -184,6 +184,10 @@ class BiospecimensView(BikaListingView):
         ]
 
     def __call__(self):
+        if getSecurityManager().checkPermission(AddProject, self.context):
+            self.show_select_row = True
+            self.show_select_column = True
+
         return super(BiospecimensView, self).__call__()
 
     def folderitems(self, full_objects=False):
@@ -219,7 +223,7 @@ class BiospecimensView(BikaListingView):
             # items[x]['choices']['Type'] = biospecimen_types
             # TODO: SPECIFY OBJ STATES WHERE USER CAN EDIT BARCODE
             if self.allow_edit and isActive(self.context) and \
-                   getSecurityManager().checkPermission("Modify portal content", obj) and \
+                   getSecurityManager().checkPermission(ManageAliquots, obj) and \
                    items[x]['review_state'] == "to_complete":
                 items[x]['allow_edit'] = ['Type', 'SubjectID', 'Barcode', 'Volume', 'Unit']
                 items[x]['choices']['Type'] = biospecimen_types
