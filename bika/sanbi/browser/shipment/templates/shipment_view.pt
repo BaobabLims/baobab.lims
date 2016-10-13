@@ -27,8 +27,8 @@
                 ">
     <h3 style="margin-top:1em;">
         <tal:current_storage>
-            <img title="Project"
-                tal:attributes="src string:${view/portal_url}/++resource++bika.sanbi.images/shipment.png">
+            <!--?<img title="Project"-->
+                <!--?tal:attributes="src string:${view/portal_url}/++resource++bika.sanbi.images/shipment.png">-->
             <span i18n:translate="">Info Shipment</span>:
         </tal:current_storage>
     </h3><br/>
