@@ -22,7 +22,7 @@ class ShipmentsView(BikaListingView):
         self.catalog = 'bika_catalog'
         self.title = self.context.translate(_("Shipments"))
         self.icon = self.portal_url + \
-                    "/++resource++bika.sanbi.images/shipment_big.png"
+                    "/++resource++bika.sanbi.images/shipments_big.png"
         self.description = ""
         self.show_sort_column = False
         self.show_select_row = False
