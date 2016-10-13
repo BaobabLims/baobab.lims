@@ -37,11 +37,11 @@
     />
 
     <browser:page
-            for="bika.sanbi.interfaces.IProject"
-            name="analysisrequests"
-            class=".project.ProjectAnalysisRequestsView"
-            permission="zope2.View"
-            layer="bika.lims.interfaces.IBikaLIMS"
+        for="bika.sanbi.interfaces.IProject"
+        name="analysisrequests"
+        class=".project.ProjectAnalysisRequestsView"
+        permission="zope2.View"
+        layer="bika.lims.interfaces.IBikaLIMS"
     />
 
     <browser:page
@@ -81,7 +81,7 @@
         name="add_kits_viewlet"
         class=".add_kits_viewlet.AddKitsViewlet"
         manager="plone.app.layout.viewlets.interfaces.IBelowContentTitle"
-        permission="zope2.View"
+        permission="bika.lims.EditClient"
         layer="bika.lims.interfaces.IBikaLIMS"
     />
 
@@ -90,7 +90,7 @@
             name="add_biospecimens_viewlet"
             class=".add_biospecimens_viewlet.AddBiospecimensViewlet"
             manager="plone.app.layout.viewlets.interfaces.IBelowContentTitle"
-            permission="zope2.View"
+            permission="bika.lims.EditClient"
             layer="bika.lims.interfaces.IBikaLIMS"
     />
 
@@ -99,7 +99,7 @@
         name="add_aliquots_viewlet"
         class=".add_aliquots_viewlet.AddAliquotsViewlet"
         manager="plone.app.layout.viewlets.interfaces.IBelowContentTitle"
-        permission="zope2.View"
+        permission="bika.lims.EditClient"
         layer="bika.lims.interfaces.IBikaLIMS"
     />
 
