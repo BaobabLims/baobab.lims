@@ -1,7 +1,5 @@
 from Products.Archetypes.public import *
-from plone.indexer import indexer
 from Products.CMFCore import permissions
-from Products.Archetypes.references import HoldingReference
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from zope.interface import implements
@@ -9,67 +7,54 @@ from zope.interface import implements
 from bika.lims.browser.widgets import DateTimeWidget
 from bika.lims.browser.fields import DateTimeField
 from bika.lims.content.bikaschema import BikaSchema
-from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from bika.sanbi import bikaMessageFactory as _
 from bika.sanbi.interfaces import IProject
 from bika.sanbi import config
 from bika.sanbi.browser.widgets import ProjectAnalysesWidget
-import sys
-
-
-@indexer(IProject)
-def getClientTitle(instance):
-    client = instance.getClient()
-    return client.Title() if client else ''
 
 schema = BikaSchema.copy() + Schema((
-    ReferenceField('Client',
-        required=1,
-        allowed_types=('Client',),
-        relationship='ClientProject',
-        vocabulary_display_path_bound=sys.maxsize,
-        referenceClass=HoldingReference,
-        widget=bika_ReferenceWidget(
-            checkbox_bound=0,
-            label=_("Client"),
-            description=_("Select the project owner."),
-            size=30,
-            catalog_name='portal_catalog',
-            showOn=True,
-            visible={'edit': 'visible', 'view': 'visible'},
-        )),
-    StringField('StudyType',
+
+    StringField(
+        'StudyType',
         searchable=True,
         widget=StringWidget(
             label=_('Type of study'),
             visible={'edit': 'visible', 'view': 'visible'},
-        )),
+        )
+    ),
 
-    IntegerField('AgeHigh',
+    IntegerField(
+        'AgeHigh',
         widget=IntegerWidget(
             label=_("Age High"),
             description=_("Maximum age of the participants."),
             size=10,
             visible={'edit': 'visible', 'view': 'visible'},
-        )),
+        )
+    ),
 
-    IntegerField('AgeLow',
+    IntegerField(
+        'AgeLow',
         widget=IntegerWidget(
             label=_("Age low"),
             description=_("Minimum age of the participants."),
             size=10,
             visible={'edit': 'visible', 'view': 'visible'},
-        )),
+        )
+    ),
 
-    IntegerField('NumParticipants',
+    IntegerField(
+        'NumParticipants',
         widget=IntegerWidget(
             label=_("Number of Participants"),
             description=_("Number of participants in the study."),
             size=10,
             visible={'edit': 'visible', 'view': 'visible'},
-        )),
+        )
+    ),
 
-    LinesField('Biospectypes',
+    LinesField(
+        'Biospectypes',
         vocabulary='_getBiospecimensDisplayList',
         widget=MultiSelectionWidget(
             modes=('edit',),
@@ -78,9 +63,11 @@ schema = BikaSchema.copy() + Schema((
                 "Multi-select widget. Use to select more than one biospecimen type. Selecting a biospecimen type import "
                 "the corresponding analysis services."),
             visible={'edit': 'visible', 'view': 'visible'},
-        )),
+        )
+    ),
 
-    ReferenceField('Service',
+    ReferenceField(
+        'Service',
         required=1,
         multiValued=1,
         allowed_types=('AnalysisService',),
@@ -88,7 +75,8 @@ schema = BikaSchema.copy() + Schema((
         widget=ProjectAnalysesWidget(
            label=_("Analyses"),
            description="",
-        )),
+        )
+    ),
 
     DateTimeField(
         'DateCreated',
@@ -100,6 +88,7 @@ schema = BikaSchema.copy() + Schema((
             visible={'edit': 'invisible', 'view': 'invisible'},
     )),
 ))
+
 schema['title'].required = True
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 schema['title'].widget.size = 100

@@ -12,7 +12,10 @@ class ClientProjectsView(ProjectsView):
         super(ClientProjectsView, self).__init__(context, request)
         self.context = context
         self.request = request
-        self.contentFilter['getClientTitle'] = context.Title()
+        self.contentFilter['path'] = {
+            'query': '/'.join(self.context.getPhysicalPath()),
+            'level': 0
+        }
 
         self.columns = {
             'Title': {'title': _('Project'),

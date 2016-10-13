@@ -134,8 +134,9 @@ class ProjectView(BrowserView):
         self.id = context.getId()
         self.title = context.Title()
         self.client = "<a href='%s'>%s</a>" % (
-        context.getClient().absolute_url(),
-        context.getClient().Title())
+            context.aq_parent.absolute_url(),
+            context.aq_parent.Title()
+        )
         self.study_type = context.getStudyType()
         self.participants = context.getNumParticipants()
         self.age_interval = str(context.getAgeLow()) + ' - ' + str(
