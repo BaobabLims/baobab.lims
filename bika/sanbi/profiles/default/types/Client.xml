@@ -5,6 +5,13 @@
         i18n:domain="plone"
         purge="True">
 
+    <property name="allowed_content_types">
+      <element value="AnalysisSpec"/>
+      <element value="SamplePoint"/>
+      <element value="Contact"/>
+      <element value="Folder"/>
+      <element value="Project"/>
+    </property>
     <!-- Hides the normal Client tabs and add "Projects" tab. -->
 
     <action title="WINE-40: Do not move or remove this entry."
@@ -18,7 +25,7 @@
     </action>
 
     <action title="Projects"
-            action_id="projects"
+            action_id="view"
             category="object"
             icon_expr="string:++resource++bika.sanbi.images/project.png"
             url_expr="string:${object_url}/projects"
@@ -37,17 +44,6 @@
         <permission value="Modify portal content"/>
     </action>
 
-    <action title="Edit"
-            action_id="edit"
-            category="object"
-            url_expr="string:${object_url}/base_edit"
-            i18n:attributes="title"
-            i18n:domain="plone"
-            visible="True">
-        <permission value="BIKA: Edit Client"/>
-    </action>
-
-
     <action title="Batches"
             action_id="batches"
             category="object"
@@ -61,7 +57,7 @@
     </action>
 
     <action title="Analysis Requests"
-            action_id="view"
+            action_id="analysisrequests"
             category="object"
             condition_expr=""
             icon_expr="string:${portal_url}/images/ar.png"
