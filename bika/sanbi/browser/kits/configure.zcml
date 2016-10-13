@@ -8,7 +8,7 @@
         for="bika.sanbi.interfaces.IKits"
         name="folder_view"
         class=".folder_view.KitsView"
-        permission="zope2.View"
+        permission="bika.sanbi.ManageKits"
         layer="bika.lims.interfaces.IBikaLIMS"
     />
 
