@@ -6,11 +6,11 @@ The two files must be kept in sync.
 from bika.lims.permissions import ADD_CONTENT_PERMISSION
 
 AddKitTemplate = 'SANBI: Add KitTemplate'
-AddKit = 'SANBI: Add Kit'
 AddProject = 'SANBI: Add Project'
+AddKit = 'SANBI: Add Kit'
 AddShipment = 'SANBI: Add Shipment'
-AddMultimage = 'BIKA: Add Multimage'
 AddAliquot = "BIKA: Add Aliquot"
+AddMultimage = 'BIKA: Add Multimage'
 EditFieldBarcode = "BIKA: Edit Field Barcode"
 ViewBarcode = "BIKA: View Barcode"
 AddStorageType = "BIKA: Add Storage Type"
