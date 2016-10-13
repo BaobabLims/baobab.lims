@@ -2,7 +2,9 @@ import json
 
 from Products.CMFCore.utils import getToolByName
 
+from bika.lims import ManageAnalysisRequests
 from bika.lims.browser.bika_listing import BikaListingView
+from bika.lims.utils import isActive
 from bika.sanbi import bikaMessageFactory as _
 from bika.sanbi.permissions import *
 
@@ -47,11 +49,20 @@ class ProjectsView(BikaListingView):
 
     def __call__(self):
         mtool = getToolByName(self.context, 'portal_membership')
-        if mtool.checkPermission(AddProject, self.context):
-            self.context_actions[_('Add')] = {
-                'url': 'createObject?type_name=Project',
-                'icon': '++resource++bika.lims.images/add.png'
-            }
+        addPortalMessage = self.context.plone_utils.addPortalMessage
+        w_tool = getToolByName(self.context, 'portal_workflow')
+        active_contacts = [c for c in self.context.objectValues('Contact') if
+                           w_tool.getInfoFor(c, 'inactive_state', '') == 'active']
+        if isActive(self.context):
+            if self.context.portal_type == "Client" and not active_contacts:
+                msg = _("Client contact required before request may be submitted")
+                addPortalMessage(msg)
+            else:
+                if mtool.checkPermission(AddProject, self.context):
+                    self.context_actions[_('Add')] = {
+                        'url': 'createObject?type_name=Project',
+                        'icon': '++resource++bika.lims.images/add.png'
+                    }
         if mtool.checkPermission(ManageProjects, self.context):
             self.review_states[0]['transitions'].append({'id': 'deactivate'})
             self.review_states.append(
@@ -80,7 +91,7 @@ class ProjectsView(BikaListingView):
             if not items[x].has_key('obj'):
                 continue
             obj = items[x]['obj']
-            items[x]['getClient'] = obj.getClient().Title()
+            items[x]['getClient'] = obj.aq_parent.Title()
             items[x]['getStudyType'] = obj.getStudyType()
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                            (items[x]['url'], items[x]['Title'])
