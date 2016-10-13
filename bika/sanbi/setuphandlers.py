@@ -67,10 +67,10 @@ class BikaCustomGenerator:
         at.setCatalogsByType('Shipment', ['bika_catalog'])
         at.setCatalogsByType('Aliquot', ['bika_catalog'])
         at.setCatalogsByType('Biospecimen', ['bika_catalog'])
-        addIndex(bc, 'kit_project_uid', 'FieldIndex')
-        addIndex(bc, 'biospecimen_project_uid', 'FieldIndex')
-        addIndex(bc, 'biospecimen_kit_uid', 'FieldIndex')
-        addIndex(bc, 'aliquot_project_uid', 'FieldIndex')
+        # addIndex(bc, 'kit_project_uid', 'FieldIndex')
+        # addIndex(bc, 'biospecimen_project_uid', 'FieldIndex')
+        # addIndex(bc, 'biospecimen_kit_uid', 'FieldIndex')
+        # addIndex(bc, 'aliquot_project_uid', 'FieldIndex')
 
         # _______________________________#
         #      BIKA_SETUP_CATALOG        #
@@ -107,23 +107,57 @@ class BikaCustomGenerator:
         mp(AddStorageType, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(AddKitTemplate, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(AddProject, ['Manager', 'LabManager', 'LabClerk'], 1)
+        mp(ManageProjects, ['Manager', 'LabManager', 'Owner'], 1)
+
+        # projects
+        mp = portal.projects.manage_permission
+        mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'Member', 'LabClerk', 'Analyst', 'Sampler', 'Preserver', 'SamplingCoordinator'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Member', 'Analyst', 'Sampler', 'Preserver', 'SamplingCoordinator', 'SamplingCoordinator'], 0)
+        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'LabClerk', 'Owner'], 0)
+        mp('Access contents information', ['Manager', 'LabManager', 'Member', 'LabClerk', 'Analyst', 'Sampler', 'Preserver', 'Owner', 'SamplingCoordinator'], 0)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'LabClerk', 'Owner'], 0)
+        portal.projects.reindexObject()
 
         # kits
         mp = portal.kits.manage_permission
-        mp(AddKit, ['Manager', 'LabManager', 'Owner'], 1)
-        mp(ManageKits, ['Manager', 'LabManager', 'Owner'], 1)
-        mp(permissions.ListFolderContents, ['LabClerk', ''], 1)
+        mp(AddKit, ['Manager', 'LabManager', 'Owner'], 0)
+        mp(ManageKits, ['Manager', 'LabManager', 'Owner'], 0)
+        mp(permissions.ListFolderContents, ['LabClerk', ''], 0)
+        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'LabClerk', 'Owner'], 0)
         mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'Owner', 'LabClerk'], 0)
         mp(permissions.DeleteObjects, ['Manager', 'LabManager', 'Owner'], 0)
         mp(permissions.View, ['Manager', 'LabManager', 'LabClerk'], 0)
-
         portal.kits.reindexObject()
 
         # shipments
         mp = portal.shipments.manage_permission
-        mp(AddShipment, ['Manager', 'LabManager', 'Owner'], 1)
-        mp(ManageShipments, ['Manager', 'LabManager', 'Owner'], 1)
+        mp(AddShipment, ['Manager', 'LabManager', 'Owner'], 0)
+        mp(ManageShipments, ['Manager', 'LabManager', 'Owner'], 0)
+        mp(permissions.ListFolderContents, ['LabClerk', ''], 0)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'Owner', 'LabClerk'], 0)
+        mp(permissions.DeleteObjects, ['Manager', 'LabManager', 'Owner'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk'], 0)
         portal.shipments.reindexObject()
+
+        # Biospecimens
+        mp = portal.biospecimens.manage_permission
+        mp(ManageAliquots, ['Manager', 'LabManager', 'Owner'], 0)
+        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
+        mp(permissions.ListFolderContents, ['LabClerk', ''], 0)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'Owner', 'LabClerk'], 0)
+        mp(permissions.DeleteObjects, ['Manager', 'LabManager', 'Owner'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk'], 0)
+        portal.biospecimens.reindexObject()
+
+        # Aliquots
+        mp = portal.aliquots.manage_permission
+        mp(ManageAliquots, ['Manager', 'LabManager', 'Owner'], 0)
+        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
+        mp(permissions.ListFolderContents, ['LabClerk', ''], 0)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'Owner', 'LabClerk'], 0)
+        mp(permissions.DeleteObjects, ['Manager', 'LabManager', 'Owner'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk'], 0)
+        portal.aliquots.reindexObject()
 
 
 def setupCustomVarious(context):
@@ -156,9 +190,9 @@ def setupCustomVarious(context):
     for item in reversed(['clients',
                           'projects',
                           'kits',
+                          'shipments',
                           'biospecimens',
                           'aliquots',
                           'analysisrequests',
-                          'shipments',
                           'supplyorders']):
         portal.moveObjectsToTop([item])
