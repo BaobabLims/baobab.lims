@@ -6,7 +6,7 @@ from Products.Archetypes.public import *
 from Products.Archetypes.references import HoldingReference
 from plone.app.folder.folder import ATFolder
 from Products.ATContentTypes.content import schemata
-from bika.lims.workflow import doActionFor
+from DateTime import DateTime
 
 from bika.lims.content.bikaschema import BikaSchema, BikaFolderSchema
 from bika.lims.browser.widgets import DateTimeWidget as bika_DateTimeWidget
@@ -239,7 +239,7 @@ class Shipment(ATFolder):
             user
         """
         # import pdb;pdb.set_trace()
-        client = self.aq_parent.getClient()
+        client = self.aq_parent.aq_parent
         pc = getToolByName(self, 'portal_catalog')
         brains = pc(portal_type='Contact', path={'query': "/".join(client.getPhysicalPath()), 'level': 0})
         contacts = []
@@ -265,6 +265,10 @@ class Shipment(ATFolder):
             kit.setStorageLocation('')
             w_tool.doActionFor(kit, 'ship')
             kit.reindexObject()
+
+        # Set shipment's date dispatched
+        now = DateTime()
+        self.setDateDispatched(now)
 
 
 schemata.finalizeATCTSchema(schema, folderish = True, moveDiscussion = False)
