@@ -122,7 +122,7 @@ class BikaCustomGenerator:
         mp = portal.kits.manage_permission
         mp(AddKit, ['Manager', 'LabManager', 'Owner'], 0)
         mp(ManageKits, ['Manager', 'LabManager', 'Owner'], 0)
-        mp(permissions.ListFolderContents, ['LabClerk', ''], 0)
+        mp(permissions.ListFolderContents, ['Manager', 'LabClerk'], 0)
         mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'LabClerk', 'Owner'], 0)
         mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'Owner', 'LabClerk'], 0)
         mp(permissions.DeleteObjects, ['Manager', 'LabManager', 'Owner'], 0)
@@ -133,7 +133,7 @@ class BikaCustomGenerator:
         mp = portal.shipments.manage_permission
         mp(AddShipment, ['Manager', 'LabManager', 'Owner'], 0)
         mp(ManageShipments, ['Manager', 'LabManager', 'Owner'], 0)
-        mp(permissions.ListFolderContents, ['LabClerk', ''], 0)
+        mp(permissions.ListFolderContents, ['Manager', 'LabClerk'], 0)
         mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'Owner', 'LabClerk'], 0)
         mp(permissions.DeleteObjects, ['Manager', 'LabManager', 'Owner'], 0)
         mp(permissions.View, ['Manager', 'LabManager', 'LabClerk'], 0)
