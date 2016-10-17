@@ -54,15 +54,16 @@ class ProjectsView(BikaListingView):
         active_contacts = [c for c in self.context.objectValues('Contact') if
                            w_tool.getInfoFor(c, 'inactive_state', '') == 'active']
         if isActive(self.context):
-            if self.context.portal_type == "Client" and not active_contacts:
-                msg = _("Client contact required before request may be submitted")
-                addPortalMessage(msg)
-            else:
-                if mtool.checkPermission(AddProject, self.context):
-                    self.context_actions[_('Add')] = {
-                        'url': 'createObject?type_name=Project',
-                        'icon': '++resource++bika.lims.images/add.png'
-                    }
+            if self.context.portal_type == "Client":
+                if not active_contacts:
+                    msg = _("Client contact required before request may be submitted")
+                    addPortalMessage(msg)
+                else:
+                    if mtool.checkPermission(AddProject, self.context):
+                        self.context_actions[_('Add')] = {
+                            'url': 'createObject?type_name=Project',
+                            'icon': '++resource++bika.lims.images/add.png'
+                        }
         if mtool.checkPermission(ManageProjects, self.context):
             self.review_states[0]['transitions'].append({'id': 'deactivate'})
             self.review_states.append(

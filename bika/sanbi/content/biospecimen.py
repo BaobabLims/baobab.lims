@@ -1,6 +1,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ATContentTypes.content import schemata
 from Products.Archetypes.atapi import *
+from Products.CMFPlone.interfaces import IConstrainTypes
 from plone.indexer import indexer
 from zope.interface import implements
 from Products.CMFCore import permissions
@@ -138,7 +139,7 @@ schema['description'].schemata = 'default'
 
 
 class Biospecimen(ATFolder):
-    implements(IBiospecimen)
+    implements(IBiospecimen, IConstrainTypes)
     security = ClassSecurityInfo()
     displayContentsTab = False
     schema = schema

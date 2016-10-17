@@ -1,3 +1,4 @@
+from Products.CMFCore.utils import getToolByName
 from archetypes.schemaextender.interfaces import IOrderableSchemaExtender
 from zope.interface import implements
 from zope.component import adapts
@@ -85,7 +86,11 @@ class Invoicing(InvoiceBatch):
         self.project = project
         self.service = service
         self.brains = brains
-        self.client_uid = self.project.getClient().UID()
+        self.client_uid = ''
+        if self.project:
+            uc = getToolByName(instance, 'uid_catalog')
+            p = uc(UID=self.project.UID())
+            self.client_uid = p[0].getObject().aq_parent.UID()
 
     security.declareProtected(ManageInvoices, 'create_invoice')
 
@@ -214,6 +219,8 @@ def ObjectModifiedEventHandler(instance, event):
                 kit_brains = instance.bika_catalog(query)
                 brains = [b for b in kit_brains if start < b.getObject().getDateCreated() < end]
                 invoicing = Invoicing(instance, project, service, brains)
+                print invoicing.client_uid
+                print '--------------'
                 invoicing.create_invoice()
             elif service == 'Storage':
                 bio_query = {

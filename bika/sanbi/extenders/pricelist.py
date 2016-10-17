@@ -45,8 +45,8 @@ def ObjectModifiedEventHandler(instance, event):
 
         """ Create price list line items
         """
-        storage_princing = instance.bika_setup.StoragePricing
-        storage_types = [t['storage_type'] for t in storage_princing]
+        storage_pricing = instance.bika_setup.StoragePricing
+        storage_types = [t['storage_type'] for t in storage_pricing]
         instance.pricelist_lineitems = []
 
         for p in instance.bika_setup_catalog(portal_type=instance.getType(),
@@ -60,7 +60,7 @@ def ObjectModifiedEventHandler(instance, event):
             if instance.getType() == 'StorageType':
 
                 if itemTitle in storage_types:
-                    storage_type = filter(lambda t: t['storage_type'] == itemTitle, storage_princing)
+                    storage_type = filter(lambda t: t['storage_type'] == itemTitle, storage_pricing)
                     price = float(storage_type[0]['price'])
                     totalprice = price
                     vat = totalprice - price
@@ -83,13 +83,12 @@ def ObjectModifiedEventHandler(instance, event):
             if instance.getDescriptions():
                 itemDescription = obj.Description()
 
-
-                li = PricelistLineItem()
-                li['title'] = itemTitle
-                li['ItemDescription'] = itemDescription
-                li['CategoryTitle'] = cat
-                li['Accredited'] = itemAccredited
-                li['Subtotal'] = "%0.2f" % price
-                li['VATAmount'] = "%0.2f" % vat
-                li['Total'] = "%0.2f" % totalprice
-                instance.pricelist_lineitems.append(li)
+            li = PricelistLineItem()
+            li['title'] = itemTitle
+            li['ItemDescription'] = itemDescription
+            li['CategoryTitle'] = cat
+            li['Accredited'] = itemAccredited
+            li['Subtotal'] = "%0.2f" % price
+            li['VATAmount'] = "%0.2f" % vat
+            li['Total'] = "%0.2f" % totalprice
+            instance.pricelist_lineitems.append(li)

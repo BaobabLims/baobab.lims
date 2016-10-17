@@ -57,6 +57,8 @@ class KitsView(BikaListingView):
                                'sort_on': 'created',
                                'sort_order': 'ascending'},
                 'transitions': [{'id': 'deactivate'},
+                                {'id': 'receive'},
+                                {'id': 'process'},
                                 # {'id': 'ship'}
                                 ],
                 'columns': [

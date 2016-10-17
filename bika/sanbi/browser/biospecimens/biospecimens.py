@@ -13,7 +13,7 @@ from bika.sanbi.permissions import ManageAliquots, AddProject
 
 
 class BiospecimensView(BikaListingView):
-    template = ViewPageTemplateFile('templates/biospecimens.pt')
+    # template = ViewPageTemplateFile('templates/biospecimens.pt')
     # table_template = ViewPageTemplateFile("templates/biospecimens_table.pt")
     implements(IFolderContentsView, IViewView)
 

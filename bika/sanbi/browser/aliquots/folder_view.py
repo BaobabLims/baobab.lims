@@ -13,8 +13,7 @@ from bika.sanbi.permissions import *
 from bika.sanbi.config import VOLUME_UNITS
 
 class AliquotsView(BikaListingView):
-    # template = ViewPageTemplateFile('templates/aliquots.pt')
-    # table_template = ViewPageTemplateFile("templates/aliquots_table.pt")
+
     implements(IFolderContentsView, IViewView)
 
     def __init__(self, context, request):

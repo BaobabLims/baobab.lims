@@ -38,3 +38,13 @@ msgstr "Dispatch"
 #: ../profiles/default/workflows/bika_shipments_workflow/definition.xml
 msgid "receive_shipment_transition_title"
 msgstr "Receive"
+
+#. Default: "Collect"
+#: ../profiles/default/workflows/bika_shipments_workflow/definition.xml
+msgid "collect_transition_title"
+msgstr "Collect"
+
+#. Default: "Process"
+#: ../profiles/default/workflows/bika_shipments_workflow/definition.xml
+msgid "process_transition_title"
+msgstr "Process"
