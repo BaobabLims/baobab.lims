@@ -21,8 +21,8 @@ Title:,Dispatched,,,,,,,,,
 Description:,,,,,,,,,,
 Transitions,"receive_shipment",,,,,,,,,
 Permissions,Acquire,Anonymous,Manager,Owner,Reader,Editor,Contributor,Analyst,LabClerk,LabManager
-Modify portal content,N,N,Y,N,N,N,N,N,Y,Y
-Delete objects,N,N,Y,N,N,N,N,N,Y,Y
+Modify portal content,N,Y,Y,N,N,N,N,N,Y,Y
+Delete objects,N,Y,Y,N,N,N,N,N,Y,Y
 ,,,,,,,,,,
 [State],,,,,,,,,,
 Id:,received,,,,,,,,,
@@ -35,7 +35,7 @@ Delete objects,N,N,Y,Y,N,N,N,N,Y,Y
 ,,,,,,,,,,
 [State],,,,,,,,,,
 Id:,to_collect,,,,,,,,,
-Title:,To-collect,,,,,,,,,
+Title:,To collect,,,,,,,,,
 Description:,,,,,,,,,,
 Transitions,,,,,,,,,,
 Permissions,Acquire,Anonymous,Manager,Owner,Reader,Editor,Contributor,Analyst,LabClerk,LabManager
@@ -56,7 +56,6 @@ Title:,Receive,,,,,,,,,
 Description:,Receive,,,,,,,,,
 Target state:,received,,,,,,,,,
 Trigger:,User,,,,,,,,,
-Guard permission:,SANBI: Manage Kits,,,,,,,,,
 ,,,,,,,,,,
 [Transition],,,,,,,,,,
 Id:,collect,,,,,,,,,
@@ -64,4 +63,3 @@ Title:,Collect,,,,,,,,,
 Description:,Collect,,,,,,,,,
 Target state:,to_collect,,,,,,,,,
 Trigger:,User,,,,,,,,,
-Guard permission:,SANBI: Manage Kits,,,,,,,,,
