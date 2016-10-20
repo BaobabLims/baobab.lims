@@ -251,7 +251,7 @@ class Shipment(ATFolder):
         return contacts
 
     def getDocuments(self):
-        """Return all the multifile objects related with the instrument
+        """Return all the multifile objects related with the shipment
         """
         return self.objectValues('Multifile')
 
