@@ -58,6 +58,8 @@ class BiospecimenWorkflowAction(WorkflowAction):
 
         for biospecimen in biospecimens:
             doActionFor(biospecimen, 'receive')
+            for partition in biospecimen.objectValues('SamplePartition'):
+                doActionFor(partition, 'receive')
 
         self.destination_url = self.context.absolute_url()
         if self.context.portal_type == 'Project':

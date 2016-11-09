@@ -8,7 +8,7 @@ from Products.CMFCore.utils import getToolByName
 
 from bika.lims.interfaces import IUnmanagedStorage, IManagedStorage
 from bika.lims.workflow import doActionFor
-from bika.sanbi.browser.project import create_sample
+from bika.sanbi.browser.project import create_sample, create_samplepartition
 
 
 class AddBiospecimensViewlet(ViewletBase):
@@ -85,8 +85,10 @@ class AddBiospecimensSubmitHandler(BrowserView):
                 workflow_enabled = self.context.bika_setup.getSamplingWorkflowEnabled()
                 for x in range(data['seq_start'], data['seq_start'] + data['biospecimen_count']):
                     sample = create_sample(self.context, self.request, data, j, x)
+                    partition = create_samplepartition(sample, {'services':[], 'part_id': sample.getId() + "-P"})
                     if not workflow_enabled:
                         doActionFor(sample, 'sample_due')
+                        doActionFor(partition, 'sample_due')
                     sample.reindexObject()
                     if (x-data['seq_start']+1) % data['biospecimen_per_kit'] == 0 and (x-data['seq_start']+1) != 0:
                         j += 1

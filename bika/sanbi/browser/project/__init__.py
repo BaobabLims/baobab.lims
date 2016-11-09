@@ -124,3 +124,17 @@ def create_sample(context, request, values, k, x):
     sample.edit(SampleID=sample.getId())
     # Return the newly created sample
     return sample
+
+def create_samplepartition(context, data):
+    """ Create partition object for sample(context)
+    """
+    partition = _createObjectByType('SamplePartition', context, data['part_id'])
+    partition.unmarkCreationFlag()
+    # Determine if the sampling workflow is enabled
+    workflow_enabled = context.bika_setup.getSamplingWorkflowEnabled()
+    # Perform the appropriate workflow action
+    workflow_action = 'sampling_workflow' if workflow_enabled \
+        else 'no_sampling_workflow'
+    context.portal_workflow.doActionFor(partition, workflow_action)
+    # Return the created partition
+    return partition
