@@ -36,6 +36,11 @@ msgstr "Dispatch"
 
 #. Default: "Receive"
 #: ../profiles/default/workflows/bika_shipments_workflow/definition.xml
+msgid "receive_kit_transition_title"
+msgstr "Receive"
+
+#. Default: "Receive"
+#: ../profiles/default/workflows/bika_shipments_workflow/definition.xml
 msgid "receive_shipment_transition_title"
 msgstr "Receive"
 
