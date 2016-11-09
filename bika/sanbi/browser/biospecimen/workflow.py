@@ -24,32 +24,32 @@ class BiospecimenWorkflowAction(WorkflowAction):
         else:
             WorkflowAction.__call__(self)
 
-    def workflow_action_complete_biospecimen(self):
+    def workflow_action_receive(self):
         form = self.request.form
         # print form
         selected_biospecimens = WorkflowAction._get_selected_items(self)
         biospecimens = []
         for uid in selected_biospecimens.keys():
             if not form['Barcode'][0][uid] or \
-               not form['Type'][0][uid] or \
-               not form['Volume'][0][uid] or \
-               not form['Unit'][0][uid] or \
-               not form['SubjectID'][0][uid]:
+                    not form['Type'][0][uid] or \
+                    not form['Volume'][0][uid] or \
+                    not form['Unit'][0][uid] or \
+                    not form['SubjectID'][0][uid]:
                 continue
 
             try:
-                biospecimen = selected_biospecimens.get(uid, None)
-                biospecimen.setBarcode(form['Barcode'][0][uid])
-                biospecimen.setType(form['Type'][0][uid])
-                biospecimen.setVolume(form['Volume'][0][uid])
-                biospecimen.setSubjectID(form['SubjectID'][0][uid])
+                obj = selected_biospecimens.get(uid, None)
+                obj.getField('Barcode').set(obj, form['Barcode'][0][uid])
+                obj.getField('SampleType').set(obj, form['Type'][0][uid])
+                obj.getField('Volume').set(obj, form['Volume'][0][uid])
+                obj.getField('SubjectID').set(obj, form['SubjectID'][0][uid])
                 unit = 'ml'
                 for u in VOLUME_UNITS:
                     if u['ResultValue'] == form['Unit'][0][uid]:
                         unit = u['ResultText']
-                biospecimen.setUnit(unit)
-
-                biospecimens.append(biospecimen)
+                obj.getField('Unit').set(obj, unit)
+                obj.reindexObject()
+                biospecimens.append(obj)
             except ReferenceException:
                 continue
 
@@ -57,7 +57,7 @@ class BiospecimenWorkflowAction(WorkflowAction):
         self.context.plone_utils.addPortalMessage(message, 'info')
 
         for biospecimen in biospecimens:
-            doActionFor(biospecimen, 'complete_biospecimen')
+            doActionFor(biospecimen, 'receive')
 
         self.destination_url = self.context.absolute_url()
         if self.context.portal_type == 'Project':
