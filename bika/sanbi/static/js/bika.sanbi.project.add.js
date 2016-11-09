@@ -1,6 +1,6 @@
 function CustomProjectAddView(){
-    var biospecFd = '#archetypes-fieldname-Biospectypes';
-    var biospecSel = '#archetypes-fieldname-Biospectypes #Biospectypes';
+    var biospecFd = '#archetypes-fieldname-SampleType';
+    var biospecSel = '#archetypes-fieldname-SampleType #SampleType';
     this.load = function(){
         // disable browser auto-complete
         $('input[type=text]').prop('autocomplete', 'off');
@@ -26,7 +26,7 @@ function CustomProjectAddView(){
         var d = $.Deferred();
         var requestData = {
             catalog_name: "bika_setup_catalog",
-            portal_type: "BiospecType",
+            portal_type: "SampleType",
             UID: uid
         };
         bika.lims.jsonapi_read(requestData, function (data) {
@@ -113,7 +113,7 @@ function CustomProjectAddView(){
         }
 
         // If ajax_categories are enabled, we need to go request items now.
-        var ajax_categories_enabled = $("input[name='ajax_categories']")
+        var ajax_categories_enabled = $("input[name='ajax_categories']");
         if (ajax_categories_enabled.length > 0 && placeholder.length > 0) {
             var options = {}
             // this parameter allows the receiving view to know for sure what's expected
@@ -126,6 +126,7 @@ function CustomProjectAddView(){
                 // (TODO does this work?)
                 options['review_state'] = $('.review_state_selector a.selected')[0].id;
             }
+            console.log(url);
             $.ajax({url: url, data: options})
               .done(function (data) {
                     // LIMS-1970 Analyses from AR Add form not displayed properly
