@@ -18,6 +18,7 @@
   <element value="Shipment"/>
   <element value="Biospecimen"/>
   <element value="Aliquot"/>
+  <element value="Sample"/>
  </property>
  <property name="allow_discussion">False</property>
  <property name="default_view_fallback">False</property>
