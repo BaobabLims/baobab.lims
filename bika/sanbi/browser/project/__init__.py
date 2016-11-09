@@ -1,8 +1,14 @@
 # Imports
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.utils import _createObjectByType
+from zope.interface import alsoProvides
 from zope.schema import ValidationError
+from DateTime import DateTime
 
 from bika.lims.interfaces import IManagedStorage, IUnmanagedStorage
+from bika.lims.utils import tmpID
+from bika.lims.workflow import doActionFor
+from bika.sanbi.interfaces import IBiospecimen
 from project import ProjectView
 
 
@@ -81,3 +87,40 @@ def assign_items_to_storages(context, items, storages):
             # user manually set the storage as full.
             for item in items:
                 item.setStorageLocation(storage)
+
+
+def create_sample(context, request, values, k, x):
+    """Create sample as biospecimen or aliquot
+    """
+    # Retrieve the required tools
+    uc = getToolByName(context, 'uid_catalog')
+    # Determine if the sampling workflow is enabled
+    workflow_enabled = context.bika_setup.getSamplingWorkflowEnabled()
+    # Create sample or refer to existing for secondary analysis request
+    sample = _createObjectByType('Sample', context, tmpID())
+    # Update the created sample with indicated values
+    sample.processForm(REQUEST=request, values=values)
+    if 'datesampled' in values:
+        sample.setDateSampled(values['datesampled'])
+    else:
+        sample.setDateSampled(DateTime())
+    if 'datereceived' in values:
+        sample.setDateReceived(values['datereceived'])
+    else:
+        sample.setDateReceived(DateTime())
+    if 'kits' in values:
+        field = sample.getField('Kit')
+        field.set(sample, values['kits'][k].UID())
+    # Specifically set the storage location
+    if 'StorageLocation' in values:
+        sample.setStorageLocation(values['StorageLocation'])
+    alsoProvides(sample, IBiospecimen)
+    context.manage_renameObject(sample.id, values['id_template'].format(id=x), )
+    # Perform the appropriate workflow action
+    workflow_action = 'sampling_workflow' if workflow_enabled \
+        else 'no_sampling_workflow'
+    doActionFor(sample, workflow_action)
+    # Set the SampleID
+    sample.edit(SampleID=sample.getId())
+    # Return the newly created sample
+    return sample

@@ -7,6 +7,8 @@ from zope.schema import ValidationError
 from Products.CMFCore.utils import getToolByName
 
 from bika.lims.interfaces import IUnmanagedStorage, IManagedStorage
+from bika.lims.workflow import doActionFor
+from bika.sanbi.browser.project import create_sample
 
 
 class AddBiospecimensViewlet(ViewletBase):
@@ -69,7 +71,6 @@ class AddBiospecimensSubmitHandler(BrowserView):
                     biospecimen.setStorageLocation(storage)
 
     def __call__(self):
-        # import pdb;pdb.set_trace()
         if "viewlet_submitted" in self.request.form:
             data = {}
             try:
@@ -78,26 +79,18 @@ class AddBiospecimensSubmitHandler(BrowserView):
                 self.form_error(e.message)
 
             # Validation is complete, now set local variables from form inputs.
-
             biospecimens = []
             j = 0
             if data:
+                workflow_enabled = self.context.bika_setup.getSamplingWorkflowEnabled()
                 for x in range(data['seq_start'], data['seq_start'] + data['biospecimen_count']):
-                    obj = api.content.create(
-                        container=self.context,
-                        type='Biospecimen',
-                        id=data['id_template'].format(id=x),
-                        title=data['title_template'].format(id=x),
-                        DateCreated = DateTime()
-                    )
-                    obj.setKit(data['kits'][j].UID())
-                    # obj.setType(data['type_uid'])
-                    self.context.manage_renameObject(obj.id, data['id_template'].format(id=x), )
-                    obj.reindexObject(idxs=['biospecimen_kit_uid'])
+                    sample = create_sample(self.context, self.request, data, j, x)
+                    if not workflow_enabled:
+                        doActionFor(sample, 'sample_due')
+                    sample.reindexObject()
                     if (x-data['seq_start']+1) % data['biospecimen_per_kit'] == 0 and (x-data['seq_start']+1) != 0:
                         j += 1
-
-                    biospecimens.append(obj)
+                    biospecimens.append(sample)
 
                 #store the created biospecimens
                 self.assign_biospecimens_to_storages(biospecimens, data['storages'])
