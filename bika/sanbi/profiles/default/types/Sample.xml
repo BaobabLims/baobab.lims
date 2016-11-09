@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<object name="Sample"
+        meta_type="Factory-based Type Information with dynamic views"
+        xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+        i18n:domain="plone"
+        purge="True">
+
+<action title="Large Sticker"
+        action_id="sticker_large"
+        category="document_actions"
+        condition_expr="python: context.portal_workflow.getInfoFor(context, 'review_state') in ['sample_received']"
+        icon_expr="string:${object_url}/++resource++bika.lims.images/sticker_large.png"
+        link_target=""
+        url_expr="string:${object_url}/sticker?autoprint=1&amp;size=large"
+        i18n:attributes="title"
+        visible="True">
+   <permission value="View"/>
+</action>
+
+<action title="Small Sticker"
+        action_id="sticker_small"
+        category="document_actions"
+        condition_expr="python: context.portal_workflow.getInfoFor(context, 'review_state') in ['sample_received']"
+        icon_expr="string:${object_url}/++resource++bika.lims.images/sticker_small.png"
+        link_target=""
+        url_expr="string:${object_url}/sticker?autoprint=1&amp;size=small"
+        i18n:attributes="title"
+        visible="True">
+   <permission value="View"/>
+</action>
+
+<action title="Stickers preview"
+        action_id="sticker_preview"
+        category="document_actions"
+        condition_expr="python: context.portal_workflow.getInfoFor(context, 'review_state') in ['sample_received']"
+        icon_expr="string:${object_url}/++resource++bika.lims.images/sticker_preview.png"
+        link_target="Stickers preview"
+        url_expr="string:${object_url}/sticker"
+        i18n:attributes="title"
+        visible="True">
+    <permission value="View"/>
+</action>
+</object>
