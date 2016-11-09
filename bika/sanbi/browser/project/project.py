@@ -6,6 +6,7 @@ from DateTime import DateTime
 
 from bika.lims.browser import BrowserView
 from bika.lims.controlpanel.bika_analysisservices import AnalysisServicesView
+from bika.lims.controlpanel.bika_sampletypes import SampleTypesView
 from bika.lims.utils import isActive
 from bika.lims.browser.invoicefolder import InvoiceFolderContentsView
 from bika.sanbi.browser.aliquots.folder_view import AliquotsView
@@ -66,7 +67,7 @@ class ProjectAnalysisServicesView(AnalysisServicesView):
         return out_items
 
 
-class ProjectBiospecView(BiospecTypesView):
+class ProjectBiospecView(SampleTypesView):
     def __init__(self, context, request, uids):
         super(ProjectBiospecView, self).__init__(context, request)
         self.uids = uids
@@ -97,7 +98,7 @@ class ProjectBiospecView(BiospecTypesView):
         ]
 
     def folderitems(self):
-        items = BiospecTypesView.folderitems(self)
+        items = SampleTypesView.folderitems(self)
         out_items = []
         for x in range(len(items)):
             if not items[x].has_key('obj'):
@@ -142,9 +143,9 @@ class ProjectView(BrowserView):
         self.age_interval = str(context.getAgeLow()) + ' - ' + str(
             context.getAgeHigh())
 
-        biospec_types = ProjectBiospecView(context, request,
-                                           context.getBiospectypes())
-        self.bio_table = biospec_types.contents_table()
+        biospecimen_types = ProjectBiospecView(context, request,
+                                           context.getSampleType())
+        self.bio_table = biospecimen_types.contents_table()
 
         uids = [o.UID() for o in context.getService()]
         view = ProjectAnalysisServicesView(context, request, uids)
