@@ -32,7 +32,16 @@ class ProjectAnalysesView(BikaListingView):
         self.form_id = "analyses"
         self.profile = None
 
-        self.do_cats = False
+        self.categories = []
+        self.do_cats = self.context.bika_setup.getCategoriseAnalysisServices()
+        if self.do_cats:
+            self.pagesize = 999999  # hide batching controls
+            self.show_categories = True
+            self.expand_all_categories = False
+            self.ajax_categories = True
+            self.ajax_categories_url = self.context.absolute_url() + \
+                                       "/sampletype_analysesview"
+            self.category_index = 'getCategoryTitle'
 
         self.columns = {
             'Title': {'title': _('Service'),
@@ -70,6 +79,15 @@ class ProjectAnalysesView(BikaListingView):
             if not items[x].has_key('obj'):
                 continue
             obj = items[x]['obj']
+
+            cat = obj.getCategoryTitle()
+            # Category (upper C) is for display column value
+            items[x]['Category'] = cat
+            if self.do_cats:
+                # category is for bika_listing to groups entries
+                items[x]['category'] = cat
+                if cat not in self.categories:
+                    self.categories.append(cat)
 
             analyses = [a.UID() for a in self.field_value]
             items[x]['selected'] = items[x]['uid'] in analyses
@@ -132,10 +150,14 @@ class ProjectAnalysesWidget(TypesWidget):
 
     security.declarePublic('Analyses')
 
-    def Analyses(self, field, allow_edit=False):
+    def Analyses(self, field, instance, allow_edit=False):
         """Print analyses table
         """
-        field_value = getattr(field, field.accessor)()
+        if instance.portal_type == 'SampleType':
+            field_value = field.getAccessor(instance)()
+        else:
+            field_value = getattr(field, field.accessor)()
+
         view = ProjectAnalysesView(self,
                                    self.REQUEST,
                                    field_value=field_value,
