@@ -14,6 +14,8 @@
     <adapter name='bika.sanbi' factory=".bikasetup.BikaSetupSchemaExtender" />
     <adapter name='bika.sanbi' factory=".pricelist.PricelistSchemaExtender" />
     <adapter name='bika.sanbi' factory=".invoicebatch.InvoiceBatchSchemaExtender" />
+    <adapter name='bika.sanbi' factory=".sampletype.SampleTypeSchemaExtender" />
+    <adapter name='bika.sanbi' factory=".sample.SampleSchemaExtender" />
 
     <browser:page
       for="bika.lims.interfaces.IBikaSetup"
@@ -33,6 +35,14 @@
       for="bika.lims.interfaces.IInvoiceBatch
            zope.lifecycleevent.interfaces.IObjectModifiedEvent"
       handler=".invoicebatch.ObjectModifiedEventHandler"
+    />
+
+    <browser:page
+      for="bika.lims.interfaces.ISampleType"
+      name="sampletype_analysesview"
+      class="bika.lims.browser.widgets.analysisprofileanalyseswidget.AnalysisProfileAnalysesView"
+      permission="zope.Public"
+      layer="bika.lims.interfaces.IBikaLIMS"
     />
 
 </configure>
