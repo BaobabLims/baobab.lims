@@ -54,11 +54,11 @@ schema = BikaSchema.copy() + Schema((
     ),
 
     LinesField(
-        'Biospectypes',
+        'SampleType',
         vocabulary='_getBiospecimensDisplayList',
         widget=MultiSelectionWidget(
             modes=('edit',),
-            label=_("Biospecimen types"),
+            label=_("Biospecimen Type"),
             description=_(
                 "Multi-select widget. Use to select more than one biospecimen type. Selecting a biospecimen type import "
                 "the corresponding analysis services."),
@@ -109,7 +109,7 @@ class Project(BaseFolder):
     def _getBiospecimensDisplayList(self):
         bsc = getToolByName(self, 'bika_setup_catalog')
         items = [(i.UID, i.Title) \
-                 for i in bsc(portal_type='BiospecType',
+                 for i in bsc(portal_type='SampleType',
                               inactive_state='active')]
         items.sort(lambda x, y: cmp(x[1], y[1]))
         items.insert(0, ('', _("None")))
