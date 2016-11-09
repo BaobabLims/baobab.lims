@@ -9,6 +9,7 @@ from bika.sanbi import bikaMessageFactory as _
 from bika.lims.utils import isActive
 from AccessControl import getSecurityManager
 from bika.sanbi.config import VOLUME_UNITS
+from bika.sanbi.interfaces import IBiospecimen, IAliquot
 from bika.sanbi.permissions import ManageAliquots, AddProject
 
 
@@ -23,12 +24,12 @@ class BiospecimensView(BikaListingView):
         self.catalog = 'bika_catalog'
         request.set('disable_plone.rightcolumn', 1)
         self.contentFilter = {
-            'portal_type': 'Biospecimen',
+            'portal_type': 'Sample',
             'sort_on': 'created',
             'sort_order': 'ascending'
         }
         self.context_actions = {}
-        self.title = self.context.translate(_("Biospecimen"))
+        self.title = self.context.translate(_("Biospecimens"))
         self.icon = self.portal_url + \
                     "/++resource++bika.sanbi.images/biospecimen_big.png"
         self.description = ''
@@ -82,6 +83,10 @@ class BiospecimensView(BikaListingView):
                 'title': _('Project'),
                 'index': 'sortable_title'
             },
+            'state_title': {
+                'title': _('State'),
+                'index': 'review_state'
+            },
             # 'Location': {
             #     'title': _('Location'),
             #     'toggle': True
@@ -93,13 +98,13 @@ class BiospecimensView(BikaListingView):
                 'id': 'default',
                 'title': _('Active'),
                 'contentFilter': {
-                    'inactive_state': 'active',
+                    'cancellation_state': 'active',
                     'sort_on': 'created',
                     'sort_order': 'ascending'
                 },
                 'transitions': [
-                    {'id': 'deactivate'},
-                    {'id': 'complete_biospecimen'}
+                    {'id': 'cancel'},
+                    {'id': 'receive'}
                 ],
                 'columns': [
                     'Title',
@@ -110,6 +115,7 @@ class BiospecimensView(BikaListingView):
                     'Barcode',
                     'Volume',
                     'Unit',
+                    'state_title',
                     # 'Location'
                 ]
             },
@@ -134,6 +140,7 @@ class BiospecimensView(BikaListingView):
                     'Barcode',
                     'Volume',
                     'Unit',
+                    'state_title',
                     # 'Location'
                 ]
             },
@@ -193,40 +200,43 @@ class BiospecimensView(BikaListingView):
     def folderitems(self, full_objects=False):
         items = BikaListingView.folderitems(self)
         bsc = getToolByName(self.context, 'bika_setup_catalog')
-        brains = bsc(portal_type='BiospecType', inactive_state='active')
+        brains = bsc(portal_type='SampleType', inactive_state='active')
         biospecimen_types = [
             {
                 'ResultValue': brain.UID,
                 'ResultText': brain.title
             }
             for brain in brains
-        ]
+            ]
+        ret = []
         for x, item in enumerate(items):
             if not items[x].has_key('obj'):
                 continue
             obj = items[x]['obj']
-            items[x]['Type'] = obj.getType() and obj.getType().Title() or ''
-            items[x]['Volume'] = obj.getVolume()
+            if not IBiospecimen.providedBy(obj):
+                continue
+            items[x]['Type'] = obj.getSampleType() and obj.getSampleType().Title() or ''
+            items[x]['Volume'] = obj.getField('Volume').get(obj)
             items[x]['Unit'] = VOLUME_UNITS[0]['ResultText']
-            items[x]['SubjectID'] = obj.getSubjectID()
-            items[x]['Kit'] = obj.getKit()
-            items[x]['Project'] = obj.getKit().aq_parent
-            if obj.getKit():
+            items[x]['SubjectID'] = obj.getField('SubjectID').get(obj)
+            kit = obj.getField('Kit').get(obj)
+            items[x]['Kit'] = kit
+            items[x]['Project'] = obj.aq_parent
+            if kit:
                 items[x]['replace']['Kit'] = \
-                    '<a href="%s">%s</a>' % (obj.getKit().absolute_url(), obj.getKit().Title())
+                    '<a href="%s">%s</a>' % (kit.absolute_url(), kit.Title())
                 items[x]['replace']['Project'] = \
-                    '<a href="%s">%s</a>' % (obj.getKit().aq_parent.absolute_url(),
-                                             obj.getKit().aq_parent.Title())
-            items[x]['Barcode'] = obj.getBarcode()
+                    '<a href="%s">%s</a>' % (kit.aq_parent.absolute_url(),
+                                             kit.aq_parent.Title())
+            items[x]['Barcode'] = obj.getField('Barcode').get(obj)
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                            (items[x]['url'], items[x]['Title'])
-            # items[x]['choices']['Type'] = biospecimen_types
             # TODO: SPECIFY OBJ STATES WHERE USER CAN EDIT BARCODE
             if self.allow_edit and isActive(self.context) and \
-                   getSecurityManager().checkPermission(ManageAliquots, obj) and \
-                   items[x]['review_state'] == "to_complete":
+                    getSecurityManager().checkPermission(ManageAliquots, obj) and \
+                            items[x]['review_state'] == "sample_due":
                 items[x]['allow_edit'] = ['Type', 'SubjectID', 'Barcode', 'Volume', 'Unit']
                 items[x]['choices']['Type'] = biospecimen_types
                 items[x]['choices']['Unit'] = VOLUME_UNITS
-
-        return items
+            ret.append(item)
+        return ret
