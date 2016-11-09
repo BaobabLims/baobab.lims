@@ -11,4 +11,9 @@
             factory="bika.sanbi.adapters.storage.defaultStorageTypes"
     />
 
+    <adapter
+        factory="bika.sanbi.adapters.sampletype.JSONReadExtender"
+        provides="bika.lims.interfaces.IJSONReadExtender"
+    />
+    
 </configure>
