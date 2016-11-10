@@ -16,14 +16,14 @@ class AliquotWorkflowAction(WorkflowAction):
             action = action[0]
 
         # Call out to the workflow action method
-        method_name = 'workflow_action_' + action
+        method_name = 'workflow_action_aliquot_' + action
         method = getattr(self, method_name, False)
         if method:
             method()
         else:
             WorkflowAction.__call__(self)
 
-    def workflow_action_complete_aliquot(self):
+    def workflow_action_aliquot_receive(self):
         form = self.request.form
         selected_aliquots = WorkflowAction._get_selected_items(self)
         aliquots = []
@@ -34,14 +34,14 @@ class AliquotWorkflowAction(WorkflowAction):
                 continue
             try:
                 aliquot = selected_aliquots.get(uid, None)
-                aliquot.setAliquotType(form['AliquotType'][0][uid])
-                aliquot.setVolume(form['Volume'][0][uid])
+                aliquot.getField('SampleType').set(aliquot, form['AliquotType'][0][uid])
+                aliquot.getField('Volume').set(aliquot, form['Volume'][0][uid])
                 unit = 'ml'
                 for u in VOLUME_UNITS:
                     if u['ResultValue'] == form['Unit'][0][uid]:
                         unit = u['ResultText']
-                aliquot.setUnit(unit)
-
+                aliquot.getField('Unit').set(aliquot, unit)
+                aliquot.reindexObject()
                 aliquots.append(aliquot)
             except ReferenceException:
                 continue
@@ -50,7 +50,9 @@ class AliquotWorkflowAction(WorkflowAction):
         self.context.plone_utils.addPortalMessage(message, 'info')
 
         for aliquot in aliquots:
-            doActionFor(aliquot, 'complete_aliquot')
+            doActionFor(aliquot, 'receive')
+            for partition in aliquot.objectValues('SamplePartition'):
+                doActionFor(partition, 'receive')
 
         self.destination_url = self.context.absolute_url()
         if self.context.portal_type == 'Project':

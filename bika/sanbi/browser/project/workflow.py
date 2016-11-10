@@ -8,9 +8,9 @@ class ProjectWorkflowAction(WorkflowAction, BiospecimenWorkflowAction, AliquotWo
         form = self.request.form
         plone.protect.CheckAuthenticator(form)
         action, _ = WorkflowAction._get_form_workflow_action(self)
-        if action == 'complete_biospecimen':
+        if action == 'receive' and 'Type' in form:
             BiospecimenWorkflowAction.__call__(self)
-        elif action == 'complete_aliquot':
+        elif action == 'receive' and 'AliquotType' in form:
             AliquotWorkflowAction.__call__(self)
         else:
             WorkflowAction.__call__(self)

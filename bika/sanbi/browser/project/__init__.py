@@ -8,7 +8,7 @@ from DateTime import DateTime
 from bika.lims.interfaces import IManagedStorage, IUnmanagedStorage
 from bika.lims.utils import tmpID
 from bika.lims.workflow import doActionFor
-from bika.sanbi.interfaces import IBiospecimen
+from bika.sanbi.interfaces import IBiospecimen, IAliquot
 from project import ProjectView
 
 
@@ -56,12 +56,13 @@ def objects_between_two_uids(context, uid_1, uid_2, portal_type, wf_1, wf_2, sta
     # Filter objects by workflow state active
     items = []
     for obj in objects:
-        st1 = w_tool.getStatusOf(wf_1, obj)
-        st2 = w_tool.getStatusOf(wf_2, obj)
-        if st1.get('review_state', None) == state and \
-                        st2.get('inactive_state', None) == 'active' and \
-                                first_id <= obj.getId() <= last_id:
-            items.append(obj)
+        if IBiospecimen.providedBy(obj):
+            st1 = w_tool.getStatusOf(wf_1, obj)
+            st2 = w_tool.getStatusOf(wf_2, obj)
+            if st1.get('review_state', None) == state and \
+                            st2.get('cancellation_state', None) == 'active' and \
+                                    first_id <= obj.getId() <= last_id:
+                items.append(obj)
 
     return items
 
@@ -89,7 +90,7 @@ def assign_items_to_storages(context, items, storages):
                 item.setStorageLocation(storage)
 
 
-def create_sample(context, request, values, k, x):
+def create_sample(context, request, values, j, x):
     """Create sample as biospecimen or aliquot
     """
     # Retrieve the required tools
@@ -108,13 +109,16 @@ def create_sample(context, request, values, k, x):
         sample.setDateReceived(values['datereceived'])
     else:
         sample.setDateReceived(DateTime())
-    if 'kits' in values:
-        field = sample.getField('Kit')
-        field.set(sample, values['kits'][k].UID())
     # Specifically set the storage location
     if 'StorageLocation' in values:
         sample.setStorageLocation(values['StorageLocation'])
-    alsoProvides(sample, IBiospecimen)
+    if 'kits' in values:
+        field = sample.getField('Kit')
+        field.set(sample, values['kits'][j].UID())
+        alsoProvides(sample, IBiospecimen)
+    if 'biospecimens' in values:
+        sample.setLinkedSample(values['biospecimens'][j].UID())
+        alsoProvides(sample, IAliquot)
     context.manage_renameObject(sample.id, values['id_template'].format(id=x), )
     # Perform the appropriate workflow action
     workflow_action = 'sampling_workflow' if workflow_enabled \

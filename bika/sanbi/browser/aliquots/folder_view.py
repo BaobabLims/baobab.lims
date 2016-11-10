@@ -9,6 +9,7 @@ from AccessControl import getSecurityManager
 
 from bika.lims.browser.bika_listing import BikaListingView
 from bika.sanbi import bikaMessageFactory as _
+from bika.sanbi.interfaces import IAliquot
 from bika.sanbi.permissions import *
 from bika.sanbi.config import VOLUME_UNITS
 
@@ -21,7 +22,7 @@ class AliquotsView(BikaListingView):
         self.context = context
         self.request = request
         self.catalog = "bika_catalog"
-        self.contentFilter = {'portal_type': 'Aliquot',
+        self.contentFilter = {'portal_type': 'Sample',
                               'sort_on': 'sortable_title'}
 
         self.context_actions = {}
@@ -66,6 +67,10 @@ class AliquotsView(BikaListingView):
                 'title': _('Project'),
                 'index': 'sortable_title'
             },
+            'state_title': {
+                'title': _('State'),
+                'index': 'review_state'
+            },
             # 'Location': {'title': _('Location'),
             #              'toggle': True},
         }
@@ -75,13 +80,13 @@ class AliquotsView(BikaListingView):
                 'id': 'default',
                 'title': _('Active'),
                 'contentFilter': {
-                    'inactive_state': 'active',
+                    'cancellation_state': 'active',
                     'sort_on': 'created',
-                    'sort_order': 'reverse'
+                    'sort_order': 'ascending'
                 },
                 'transitions': [
-                    {'id': 'complete_aliquot'},
-                    {'id': 'deactivate'}
+                    {'id': 'cancel'},
+                    {'id': 'receive'}
                 ],
                 'columns': [
                     'Title',
@@ -90,6 +95,7 @@ class AliquotsView(BikaListingView):
                     'AliquotType',
                     'Volume',
                     'Unit',
+                    'state_title',
                     # 'Location'
                 ]
             },
@@ -156,9 +162,9 @@ class AliquotsView(BikaListingView):
         return super(AliquotsView, self).__call__()
 
     def folderitems(self, full_objects=False):
-        items = super(AliquotsView, self).folderitems()
+        items = BikaListingView.folderitems(self)
         bsc = getToolByName(self.context, 'bika_setup_catalog')
-        brains = bsc(portal_type='BiospecType', inactive_state='active')
+        brains = bsc(portal_type='SampleType', inactive_state='active')
         aliquot_types = [
             {
                 'ResultValue': brain.UID,
@@ -166,15 +172,17 @@ class AliquotsView(BikaListingView):
             }
             for brain in brains
         ]
-
-        for x in range(len(items)):
+        ret = []
+        for x, item in enumerate(items):
             if not items[x].has_key('obj'):
                 continue
             obj = items[x]['obj']
-            items[x]['Biospecimen'] = obj.getBiospecimen().Title()
-            items[x]['AliquotType'] = obj.getAliquotType() and obj.getAliquotType().Title() or ''
-            items[x]['Volume'] = obj.getVolume()
-            items[x]['Unit'] = obj.getUnit()
+            if not IAliquot.providedBy(obj):
+                continue
+            items[x]['Biospecimen'] = obj.getLinkedSample().Title()
+            items[x]['AliquotType'] = obj.getSampleType() and obj.getSampleType().Title() or ''
+            items[x]['Volume'] = items[x]['Volume'] = obj.getField('Volume').get(obj)
+            items[x]['Unit'] = VOLUME_UNITS[0]['ResultText']
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                            (items[x]['url'], items[x]['Title'])
             if self.context.portal_type == 'Aliquots':
@@ -184,10 +192,11 @@ class AliquotsView(BikaListingView):
 
             if self.allow_edit and isActive(self.context) and \
                     getSecurityManager().checkPermission("Modify portal content", obj) and \
-                    items[x]['review_state'] == "to_complete":
+                    items[x]['review_state'] == "sample_due":
                 items[x]['allow_edit'] = ['AliquotType', 'Volume', 'Unit']
                 items[x]['choices']['AliquotType'] = aliquot_types
                 items[x]['choices']['Unit'] = VOLUME_UNITS
+            ret.append(item)
 
-        return items
+        return ret
 

@@ -7,25 +7,28 @@ from zope.schema import ValidationError
 from DateTime import DateTime
 
 from bika.lims.interfaces import IManagedStorage
+from bika.lims.workflow import doActionFor
 from bika.sanbi.browser.project import get_storage_objects, count_storage_positions, objects_between_two_uids, \
-    assign_items_to_storages
+    assign_items_to_storages, create_sample, create_samplepartition
+from bika.sanbi.interfaces import IBiospecimen
 
 
 class AddAliquotsViewlet(ViewletBase):
     index = ViewPageTemplateFile("templates/add_aliquots_viewlet.pt")
 
     def biospecimens(self):
-        """ Return the biospcimen of the current project
+        """ Return samples providing IBiospecimen of the current project
         """
         items = []
         w_tool = getToolByName(self.context, 'portal_workflow')
-        biospecimens = self.context.objectValues('Biospecimen')
-        for biospecimen in biospecimens:
-            st1 = w_tool.getStatusOf("bika_biospecimen_workflow", biospecimen)
-            st2 = w_tool.getStatusOf("bika_inactive_workflow", biospecimen)
-            if st1.get('review_state', None) == 'completed' and \
-                            st2.get('inactive_state', None) == 'active':
-                items.append({'uid': biospecimen.UID(), 'title': biospecimen.Title()})
+        samples = self.context.objectValues('Sample')
+        for sample in samples:
+            if IBiospecimen.providedBy(sample):
+                st1 = w_tool.getStatusOf("bika_sample_workflow", sample)
+                st2 = w_tool.getStatusOf("bika_cancellation_workflow", sample)
+                if st1.get('review_state', None) == 'sample_received' and \
+                                st2.get('cancellation_state', None) == 'active':
+                    items.append({'uid': sample.UID(), 'title': sample.Title()})
         items.sort(lambda x, y: cmp(x['title'], y['title']))
 
         return items
@@ -58,21 +61,19 @@ class AddAliquotsSubmitHandler(BrowserView):
             # Validation is complete, now set local variables from form inputs.
             aliquots = []
             j = 0
+            workflow_enabled = self.context.bika_setup.getSamplingWorkflowEnabled()
+            # import pdb;pdb.set_trace()
             for x in range(data['seq_start'], data['seq_start'] + data['count']):
-                obj = api.content.create(
-                    container=self.context,
-                    id=data['id_template'].format(id=x),
-                    title=data['title_template'].format(id=x),
-                    type='Aliquot',
-                    DateCreated=DateTime()
-                )
-
-                # obj.setAliquotType(data['aliquot_type_uid'])
-                obj.setBiospecimen(data['biospecimens'][j].UID())
-                self.context.manage_renameObject(obj.id, data['id_template'].format(id=x), )
+                aliquot = create_sample(self.context, self.request, data, j, x)
+                partition = create_samplepartition(aliquot, {'services': [], 'part_id': aliquot.getId() + "-P"})
+                if not workflow_enabled:
+                    doActionFor(aliquot, 'sample_due')
+                    doActionFor(partition, 'sample_due')
+                # aliquot.setLinkedSample(data['biospecimens'][j].UID())
+                aliquot.reindexObject()
                 if (x-data['seq_start']+1) % data['aliquot_count'] == 0 and (x-data['seq_start']+1) != 0:
                     j += 1
-                aliquots.append(obj)
+                aliquots.append(aliquot)
 
             # store the created biospecimens
             assign_items_to_storages(self.context, aliquots, data['storages'])
@@ -105,8 +106,8 @@ class AddAliquotsSubmitHandler(BrowserView):
             raise ValidationError(u'Kits range is required. Or project select has no kits!')
 
         biospecimens = objects_between_two_uids(self.context, uid_1, uid_2,
-                                                'Biospecimen', 'bika_biospecimen_workflow',
-                                                'bika_inactive_workflow', 'completed')
+                                                'Sample', 'bika_sample_workflow',
+                                                'bika_cancellation_workflow', 'sample_received')
 
         bio_count = len(biospecimens)
         aliquot_count = int(form.get('aliquot_count', None))
