@@ -8,6 +8,7 @@
 
     <include package=".browser.invoices" file="overrides.zcml" />
     <include package=".browser.client" file="overrides.zcml" />
+    <include package=".browser.biospecimen" file="overrides.zcml" />
 
     <unconfigure>
         <subscriber

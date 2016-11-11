@@ -1,0 +1,23 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:zcml="http://namespaces.zope.org/browser"
+           xmlns:fss="http://namespaces.zope.org/browser"
+           xmlns:browser="http://namespaces.zope.org/browser"
+           xmlns:five="http://namespaces.zope.org/five">
+
+    <browser:page
+      for="bika.lims.interfaces.ISample"
+      name="base_view"
+      class="bika.sanbi.browser.biospecimen.SampleView"
+      permission="bika.lims.ManageSamples"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="bika.lims.interfaces.ISample"
+      name="base_edit"
+      class="bika.sanbi.browser.biospecimen.SampleEdit"
+      permission="bika.lims.ManageSamples"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+</configure>

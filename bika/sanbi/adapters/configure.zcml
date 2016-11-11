@@ -15,5 +15,12 @@
         factory="bika.sanbi.adapters.sampletype.JSONReadExtender"
         provides="bika.lims.interfaces.IJSONReadExtender"
     />
+
+    <adapter
+      factory=".widgetvisibility.SampleFieldWidgetVisibility"
+      provides="bika.lims.interfaces.IATWidgetVisibility"
+      for="bika.lims.interfaces.ISample"
+      name="CustomFieldWV"
+    />
     
 </configure>
