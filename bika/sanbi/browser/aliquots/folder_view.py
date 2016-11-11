@@ -85,8 +85,8 @@ class AliquotsView(BikaListingView):
                     'sort_order': 'ascending'
                 },
                 'transitions': [
-                    {'id': 'cancel'},
-                    {'id': 'receive'}
+                    {'id': 'receive'},
+                    {'id': 'cancel'}
                 ],
                 'columns': [
                     'Title',
@@ -100,13 +100,16 @@ class AliquotsView(BikaListingView):
                 ]
             },
             {
-                'id': 'completed',
-                'title': _('Completed'),
+                'id': 'sample_due',
+                'title': _('Sample Due'),
                 'contentFilter': {
-                    'review_state': 'completed'
+                    'cancellation_state': 'sample_due',
+                    'sort_on': 'created',
+                    'sort_order': 'ascending'
                 },
                 'transitions': [
-                    {'id': 'deactivate'},
+                    {'id': 'receive'},
+                    {'id': 'cancel'}
                 ],
                 'columns': [
                     'Title',
@@ -115,17 +118,18 @@ class AliquotsView(BikaListingView):
                     'AliquotType',
                     'Volume',
                     'Unit',
+                    'state_title',
                     # 'Location'
                 ]
             },
             {
-                'id': 'inactive',
-                'title': _('Deactivated'),
+                'id': 'sample_received',
+                'title': _('Received'),
                 'contentFilter': {
-                    'inactive_state': 'inactive'
+                    'review_state': 'sample_received'
                 },
                 'transitions': [
-                    {'id': 'activate'},
+                    {'id': 'cancel'},
                 ],
                 'columns': [
                     'Title',
@@ -134,6 +138,27 @@ class AliquotsView(BikaListingView):
                     'AliquotType',
                     'Volume',
                     'Unit',
+                    'state_title',
+                    # 'Location'
+                ]
+            },
+            {
+                'id': 'cancelled',
+                'title': _('Cancelled'),
+                'contentFilter': {
+                    'cancellation_state': 'cancelled'
+                },
+                'transitions': [
+                    {'id': 'reinstate'},
+                ],
+                'columns': [
+                    'Title',
+                    'Project',
+                    'Biospecimen',
+                    'AliquotType',
+                    'Volume',
+                    'Unit',
+                    'state_title',
                     # 'Location'
                 ]
             },
@@ -179,7 +204,9 @@ class AliquotsView(BikaListingView):
             obj = items[x]['obj']
             if not IAliquot.providedBy(obj):
                 continue
-            items[x]['Biospecimen'] = obj.getLinkedSample().Title()
+            items[x]['replace']['Biospecimen'] = \
+                "<a href='%s'>%s</a>" % (obj.getField('LinkedSample').get(obj).absolute_url(),
+                                        obj.getField('LinkedSample').get(obj).Title())
             items[x]['AliquotType'] = obj.getSampleType() and obj.getSampleType().Title() or ''
             items[x]['Volume'] = items[x]['Volume'] = obj.getField('Volume').get(obj)
             items[x]['Unit'] = VOLUME_UNITS[0]['ResultText']
