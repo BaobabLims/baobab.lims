@@ -2,6 +2,7 @@ from Products.Archetypes.references import HoldingReference
 from archetypes.schemaextender.interfaces import IOrderableSchemaExtender
 from archetypes.schemaextender.interfaces import ISchemaModifier
 from zope.component import adapts
+from Products.CMFCore import permissions
 
 from bika.lims.fields import *
 from bika.lims.interfaces import ISample
@@ -11,9 +12,7 @@ from bika.sanbi import bikaMessageFactory as _
 from bika.sanbi.interfaces import IBioSpecimenStorage
 import sys
 
-from Products.Archetypes import atapi
 from bika.lims.content.sample import Sample as BaseSample
-from bika.lims.config import PROJECTNAME
 
 
 class ExtFixedPointField(ExtensionField, FixedPointField):
@@ -37,12 +36,12 @@ class SampleSchemaExtender(object):
                 visible={'view': 'invisible',
                          'edit': 'visible',
                          'header_table': 'visible',
-                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
-                         'scheduled_sampling': {'view': 'visible', 'edit': 'visible'},
-                         'sampled': {'view': 'visible', 'edit': 'visible'},
-                         'sample_received': {'view': 'visible', 'edit': 'visible'},
-                         'expired': {'view': 'visible', 'edit': 'visible'},
-                         'disposed': {'view': 'visible', 'edit': 'visible'},
+                         'sample_registered': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_due': {'view': 'visible', 'edit': 'invisible'},
+                         'sampled': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'invisible'},
+                         'expired': {'view': 'visible', 'edit': 'invisible'},
+                         'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
                 render_own_label = True,
             )
@@ -55,7 +54,16 @@ class SampleSchemaExtender(object):
                 label=_("Storage Location"),
                 description=_("Location where item is kept"),
                 size=40,
-                visible={'edit': 'visible', 'view': 'visible'},
+                visible={'edit': 'visible',
+                         'view': 'visible',
+                         'header_table': 'visible',
+                         'sample_registered': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_due': {'view': 'visible', 'edit': 'invisible'},
+                         'sampled': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'invisible'},
+                         'expired': {'view': 'visible', 'edit': 'invisible'},
+                         'disposed': {'view': 'visible', 'edit': 'invisible'},
+                         },
                 catalog_name='bika_setup_catalog',
                 showOn=True,
                 render_own_label=True,
@@ -77,13 +85,12 @@ class SampleSchemaExtender(object):
                 visible={'edit': 'visible',
                          'view': 'visible',
                          'header_table': 'visible',
-                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
-                         'to_be_sampled': {'view': 'visible', 'edit': 'invisible'},
-                         'scheduled_sampling': {'view': 'visible', 'edit': 'visible'},
-                         'sampled': {'view': 'visible', 'edit': 'visible'},
-                         'sample_received': {'view': 'visible', 'edit': 'visible'},
-                         'expired': {'view': 'visible', 'edit': 'visible'},
-                         'disposed': {'view': 'visible', 'edit': 'visible'},
+                         'sample_registered': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_due': {'view': 'visible', 'edit': 'invisible'},
+                         'sampled': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'invisible'},
+                         'expired': {'view': 'visible', 'edit': 'invisible'},
+                         'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
                 render_own_label=True,
             )
@@ -97,13 +104,12 @@ class SampleSchemaExtender(object):
                 visible={'edit': 'visible',
                          'view': 'visible',
                          'header_table': 'visible',
-                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
-                         'to_be_sampled': {'view': 'visible', 'edit': 'invisible'},
-                         'scheduled_sampling': {'view': 'visible', 'edit': 'visible'},
-                         'sampled': {'view': 'visible', 'edit': 'visible'},
-                         'sample_received': {'view': 'visible', 'edit': 'visible'},
-                         'expired': {'view': 'visible', 'edit': 'visible'},
-                         'disposed': {'view': 'visible', 'edit': 'visible'},
+                         'sample_registered': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_due': {'view': 'visible', 'edit': 'invisible'},
+                         'sampled': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'invisible'},
+                         'expired': {'view': 'visible', 'edit': 'invisible'},
+                         'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
                 render_own_label=True,
             )
@@ -120,12 +126,11 @@ class SampleSchemaExtender(object):
                          'view': 'visible',
                          'header_table': 'visible',
                          'sample_registered': {'view': 'visible', 'edit': 'visible'},
-                         'to_be_sampled': {'view': 'visible', 'edit': 'invisible'},
-                         'scheduled_sampling': {'view': 'visible', 'edit': 'visible'},
-                         'sampled': {'view': 'visible', 'edit': 'visible'},
-                         'sample_received': {'view': 'visible', 'edit': 'visible'},
-                         'expired': {'view': 'visible', 'edit': 'visible'},
-                         'disposed': {'view': 'visible', 'edit': 'visible'},
+                         'sample_due': {'view': 'visible', 'edit': 'invisible'},
+                         'sampled': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'invisible'},
+                         'expired': {'view': 'visible', 'edit': 'invisible'},
+                         'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
                 render_own_label=True,
             )
@@ -138,15 +143,39 @@ class SampleSchemaExtender(object):
                          'view': 'visible',
                          'header_table': 'visible',
                          'sample_registered': {'view': 'visible', 'edit': 'visible'},
-                         'to_be_sampled': {'view': 'visible', 'edit': 'invisible'},
-                         'scheduled_sampling': {'view': 'visible', 'edit': 'visible'},
-                         'sampled': {'view': 'visible', 'edit': 'visible'},
-                         'sample_received': {'view': 'visible', 'edit': 'visible'},
-                         'expired': {'view': 'visible', 'edit': 'visible'},
-                         'disposed': {'view': 'visible', 'edit': 'visible'},
+                         'sample_due': {'view': 'visible', 'edit': 'invisible'},
+                         'sampled': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'invisible'},
+                         'expired': {'view': 'visible', 'edit': 'invisible'},
+                         'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
                 render_own_label=True,
             )
+        ),
+        ExtReferenceField(
+            'LinkedSample',
+            vocabulary_display_path_bound=sys.maxsize,
+            multiValue=1,
+            allowed_types=('Sample',),
+            relationship='SampleSample',
+            referenceClass=HoldingReference,
+            mode="rw",
+            read_permission=permissions.View,
+            write_permission=permissions.ModifyPortalContent,
+            widget=ReferenceWidget(
+                label=_("Biospecimen"),
+                visible={'edit': 'visible',
+                         'view': 'visible',
+                         'header_table': 'visible',
+                         'sample_registered': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_due': {'view': 'visible', 'edit': 'invisible'},
+                         'sampled': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'invisible'},
+                         'expired': {'view': 'visible', 'edit': 'invisible'},
+                         'disposed': {'view': 'visible', 'edit': 'invisible'},
+                         },
+                render_own_label=True,
+            ),
         ),
     ]
 
@@ -175,4 +204,4 @@ class Sample(BaseSample):
     """
 
 # Overrides type bika.lims.content.sample
-atapi.registerType(Sample, PROJECTNAME)
+# atapi.registerType(Sample, PROJECTNAME)
