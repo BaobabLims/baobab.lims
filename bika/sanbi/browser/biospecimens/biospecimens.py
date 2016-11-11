@@ -103,8 +103,8 @@ class BiospecimensView(BikaListingView):
                     'sort_order': 'ascending'
                 },
                 'transitions': [
-                    {'id': 'cancel'},
-                    {'id': 'receive'}
+                    {'id': 'receive'},
+                    {'id': 'cancel'}
                 ],
                 'columns': [
                     'Title',
@@ -119,42 +119,18 @@ class BiospecimensView(BikaListingView):
                     # 'Location'
                 ]
             },
-
             {
-                'id': 'completed',
-                'title': _('Completed'),
+                'id': 'sample_due',
+                'title': _('Sample Due'),
                 'contentFilter': {
-                    'review_state': 'completed',
-                    'sort_on': 'created',
-                    'sort_order': 'reverse'
-                },
-                'transitions': [
-                    {'id': 'deactivate'}
-                ],
-                'columns': [
-                    'Title',
-                    'Project',
-                    'Kit',
-                    'Type',
-                    'SubjectID',
-                    'Barcode',
-                    'Volume',
-                    'Unit',
-                    'state_title',
-                    # 'Location'
-                ]
-            },
-
-            {
-                'id': 'inactive',
-                'title': _('Deactivated'),
-                'contentFilter': {
-                    'inactive_state': 'inactive',
+                    'review_state': 'sample_due',
+                    'cancellation_state': 'active',
                     'sort_on': 'created',
                     'sort_order': 'ascending'
                 },
                 'transitions': [
-                    {'id': 'activate'}
+                    {'id': 'receive'},
+                    {'id': 'cancel'}
                 ],
                 'columns': [
                     'Title',
@@ -165,6 +141,56 @@ class BiospecimensView(BikaListingView):
                     'Barcode',
                     'Volume',
                     'Unit',
+                    'state_title',
+                    # 'Location'
+                ]
+            },
+            {
+                'id': 'sample_received',
+                'title': _('Received'),
+                'contentFilter': {
+                    'review_state': 'sample_received',
+                    'sort_on': 'created',
+                    'sort_order': 'reverse'
+                },
+                'transitions': [
+                    {'id': 'cancel'}
+                ],
+                'columns': [
+                    'Title',
+                    'Project',
+                    'Kit',
+                    'Type',
+                    'SubjectID',
+                    'Barcode',
+                    'Volume',
+                    'Unit',
+                    'state_title',
+                    # 'Location'
+                ]
+            },
+
+            {
+                'id': 'cancelled',
+                'title': _('Cancelled'),
+                'contentFilter':{
+                    'cancellation_state': 'cancelled',
+                    'sort_order': 'reverse',
+                    'sort_on':'created'
+                },
+                'transitions': [
+                    {'id': 'reinstate'},
+                ],
+                'columns': [
+                    'Title',
+                    'Project',
+                    'Kit',
+                    'Type',
+                    'SubjectID',
+                    'Barcode',
+                    'Volume',
+                    'Unit',
+                    'state_title',
                     # 'Location'
                 ]
             },

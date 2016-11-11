@@ -109,6 +109,10 @@ def create_sample(context, request, values, j, x):
         sample.setDateReceived(values['datereceived'])
     else:
         sample.setDateReceived(DateTime())
+    if 'datesampling' in values:
+        sample.setSamplingDate(values['datesampling'])
+    else:
+        sample.setSamplingDate(DateTime())
     # Specifically set the storage location
     if 'StorageLocation' in values:
         sample.setStorageLocation(values['StorageLocation'])
@@ -117,7 +121,9 @@ def create_sample(context, request, values, j, x):
         field.set(sample, values['kits'][j].UID())
         alsoProvides(sample, IBiospecimen)
     if 'biospecimens' in values:
-        sample.setLinkedSample(values['biospecimens'][j].UID())
+        field = sample.getField('LinkedSample')
+        field.set(sample, values['biospecimens'][j].UID())
+        # sample.setLinkedSample(values['biospecimens'][j].UID())
         alsoProvides(sample, IAliquot)
     context.manage_renameObject(sample.id, values['id_template'].format(id=x), )
     # Perform the appropriate workflow action
