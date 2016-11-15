@@ -115,4 +115,8 @@ class Project(BaseFolder):
         items.insert(0, ('', _("None")))
         return DisplayList(list(items))
 
+    def getClient(self):
+        return self.aq_parent if self.aq_parent.portal_type == 'Client' \
+                              else ''
+
 registerType(Project, config.PROJECTNAME)
