@@ -7,6 +7,7 @@ from Products.CMFCore import permissions
 from bika.lims.fields import *
 from bika.lims.interfaces import ISample
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
+from bika.lims.browser.widgets import DateTimeWidget
 
 from bika.sanbi import bikaMessageFactory as _
 from bika.sanbi.interfaces import IBioSpecimenStorage
@@ -167,6 +168,28 @@ class SampleSchemaExtender(object):
                 visible={'edit': 'visible',
                          'view': 'visible',
                          'header_table': 'visible',
+                         'sample_registered': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_due': {'view': 'visible', 'edit': 'invisible'},
+                         'sampled': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'invisible'},
+                         'expired': {'view': 'visible', 'edit': 'invisible'},
+                         'disposed': {'view': 'visible', 'edit': 'invisible'},
+                         },
+                render_own_label=True,
+            ),
+        ),
+        ExtDateTimeField(
+            'DateCreated',
+            mode="rw",
+            read_permission=permissions.View,
+            write_permission=permissions.ModifyPortalContent,
+            widget=DateTimeWidget(
+                label=_("Date Created"),
+                description=_("Define when the sample has been created."),
+                show_time=True,
+                visible={'edit': 'visible',
+                         'view': 'visible',
+                         'header_table': 'invisible',
                          'sample_registered': {'view': 'visible', 'edit': 'invisible'},
                          'sample_due': {'view': 'visible', 'edit': 'invisible'},
                          'sampled': {'view': 'visible', 'edit': 'invisible'},
