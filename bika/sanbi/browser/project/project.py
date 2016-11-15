@@ -5,6 +5,7 @@ from AccessControl import getSecurityManager
 from DateTime import DateTime
 
 from bika.lims.browser import BrowserView
+from bika.lims.browser.client import ClientAnalysisRequestsView
 from bika.lims.controlpanel.bika_analysisservices import AnalysisServicesView
 from bika.lims.controlpanel.bika_sampletypes import SampleTypesView
 from bika.lims.utils import isActive
@@ -251,20 +252,36 @@ class InvoiceCreate(InvoiceFolderContentsView):
     #     super(InvoiceCreate, self).__call__()
 
 
-class ProjectAnalysisRequestsView(AnalysisRequestsView):
+class ProjectAnalysisRequestsView(ClientAnalysisRequestsView):
     """Show ARs in this project, and display a viewlet for creating
     ARs from samples located inside this project
     """
 
     def __init__(self, context, request):
-        super(ProjectAnalysisRequestsView, self).__init__(context, request)
+        ClientAnalysisRequestsView.__init__(self, context, request)
 
         self.catalog = "bika_catalog"
         path = '/'.join(self.context.getPhysicalPath())
         self.contentFilter = {'portal_type': 'AnalysisRequest',
                               'sort_on': 'created',
                               'sort_order': 'reverse',
-                              'path': {"query": path, "level": 0},
+                              # 'path': {"query": path, "level": 0},
                               'cancellation_state': 'active',
                               }
-        self.context_actions = {}
+        # self.context_actions = {}
+        ids = ['to_be_sampled', 'to_be_preserved', 'scheduled_sampling']
+        j = 0
+        for i in range(len(self.review_states)):
+            if i > len(self.review_states): break
+            if self.review_states[i-j]['id'] in ids:
+                self.review_states.pop(i-j)
+                j += 1
+
+    def folderitem(self, obj, item, index):
+        ClientAnalysisRequestsView.folderitem(self, obj, item, index)
+        field = obj.getField('Project')
+        project = field.get(obj)
+        if project == self.context:
+            return item
+
+        return None
