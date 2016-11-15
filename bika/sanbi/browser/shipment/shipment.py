@@ -31,7 +31,8 @@ class ShipmentView(BikaListingView):
         self.id = self.context.getId()
         self.title = self.context.Title()
         self.study_name = self.context.aq_parent.Title()
-        self.from_contact = self.context.getFromContact()
+        self.from_contact = self.context.getFromContact() and \
+                            self.context.getFromContact().Title() or ''
         self.to_contact = self.context.getToContact().Title()
         self.sender_address = self.context.getDeliveryAddress()
         self.courier_name = self.context.getCourier()
@@ -174,15 +175,14 @@ class PrintView(ShipmentView):
         self.sender_address = context.getDeliveryAddress()
         self.header_text = "{0} : {1}".format(context.aq_parent,
                                               context.aq_parent.getId())
-        self.from_contact = context.getFromContact()
+        self.from_contact = self.context.getFromContact() and \
+                            self.context.getFromContact().Title() or ''
         self.to_contact = context.getToContact().Title()
         self.study_name = context.aq_parent.Title()
         kits = context.getKits()
         kit_template = kits[0].getKitTemplate()
         self.kit_name = kit_template.Title()
         self.kit_quantity = len(kits)
-        # self.kit_assembled_date = kit.CreationDate()
-        # self.kit_expiration_date = self.ulocalized_time(kit.getExpiryDate())
 
         self.date_dispatched = self.ulocalized_time(context.getDateDispatched())
         self.courier_name = context.getCourier()
