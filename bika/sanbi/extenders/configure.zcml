@@ -37,6 +37,12 @@
       handler=".invoicebatch.ObjectModifiedEventHandler"
     />
 
+    <subscriber
+      for="bika.lims.interfaces.IAnalysisRequest
+           zope.lifecycleevent.interfaces.IObjectModifiedEvent"
+      handler=".analysisrequest.ObjectModifiedEventHandler"
+    />
+
     <browser:page
       for="bika.lims.interfaces.ISampleType"
       name="sampletype_analysesview"
