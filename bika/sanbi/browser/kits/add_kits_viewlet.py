@@ -148,6 +148,7 @@ class AddKitsSubmitHandler(BrowserView):
             # Remove from storage and liberate storage position
             location = item.getStorageLocation()
             item.setStorageLocation(None)
+            item.setDateOpened(DateTime())
             # liberate storage position
             if location.portal_type == 'StoragePosition':
                 self.portal_workflow.doActionFor(location, 'liberate')
