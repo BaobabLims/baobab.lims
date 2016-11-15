@@ -113,6 +113,12 @@ def create_sample(context, request, values, j, x):
         sample.setSamplingDate(values['datesampling'])
     else:
         sample.setSamplingDate(DateTime())
+    if 'datacreated' in values:
+        field = sample.getField('DateCreated')
+        field.set(sample, values['datecreated'])
+    else:
+        field = sample.getField('DateCreated')
+        field.set(sample, DateTime())
     # Specifically set the storage location
     if 'StorageLocation' in values:
         sample.setStorageLocation(values['StorageLocation'])
