@@ -18,9 +18,9 @@ from zope.interface import implements
 
 from bika.lims.interfaces import IATWidgetVisibility
 from bika.sanbi.interfaces import IAliquot, IBiospecimen
+from bika.sanbi import bikaMessageFactory as _
 
-
-class CustomFieldWidgetVisibility(object):
+class ARFieldWidgetVisibility(object):
     """Forces a set of AnalysisRequest fields to be invisible depending on
     some arbitrary condition.
     """
@@ -29,15 +29,32 @@ class CustomFieldWidgetVisibility(object):
     def __init__(self, context):
         self.context = context
         self.sort = 10
-        self.hidden_fields = ['AdHoc', 'Composite', 'InvoiceExclude']
+        self.hidden_fields = [
+            'AdHoc', 'Composite', 'InvoiceExclude',
+            'SamplingDate', 'SampleType', 'SamplePoint',
+            'StorageLocation', 'Batch', 'SamplingRound',
+            'SamplingDeviation', 'SampleCondition',
+            'Template', 'ClientReference', 'Profile',
+            'DefaultContainerType', 'ClientSampleID'
+        ]
         self.random = 4  # fair dice roll
 
     def __call__(self, context, mode, field, default):
         state = default if default else 'hidden'
         fieldName = field.getName()
-        if not self.context.getClient():
-            if fieldName in []:
+        client = self.context.getClient()
+        if not client.hasObject(self.context.getId()):
+            if fieldName == 'Sample':
+                field.widget.base_query = {
+                    'cancellation_state': 'active',
+                    'review_state': ['sample_received'],
+                    'path': {'query': '/'.join(self.context.aq_parent.getPhysicalPath()),
+                             'level': 0}
+                }
+            if fieldName in self.hidden_fields:
+                field.required = False
                 return 'invisible'
+
         return state
 
 class SampleFieldWidgetVisibility(object):
