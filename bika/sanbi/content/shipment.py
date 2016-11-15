@@ -10,6 +10,7 @@ from DateTime import DateTime
 
 from bika.lims.content.bikaschema import BikaSchema, BikaFolderSchema
 from bika.lims.browser.widgets import DateTimeWidget as bika_DateTimeWidget
+from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from bika.sanbi.interfaces import IShipment
 from bika.sanbi import bikaMessageFactory as _
 from bika.sanbi import config
@@ -19,19 +20,29 @@ import sys
 
 schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
 
-    #Temporary fields for data to be collected/obtained from the project
-    StringField(
+    ReferenceField(
         'FromContact',
-        searchable=True,
-        mode='rw',
         required=1,
-        widget=StringWidget(
+        vocabulary='get_project_client_contacts',
+        vocabulary_display_path_bound=sys.maxsize,
+        allowed_types=('LabContact',),
+        referenceClass=HoldingReference,
+        relationship='ShipmentLabContact',
+        mode="rw",
+        read_permission=permissions.View,
+        widget=bika_ReferenceWidget(
             label=_("From Contact"),
+            description=_("Laboratory contact sending this shipment."),
             size=30,
-            visible={'view': 'visible', 'edit': 'visible'},
-        )
+            base_query={'inactive_state': 'active'},
+            showOn=True,
+            popup_width='400px',
+            colModel=[{'columnName': 'UID', 'hidden': True},
+                      {'columnName': 'Fullname', 'width': '50', 'label': _('Name')},
+                      {'columnName': 'EmailAddress', 'width': '50', 'label': _('Email Address')},
+                      ],
+        ),
     ),
-
     ReferenceField(
         'ToContact',
         required=1,
@@ -44,8 +55,8 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
         read_permission=permissions.View,
         widget=SelectionWidget(
             format="select",
-            label=_("Contact"),
-            render_own_label=True,
+            label=_("To Contact"),
+            description=_("Client contact receiving this shipment."),
             size=30,
             base_query={'inactive_state': 'active'},
             showOn=True,
@@ -66,16 +77,6 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
         widget=TextAreaWidget(
             label=_("Delivery Address"),
             description=_("Indicate the client address to send the shipment to.")
-        ),
-    ),
-    TextField('ShippingAddress',
-        schemata='Correspondence',
-        searchable=True,
-        allowable_content_types = ('text/plain', ),
-        default_output_type="text/plain",
-        mode="rw",
-        widget=TextAreaWidget(
-            label=_("Shipping Address"),
         ),
     ),
     TextField('BillingAddress',
