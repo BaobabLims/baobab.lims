@@ -53,3 +53,8 @@ msgstr "Collect"
 #: ../profiles/default/workflows/bika_shipments_workflow/definition.xml
 msgid "process_transition_title"
 msgstr "Process"
+
+#. Default: "Liberate"
+#: ../profiles/default/workflows/bika_storage_workflow/definition.xml
+msgid "liberate_transition_title"
+msgstr "Liberate"

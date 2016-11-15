@@ -219,8 +219,6 @@ def ObjectModifiedEventHandler(instance, event):
                 kit_brains = instance.bika_catalog(query)
                 brains = [b for b in kit_brains if start < b.getObject().getDateCreated() < end]
                 invoicing = Invoicing(instance, project, service, brains)
-                print invoicing.client_uid
-                print '--------------'
                 invoicing.create_invoice()
             elif service == 'Storage':
                 bio_query = {
