@@ -160,6 +160,26 @@ class AddKitsSubmitHandler(BrowserView):
         # assign all stockitems to the Kit.
         kit.setStockItems(stockitems)
 
+    def update_qtty_products(self, kit):
+        """ Update the qtty of products after assigning stock items to
+        kit
+        """
+        template = kit.getKitTemplate()
+        stockitems = self.stockitems_for_template(template)
+        wf = getToolByName(self.context, 'portal_workflow')
+        products = []
+        for si in stockitems:
+            product = si.getProduct()
+            if not product in products:
+                products.append(product)
+        for product in products:
+            stockitems = self.context.getBackReferences("StockItemProduct")
+            qtty = 0
+            for si in stockitems:
+                if wf.getInfoFor(si, 'review_state') == 'available': qtty += 1
+            product.setQuantity(qtty)
+            product.reindexObject()
+
     def assign_kit_to_storage(self, kits, storages):
         """ assign position to created kits.
         """
@@ -205,6 +225,7 @@ class AddKitsSubmitHandler(BrowserView):
                 DateCreated=DateTime()
             )
             self.assign_stockitems_to_kit(obj)
+            self.update_qtty_products(obj)
             self.context.manage_renameObject(obj.id, id_template.format(id=x))
             kits.append(obj)
         # store kits
