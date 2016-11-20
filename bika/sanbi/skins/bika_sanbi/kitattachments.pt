@@ -16,7 +16,7 @@
             <dd class="collapsibleContent" style="margin-bottom:0;">
             <table class="attachments" style="margin-bottom:0;">
               <tr>
-                 <td tal:define="updateable python: review_state in ('pending', 'completed', 'stored')"
+                 <td tal:define="updateable python: review_state in ('generated', 'shipped', 'received')"
                     tal:condition="python:updateable and (update_attachments or add_attachments)">
                     <metal:block use-macro="here/kitattachments/macros/attachments_update"/>
                  </td>
@@ -55,7 +55,7 @@
 
         <div metal:define-macro="attachments_list"
          class="attachments_list"
-         tal:define="deleteable python:delete_attachments and review_state in  ['pending', 'completed','stored']">
+         tal:define="deleteable python:delete_attachments and review_state in  ['generated', 'shipped', 'received']">
          <metal:block tal:define="dummy python:request.RESPONSE.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, post-check=0, pre-check=0')" />
         <table class="invoice-items items">
             <tr>
