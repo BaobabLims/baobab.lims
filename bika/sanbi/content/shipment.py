@@ -1,6 +1,11 @@
 from AccessControl import ClassSecurityInfo
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.utils import formataddr
+from smtplib import SMTPServerDisconnected, SMTPRecipientsRefused
 from zope.interface import implements
 from Products.CMFCore import permissions
+from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.CMFCore.utils import getToolByName
 from Products.Archetypes.public import *
 from Products.Archetypes.references import HoldingReference
@@ -8,9 +13,11 @@ from plone.app.folder.folder import ATFolder
 from Products.ATContentTypes.content import schemata
 from DateTime import DateTime
 
+from bika.lims import logger
 from bika.lims.content.bikaschema import BikaSchema, BikaFolderSchema
 from bika.lims.browser.widgets import DateTimeWidget as bika_DateTimeWidget
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
+from bika.lims.utils import encode_header
 from bika.sanbi.interfaces import IShipment
 from bika.sanbi import bikaMessageFactory as _
 from bika.sanbi import config
@@ -256,8 +263,25 @@ class Shipment(ATFolder):
         """
         return self.objectValues('Multifile')
 
-    def workflow_script_dispatch_shipment(self):
+    def send_mail(self, sender, receiver, subject="", body=""):
+        """Send email from sender to receiver
         """
+        mime_msg = MIMEMultipart('related')
+        mime_msg['Subject'] = subject
+        mime_msg['From'] = sender
+        mime_msg['To'] = receiver
+        msg_txt = MIMEText(body, 'plain')
+        mime_msg.attach(msg_txt)
+        try:
+            host = getToolByName(self, 'MailHost')
+            host.send(mime_msg.as_string(), immediate=True)
+        except SMTPServerDisconnected as msg:
+            logger.warn("SMTPServerDisconnected: %s." % msg)
+        except SMTPRecipientsRefused as msg:
+            raise WorkflowException(str(msg))
+
+    def workflow_script_dispatch_shipment(self):
+        """executed after shipment state transition "dispatch"
         """
         # free positions kits occupy
         kits = self.getKits()
@@ -271,6 +295,35 @@ class Shipment(ATFolder):
         now = DateTime()
         self.setDateDispatched(now)
 
+
+    def workflow_script_receive_shipment(self):
+        """executed after shipment state transition to received
+        """
+        to_contact = self.getToContact()
+        from_contact = self.getFromContact()
+        client = to_contact.aq_parent
+        subject = "Shipment Received"
+        sender = formataddr((encode_header(client.getName()), to_contact.getEmailAddress()))
+        lab = self.bika_setup.laboratory
+        receiver = formataddr((lab.getName(), from_contact.getEmailAddress()))
+        body = "Automatic email:\n"
+        body += '\"%s\" sent to client \"%s\" has been received.' % (self.Title(), client.getName())
+        self.send_mail(sender, receiver, subject, body)
+
+
+    def workflow_script_collect(self):
+        """executed after shipment state transition to collect
+        """
+        to_contact = self.getToContact()
+        from_contact = self.getFromContact()
+        client = to_contact.aq_parent
+        subject = "Shipment ready for collection"
+        sender = formataddr((encode_header(client.getName()), to_contact.getEmailAddress()))
+        lab = self.bika_setup.laboratory
+        receiver = formataddr((lab.getName(), from_contact.getEmailAddress()))
+        body = "Automatic email:\n"
+        body += '\"%s\" sent to client \"%s\" ready for collection.' % (self.Title(), client.getName())
+        self.send_mail(sender, receiver, subject, body)
 
 schemata.finalizeATCTSchema(schema, folderish = True, moveDiscussion = False)
 
