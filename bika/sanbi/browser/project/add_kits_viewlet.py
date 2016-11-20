@@ -173,7 +173,7 @@ class AddKitsSubmitHandler(BrowserView):
             if not product in products:
                 products.append(product)
         for product in products:
-            stockitems = self.context.getBackReferences("StockItemProduct")
+            stockitems = product.getBackReferences("StockItemProduct")
             qtty = 0
             for si in stockitems:
                 if wf.getInfoFor(si, 'review_state') == 'available': qtty += 1
