@@ -32,6 +32,10 @@ class AddKitsSubmitHandler(BrowserView):
         self.context = context
         self.request = request
         self.form = request.form
+        self.uc = getToolByName(self.context, 'uid_catalog')
+        self.bsc = self.bika_setup_catalog
+        self.bc = self.bika_catalog
+        self.wf = self.portal_workflow
 
     def __call__(self):
         if "viewlet_submitted" in self.request.form:
@@ -39,24 +43,24 @@ class AddKitsSubmitHandler(BrowserView):
                 self.validate_form_inputs()
             except ValidationError as e:
                 self.form_error(e.message)
+                return
 
             self.context.setConstrainTypesMode(constraintypes.DISABLED)
+
             kits = self.create_kits()
 
             msg = u'%s kits assembled.' % len(kits)
             self.context.plone_utils.addPortalMessage(msg)
-            self.request.response.redirect(self.context.absolute_url())
+            self.request.response.redirect(self.context.absolute_url() + '/kits')
 
     def get_kit_storages(self):
         """Take a list of UIDs from the form, and resolve to a list of Storages.
         Accepts ManagedStorage, UnmanagedStorage, or StoragePosition UIDs.
         """
-        uc = getToolByName(self.context, 'uid_catalog')
-        wf = self.portal_workflow
         kit_storages = []
         form_uids = self.form['kit_storage_uids'].split(',')
         for uid in form_uids:
-            brain = uc(UID=uid)[0]
+            brain = self.bsc(UID=uid)[0]
             instance = brain.getObject()
             # last-minute check if this storage is available
             if IUnmanagedStorage.providedBy(instance) \
@@ -91,15 +95,15 @@ class AddKitsSubmitHandler(BrowserView):
         return count
 
     def get_si_storages(self):
-        """ return objects of the selected stock items storages
+        """ return storages which could store stock items
         """
-        uc = getToolByName(self.context, 'uid_catalog')
         si_storages = []
         for uid in self.form['si_storage_uids'].split(','):
-            brain = uc(UID=uid)
+            brain = self.bsc(UID=uid)
             if not brain:
-                raise ValidationError(u'Bad uid.  Should not happen.')
+                raise ValidationError(u'Bad uid. This should not happen.')
             si_storages.append(brain[0].getObject())
+
         return si_storages
 
     def filter_stockitems_by_storage_location(self, items):
@@ -115,29 +119,33 @@ class AddKitsSubmitHandler(BrowserView):
                 sis = storage.only_items_of_portal_type('StockItem')
                 stockitems += [si for si in sis if si in items]
 
-        # if si_storages:
-        #     return [item for item in items
-        #             if item.getStorageLocation() in si_storages]
-        # else:
-        #     return items
         return stockitems
+
+    def product_stockitems(self, uid):
+        """ stock items of a product uid
+        """
+        brains = self.bika_setup_catalog(
+            portal_type='StockItem',
+            getProductUID=uid,
+            review_state='available')
+        items = [b.getObject() for b in brains]
+
+        return items
 
     def stockitems_for_template(self, template):
         """ Return stockitems of kit template's products
         """
         stockitems = []
         for product in template.getProductList():
-            brains = self.bika_setup_catalog(
-                portal_type='StockItem',
-                getProductUID=product['product_uid'],
-                review_state='available')
-            items = [b.getObject() for b in brains]
+            items = self.product_stockitems(product['product_uid'])
             items = self.filter_stockitems_by_storage_location(items)
             quantity = int(product['quantity'])
             if len(items) < quantity:
-                raise ValidationError(
-                    u"There is insufficient stock available for the "
-                    u"product '%s'." % product['product'])
+                msg = u"There is insufficient stock available for the " \
+                    u"product '%s'." % product['product']
+                self.form_error(msg)
+                raise ValidationError(msg)
+
             stockitems += items[:quantity]
 
         return stockitems
@@ -165,36 +173,33 @@ class AddKitsSubmitHandler(BrowserView):
         kit
         """
         template = kit.getKitTemplate()
-        stockitems = self.stockitems_for_template(template)
-        wf = getToolByName(self.context, 'portal_workflow')
+        # stockitems = self.stockitems_for_template(template)
         products = []
-        for si in stockitems:
-            product = si.getProduct()
-            if not product in products:
-                products.append(product)
+        for item in template.getProductList():
+            product = self.bsc(UID=item['product_uid'])[0].getObject()
+            products.append(product)
         for product in products:
             stockitems = product.getBackReferences("StockItemProduct")
             qtty = 0
             for si in stockitems:
-                if wf.getInfoFor(si, 'review_state') == 'available': qtty += 1
+                if self.wf.getInfoFor(si, 'review_state') == 'available': qtty += 1
             product.setQuantity(qtty)
             product.reindexObject()
 
     def assign_kit_to_storage(self, kits, storages):
         """ assign position to created kits.
         """
-        wf = getToolByName(self.context, 'portal_workflow')
         for storage in storages:
             if IManagedStorage.providedBy(storage):
                 free_positions = storage.get_free_positions()
                 if len(kits) <= len(free_positions):
                     for i, kit in enumerate(kits):
                         kit.setStorageLocation(free_positions[i])
-                        wf.doActionFor(free_positions[i], 'occupy')
+                        self.wf.doActionFor(free_positions[i], 'occupy')
                 else:
                     for i, position in enumerate(free_positions):
                         kits[i].setStorageLocation(position)
-                        wf.doActionFor(position, 'occupy')
+                        self.wf.doActionFor(position, 'occupy')
                     kits = kits[len(free_positions):]
             elif IUnmanagedStorage.providedBy(storage):
                 # Case of unmanaged storage there is no limit in storage until
@@ -254,13 +259,18 @@ class AddKitsSubmitHandler(BrowserView):
 
         # verify ID sequence start
         if seq_start < 1:
-            raise ValidationError(u'Sequence Start may not be < 1')
+            raise ValidationError(u'Sequence Start should be > 0')
 
         # verify number of kits
         if kit_count < 1:
-            raise ValidationError(u'Kit count must not be < 1')
+            raise ValidationError(u'Kit count should be > 0')
 
-        # KIT storage destination is required field.
+        # Kit template required
+        kit_template_uid = self.form.get('KitTemplate_uid', None)
+        if not kit_template_uid:
+            raise ValidationError(u'Kit template field is required.')
+
+        # Kit storage destination is required field.
         kit_storage_uids = form.get('kit_storage_uids', '')
         if not kit_storage_uids:
             raise ValidationError(u'You must select the Storage where the kit '
@@ -280,14 +290,24 @@ class AddKitsSubmitHandler(BrowserView):
                 raise ValidationError(
                     u'The ID %s exists, cannot be created.' % check)
 
+        # Check there are enough stock items in stock to create the kits
+        kit_template = self.bsc(UID=kit_template_uid)[0].getObject()
+        for item in kit_template.getProductList():
+            items = self.product_stockitems(item['product_uid'])
+            items = self.filter_stockitems_by_storage_location(items)
+            if len(items) < int(item['quantity']) * kit_count:
+                raise ValidationError(
+                    u"There is insufficient stock available for " \
+                    u"product '%s'." % item['product'])
+
         kit_storages = self.get_kit_storages()
         if all([IManagedStorage.providedBy(storage) for storage in kit_storages]):
             nr_positions = self.count_storage_positions(kit_storages)
             if kit_count > nr_positions:
                 raise ValidationError(
-                    u"Not enough kit storage positions available.  Please select "
+                    u"Not enough kit storage positions available. Please select "
                     u"or create additional storages for kits.")
 
     def form_error(self, msg):
-        self.context.plone_utils.addPortalMessage(msg)
-        self.request.response.redirect(self.context.absolute_url())
+        self.context.plone_utils.addPortalMessage(msg, 'error')
+        self.request.response.redirect(self.context.absolute_url() + '/kits')
