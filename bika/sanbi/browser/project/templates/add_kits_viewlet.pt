@@ -191,7 +191,7 @@
                                    type="number"
                                    class="kit_count"
                                    tabindex="4"
-                                    tal:attributes="value python: request.get('kit_count', '1')"/>
+                                   tal:attributes="value python: context.getNumParticipants() - len(context.objectValues('Kit'))"/>
                         </td>
                     </tr>
                     <tr>
