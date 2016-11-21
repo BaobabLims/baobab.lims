@@ -14,16 +14,21 @@ class KitsView(BikaListingView):
     implements(IFolderContentsView, IViewView)
 
     def __init__(self, context, request):
-        super(KitsView, self).__init__(context, request)
+        BikaListingView.__init__(self, context, request)
         self.context = context
         self.request = request
         self.catalog = 'bika_catalog'
         request.set('disable_plone.rightcolumn', 1)
         self.contentFilter = {
             'portal_type': 'Kit',
-            'sort_on': 'created',
-            'sort_order': 'ascending'
+            'sort_on': 'sortable_title',
+            'sort_order': 'reverse'
         }
+        # Todo: I add these two line to set the sort and the order of kit listing because
+        # Todo: the values in self.contentFilter seems have no effect!
+        self.sort_on = 'sortable_title'
+        self.request.set('list_sort_order', 'reverse')
+
         self.context_actions = {}
         self.title = self.context.translate(_("Kits"))
         self.icon = self.portal_url + \
@@ -39,28 +44,29 @@ class KitsView(BikaListingView):
             self.request.set('disable_border', 1)
 
         self.columns = {
-            'Title': {'title': _('Kit Name'),
-                      'index': 'sortable_title'},
+            'Title': {'title': _('Kit Name')},
             'Project': {'title': _('Project'),
                             'toggle': True},
             'kitTemplate': {'title': _('Kit template'),
                             'toggle': True},
             'state_title': {'title': _('State'),
-                            'index': 'review_state'}
+                            'index': 'review_state'},
+            'sortable_title':{}
         }
 
         self.review_states = [
             {
                 'id': 'default',
                 'title': _('Active'),
-                'contentFilter': {'inactive_state': 'active',
-                               'sort_on': 'created',
-                               'sort_order': 'ascending'},
-                'transitions': [{'id': 'deactivate'},
-                                {'id': 'receive_kit'},
-                                {'id': 'process'},
-                                # {'id': 'ship'}
-                                ],
+                'contentFilter': {
+                    'inactive_state': 'active',
+                },
+                'transitions': [
+                    {'id': 'deactivate'},
+                    {'id': 'receive_kit'},
+                    {'id': 'process'},
+                    # {'id': 'ship'}
+                ],
                 'columns': [
                     'Title',
                     'Project',
@@ -71,11 +77,15 @@ class KitsView(BikaListingView):
             {
                 'id': 'shipped',
                 'title': _('Shipped'),
-                'contentFilter': {'review_state': 'shipped',
-                                  'sort_on': 'created',
-                                  'sort_order': 'ascending'},
-                'transitions': [{'id': 'deactivate'},
-                                {'id': 'receive_kit'}],
+                'contentFilter': {
+                    'review_state': 'shipped',
+                    'sort_on': 'sortable_title',
+                    'sort_order': 'reverse'
+                },
+                'transitions': [
+                    {'id': 'deactivate'},
+                    {'id': 'receive_kit'}
+                ],
                 'columns': [
                     'Title',
                     'Project',
@@ -86,11 +96,15 @@ class KitsView(BikaListingView):
             {
                 'id': 'received',
                 'title': _('Received'),
-                'contentFilter': {'review_state': 'received',
-                                  'sort_on': 'created',
-                                  'sort_order': 'ascending'},
-                'transitions': [{'id': 'deactivate'},
-                                {'id': 'process'}],
+                'contentFilter': {
+                    'review_state': 'received',
+                    'sort_on': 'sortable_title',
+                    'sort_order': 'reverse'
+                },
+                'transitions': [
+                    {'id': 'deactivate'},
+                    {'id': 'process'}
+                ],
                 'columns': [
                     'Title',
                     'Project',
@@ -101,9 +115,11 @@ class KitsView(BikaListingView):
             {
                 'id': 'processed',
                 'title': _('Processed'),
-                'contentFilter': {'review_state': 'processed',
-                                  'sort_on': 'created',
-                                  'sort_order': 'ascending'},
+                'contentFilter': {
+                    'review_state': 'processed',
+                    'sort_on': 'sortable_title',
+                    'sort_order': 'reverse'
+                },
                 'transitions': [{'id': 'deactivate'}],
                 'columns': [
                     'Title',
@@ -115,8 +131,10 @@ class KitsView(BikaListingView):
             {
                 'id': 'all',
                 'title': _('All'),
-                'contentFilter': {'sort_on': 'created',
-                                  'sort_order': 'ascending'},
+                'contentFilter': {
+                    'sort_on': 'sortable_title',
+                    'sort_order': 'reverse'
+                },
                 'columns': [
                     'Title',
                     'Project',
@@ -130,7 +148,7 @@ class KitsView(BikaListingView):
         if getSecurityManager().checkPermission(AddProject, self.context):
             self.show_select_row = True
             self.show_select_column = True
-        return super(KitsView, self).__call__()
+        return BikaListingView.__call__(self)
 
     def folderitems(self):
         items = super(KitsView, self).folderitems()
