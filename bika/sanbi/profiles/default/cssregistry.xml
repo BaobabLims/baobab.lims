@@ -2,6 +2,15 @@
 <object name="portal_css">
 
 <stylesheet
+    id="++resource++bika.sanbi.css/myfile.css"
+    expression="python:here.portal_type in [
+    'Shipment']"
+    media="screen"
+    rel="stylesheet"
+    rendering="link"
+    insert-before="*"/>
+
+<stylesheet
     id="++resource++bika.sanbi.css/hide_sanbi_contentmenu.css"
     expression="python:here.portal_type in [
     'Project',
