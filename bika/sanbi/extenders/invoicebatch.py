@@ -123,15 +123,19 @@ class Invoicing(InvoiceBatch):
             storage_pricing = self._pricing_dict_format(field.getAccessor(self.instance.bika_setup)())
             for brain in self.brains:
                 sample = brain.getObject()
-                days = int(end - sample.getDateCreated())
+                field = sample.getField('DateCreated')
+                days = int(end - field.get(sample))
                 storage_location = sample.getStorageLocation()
                 if storage_location and storage_location.portal_type == 'StoragePosition':
                     id = storage_location.getHierarchy().split('.')[0]
-                    unit_brains = self.instance.bika_setup_catalog(portal_type='StorageUnit', id=id)
-                    if unit_brains:
-                        storage_type = unit_brains[0].getObject().getUnitType()
-                        if storage_type:
-                            sub_total += float(storage_pricing[storage_type.UID()])
+                    hierarchy = storage_location.getHierarchy().split('.')
+                    for i in xrange(len(hierarchy)-2, -1, -1):
+                        unit_brains = self.instance.bika_setup_catalog(portal_type='StorageUnit', id=hierarchy[i])
+                        if unit_brains:
+                            storage_type = unit_brains[0].getObject().getUnitType()
+                            if storage_type:
+                                sub_total += float(storage_pricing[storage_type.UID()]) * days
+                                break
                     else:
                         continue
             vat = float(self.instance.bika_setup.getVAT())
@@ -151,6 +155,15 @@ class Invoicing(InvoiceBatch):
                                                   vat=vat, total=total)
                 invoice.invoice_lineitems.append(line_item)
 
+        elif self.service == 'AnalysisRequest':
+            for brain in self.brains:
+                ar = brain.getObject()
+                sub_total = ar.getSubtotal()
+                vat = ar.getVATAmount()
+                total = ar.getTotal()
+                line_item = self._create_lineitem(ar, self.service, sub_total=sub_total,
+                                                  vat=vat, total=total)
+                invoice.invoice_lineitems.append(line_item)
         invoice.reindexObject()
         return invoice
 
@@ -172,6 +185,14 @@ class Invoicing(InvoiceBatch):
             lineitem['OrderNumber'] = obj.getOrderNumber()
             lineitem['AnalysisRequest'] = ''
             lineitem['SupplyOrder'] = obj
+            description = get_invoice_item_description(obj)
+            lineitem['ItemDescription'] = description
+
+        elif service == 'AnalysisRequest':
+            lineitem['ItemDate'] = obj.getDatePublished()
+            lineitem['OrderNumber'] = obj.getRequestID()
+            lineitem['AnalysisRequest'] = obj
+            lineitem['SupplyOrder'] = ''
             description = get_invoice_item_description(obj)
             lineitem['ItemDescription'] = description
 
@@ -206,6 +227,7 @@ def ObjectModifiedEventHandler(instance, event):
         services = instance.Schema()['Services'].get(instance)
         field = instance.getField('Project')
         project = field.getAccessor(instance)()
+        client = project.aq_parent
         # field.getMutator(instance)('Storage')
 
         # Query for kits in date range
@@ -222,25 +244,22 @@ def ObjectModifiedEventHandler(instance, event):
                 invoicing.create_invoice()
             elif service == 'Storage':
                 bio_query = {
-                    'portal_type': 'Biospecimen',
-                    'inactive_state': 'active',
-                    'biospecimen_project_uid': project.UID()
+                    'portal_type': 'Sample',
+                    'cancellation_state': 'active',
+                    'path': {'query': '/'.join(project.getPhysicalPath()), 'depth': 1}
                 }
-                bio_brains = instance.bika_catalog(bio_query)
-                bio_brains = [b for b in bio_brains if b.getObject().getDateCreated() < end]
-
-                aliquot_query = {
-                    'portal_type': 'Biospecimen',
-                    'inactive_state': 'active',
-                    'aliquot_project_uid': project.UID()
-                }
-                aliquot_brains = instance.bika_catalog(aliquot_query)
-                aliquot_brains = [b for b in aliquot_brains if b.getObject().getDateCreated() < end]
-
-                brains = bio_brains + aliquot_brains
-
+                items = instance.bika_catalog(bio_query)
+                #brains = [b for b in brains if b.getObject().getDateCreated() < end]
+                brains = []
+                for item in items:
+                    obj = item.getObject()
+                    field = obj.getField('DateCreated')
+                    date_created = field.get(obj)
+                    if date_created < end:
+                        brains.append(item)
                 invoicing = Invoicing(instance, project, service, brains)
                 invoicing.create_invoice()
+
             elif service == 'LabProduct':
                 # Query for Orders in date range
                 query = {
@@ -252,7 +271,6 @@ def ObjectModifiedEventHandler(instance, event):
                     }
                 }
                 orders = instance.portal_catalog(query)
-
                 clients = {}
                 for p in orders:
                     obj = p.getObject()
@@ -268,3 +286,19 @@ def ObjectModifiedEventHandler(instance, event):
                     if project.getClient().UID() == client_uid:
                         invoicing = Invoicing(instance, project, service, brains)
                         invoicing.create_invoice()
+
+            elif service == 'AnalysisRequest':
+                query = {
+                    'portal_type': 'AnalysisRequest',
+                    'review_state': 'published',
+                    'getInvoiceExclude': False,
+                    'path': {'query': '/'.join(client.getPhysicalPath()), 'depth': 1}
+                }
+                items = instance.bika_catalog(query)
+                brains = []
+                for item in items:
+                    date_published = item.getObject().getDatePublished()
+                    if start <= date_published <= end:
+                        brains.append(item)
+                invoicing = Invoicing(instance, project, service, brains)
+                invoicing.create_invoice()
