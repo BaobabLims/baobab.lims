@@ -113,7 +113,7 @@ def create_sample(context, request, values, j, x):
         sample.setSamplingDate(values['datesampling'])
     else:
         sample.setSamplingDate(DateTime())
-    if 'datacreated' in values:
+    if 'datecreated' in values:
         field = sample.getField('DateCreated')
         field.set(sample, values['datecreated'])
     else:

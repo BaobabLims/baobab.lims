@@ -120,7 +120,7 @@
                             <div class="discreet">Select the service to invoice the client.</div>
                         </td>
                         <td>
-                            <select id="invoice_services" tabindex="3" name="invoice_services" size="5" multiple>
+                            <select id="invoice_services" tabindex="3" name="invoice_services" size="4" multiple>
                                 <tal:services tal:repeat="service python:view.invoice_services">
                                     <option tal:attributes="value python:service[0]"
                                             tal:content="python:service[1]"></option>
