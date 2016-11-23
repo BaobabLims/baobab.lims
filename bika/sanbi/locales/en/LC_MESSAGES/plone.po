@@ -58,3 +58,8 @@ msgstr "Process"
 #: ../profiles/default/workflows/bika_storage_workflow/definition.xml
 msgid "liberate_transition_title"
 msgstr "Liberate"
+
+#. Default: "Ship"
+#: ../profiles/default/workflows/bika_kit_assembly_workflow/definition.xml
+msgid "ship_transition_title"
+msgstr "Ship"
