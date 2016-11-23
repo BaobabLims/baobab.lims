@@ -4,4 +4,12 @@
            xmlns:browser="http://namespaces.zope.org/browser"
            xmlns:five="http://namespaces.zope.org/five">
 
+    <browser:page
+        for="bika.lims.interfaces.IAnalysisRequest"
+        name="ar_add"
+        class="bika.sanbi.browser.analysisrequest.add.AnalysisRequestAddView"
+        permission="bika.lims.ManageAnalysisRequests"
+        layer="bika.lims.interfaces.IBikaLIMS"
+   />
+
 </configure>
