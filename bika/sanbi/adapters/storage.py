@@ -8,11 +8,11 @@ def defaultStorageTypes(context):
     return [
         {'interface': IBioSpecimenStorage,
          'identifier': IBioSpecimenStorage.__identifier__,
-         'title': 'Bio Specimen'},
+         'title': 'Biospecimens'},
         {'interface': IAliquotStorage,
          'identifier': IAliquotStorage.__identifier__,
-         'title': 'Aliquot'},
+         'title': 'Aliquots'},
         {'interface': IKitStorage,
          'identifier': IKitStorage.__identifier__,
-         'title': 'Kit'}
+         'title': 'Kits'}
     ]

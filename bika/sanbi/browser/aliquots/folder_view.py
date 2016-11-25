@@ -22,9 +22,11 @@ class AliquotsView(BikaListingView):
         self.context = context
         self.request = request
         self.catalog = "bika_catalog"
-        self.contentFilter = {'portal_type': 'Sample',
-                              'sort_on': 'sortable_title'}
-
+        self.contentFilter = {
+            'portal_type': 'Sample',
+            'sort_on': 'sortable_title'
+        }
+        # self.sort_on = 'Title'
         self.context_actions = {}
         self.title = self.context.translate(_("Aliquots"))
         self.icon = self.portal_url + \
@@ -81,7 +83,6 @@ class AliquotsView(BikaListingView):
                 'title': _('Active'),
                 'contentFilter': {
                     'cancellation_state': 'active',
-                    'sort_on': 'created',
                     'sort_order': 'ascending'
                 },
                 'transitions': [
@@ -103,8 +104,7 @@ class AliquotsView(BikaListingView):
                 'id': 'sample_due',
                 'title': _('Sample Due'),
                 'contentFilter': {
-                    'cancellation_state': 'sample_due',
-                    'sort_on': 'created',
+                    'review_state': 'sample_due',
                     'sort_order': 'ascending'
                 },
                 'transitions': [
@@ -180,7 +180,7 @@ class AliquotsView(BikaListingView):
 
     def __call__(self):
         mtool = getToolByName(self.context, 'portal_membership')
-        if mtool.checkPermission(ManageAliquots, self.context):
+        if mtool.checkPermission(AddProject, self.context):
             stat = self.request.get("%s_review_state" % self.form_id, 'default')
             self.show_select_column = stat != 'all'
 
