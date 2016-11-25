@@ -99,7 +99,7 @@ class AddBiospecimensSubmitHandler(BrowserView):
 
                 msg = u'%s Biospecimens created.' % len(biospecimens)
                 self.context.plone_utils.addPortalMessage(msg)
-            self.request.response.redirect(self.context.absolute_url())
+            self.request.response.redirect(self.context.absolute_url() + '/biospecimens')
 
     def kits_between_limits(self, first_limit_uid, last_limit_uid):
         """Retrieve kits between the two limits
@@ -213,4 +213,4 @@ class AddBiospecimensSubmitHandler(BrowserView):
 
     def form_error(self, msg):
         self.context.plone_utils.addPortalMessage(msg)
-        self.request.response.redirect(self.context.absolute_url())
+        self.request.response.redirect(self.context.absolute_url() + '/biospecimens')

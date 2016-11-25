@@ -80,7 +80,7 @@ class AddAliquotsSubmitHandler(BrowserView):
 
             msg = u'%s Aliquots created.' % len(aliquots)
             self.context.plone_utils.addPortalMessage(msg)
-            self.request.response.redirect(self.context.absolute_url())
+            self.request.response.redirect(self.context.absolute_url() + '/aliquots')
 
     def validate_form_inputs(self):
         """Validate form inputs
@@ -145,4 +145,4 @@ class AddAliquotsSubmitHandler(BrowserView):
 
     def form_error(self, msg):
         self.context.plone_utils.addPortalMessage(msg)
-        self.request.response.redirect(self.context.absolute_url())
+        self.request.response.redirect(self.context.absolute_url() + '/aliquots')
