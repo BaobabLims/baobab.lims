@@ -17,7 +17,7 @@
     appId="bika.sanbi" category="bika" condition_expr=""
     icon_expr="string:++resource++bika.sanbi.images/biospectype.png"
     url_expr="string:$portal_url/bika_setup/bika_biospectypes"
-    visible="True"
+    visible="False"
     i18n:attributes="title">
   <permission>BIKA: Manage Bika</permission>
 </configlet>
