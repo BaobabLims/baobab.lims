@@ -63,7 +63,7 @@ class Kit_Templates(WorksheetImporter):
             kit_component = Kit_Components(self, self.workbook, self.dataset_project, self.dataset_name, template_name, catalog)
             product_list = kit_component.get_product_list()
             #category = self.get_object(catalog, 'ProductCategory', title=row.get('category'))
-            obj = _createObjectByType("KitTemplate", folder, tmpID())
+            obj = _createObjectByType('KitTemplate', folder, tmpID())
             obj.edit(
                 title=template_name,
                 ProductList=product_list,
@@ -71,5 +71,39 @@ class Kit_Templates(WorksheetImporter):
             )
             #obj.setCategory(category)
 
+            obj.unmarkCreationFlag()
+            renameAfterCreation(obj)
+
+class Product_Categories(WorksheetImporter):
+    """Add some dummy product categories
+    """
+    def Import(self):
+        folder = self.context.bika_setup.bika_productcategories
+        rows = self.get_rows(3)
+        for row in rows:
+            title = row.get('title')
+            description = row.get('description', '')
+            obj = _createObjectByType('ProductCategory', folder, tmpID())
+            obj.edit(
+                title=title,
+                description=description
+            )
+            obj.unmarkCreationFlag()
+            renameAfterCreation(obj)
+
+class Storage_Types(WorksheetImporter):
+    """Add some dummy product categories
+    """
+    def Import(self):
+        folder = self.context.bika_setup.bika_storagetypes
+        rows = self.get_rows(3)
+        for row in rows:
+            title = row.get('title')
+            description = row.get('description', '')
+            obj = _createObjectByType('StorageType', folder, tmpID())
+            obj.edit(
+                title=title,
+                description=description
+            )
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
