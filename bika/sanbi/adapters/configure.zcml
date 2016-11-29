@@ -29,5 +29,19 @@
       for="bika.lims.interfaces.ISample"
       name="CustomFieldWV"
     />
+
+    <adapter
+      factory=".widgetvisibility.PriceListWidgetVisibility"
+      provides="bika.lims.interfaces.IATWidgetVisibility"
+      for="bika.lims.interfaces.IPricelist"
+      name="PriceListFieldWV"
+    />
+
+    <adapter
+      factory=".widgetvisibility.ProductWidgetVisibility"
+      provides="bika.lims.interfaces.IATWidgetVisibility"
+      for="bika.lims.interfaces.IProduct"
+      name="ProductFieldWV"
+    />
     
 </configure>
