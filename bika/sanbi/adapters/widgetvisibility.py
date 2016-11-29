@@ -51,9 +51,9 @@ class ARFieldWidgetVisibility(object):
                     'path': {'query': '/'.join(self.context.aq_parent.getPhysicalPath()),
                              'level': 0}
                 }
-            if fieldName in self.hidden_fields:
-                field.required = False
-                return 'invisible'
+        if fieldName in self.hidden_fields:
+            field.required = False
+            return 'invisible'
 
         return state
 
@@ -85,6 +85,54 @@ class SampleFieldWidgetVisibility(object):
         state = default if default else 'hidden'
         field_name = field.getName()
         if field_name in self.hidden_fields and mode == 'header_table':
+            field.required = False
+            return 'invisible'
+
+        return state
+
+
+class PriceListWidgetVisibility(object):
+    """Forces a set of Sample fields to be invisible depending on
+    if context implement IBiospecimen or IAliquot
+    """
+    implements(IATWidgetVisibility)
+
+    def __init__(self, context):
+        self.context = context
+        self.sort = 10
+        self.hidden_fields = [
+            'BulkDiscount',
+            'BulkPrice'
+        ]
+        self.random = 4  # fair dice roll
+
+    def __call__(self, context, mode, field, default):
+        state = default if default else 'hidden'
+        fieldName = field.getName()
+        if fieldName in self.hidden_fields:
+            field.required = False
+            return 'invisible'
+
+        return state
+
+class ProductWidgetVisibility(object):
+    """Forces a set of Sample fields to be invisible depending on
+    if context implement IBiospecimen or IAliquot
+    """
+    implements(IATWidgetVisibility)
+
+    def __init__(self, context):
+        self.context = context
+        self.sort = 10
+        self.hidden_fields = [
+            'CAS', 'SupplierCatalogueID'
+        ]
+        self.random = 4  # fair dice roll
+
+    def __call__(self, context, mode, field, default):
+        state = default if default else 'hidden'
+        fieldName = field.getName()
+        if fieldName in self.hidden_fields:
             field.required = False
             return 'invisible'
 
