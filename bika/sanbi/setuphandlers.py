@@ -67,10 +67,6 @@ class BikaCustomGenerator:
         at.setCatalogsByType('Shipment', ['bika_catalog'])
         at.setCatalogsByType('Aliquot', ['bika_catalog'])
         at.setCatalogsByType('Biospecimen', ['bika_catalog'])
-        # addIndex(bc, 'kit_project_uid', 'FieldIndex')
-        # addIndex(bc, 'biospecimen_project_uid', 'FieldIndex')
-        # addIndex(bc, 'biospecimen_kit_uid', 'FieldIndex')
-        # addIndex(bc, 'aliquot_project_uid', 'FieldIndex')
 
         # _______________________________#
         #      BIKA_SETUP_CATALOG        #
@@ -87,7 +83,6 @@ class BikaCustomGenerator:
         at.setCatalogsByType('BiospecType', ['bika_setup_catalog', ])
         at.setCatalogsByType('Multimage', ['bika_setup_catalog', ])
         at.setCatalogsByType('StorageType', ['bika_setup_catalog', ])
-        # addIndex(bsc, 'getISID', 'FieldIndex')
 
         bac = getToolByName(portal, 'bika_analysis_catalog', None)
         if bsc is None:
@@ -181,7 +176,7 @@ def setupCustomVarious(context):
               'worksheets',
               'methods',
               'inventoryorders',
-              # 'invoices',
+              'supplyorders',
               'arimports', ]:
         obj = portal[x]
         obj.schema['excludeFromNav'].set(obj, True)
@@ -195,5 +190,6 @@ def setupCustomVarious(context):
                           'biospecimens',
                           'aliquots',
                           'analysisrequests',
-                          'supplyorders']):
+                          'pricelists',
+                          'invoices']):
         portal.moveObjectsToTop([item])
