@@ -11,15 +11,13 @@ from bika.lims.controlpanel.bika_sampletypes import SampleTypesView
 from bika.lims.utils import isActive
 from bika.lims.browser.invoicefolder import InvoiceFolderContentsView
 from bika.sanbi.browser.aliquots.folder_view import AliquotsView
+from bika.sanbi.browser.analysisrequest.analysisrequests import AnalysisRequestsView
 from bika.sanbi.browser.biospecimens.biospecimens import BiospecimensView
 from bika.sanbi.browser.kits.folder_view import KitsView
 from bika.sanbi.browser.shipments.folder_view import ShipmentsView
-from bika.sanbi.controlpanel.bika_biospectypes import BiospecTypesView
-from bika.sanbi.config import VOLUME_UNITS
 from bika.sanbi import bikaMessageFactory as _
 
-from bika.lims.browser.analysisrequest.analysisrequests \
-    import AnalysisRequestsView
+
 
 
 class ProjectAnalysisServicesView(AnalysisServicesView):
@@ -248,37 +246,18 @@ class InvoiceCreate(InvoiceFolderContentsView):
         for state in self.review_states:
             state['columns'].insert(state['columns'].index('start'), 'service')
 
-    # def __call__(self):
-    #     super(InvoiceCreate, self).__call__()
 
-
-class ProjectAnalysisRequestsView(ClientAnalysisRequestsView):
-    """Show ARs in this project, and display a viewlet for creating
-    ARs from samples located inside this project
+class ProjectAnalysisRequestsView(AnalysisRequestsView):
+    """Show ARs of this project.
     """
 
     def __init__(self, context, request):
-        ClientAnalysisRequestsView.__init__(self, context, request)
-
-        self.catalog = "bika_catalog"
-        path = '/'.join(self.context.getPhysicalPath())
-        self.contentFilter = {'portal_type': 'AnalysisRequest',
-                              'sort_on': 'created',
-                              'sort_order': 'reverse',
-                              # 'path': {"query": path, "level": 0},
-                              'cancellation_state': 'active',
-                              }
-        # self.context_actions = {}
-        ids = ['to_be_sampled', 'to_be_preserved', 'scheduled_sampling']
-        j = 0
-        for i in range(len(self.review_states)):
-            if i > len(self.review_states): break
-            if self.review_states[i-j]['id'] in ids:
-                self.review_states.pop(i-j)
-                j += 1
+        AnalysisRequestsView.__init__(self, context, request)
+        self.context = context
+        self.request = request
 
     def folderitem(self, obj, item, index):
-        ClientAnalysisRequestsView.folderitem(self, obj, item, index)
+        AnalysisRequestsView.folderitem(self, obj, item, index)
         field = obj.getField('Project')
         project = field.get(obj)
         if project == self.context:
