@@ -51,6 +51,9 @@ class KitTemplatesView(BikaListingView):
 
         self.columns = {
             'Title': {'title': _('Title')},
+            'Description': {'title': _('Description'),
+                            'index': 'description',
+                            'toggle': True}
         }
         self.review_states = [
             {'id': 'default',
@@ -60,6 +63,7 @@ class KitTemplatesView(BikaListingView):
              'transitions': [{'id':'deactivate'}, ],
              'columns': [
                  'Title',
+                 'Description'
              ]},
         ]
 
@@ -70,6 +74,7 @@ class KitTemplatesView(BikaListingView):
         for x in range(len(items)):
             if not items[x].has_key('obj'): continue
             obj = items[x]['obj']
+            items[x]['Description'] = obj.Description()
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                  (items[x]['url'], items[x]['Title'])
 
