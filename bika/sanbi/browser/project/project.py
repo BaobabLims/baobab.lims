@@ -1,17 +1,12 @@
-from Products.ATContentTypes.lib import constraintypes
-from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from AccessControl import getSecurityManager
-from DateTime import DateTime
 
 from bika.lims.browser import BrowserView
 from bika.lims.browser.client import ClientAnalysisRequestsView
 from bika.lims.controlpanel.bika_analysisservices import AnalysisServicesView
 from bika.lims.controlpanel.bika_sampletypes import SampleTypesView
-from bika.lims.utils import isActive
 from bika.lims.browser.invoicefolder import InvoiceFolderContentsView
 from bika.sanbi.browser.aliquots.folder_view import AliquotsView
-from bika.sanbi.browser.analysisrequest.analysisrequests import AnalysisRequestsView
+from bika.sanbi.browser.analysisrequest import hide_actions_and_columns
 from bika.sanbi.browser.biospecimens.biospecimens import BiospecimensView
 from bika.sanbi.browser.kits.folder_view import KitsView
 from bika.sanbi.browser.shipments.folder_view import ShipmentsView
@@ -247,17 +242,24 @@ class InvoiceCreate(InvoiceFolderContentsView):
             state['columns'].insert(state['columns'].index('start'), 'service')
 
 
-class ProjectAnalysisRequestsView(AnalysisRequestsView):
+class ProjectAnalysisRequestsView(ClientAnalysisRequestsView):
     """Show ARs of this project.
     """
 
     def __init__(self, context, request):
-        AnalysisRequestsView.__init__(self, context, request)
+        ClientAnalysisRequestsView.__init__(self, context, request)
         self.context = context
         self.request = request
+        self.contentFilter = {
+            'portal_type': 'AnalysisRequest',
+            'sort_on': 'created',
+            'sort_order': 'reverse',
+            'cancellation_state': 'active',
+        }
+        hide_actions_and_columns(self)
 
     def folderitem(self, obj, item, index):
-        AnalysisRequestsView.folderitem(self, obj, item, index)
+        ClientAnalysisRequestsView.folderitem(self, obj, item, index)
         field = obj.getField('Project')
         project = field.get(obj)
         if project == self.context:
