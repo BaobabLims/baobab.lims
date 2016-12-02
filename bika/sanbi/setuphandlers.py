@@ -104,6 +104,7 @@ class BikaCustomGenerator:
         mp(AddProject, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(ManageProjects, ['Manager', 'LabManager', 'Owner'], 1)
         mp(ManageShipments, ['Manager', 'LabManager', 'Owner', 'Member'], 1)
+        mp(AddKit, ['Manager', 'LabManager', 'Owner'], 1)
 
         # projects
         mp = portal.projects.manage_permission

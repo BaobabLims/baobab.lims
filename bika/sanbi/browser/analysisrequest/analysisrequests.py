@@ -1,5 +1,4 @@
 from bika.lims.browser.analysisrequest import AnalysisRequestsView as ARV
-from bika.lims.browser.client import ClientAnalysisRequestsView
 from bika.sanbi.browser.analysisrequest import hide_actions_and_columns
 
 

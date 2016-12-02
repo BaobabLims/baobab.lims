@@ -13,8 +13,6 @@ from bika.sanbi.browser.shipments.folder_view import ShipmentsView
 from bika.sanbi import bikaMessageFactory as _
 
 
-
-
 class ProjectAnalysisServicesView(AnalysisServicesView):
     def __init__(self, context, request, uids):
         self.uids = uids
