@@ -110,9 +110,11 @@ class Invoicing(InvoiceBatch):
             for brain in self.brains:
                 kit = brain.getObject()
                 kit_template = kit.getKitTemplate()
-                sub_total += float(kit_template.getPrice())
-                vat = float(kit_template.getVAT())
-            total = sub_total + (sub_total * vat / 100)
+                sub_total = float(kit_template.getSubtotal())
+                vat = float(kit_template.getVATAmount())
+                total = float(kit_template.getTotal())
+            sub_total *= len(self.brains)
+            total *= len(self.brains)
             message = 'Kit invoicing for the period {} to {}'
             line_item = self._create_lineitem(self.project, self.service, message, start, end,
                                               sub_total, vat, total)
@@ -121,6 +123,7 @@ class Invoicing(InvoiceBatch):
         elif self.service == 'Storage':
             field = self.instance.bika_setup.getField('StoragePricing')
             storage_pricing = self._pricing_dict_format(field.getAccessor(self.instance.bika_setup)())
+            if not storage_pricing: return
             for brain in self.brains:
                 sample = brain.getObject()
                 field = sample.getField('DateCreated')
@@ -170,10 +173,10 @@ class Invoicing(InvoiceBatch):
     security.declareProtected(ManageInvoices, '_create_lineitem')
 
     @staticmethod
-    def _create_lineitem(obj, service, message='', start='', end='', sub_total=0, vat=0, total=0):
+    def _create_lineitem(obj, service, message='', start='', end='', sub_total=0.0, vat=0.0, total=0.0):
         lineitem = InvoiceLineItem()
         if service in ('Kit', 'Storage'):
-            lineitem['ItemDate'] = obj.getDateCreated()
+            lineitem['ItemDate'] = start
             lineitem['OrderNumber'] = obj.getId()
             lineitem['AnalysisRequest'] = ''
             lineitem['SupplyOrder'] = ''
