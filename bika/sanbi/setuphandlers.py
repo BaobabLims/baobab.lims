@@ -101,25 +101,27 @@ class BikaCustomGenerator:
         mp(ViewBarcode, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(AddStorageType, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(AddKitTemplate, ['Manager', 'LabManager', 'LabClerk'], 1)
-        mp(AddProject, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(ManageProjects, ['Manager', 'LabManager', 'Owner'], 1)
         mp(ManageShipments, ['Manager', 'LabManager', 'Owner', 'Member'], 1)
-        mp(AddKit, ['Manager', 'LabManager', 'Owner'], 1)
+        mp(ManageKits, ['Manager', 'LabManager', 'LabClerk'], 1)
+        mp(ManageAliquots, ['Manager', 'LabManager', 'LabClerk'], 1)
+        mp(AddProject, ['Manager', 'LabManager', 'LabClerk'], 1)
+        mp(AddKit, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(AddShipment, ['Manager', 'LabManager', 'LabClerk'], 1)
 
         # projects
         mp = portal.projects.manage_permission
-        mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'Member', 'LabClerk', 'Analyst', 'Sampler', 'Preserver', 'SamplingCoordinator'], 0)
-        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Member', 'Analyst', 'Sampler', 'Preserver', 'SamplingCoordinator', 'SamplingCoordinator'], 0)
-        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'LabClerk', 'Owner'], 0)
-        mp('Access contents information', ['Manager', 'LabManager', 'Member', 'LabClerk', 'Analyst', 'Sampler', 'Preserver', 'Owner', 'SamplingCoordinator'], 0)
-        mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'LabClerk', 'Owner'], 0)
+        mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'Member', 'LabClerk', 'Analyst'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Member', 'Analyst'], 0)
+        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'LabClerk'], 0)
+        mp('Access contents information', ['Manager', 'LabManager', 'Member', 'LabClerk', 'Analyst'], 0)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'LabClerk'], 0)
         portal.projects.reindexObject()
 
         # kits
         mp = portal.kits.manage_permission
-        mp(AddKit, ['Manager', 'LabManager', 'Owner'], 0)
-        mp(ManageKits, ['Manager', 'LabManager', 'Owner'], 0)
+        mp(AddKit, ['Manager', 'LabManager', 'LabClerk'], 0)
+        mp(ManageKits, ['Manager', 'LabManager', 'LabClerk'], 0)
         mp(permissions.ListFolderContents, ['Manager', 'LabClerk'], 0)
         mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'LabClerk', 'Owner'], 0)
         mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'Owner', 'LabClerk'], 0)
@@ -139,7 +141,7 @@ class BikaCustomGenerator:
 
         # Biospecimens
         mp = portal.biospecimens.manage_permission
-        mp(ManageAliquots, ['Manager', 'LabManager', 'Owner'], 0)
+        mp(ManageAliquots, ['Manager', 'LabManager', 'LabClerk'], 0)
         mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
         mp(permissions.ListFolderContents, ['LabClerk', ''], 0)
         mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'Owner', 'LabClerk'], 0)
@@ -149,7 +151,7 @@ class BikaCustomGenerator:
 
         # Aliquots
         mp = portal.aliquots.manage_permission
-        mp(ManageAliquots, ['Manager', 'LabManager', 'Owner'], 0)
+        mp(ManageAliquots, ['Manager', 'LabManager', 'LabClerk'], 0)
         mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
         mp(permissions.ListFolderContents, ['LabClerk', ''], 0)
         mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'Owner', 'LabClerk'], 0)
