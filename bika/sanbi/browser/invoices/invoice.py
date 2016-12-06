@@ -38,14 +38,10 @@ class AddInvoiceSubmitHandler(BrowserView):
             except ValidationError as e:
                 self.form_error(e.message)
                 return
-            # services = ', '.join(data['services'])
 
             from Products.CMFPlone.utils import _createObjectByType
             from bika.lims.utils import tmpID
             instance = _createObjectByType('InvoiceBatch', self.context, tmpID(), title=data['title'])
-            # print "after create"
-            # import pdb
-            # pdb.set_trace()
             instance.unmarkCreationFlag()
             instance.edit(
                 Project=data['project_uid'],
@@ -53,10 +49,6 @@ class AddInvoiceSubmitHandler(BrowserView):
                 BatchStartDate=data['start_date'],
                 BatchEndDate=data['end_date']
             )
-
-            # print "after edit"
-            # import pdb
-            # pdb.set_trace()
             renameAfterCreation(instance)
             instance.processForm()
             msg = u'Invoice for period "%s" to "%s" created.' % (data['start_date'], data['end_date'])
