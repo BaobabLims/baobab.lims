@@ -20,7 +20,6 @@ class AddBiospecimensViewlet(ViewletBase):
         items = []
         w_tool = getToolByName(self.context, 'portal_workflow')
         kits = self.context.objectValues('Kit')
-        # import pdb;pdb.set_trace()
         for kit in kits:
             st1 = w_tool.getStatusOf("bika_kit_assembly_workflow", kit)
             st2 = w_tool.getStatusOf("bika_inactive_workflow", kit)

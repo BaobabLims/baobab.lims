@@ -62,7 +62,6 @@ class AddAliquotsSubmitHandler(BrowserView):
             aliquots = []
             j = 0
             workflow_enabled = self.context.bika_setup.getSamplingWorkflowEnabled()
-            # import pdb;pdb.set_trace()
             for x in range(data['seq_start'], data['seq_start'] + data['count']):
                 aliquot = create_sample(self.context, self.request, data, j, x)
                 partition = create_samplepartition(aliquot, {'services': [], 'part_id': aliquot.getId() + "-P"})

@@ -246,7 +246,6 @@ class Shipment(ATFolder):
         """ get the UID of the contact associated with the authenticated
             user
         """
-        # import pdb;pdb.set_trace()
         client = self.aq_parent.aq_parent
         pc = getToolByName(self, 'portal_catalog')
         brains = pc(portal_type='Contact', path={'query': "/".join(client.getPhysicalPath()), 'level': 0})
