@@ -17,6 +17,7 @@ function ComputeKitTemplatePrice() {
             var productUIDs = [];
             var productQuantities = [];
             var inputs = $(".ArchetypesRecordsWidget [combogrid_options]");
+            var j = 0;
             for (var i = 0; i < inputs.length; i++) {
                 var id = $(inputs[i])[0].id;
                 var eType = id.split('-')[1];
@@ -31,8 +32,9 @@ function ComputeKitTemplatePrice() {
                     case 'product':
                         if($(inputs[i]).val()){
                             // productTitles.push($(inputs[i]).val());
-                            productUIDs.push($('#ProductList-product_uid-' + i).val());
+                            productUIDs.push($('#ProductList-product_uid-' + j).val());
                         }
+                        j++;
                         break;
                 }
             }
