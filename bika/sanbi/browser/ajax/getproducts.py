@@ -67,12 +67,11 @@ class ComputeTotalPrice(BrowserView):
         ret = []
         if 'uids[]' in self.request.form:
             uids = self.request.form['uids[]']
-            catalog = 'uid_catalog'
+            catalog = 'bika_setup_catalog'
             uc = getToolByName(self.context, catalog)
-            brains = uc.searchResults(UID=uids)
-
-            for brain in brains:
-                product = brain.getObject()
+            for uid in uids:
+                brains = uc.searchResults(UID=uid)
+                product = brains[0].getObject()
                 ret.append({'title': product.Title(), 'price': product.getPrice()})
 
         return json.dumps(ret)
