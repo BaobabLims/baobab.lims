@@ -301,7 +301,9 @@ def ObjectModifiedEventHandler(instance, event):
                 brains = []
                 for item in items:
                     date_published = item.getObject().getDatePublished()
-                    if isinstance(date_published, unicode):
+                    if isinstance(date_published, unicode) and \
+                            isinstance(start, DateTime) and \
+                            isinstance(end, DateTime):
                         start =  start.strftime('%Y-%m-%d %H:%M %p')
                         end =  end.strftime('%Y-%m-%d %H:%M %p')
                     if start <= date_published <= end:
