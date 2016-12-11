@@ -301,11 +301,11 @@ def ObjectModifiedEventHandler(instance, event):
                 brains = []
                 for item in items:
                     date_published = item.getObject().getDatePublished()
-                    if isinstance(date_published, unicode) and \
-                            isinstance(start, DateTime) and \
-                            isinstance(end, DateTime):
-                        start =  start.strftime('%Y-%m-%d %H:%M %p')
-                        end =  end.strftime('%Y-%m-%d %H:%M %p')
+                    if isinstance(date_published, unicode):
+                        if isinstance(start, DateTime):
+                            start =  start.strftime('%Y-%m-%d %H:%M %p')
+                        if isinstance(end, DateTime):
+                            end =  end.strftime('%Y-%m-%d %H:%M %p')
                     if start <= date_published <= end:
                         brains.append(item)
                 invoicing = Invoicing(instance, project, service, brains)
