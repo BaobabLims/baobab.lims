@@ -17,7 +17,6 @@ class SampleTypeSchemaExtender(object):
         ExtReferenceField(
             'Service',
             schemata='Analyses',
-            required=1,
             multiValued=1,
             allowed_types=('AnalysisService',),
             relationship='SampleTypeAnalysisService',
