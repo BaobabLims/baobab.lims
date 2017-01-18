@@ -5,7 +5,7 @@
 
   <genericsetup:registerProfile
       name="default"
-      title="Bika Biobank LIMS"
+      title="Baobab LIMS"
       directory="profiles/default"
       description='SANBI extension profile for Bika LIMS'
       provides="Products.GenericSetup.interfaces.EXTENSION"/>
