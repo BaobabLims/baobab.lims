@@ -72,3 +72,23 @@ class FrontPageView(BrowserView):
         """
         return ploneapi.user.is_anonymous()
 
+    def get_user_roles(self):
+        """Returns a list of roles for the current user
+        """
+        if self.is_anonymous_user():
+            return []
+        current_user = ploneapi.user.get_current()
+        return ploneapi.user.get_roles(user=current_user)
+
+    def set_versions(self):
+        """Configure a list of product versions from portal.quickinstaller
+        """
+        self.versions = {}
+        self.upgrades = {}
+        qi = ploneapi.portal.get_tool("portal_quickinstaller")
+        for key in qi.keys():
+            info = qi.upgradeInfo('bika.lims')
+            self.versions[key] = qi.getProductVersion(key)
+            info = qi.upgradeInfo(key)
+            if info and 'installedVersion' in info:
+                self.upgrades[key] = info['installedVersion']
