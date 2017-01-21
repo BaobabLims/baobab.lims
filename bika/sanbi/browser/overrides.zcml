@@ -18,4 +18,20 @@
         />
     </unconfigure>
 
+    <browser:page
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        name="bika-frontpage"
+        class="bika.sanbi.browser.bika-frontpage.FrontPageView"
+        permission="zope2.View"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:menuItem
+        for="Products.CMFCore.interfaces.ISiteRoot"
+        menu="plone_displayviews"
+        title="Baobab LIMS front-page"
+        action="bika-frontpage"
+        description="Baobab LIMS front-page"
+    />
+
 </configure>
