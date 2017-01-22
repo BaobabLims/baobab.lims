@@ -1,6 +1,3 @@
 Baobab LIMS
 ===========
-
-The meaning of Baobab
----------------------
-Is the common name for each of the nine species of tree in the genus Adansonia
+An open source LIMS for human Biobanks. *Baobab* is a common name given to nine tree species from different countries in world, mostly in Africa.  
