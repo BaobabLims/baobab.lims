@@ -5,4 +5,8 @@ Baobab LIMS written in Plone, a python framework known for its robustness, and i
 
 Installation
 ------------
-* `Installing Baobab LIMS <https://github.com/hocinebendou/baobab.lims/wiki/Installation>`_
+
+* Installing Baobab LIMS <https://github.com/hocinebendou/baobab.lims/wiki/Installation>
+
+Documentation
+-------------
