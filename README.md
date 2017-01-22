@@ -1,3 +1,3 @@
-Bika SANBI customisations
-=========================
+Baoban LIMS
+===========
 
