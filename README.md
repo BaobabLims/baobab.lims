@@ -10,3 +10,12 @@ Installation
 
 Documentation
 -------------
+
+* User manual <https://b3abiobank.sanbi.ac.za/demo/manual.pdf>
+* Github Wiki <https://github.com/hocinebendou/baobab.lims/wiki>
+
+Feedback and Support
+--------------------
+
+* Sanbi Team on Slack <https://sanbi.slack.com/>
+* Issue Tracker: http://jira.bikalabs.com/ <http://jira.bikalabs.com>
