@@ -31,10 +31,21 @@ def initialize(context):
     from content.aliquot import Aliquot
     from content.aliquots import Aliquots
     from content.biospecimens import Biospecimens
+    from content.inventoryorder import InventoryOrder
+    from content.inventoryorderfolder import InventoryOrderFolder
+    from content.product import Product
+    from content.stockitem import StockItem
+    from content.storageunit import StorageUnit
+    from content.storageunits import StorageUnits
+    from content.managedstorage import ManagedStorage
+    from content.unmanagedstorage import UnmanagedStorage
+    from content.storageposition import StoragePosition
 
     from controlpanel.bika_kittemplates import KitTemplates
     from controlpanel.bika_biospectypes import BiospecTypes
     from controlpanel.bika_storagetypes import StorageTypes
+    from controlpanel.bika_products import Products
+    from controlpanel.bika_stockitems import StockItems
 
     content_types, constructors, ftis = process_types(
         listTypes(PROJECTNAME),

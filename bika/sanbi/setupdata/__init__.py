@@ -74,22 +74,6 @@ class Kit_Templates(WorksheetImporter):
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
 
-class Product_Categories(WorksheetImporter):
-    """Add some dummy product categories
-    """
-    def Import(self):
-        folder = self.context.bika_setup.bika_productcategories
-        rows = self.get_rows(3)
-        for row in rows:
-            title = row.get('title')
-            description = row.get('description', '')
-            obj = _createObjectByType('ProductCategory', folder, tmpID())
-            obj.edit(
-                title=title,
-                description=description
-            )
-            obj.unmarkCreationFlag()
-            renameAfterCreation(obj)
 
 class Storage_Types(WorksheetImporter):
     """Add some dummy product categories

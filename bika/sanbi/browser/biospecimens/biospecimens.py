@@ -3,14 +3,15 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone.app.content.browser.interfaces import IFolderContentsView
 from plone.app.layout.globals.interfaces import IViewView
 from zope.interface.declarations import implements
+from AccessControl import getSecurityManager
 
 from bika.lims.browser.bika_listing import BikaListingView
-from bika.sanbi import bikaMessageFactory as _
 from bika.lims.utils import isActive
-from AccessControl import getSecurityManager
+from bika.lims.interfaces import ISample
+
 from bika.sanbi.config import VOLUME_UNITS
-from bika.sanbi.interfaces import IBiospecimen, IAliquot
 from bika.sanbi.permissions import ManageAliquots, AddProject
+from bika.sanbi import bikaMessageFactory as _
 
 
 class BiospecimensView(BikaListingView):
@@ -28,7 +29,9 @@ class BiospecimensView(BikaListingView):
             'sort_on': 'created',
             'sort_order': 'ascending'
         }
-        self.context_actions = {}
+        self.context_actions = {_('Add'):
+                                {'url': 'createObject?type_name=Sample',
+                                'icon': '++resource++bika.lims.images/add.png'}}
         self.title = self.context.translate(_("Biospecimens"))
         self.icon = self.portal_url + \
                     "/++resource++bika.sanbi.images/biospecimen_big.png"
@@ -104,6 +107,7 @@ class BiospecimensView(BikaListingView):
                 },
                 'transitions': [
                     {'id': 'receive'},
+                    {'id': 'sample_due'},
                     {'id': 'cancel'}
                 ],
                 'columns': [
@@ -115,6 +119,30 @@ class BiospecimensView(BikaListingView):
                     'Barcode',
                     'Volume',
                     'Unit',
+                    'state_title',
+                    # 'Location'
+                ]
+            },
+
+            {
+                'id': 'sample_registered',
+                'title': _('Sample Registered'),
+                'contentFilter': {
+                    'review_state': 'sample_registered',
+                    'cancellation_state': 'active',
+                    'sort_on': 'created',
+                    'sort_order': 'ascending'
+                },
+                'transitions': [
+                    {'id': 'sample_due'},
+                    {'id': 'cancel'}
+                ],
+                'columns': [
+                    'Title',
+                    'Project',
+                    'Kit',
+                    'Type',
+                    'Barcode',
                     'state_title',
                     # 'Location'
                 ]
@@ -239,30 +267,41 @@ class BiospecimensView(BikaListingView):
             if not items[x].has_key('obj'):
                 continue
             obj = items[x]['obj']
-            if not IBiospecimen.providedBy(obj):
+            if not ISample.providedBy(obj):
                 continue
             items[x]['Type'] = obj.getSampleType() and obj.getSampleType().Title() or ''
             items[x]['Volume'] = obj.getField('Volume').get(obj)
             items[x]['Unit'] = VOLUME_UNITS[0]['ResultText']
             items[x]['SubjectID'] = obj.getField('SubjectID').get(obj)
             kit = obj.getField('Kit').get(obj)
+            project = obj.getField('Project').get(obj)
             items[x]['Kit'] = kit
-            items[x]['Project'] = obj.aq_parent
+            items[x]['Project'] = project
+            if project:
+                items[x]['replace']['Project'] = \
+                    '<a href="%s">%s</a>' % (project.absolute_url(),
+                                             project.Title())
             if kit:
                 items[x]['replace']['Kit'] = \
                     '<a href="%s">%s</a>' % (kit.absolute_url(), kit.Title())
-                items[x]['replace']['Project'] = \
-                    '<a href="%s">%s</a>' % (kit.aq_parent.absolute_url(),
-                                             kit.aq_parent.Title())
+
+                # TODO: IF STATUS IS RECEIVED EXECUTE THIS
+                # items[x]['replace']['Type'] = \
+                #     '<a href="%s">%s</a>' % (obj.getSampleType().absolute_url(),
+                #                              obj.getSampleType().Title())
             items[x]['Barcode'] = obj.getField('Barcode').get(obj)
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                            (items[x]['url'], items[x]['Title'])
             # TODO: SPECIFY OBJ STATES WHERE USER CAN EDIT BARCODE
             if self.allow_edit and isActive(self.context) and \
-                    getSecurityManager().checkPermission(ManageAliquots, obj) and \
-                            items[x]['review_state'] == "sample_due":
-                items[x]['allow_edit'] = ['Type', 'SubjectID', 'Barcode', 'Volume', 'Unit']
-                items[x]['choices']['Type'] = biospecimen_types
-                items[x]['choices']['Unit'] = VOLUME_UNITS
+                    getSecurityManager().checkPermission(ManageAliquots, obj):
+                if items[x]['review_state'] == "sample_registered":
+                    items[x]['allow_edit'] = ['Type', 'Barcode']
+                    items[x]['choices']['Type'] = biospecimen_types
+                elif items[x]['review_state'] == "sample_due":
+                    items[x]['allow_edit'] = ['SubjectID', 'Volume', 'Unit']
+
+                    if not items[x]['Unit']:
+                        items[x]['choices']['Unit'] = VOLUME_UNITS
             ret.append(item)
         return ret

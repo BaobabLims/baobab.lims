@@ -5,10 +5,10 @@
     i18n_domain="bika">
 
     <adapter
-            for="*"
-            provides="bika.lims.interfaces.IStorageTypeRegistration"
-            name="bika.sanbi.storagetypes"
-            factory="bika.sanbi.adapters.storage.defaultStorageTypes"
+        for="*"
+        provides="bika.sanbi.interfaces.IStorageTypeRegistration"
+        name="bika.sanbi.storagetypes"
+        factory="bika.sanbi.adapters.storage.defaultStorageTypes"
     />
 
     <adapter
@@ -17,10 +17,10 @@
     />
 
     <adapter
-      factory=".widgetvisibility.ARFieldWidgetVisibility"
-      provides="bika.lims.interfaces.IATWidgetVisibility"
-      for="bika.lims.interfaces.IAnalysisRequest"
-      name="ARFieldWV"
+        factory=".widgetvisibility.ARFieldWidgetVisibility"
+        provides="bika.lims.interfaces.IATWidgetVisibility"
+        for="bika.lims.interfaces.IAnalysisRequest"
+        name="ARFieldWV"
     />
 
     <adapter
@@ -40,7 +40,7 @@
     <adapter
       factory=".widgetvisibility.ProductWidgetVisibility"
       provides="bika.lims.interfaces.IATWidgetVisibility"
-      for="bika.lims.interfaces.IProduct"
+      for="bika.sanbi.interfaces.IProduct"
       name="ProductFieldWV"
     />
     

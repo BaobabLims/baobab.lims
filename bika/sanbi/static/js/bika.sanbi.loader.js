@@ -17,12 +17,16 @@ window.bika.sanbi.controllers =  {
         ['CustomAnalysisRequestAddView'],
     "#kit-printview-wrapper":
         ['KitPrintView'],
-    ".template-base_edit #storagemanage_edit":
-        ['CustomStorageManageAddView'],
     "#project-base-edit":
         ['CustomProjectAddView'],
     "#kittemplate-base-edit":
-        ['ComputeKitTemplatePrice']
+        ['ComputeKitTemplatePrice'],
+    ".portaltype-inventoryorder.template-base_edit":
+        ['OrderEditView'],
+    "#order_publish_container":
+        ['OrderPublishView'],
+    ".portaltype-sample":
+        ['BaobabSampleView']
 };
 
 /**

@@ -15,11 +15,6 @@ from bika.sanbi import config
 from bika.sanbi.interfaces import IKit, IKitStorage
 
 
-@indexer(IKit)
-def get_kit_project_uid(instance):
-    return instance.getProject().UID()
-
-
 Project = ReferenceField(
     'Project',
     required=1,
@@ -147,5 +142,7 @@ class Kit(BaseContent):
         from bika.lims.idserver import renameAfterCreation
         renameAfterCreation(self)
 
+    def getParentUID(self):
+        return self.aq_parent.UID()
 
 registerType(Kit, config.PROJECTNAME)

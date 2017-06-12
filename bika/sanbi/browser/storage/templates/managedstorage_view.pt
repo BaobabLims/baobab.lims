@@ -1,0 +1,29 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      xmlns="http://www.w3.org/1999/xhtml"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="bika">
+
+<head></head>
+
+<body>
+
+<metal:content-title fill-slot="content-title">
+    <h1>
+        <img tal:condition="view/icon | nothing"
+             src="" tal:attributes="src view/icon"/>
+        <span class="documentFirstHeading" tal:content="view/title"/>
+    </h1>
+</metal:content-title>
+
+<metal:core fill-slot="content-core">
+    <form id="list" action="workflow_action" method="post" name="bika_listing_form">
+        <div id="folderlisting-main-table" tal:content="structure view/positions_table"></div>
+    </form>
+    <span tal:replace="structure view/graph"/>
+</metal:core>
+
+</body>
+
+</html>

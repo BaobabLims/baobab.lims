@@ -6,5 +6,11 @@
 
     <include file="browser/analysisrequest/overrides.zcml" />
     <include file="browser/overrides.zcml" />
+    <include file="monkey/overrides.zcml" />
+
+    <browser:resource
+        file="skins/bika_sanbi/logo.png"
+        name="bika-lims-logo.png"
+    />
 
 </configure>

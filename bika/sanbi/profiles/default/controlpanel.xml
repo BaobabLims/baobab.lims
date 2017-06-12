@@ -31,4 +31,22 @@
   <permission>BIKA: Manage Bika</permission>
 </configlet>
 
+<configlet title="Products" action_id="bika_products"
+    appId="bika.sanbi" category="bika" condition_expr=""
+    icon_expr="string:++resource++bika.lims.images/product.png"
+    url_expr="string:$portal_url/bika_setup/bika_products"
+    visible="True"
+  i18n:attributes="title">
+  <permission>BIKA: Manage Bika</permission>
+</configlet>
+
+<configlet title="Stock items" action_id="bika_stockitems"
+    appId="bika.sanbi" category="bika" condition_expr=""
+    icon_expr="string:++resource++bika.lims.images/product.png"
+    url_expr="string:$portal_url/bika_setup/bika_stockitems"
+    visible="True"
+  i18n:attributes="title">
+  <permission>BIKA: Manage Bika</permission>
+</configlet>
+
 </object>

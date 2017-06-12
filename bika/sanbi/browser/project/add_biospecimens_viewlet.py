@@ -1,12 +1,10 @@
-from DateTime import DateTime
 from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from plone import api
 from plone.app.layout.viewlets import ViewletBase
 from zope.schema import ValidationError
 from Products.CMFCore.utils import getToolByName
 
-from bika.lims.interfaces import IUnmanagedStorage, IManagedStorage
+from bika.sanbi.interfaces import IUnmanagedStorage, IManagedStorage
 from bika.lims.workflow import doActionFor
 from bika.sanbi.browser.project import create_sample, create_samplepartition
 

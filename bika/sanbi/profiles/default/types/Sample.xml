@@ -1,17 +1,32 @@
 <?xml version="1.0"?>
+
 <object name="Sample"
         meta_type="Factory-based Type Information with dynamic views"
         xmlns:i18n="http://xml.zope.org/namespaces/i18n"
         i18n:domain="plone"
         purge="True">
 
+<alias from="edit" to="base_edit"/>
+
+<action title="Aliquots"
+        action_id="aliquots"
+        category="object"
+        icon_expr=""
+        link_target=""
+        url_expr="string:${object_url}/aliquots"
+        i18n:attributes="title"
+        i18n:domain="plone"
+        visible="True">
+    <permission value="View"/>
+</action>
+
 <action title="Large Sticker"
         action_id="sticker_large"
         category="document_actions"
-        condition_expr="python: context.portal_workflow.getInfoFor(context, 'review_state') in ['sample_received']"
+        condition_expr="python: context.portal_workflow.getInfoFor(context, 'review_state') in ['sample_due', 'sample_received']"
         icon_expr="string:${object_url}/++resource++bika.lims.images/sticker_large.png"
         link_target=""
-        url_expr="string:${object_url}/sticker?autoprint=1&amp;size=large"
+        url_expr="string:${object_url}/sticker?autoprint=1&amp;template=sanbi:Code_128_1x72mm_b.pt"
         i18n:attributes="title"
         visible="True">
    <permission value="View"/>
@@ -40,4 +55,5 @@
         visible="True">
     <permission value="View"/>
 </action>
+
 </object>

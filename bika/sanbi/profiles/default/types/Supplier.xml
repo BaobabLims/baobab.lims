@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<object name="Supplier"
+        meta_type="Factory-based Type Information with dynamic views"
+        xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+        i18n:domain="plone"
+        purge="True">
+
+    <property name="allowed_content_types">
+      <element value="ReferenceSample"/>
+      <element value="SupplierContact"/>
+      <element value="InventoryOrder" />
+    </property>
+    <!-- Hides the normal Client tabs and add "Projects" tab. -->
+
+    <action title="WINE-40: Do not move or remove this entry."
+            action_id="view"
+            category="object"
+            url_expr="string:${object_url}/base_view"
+            i18n:attributes="title"
+            i18n:domain="plone"
+            visible="False">
+        <permission value="Modify portal content"/>
+    </action>
+
+    <action title="Edit"
+            action_id="edit"
+            category="object"
+            condition_expr=""
+            url_expr="string:${object_url}/edit"
+            i18n:attributes="title"
+            i18n:domain="plone"
+            visible="True">
+        <permission value="Modify portal content"/>
+    </action>
+
+    <action title="Orders"
+            action_id="inventoryorders"
+            category="object"
+            condition_expr=""
+            icon_expr="string:${portal_url}/images/inventoryorder.png"
+            link_target=""
+            url_expr="string:${object_url}/orders"
+            i18n:attributes="title"
+            visible="True">
+        <permission value="Modify portal content"/>
+    </action>
+
+</object>

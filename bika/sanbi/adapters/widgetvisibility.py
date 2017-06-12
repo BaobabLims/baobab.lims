@@ -48,8 +48,9 @@ class ARFieldWidgetVisibility(object):
                 field.widget.base_query = {
                     'cancellation_state': 'active',
                     'review_state': ['sample_received'],
-                    'path': {'query': '/'.join(self.context.aq_parent.getPhysicalPath()),
-                             'level': 0}
+                    # 'path': {'query': '/'.join(self.context.aq_parent.getPhysicalPath()),
+                    #          'level': 0}
+                    'getProjectUID': self.context.aq_parent.UID()
                 }
         if fieldName in self.hidden_fields:
             field.required = False
@@ -67,27 +68,45 @@ class SampleFieldWidgetVisibility(object):
         self.context = context
         self.sort = 10
         self.random = 4
-        if IAliquot.providedBy(context):
-            self.hidden_fields = ['Kit', 'SubjectID',
-                                  'Barcode', 'Sampling Date',
-                                  'ScheduledSamplingSampler',
-                                  'PreparationWorkflow',
-                                  'SamplePoint', 'Sampler']
+        self.hidden_fields = [
+            'ClientReference',
+            'PreparationWorkflow',
+            'ClientSampleID',
+            'SamplingWorkflowEnabled',
+            'Sampler',
+            'Composite',
+            'AdHoc',
+            'EnvironmentalConditions',
+            'ScheduledSamplingSampler',
+            'SamplePoint',
+            'SamplingDeviation',
+            'DisposalDate',
+            'DateSampled',
+            'DateCreated']
 
-        if IBiospecimen.providedBy(context):
-            self.hidden_fields = ['Sampling Date',
-                                  'LinkedSample',
-                                  'ScheduledSamplingSampler',
-                                  'PreparationWorkflow',
-                                  'SamplePoint', 'Sampler']
-
+        self.show_fields = [
+            'SampleType',
+            'SampleCondition'
+        ]
     def __call__(self, context, mode, field, default):
         state = default if default else 'hidden'
         field_name = field.getName()
-        if field_name in self.hidden_fields and mode == 'header_table':
+
+        wftool = self.context.portal_workflow
+        review_state = wftool.getInfoFor(self.context, 'review_state')
+
+        if field_name in self.hidden_fields:
             field.required = False
             return 'invisible'
 
+        if field_name in self.show_fields:
+            field.widget.visible['sample_received'] = {'view': 'visible', 'edit': 'visible'}
+            field.widget.visible['sample_due'] = {'view': 'visible', 'edit': 'visible'}
+
+        if review_state == 'sample_registered' and not context.aq_parent.hasObject(context.getId()):
+            field.widget.render_own_label = False
+        else:
+            field.widget.render_own_label = True
         return state
 
 

@@ -1,0 +1,164 @@
+<html>
+<body>
+<style type="text/css">
+    .add-managed{
+      padding: 10px 0px;
+    }
+    .add-managed .discreet{
+      font-size:50%;
+      color:#ddd;
+    }
+    .add-managed input{
+      margin-bottom:5px;
+    }
+    .discreet li {
+        padding:0;
+        margin:0;
+        line-height:1em !important;
+    }
+    table {
+        width:100%;
+    }
+    td {
+        padding:5px 10px 5px 0;
+    }
+    td.bordertop {
+        border-top: 1px solid #ddd;
+    }
+
+    select.storage_types {margin-left:15px;}
+
+</style>
+
+
+<table>
+    <tr>
+        <td>Prefix Text:
+            <div class="discreet">
+                The display titles and IDs for new storage units. Provide the prefix to
+                be append to the leading zeros number.
+            </div>
+        </td>
+        <td><input name="managed-prefix-text"
+                   class="prefixtext"
+                   placeholder="Prefix text"
+                   tal:attributes="value python: request.get('managed-prefix-text', '')"/>
+        </td>
+
+    <tr>
+    <tr>
+        <td>Leading Zeros:
+            <div class="discreet">
+                Prepend the zeros specified here to the sequence numbers of the storage units to create, ex: 00
+            </div>
+        </td>
+        <td><input name="managed-leading-zeros"
+                   class="leading-zeros"
+                   placeholder="Leading zeros"
+                   tal:attributes="value python: request.get('managed-leading-zeros', '')"/>
+        </td>
+    </tr>
+    <tr>
+        <td>ID Sequence Start:
+            <div class="discreet">
+                The number of the first item in the ID sequence. This can be a
+                simple number like '1', or it can be a string like 'A' or 'AA'.
+            </div>
+        </td>
+        <td>
+            <input name="managed-start"
+                   class="start"
+                   type="number"
+                   autocomplete="false"
+                   tal:attributes="value python: request.get('managed-start', '1')"/>
+        </td>
+    </tr>
+    <tr>
+        <td>Number of items:
+            <div class="discreet">
+                The number of storage units to create. If the sequence start
+                is 'A' and the number of items is 5, items A,B,C,D and E will
+                be created.
+            </div>
+        </td>
+        <td>
+            <input name="managed-nr-items"
+                   class="nr_items"
+                   type="number"
+                   autocomplete="false"
+                   tal:attributes="value python: request.get('managed-nr-items', '1')"/>
+        </td>
+    </tr>
+    <tr>
+        <td>Temperature:
+        </td>
+        <td>
+            <input name="managed-temperature"
+                   class="temperature"
+                   autocomplete="false"
+                   tal:attributes="value python: request.get('managed-temperature', '')"/>
+        </td>
+    </tr>
+    <tr>
+        <td class="bordertop">Number of positions:
+            <div class="discreet">
+                    Enter the number of possible storage positions
+                    located inside these storages.
+            </div>
+        </td>
+        <td class="bordertop">
+            <input name="managed-positions"
+                   class="managedpositions"
+                   type="number"
+                   tal:attributes="value python: request.get('managed-positions', '')"/>
+        </td>
+    </tr>
+    <tr>
+        <td>Storage Types:
+            <div class="discreet">
+                Select the types of objects that can be stored here.
+            </div>
+        </td>
+        <td>
+            <select id="managed-storage-types" name="managed-storage-types" size="6" multiple>
+                <tal:x tal:repeat="stype python:context.getStorageTypes(show_all=True)">
+                    <option tal:attributes="value python:stype['identifier']">
+                        <tal:t tal:replace="python: stype['title']"/>
+                    </option>
+                </tal:x>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>Graphical representation:
+            <div class="discreet">
+                Select a dimension and set number of columns and rows to represent positions in a grid.
+            </div>
+        </td>
+        <td>
+
+            <div style="display: inline-block; padding-left:10px; border: 1px solid #bbb; padding: 5px; width: auto;">
+                <div data-fieldname="YAxis" id="YAxis" style="display: inline-block;">
+                    <span style="font-weight: bold; padding-right: 5px;">Rows:</span>
+                    <input name="managed-y" id="managed-y" type="number"
+                           style="background-color: #FDFDFD; border:1px solid #ddd; height: 20px; width: 50px;"
+                           tal:attributes="value string:0"/>
+                </div>
+                <div data-fieldname="XAxis" id="XAxis" style="display: inline-block;">
+                    <span style="font-weight: bold; padding-right: 5px;">Columns:</span>
+                    <input name="managed-x" id="managed-x" type="number"
+                           style="background-color: #FDFDFD; border:1px solid #ddd; height: 20px; width: 50px;"
+                           tal:attributes="value python:len(context.objectValues('StoragePosition'))"/>
+                </div>
+            </div>
+        </td>
+    </tr>
+
+
+</table>
+
+
+</body>
+</html>
+
+

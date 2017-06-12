@@ -9,11 +9,23 @@ AddKitTemplate = 'SANBI: Add KitTemplate'
 AddProject = 'SANBI: Add Project'
 AddKit = 'SANBI: Add Kit'
 AddShipment = 'SANBI: Add Shipment'
-AddAliquot = "BIKA: Add Aliquot"
-AddMultimage = 'BIKA: Add Multimage'
-EditFieldBarcode = "BIKA: Edit Field Barcode"
-ViewBarcode = "BIKA: View Barcode"
-AddStorageType = "BIKA: Add Storage Type"
+AddAliquot = "SANBI: Add Aliquot"
+AddMultimage = 'SANBI: Add Multimage'
+EditFieldBarcode = "SANBI: Edit Field Barcode"
+ViewBarcode = "SANBI: View Barcode"
+AddStorageType = "SANBI: Add Storage Type"
+AddStorageUnit = 'SANBI: Add Storage Unit'
+AddManagedStorage = 'SANBI: Add Managed Storage'
+AddUnmanagedStorage = 'SANBI: Add Unmanaged Storage'
+AddStoragePosition = 'SANBI: Add Storage Position'
+
+
+# New or changed permissions
+#---------------------------
+AddInventoryOrder = 'SANBI: Add Inventory Order'
+DispatchInventoryOrder = 'SANBI: Dispatch Inventory Order'
+ReceiveInventoryOrder = 'SANBI: Receive Inventory Order'
+StoreInventoryOrder = 'SANBI: Store Inventory Order'
 
 # Add Permissions for specific types, if required
 ADD_CONTENT_PERMISSIONS = {
@@ -24,6 +36,11 @@ ADD_CONTENT_PERMISSIONS = {
     'Multimage': AddMultimage,
     'Aliquot': AddAliquot,
     'StorageType': AddStorageType,
+    'InventoryOrder': AddInventoryOrder,
+    'StorageUnit': AddStorageUnit,
+    'ManagedStorage': AddManagedStorage,
+    'UnmanagedStorage': AddUnmanagedStorage,
+    'StoragePosition': AddStoragePosition,
 }
 
 ManageStoragePositions = "SANBI: Manage Storage Positions"
@@ -32,3 +49,5 @@ ManageKitTemplates = "SANBI: Manage KitTemplates"
 ManageProjects = 'SANBI: Manage Projects'
 ManageShipments= "SANBI: Manage Shipments"
 ManageAliquots = "SANBI: Manage Aliquots"
+
+DueSample = 'SANBI: Due Sample'

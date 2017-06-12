@@ -7,7 +7,9 @@ from plone.app.layout.viewlets import ViewletBase
 from zope.schema import ValidationError
 from DateTime import DateTime
 
-from bika.lims.interfaces import IUnmanagedStorage, IStoragePosition, \
+from bika.sanbi.browser.project import get_first_sampletype
+from bika.sanbi.browser.project.util import SampleGeneration
+from bika.sanbi.interfaces import IUnmanagedStorage, IStoragePosition, \
     IManagedStorage
 
 
@@ -36,6 +38,8 @@ class AddKitsSubmitHandler(BrowserView):
         self.bsc = self.bika_setup_catalog
         self.bc = self.bika_catalog
         self.wf = self.portal_workflow
+        self.samples_gen = SampleGeneration(self.form, self.context)
+        self.sample_type = get_first_sampletype(self.context)
 
     def __call__(self):
         if "viewlet_submitted" in self.request.form:
@@ -58,7 +62,7 @@ class AddKitsSubmitHandler(BrowserView):
         Accepts ManagedStorage, UnmanagedStorage, or StoragePosition UIDs.
         """
         kit_storages = []
-        form_uids = self.form['kit_storage_uids'].split(',')
+        form_uids = self.form['kit-storage-uids'].split(',')
         for uid in form_uids:
             brain = self.bsc(UID=uid)[0]
             instance = brain.getObject()
@@ -98,7 +102,7 @@ class AddKitsSubmitHandler(BrowserView):
         """ return storages which could store stock items
         """
         si_storages = []
-        for uid in self.form['si_storage_uids'].split(','):
+        for uid in self.form['si-storage-uids'].split(','):
             brain = self.bsc(UID=uid)
             if not brain:
                 raise ValidationError(u'Bad uid. This should not happen.')
@@ -210,22 +214,27 @@ class AddKitsSubmitHandler(BrowserView):
     def create_kits(self):
         """Create the new kits
         """
-        title_template = self.form.get('titletemplate', None)
-        id_template = self.form.get('idtemplate', None)
-        seq_start = int(self.form.get('seq_start', None))
-        kit_count = int(self.form.get('kit_count', None))
-        project_uid = self.form.get('Project_uid', None)
-        kit_template_uid = self.form.get('KitTemplate_uid', None)
+        prefix_text = self.form.get('kits-prefix-text', None)
+        leading_zeros = self.form.get('kits-leading-zeros', None)
+        seq_start = int(self.form.get('seq-start', None))
+        kit_count = int(self.form.get('kit-count', None))
+        kit_template_uid = self.form.get('kit-template-uid', None)
+        # kit storages
         kits = []
         kit_storages = self.get_kit_storages()
+        # sample storages
+        samples = []
+        sample_storages = self.samples_gen.get_biospecimen_storages()
+
 
         for x in range(seq_start, seq_start + kit_count):
+            id_template = prefix_text + '-' + str(x).zfill(len(leading_zeros))
+            title_template = prefix_text + ' ' + str(x).zfill(len(leading_zeros))
             obj = api.content.create(
                 container=self.context,
                 type='Kit',
-                id=id_template.format(id=x),
-                title=title_template.format(id=x),
-                Project=project_uid,
+                id=id_template,
+                title=title_template,
                 KitTemplate=kit_template_uid,
                 DateCreated=DateTime()
             )
@@ -235,6 +244,11 @@ class AddKitsSubmitHandler(BrowserView):
             kits.append(obj)
         # store kits
         self.assign_kit_to_storage(kits, kit_storages)
+        # generate biospecimens
+        for kit in kits:
+            sample = self.samples_gen.create_sample(kit, self.sample_type)
+            samples.append(sample)
+        self.samples_gen.store_samples(samples, sample_storages)
 
         return kits
 
@@ -242,17 +256,17 @@ class AddKitsSubmitHandler(BrowserView):
 
         form = self.request.form
 
-        title_template = form.get('titletemplate', None)
-        id_template = form.get('idtemplate', None)
-        if not (title_template and id_template):
-            raise ValidationError(u'ID and Title template are both required.')
-        if not ('{id}' in title_template and '{id}' in id_template):
-            raise ValidationError(u'ID and Title templates must contain {id} '
-                                  u'for ID sequence substitution')
+        prefix_text = form.get('kits-prefix-text', None)
+        leading_zeros = form.get('kits-leading-zeros', None)
+        if not prefix_text or not leading_zeros:
+            msg = u'Prefix text and Leading zeros are both required.'
+            raise ValidationError(msg)
+
+        # TODO: check if leading zeros has only zeros
 
         try:
-            seq_start = int(form.get('seq_start', None))
-            kit_count = int(form.get('kit_count', None))
+            seq_start = int(form.get('seq-start', None))
+            kit_count = int(form.get('kit-count', None))
         except:
             raise ValidationError(
                 u'Sequence start and all counts must be integers')
@@ -266,18 +280,17 @@ class AddKitsSubmitHandler(BrowserView):
             raise ValidationError(u'Kit count should be > 0')
 
         # Kit template required
-        kit_template_uid = self.form.get('KitTemplate_uid', None)
+        kit_template_uid = self.form.get('kit-template-uid', None)
         if not kit_template_uid:
-            raise ValidationError(u'Kit template field is required.')
+            raise ValidationError(u'Kit Template field is required.')
 
         # Kit storage destination is required field.
-        kit_storage_uids = form.get('kit_storage_uids', '')
+        kit_storage_uids = form.get('kit-storage-uids', '')
         if not kit_storage_uids:
-            raise ValidationError(u'You must select the Storage where the kit '
-                                  u'items will be stored.')
+            raise ValidationError(u'Kit storage required.')
 
         # Stock Item storage (where items will be taken from) is required
-        si_storage_uids = form.get('si_storage_uids', '')
+        si_storage_uids = form.get('si-storage-uids', '')
         if not si_storage_uids:
             raise ValidationError(u'You must select the Storage where the '
                                   u'stock items will be taken from.')
@@ -285,10 +298,10 @@ class AddKitsSubmitHandler(BrowserView):
         # Check that none of the IDs conflict with existing items
         ids = [x.id for x in self.context.objectValues()]
         for x in range(kit_count):
-            check = id_template.format(id=seq_start + x)
-            if check in ids:
+            id_kit = prefix_text + '-' + str(seq_start+ x).zfill(len(leading_zeros))
+            if id_kit in ids:
                 raise ValidationError(
-                    u'The ID %s exists, cannot be created.' % check)
+                    u'The ID %s exists, cannot be created.' % id_kit)
 
         # Check there are enough stock items in stock to create the kits
         kit_template = self.bsc(UID=kit_template_uid)[0].getObject()
@@ -306,6 +319,18 @@ class AddKitsSubmitHandler(BrowserView):
             if kit_count > nr_positions:
                 raise ValidationError(
                     u"Not enough kit storage positions available. Please select "
+                    u"or create additional storages for kits.")
+
+        # Check that the storages selected has sufficient positions to contain
+        # the biospecimen to generate.
+        biospecimens_per_kit = int(form.get('specimen-count', None))
+        biospecimen_count = kit_count * biospecimens_per_kit
+        bio_storages = self.samples_gen.get_biospecimen_storages()
+        if all([IManagedStorage.providedBy(storage) for storage in bio_storages]):
+            nr_positions = self.samples_gen.count_storage_positions(bio_storages)
+            if biospecimen_count > nr_positions:
+                raise ValidationError(
+                    u"Not enough kit storage positions available.  Please select "
                     u"or create additional storages for kits.")
 
     def form_error(self, msg):

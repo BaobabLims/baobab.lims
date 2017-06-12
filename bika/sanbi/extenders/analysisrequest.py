@@ -6,14 +6,16 @@ from Products.CMFCore import permissions
 from Products.CMFCore.utils import getToolByName
 from zope.component import adapts
 from zope.interface import implements
-
 from zope.container.contained import ContainerModifiedEvent
 
 from bika.lims.fields import *
 from bika.lims.browser.widgets import ReferenceWidget as bikaReferenceWidget
 from bika.lims.interfaces import IAnalysisRequest
 from bika.lims.workflow import doActionFor
+from bika.lims.content.analysisrequest import AnalysisRequest as BaseAR
+
 from bika.sanbi import bikaMessageFactory as _
+
 import sys
 
 class AnalysisRequestSchemaExtender(object):
@@ -85,3 +87,24 @@ def ObjectModifiedEventHandler(instance, event):
         for analysis in ar_analyses:
             analysis.setSamplePartition(partition)
 
+
+class AnalysisRequest(BaseAR):
+    """ Inherits from bika.lims.content.AnalysisRequest
+    """
+    _at_rename_after_creation = True
+
+    def _renameAfterCreation(self, check_auto_id=False):
+        from bika.sanbi.idserver import renameAfterCreation
+        renameAfterCreation(self)
+
+    def getClient(self):
+        if self.aq_parent.portal_type == 'Client':
+            return self.aq_parent
+        else:
+            return self.aq_parent.getClient()
+
+
+from Products.Archetypes import atapi
+from bika.lims.config import PROJECTNAME
+# Overrides type bika.lims.content.sample
+atapi.registerType(AnalysisRequest, PROJECTNAME)

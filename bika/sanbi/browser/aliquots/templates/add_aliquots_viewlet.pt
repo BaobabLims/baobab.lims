@@ -296,7 +296,7 @@
                                 required="True"
                                 class="blurrable firstToFocus referencewidget"
                                 value=""
-                                base_query='{"portal_type": ["ManagedStorage", "UnmanagedStorage"], "object_provides": "bika.sanbi.interfaces.IBioSpecimenStorage", "review_state": "available", "inactive_state": "active"}'
+                                base_query='{"portal_type": ["ManagedStorage", "UnmanagedStorage"], "object_provides": "bika.sanbi.interfaces.IBiospecimenStorage", "review_state": "available", "inactive_state": "active"}'
                                 search_query='{}'
                                 catalog_name="bika_setup_catalog"
                                 ui_item="Title"

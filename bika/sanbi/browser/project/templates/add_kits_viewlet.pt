@@ -8,6 +8,7 @@
 
                 var stockItemUIDs = [];
                 var kitUIDs = [];
+                var biospecimenUIDs = [];
 
                 /* Help functions */
 
@@ -36,6 +37,16 @@
                         }
 
                         $("#kit-storage-uids").val(kitUIDs);
+                    } else if (storageType == "Biospecimen") {
+                        if (operation == 'ADD'){
+                            biospecimenUIDs.push(UID);
+                        }else if (operation == 'REMOVE'){
+                            biospecimenUIDs = biospecimenUIDs.filter(function (uid) {
+                                return uid != UID;
+                            });
+                        }
+
+                        $("#b-storage-uids").val(biospecimenUIDs);
                     }
 
                 }
@@ -62,6 +73,10 @@
                     $("#k-button").val("Add");
                 });
 
+                $("#biospecimen_uid").on("focus", function (e) {
+                    $("#b-button").val("Add");
+                });
+
                 /* Process */
 
                 $("#si-button").on("click", function (e) {
@@ -70,6 +85,11 @@
 
                 $("#k-button").on("click", function (e) {
                     createStorageRow('#kitAssembly', '#kit_uid', '#kit-table-storages', 'Kit');
+                });
+
+                $("#b-button").on("click", function (e) {
+                    console.log($("#b-button").val());
+                    createStorageRow('#StorageLevel', '#biospecimen_uid', '#biospecimen-table-storages', 'Biospecimen');
                 });
 
                 $("#stockitem-table-storages").on("click", ".remove-tr", function (e) {
@@ -82,6 +102,12 @@
                     $(this).parents("tr").remove();
                     var uid = $(this).parents('tr')[0].id;
                     updateArrayUIDs('Kit', uid, 'REMOVE');
+                });
+
+                $("#biospecimen-table-storages").on("click", ".remove-tr", function (e) {
+                    $(this).parents("tr").remove();
+                    var uid = $(this).parents('tr')[0].id;
+                    updateArrayUIDs('Biospecimen', uid, 'REMOVE')
                 });
 
             });
@@ -151,7 +177,7 @@
             <form name="add-kits" action="add_kits_submit" method="POST">
                 <table>
                     <tr>
-                        <td>Template for new Titles:
+                        <!--<td>Template for new Titles:
                             <div class="discreet">The display titles with {id}
                                 included.
                             </div>
@@ -160,19 +186,31 @@
                                    class="titletemplate"
                                    placeholder="Title For {id}"
                                    tabindex="1"
-                                tal:attributes="value python: request.get('titletemplate', '')"/>
+                                   tal:attributes="value python: request.get('titletemplate', '')"/>
+                        </td>-->
+                        <td>Prefix Text:
+                            <div class="discreet">
+                                The display titles and IDs for new storage units. Provide the prefix to
+                                be append to the leading zeros number.
+                            </div>
+                        </td>
+                        <td><input name="kits-prefix-text"
+                                   class="prefixtext"
+                                   placeholder="Prefix text"
+                                   tabindex="1"
+                                   tal:attributes="value python: request.get('kits-prefix-text', '')"/>
                         </td>
                         <td>ID Sequence Start:</td>
                         <td>
-                            <input name="seq_start"
+                            <input name="seq-start"
                                    type="number"
-                                   class="seq_start"
+                                   class="seq-start"
                                    tabindex="3"
-                                    tal:attributes="value python: request.get('seq_start', '1')"/>
+                                   tal:attributes="value python: request.get('seq-start', '1')"/>
                         </td>
                     <tr>
                     <tr>
-                        <td>Template for new IDs:
+                        <!--<td>Template for new IDs:
                             <div class="discreet">IDs should not include spaces
                                 or non-ascii characters.
                             </div>
@@ -183,23 +221,34 @@
                                    placeholder="prefix-{id}"
                                    tabindex="2"
                                     tal:attributes="value python: request.get('idtemplate', '')"/>
+                        </td>-->
+                        <td>Leading Zeros:
+                            <div class="discreet">
+                                Prepend the zeros specified here to the sequence numbers of the storage units to create, ex: 00
+                            </div>
+                        </td>
+                        <td><input name="kits-leading-zeros"
+                                   class="leading-zeros"
+                                   placeholder="Leading zeros"
+                                   tabindex="2"
+                                   tal:attributes="value python: request.get('kits-leading-zeros', '')"/>
                         </td>
                         <td>Number of Kits to assemble
                         </td>
                         <td>
-                            <input name="kit_count"
+                            <input name="kit-count"
                                    type="number"
-                                   class="kit_count"
+                                   class="kit-count"
                                    tabindex="4"
-                                   default='0'/>
+                                   tal:attributes="value python: request.get('kit-count', '1')"/>
                         </td>
                     </tr>
                     <tr>
-                        <td class="bordertop">Kit Template
+                        <td>Kit Template
                             <div class="discreet">Templates referencing components/products kits will contain
                             </div>
                         </td>
-                        <td class="bordertop" colspan="3">
+                        <td>
                             <div style="width:100%" class="field ArchetypesReferenceWidget">
                                 <input
                                         type="text"
@@ -230,8 +279,17 @@
                                                             "force_all": true,
                                                             "portal_types": {}}'/>
 
-                                <input type="hidden" name="KitTemplate_uid" id="KitTemplate_uid">
+                                <input type="hidden" name="kit-template-uid" id="kit-template-uid">
                             </div>
+                        </td>
+                        <td>Number of biospecimen per kit
+                        </td>
+                        <td>
+                            <input name="specimen-count"
+                                   type="number"
+                                   class="specimen-count"
+                                   tabindex="7"
+                                   tal:attributes="value python: request.get('specimen-count', '1')"/>
                         </td>
                     </tr>
                 </table>
@@ -244,9 +302,7 @@
                             <span></span>
                         </fieldset>
                         <div class="discreet" class="helptext">
-                            Select Stock-Item storage to use in kit assembling. In case of more than one storage
-                            selected, storages are
-                            searched in the order they are specified.
+                            Select the storage of items to use in kit assembling. Possibility to select multiple storages.
                         </div>
                         <div style="width:100%" class="field ArchetypesReferenceWidget">
                             <input
@@ -256,12 +312,12 @@
                                     required="True"
                                     class="blurrable firstToFocus referencewidget"
                                     value=""
-                                    base_query='{"portal_type": ["ManagedStorage", "UnmanagedStorage"], "object_provides": "bika.lims.interfaces.IStockItemStorage", "review_state": "available", "inactive_state": "active"}'
+                                    base_query='{"portal_type": ["UnmanagedStorage"], "object_provides": "bika.lims.interfaces.IStockItemStorage", "review_state": "available", "inactive_state": "active"}'
                                     search_query='{}'
                                     catalog_name="bika_setup_catalog"
                                     ui_item="Title"
                                     autocomplete="false"
-                                    tabindex="6"
+                                    tabindex="8"
                                     combogrid_options='{"colModel": [{"columnName": "Title", "align": "left", "label": "Title", "width": "30"},
                                                                  {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "50"},
                                                                  {"columnName": "UID", "hidden": true}],
@@ -293,9 +349,7 @@
                             <span></span>
                         </fieldset>
                         <div class="discreet" class="helptext">
-                            Select Kit storage to store the generated kits. In case of more than one storage selected,
-                            storages are
-                            filled in the order they are specified.
+                            Select a location to store the kits to generate. Possibility to select multiple locations.
                         </div>
                         <div style="width:100%" class="field ArchetypesReferenceWidget">
                             <input
@@ -305,12 +359,12 @@
                                     required="True"
                                     class="blurrable firstToFocus referencewidget"
                                     value=""
-                                    base_query='{"portal_type": ["ManagedStorage", "UnmanagedStorage"], "object_provides": "bika.sanbi.interfaces.IKitStorage", "review_state": "available", "inactive_state": "active"}'
+                                    base_query='{"portal_type": ["UnmanagedStorage"], "object_provides": "bika.sanbi.interfaces.IKitStorage", "review_state": "available", "inactive_state": "active"}'
                                     search_query='{}'
                                     catalog_name="bika_setup_catalog"
                                     ui_item="Title"
                                     autocomplete="false"
-                                    tabindex="6"
+                                    tabindex="9"
                                     combogrid_options='{"colModel": [{"columnName": "Title", "align": "left", "label": "Title", "width": "30"},
                                                                      {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "50"},
                                                                      {"columnName": "FreePositions", "align": "left", "label": "Free", "width": "20"},
@@ -339,13 +393,64 @@
                     </div>
                 </div>
 
-                <input type="hidden" name="si_storage_uids" id="si-storage-uids"/>
-                <input type="hidden" name="kit_storage_uids" id="kit-storage-uids"/>
+                <div id="storage-management">
+                    <fieldset>
+                        <legend>Biospecimen Storage Management</legend>
+                        <span></span>
+                    </fieldset>
+
+                    <div style="display: inline-block;">
+                        <div style="width:100%" class="field ArchetypesReferenceWidget">
+                            <input
+                                    type="text"
+                                    name="StorageLevel"
+                                    id="StorageLevel"
+                                    class="blurrable firstToFocus referencewidget"
+                                    value=""
+                                    base_query='{"portal_type": ["ManagedStorage"], "object_provides": "bika.sanbi.interfaces.IBiospecimenStorage", "review_state": "available", "inactive_state": "active"}'
+                                    search_query='{}'
+                                    catalog_name="bika_setup_catalog"
+                                    ui_item="Title"
+                                    autocomplete="false"
+                                    tabindex="10"
+                                    combogrid_options='{"colModel": [{"columnName": "Title", "align": "left", "label": "Title", "width": "30"},
+                                                                 {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "50"},
+                                                                 {"columnName": "FreePositions", "align": "left", "label": "Free", "width": "20"},
+                                                                 {"columnName": "UID", "hidden": true}],
+                                                    "search_fields": ["Title"],
+                                                    "catalog_name": "bika_setup_catalog",
+                                                    "url": "referencewidget_search",
+                                                    "discard_empty": [],
+                                                    "popup_width": "650px",
+                                                    "showOn": true,
+                                                    "searchIcon": true,
+                                                    "minLength": "0",
+                                                    "resetButton": false,
+                                                    "sord": "asc",
+                                                    "sidx": "Title",
+                                                    "force_all": true,
+                                                    "portal_types": {}}'/>
+
+                            <input type="hidden" name="biospecimen_uid" id="biospecimen_uid">
+
+                            <input type="button" id='b-button' class="add-button" value="Add"/>
+                        </div>
+                    </div>
+                    <div class="discreet helptext" style="display: inline-block; margin-left: 100px;">
+                        Select the storage(s) to contain the biospecimens created.<br/>Possibility to select multiple locations.<br/>
+                    </div>
+
+                    <table id="biospecimen-table-storages" style="width: 35%;"></table>
+                </div>
+
+                <input type="hidden" name="si-storage-uids" id="si-storage-uids"/>
+                <input type="hidden" name="kit-storage-uids" id="kit-storage-uids"/>
+                <input type="hidden" name="biospecimen-storage-uids" id="b-storage-uids" />
 
                 <input name="viewlet_submitted"
                        type="submit"
                        class="kits-add"
-                       tabindex="7"
+                       tabindex="11"
                        value="Add Kits">
             </form>
         </div>

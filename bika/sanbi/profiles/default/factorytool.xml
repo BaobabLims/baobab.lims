@@ -1,13 +1,22 @@
 <?xml version="1.0"?>
 <object name="portal_factory" meta_type="Plone Factory Tool">
- <factorytypes>
-  <type portal_type="KitTemplate"/>
-  <type portal_type="Kit"/>
-  <type portal_type="Shipment"/>
-  <type portal_type="Project"/>
-  <type portal_type="BiospecType"/>
-  <type portal_type="Aliquot"/>
-  <type portal_type="Biospecimen"/>
-  <type portal_type="StorageType"/>
- </factorytypes>
+    <factorytypes>
+
+        <type portal_type="KitTemplate"/>
+        <type portal_type="Kit"/>
+        <type portal_type="Shipment"/>
+        <type portal_type="Project"/>
+        <type portal_type="BiospecType"/>
+        <type portal_type="Aliquot"/>
+        <type portal_type="Biospecimen"/>
+        <type portal_type="StorageType"/>
+        <type portal_type="InventoryOrder"/>
+        <type portal_type="Product"/>
+        <type portal_type="StockItem"/>
+        <type portal_type="StorageUnit"/>
+        <type portal_type="ManagedStorage"/>
+        <type portal_type="UnmanagedStorage"/>
+        <type portal_type="StoragePosition"/>
+
+    </factorytypes>
 </object>

@@ -3,17 +3,20 @@ from archetypes.schemaextender.interfaces import IOrderableSchemaExtender
 from archetypes.schemaextender.interfaces import ISchemaModifier
 from zope.component import adapts
 from Products.CMFCore import permissions
+from DateTime import DateTime
 
 from bika.lims.fields import *
 from bika.lims.interfaces import ISample
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from bika.lims.browser.widgets import DateTimeWidget
+from bika.lims.content.sample import Sample as BaseSample
+from bika.lims.workflow import doActionFor
 
 from bika.sanbi import bikaMessageFactory as _
-from bika.sanbi.interfaces import IBioSpecimenStorage
-import sys
+from bika.sanbi.interfaces import ISampleStorageLocation
+from bika.sanbi.browser.project import create_samplepartition
 
-from bika.lims.content.sample import Sample as BaseSample
+import sys
 
 
 class ExtFixedPointField(ExtensionField, FixedPointField):
@@ -26,6 +29,30 @@ class SampleSchemaExtender(object):
 
     fields = [
         ExtReferenceField(
+            'Project',
+            required=True,
+            allowed_types=('Project',),
+            relationship='InvoiceProject',
+            referenceClass=HoldingReference,
+            widget=bika_ReferenceWidget(
+                label=_("Project"),
+                catalog_name='bika_catalog',
+                visible={'edit': 'visible',
+                         'view': 'visible',
+                         'header_table': 'visible',
+                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         'sample_due': {'view': 'visible', 'edit': 'visible'},
+                         'sampled': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'visible'},
+                         'expired': {'view': 'visible', 'edit': 'invisible'},
+                         'disposed': {'view': 'visible', 'edit': 'invisible'},
+                         },
+                size=30,
+                showOn=True,
+                description=_("Select the project of the sample."),
+            )
+        ),
+        ExtReferenceField(
             'Kit',
             vocabulary_display_path_bound=sys.maxint,
             allowed_types=('Kit',),
@@ -34,22 +61,25 @@ class SampleSchemaExtender(object):
             widget=bika_ReferenceWidget(
                 label=_("Kit"),
                 catalog_name='bika_catalog',
-                visible={'view': 'invisible',
+                visible={'view': 'visible',
                          'edit': 'visible',
                          'header_table': 'visible',
-                         'sample_registered': {'view': 'visible', 'edit': 'invisible'},
-                         'sample_due': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         'sample_due': {'view': 'visible', 'edit': 'visible'},
                          'sampled': {'view': 'visible', 'edit': 'invisible'},
-                         'sample_received': {'view': 'visible', 'edit': 'invisible'},
-                         'expired': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'visible'},
+                         'expired': {'view': 'visible', 'edit': 'visible'},
                          'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
+                showOn=True,
                 render_own_label = True,
-            )
+                description=_("Select the kit of the sample if exists."),
+            ),
         ),
         ExtReferenceField(
             'StorageLocation',
-            allowed_types=('UnmanagedStorage', 'StoragePosition'),
+            #required=True,
+            allowed_types=('StoragePosition',),
             relationship='ItemStorageLocation',
             widget=bika_ReferenceWidget(
                 label=_("Storage Location"),
@@ -58,10 +88,10 @@ class SampleSchemaExtender(object):
                 visible={'edit': 'visible',
                          'view': 'visible',
                          'header_table': 'visible',
-                         'sample_registered': {'view': 'visible', 'edit': 'invisible'},
-                         'sample_due': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         'sample_due': {'view': 'visible', 'edit': 'visible'},
                          'sampled': {'view': 'visible', 'edit': 'invisible'},
-                         'sample_received': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'visible'},
                          'expired': {'view': 'visible', 'edit': 'invisible'},
                          'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
@@ -70,10 +100,9 @@ class SampleSchemaExtender(object):
                 render_own_label=True,
                 base_query={'inactive_state': 'active',
                             'review_state': 'available',
-                            'object_provides': IBioSpecimenStorage.__identifier__},
+                            'object_provides': ISampleStorageLocation.__identifier__},
                 colModel=[{'columnName': 'UID', 'hidden': True},
-                          {'columnName': 'Title', 'width': '50', 'label': _('Title')},
-                          {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "50"}
+                          {'columnName': 'Title', 'width': '50', 'label': _('Title')}
                           ],
             )
         ),
@@ -86,10 +115,10 @@ class SampleSchemaExtender(object):
                 visible={'edit': 'visible',
                          'view': 'visible',
                          'header_table': 'visible',
-                         'sample_registered': {'view': 'visible', 'edit': 'invisible'},
-                         'sample_due': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         'sample_due': {'view': 'visible', 'edit': 'visible'},
                          'sampled': {'view': 'visible', 'edit': 'invisible'},
-                         'sample_received': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'visible'},
                          'expired': {'view': 'visible', 'edit': 'invisible'},
                          'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
@@ -105,10 +134,10 @@ class SampleSchemaExtender(object):
                 visible={'edit': 'visible',
                          'view': 'visible',
                          'header_table': 'visible',
-                         'sample_registered': {'view': 'visible', 'edit': 'invisible'},
-                         'sample_due': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         'sample_due': {'view': 'visible', 'edit': 'visible'},
                          'sampled': {'view': 'visible', 'edit': 'invisible'},
-                         'sample_received': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'visible'},
                          'expired': {'view': 'visible', 'edit': 'invisible'},
                          'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
@@ -122,14 +151,14 @@ class SampleSchemaExtender(object):
             widget=DecimalWidget(
                 label=_("Volume"),
                 size=15,
-                description=_("The The volume of the biospecimen taken from the subject."),
+                description=_("The volume of the biospecimen taken from the subject."),
                 visible={'edit': 'visible',
                          'view': 'visible',
                          'header_table': 'visible',
                          'sample_registered': {'view': 'visible', 'edit': 'visible'},
-                         'sample_due': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_due': {'view': 'visible', 'edit': 'visible'},
                          'sampled': {'view': 'visible', 'edit': 'invisible'},
-                         'sample_received': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'visible'},
                          'expired': {'view': 'visible', 'edit': 'invisible'},
                          'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
@@ -144,9 +173,9 @@ class SampleSchemaExtender(object):
                          'view': 'visible',
                          'header_table': 'visible',
                          'sample_registered': {'view': 'visible', 'edit': 'visible'},
-                         'sample_due': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_due': {'view': 'visible', 'edit': 'visible'},
                          'sampled': {'view': 'visible', 'edit': 'invisible'},
-                         'sample_received': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'visible'},
                          'expired': {'view': 'visible', 'edit': 'invisible'},
                          'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
@@ -163,19 +192,24 @@ class SampleSchemaExtender(object):
             mode="rw",
             read_permission=permissions.View,
             write_permission=permissions.ModifyPortalContent,
-            widget=ReferenceWidget(
+            widget=bika_ReferenceWidget(
                 label=_("Biospecimen"),
                 visible={'edit': 'visible',
                          'view': 'visible',
                          'header_table': 'visible',
-                         'sample_registered': {'view': 'visible', 'edit': 'invisible'},
-                         'sample_due': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         'sample_due': {'view': 'visible', 'edit': 'visible'},
                          'sampled': {'view': 'visible', 'edit': 'invisible'},
-                         'sample_received': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'visible'},
                          'expired': {'view': 'visible', 'edit': 'invisible'},
                          'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
+                showOn=True,
                 render_own_label=True,
+                colModel=[{'columnName': 'UID', 'hidden': True},
+                          {'columnName': 'Title', 'width': '50', 'label': _('Title')},
+                          {"columnName": "LocationTitle", "align": "left", "label": "Location", "width": "50"}
+                          ],
             ),
         ),
         ExtDateTimeField(
@@ -190,14 +224,22 @@ class SampleSchemaExtender(object):
                 visible={'edit': 'visible',
                          'view': 'visible',
                          'header_table': 'invisible',
-                         'sample_registered': {'view': 'visible', 'edit': 'invisible'},
-                         'sample_due': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         'sample_due': {'view': 'visible', 'edit': 'visible'},
                          'sampled': {'view': 'visible', 'edit': 'invisible'},
-                         'sample_received': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'visible'},
                          'expired': {'view': 'visible', 'edit': 'invisible'},
                          'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
                 render_own_label=True,
+            ),
+        ),
+        ExtComputedField(
+            'LocationTitle',
+            searchable=True,
+            expression="here.getStorageLocation() and here.getStorageLocation().Title() or ''",
+            widget=ComputedWidget(
+                visible=False,
             ),
         ),
     ]
@@ -206,6 +248,11 @@ class SampleSchemaExtender(object):
         self.context = context
 
     def getOrder(self, schematas):
+        sch = schematas['default']
+        sch.remove('Project')
+        sch.remove('Kit')
+        sch.insert(sch.index('SampleType'), 'Project')
+        sch.insert(sch.index('SampleType'), 'Kit')
         return schematas
 
     def getFields(self):
@@ -225,6 +272,52 @@ class SampleSchemaModifier(object):
 class Sample(BaseSample):
     """ Inherits from bika.lims.content.sample
     """
+    _at_rename_after_creation = True
 
+    def _renameAfterCreation(self, check_auto_id=False):
+        from bika.sanbi.idserver import renameAfterCreation
+        renameAfterCreation(self)
+
+    def getProjectUID(self):
+        if self.aq_parent.Title() == 'Biospecimens':
+            return self.getField('Project').get(self).UID()
+        else:
+            return self.aq_parent.UID()
+
+    def getLastARNumber(self):
+        ARs = self.getBackReferences("AnalysisRequestSample")
+        prefix = self.getSampleType().getPrefix()
+        ar_ids = sorted([AR.id for AR in ARs if AR.id.startswith(prefix)])
+        try:
+            last_ar_number = int(ar_ids[-1].split("-R")[-1])
+        except:
+            return 0
+        return last_ar_number
+
+    def at_post_create_script(self):
+        """Execute once the object is created
+        """
+
+        if self.aq_parent.Title() == 'Biospecimens':
+            self.container = self.getField('Project').get(self)
+            doActionFor(self, 'sample_due')
+            doActionFor(self, 'receive')
+
+        create_samplepartition(self, {'services': [], 'part_id': self.getId() + "-P"})
+
+        location = self.getStorageLocation()
+        if location:
+            doActionFor(location, 'occupy')
+
+    def at_post_edit_script(self):
+        """Execute once the object is edited
+        """
+        print 'salammmmmmmmmmmm'
+        raise ValueError
+
+    # TODO: CHECK ObjectModifiedEventHandler IN SANBI ANALYSISREQUEST.PY
+
+from Products.Archetypes import atapi
+from bika.lims.config import PROJECTNAME
 # Overrides type bika.lims.content.sample
-# atapi.registerType(Sample, PROJECTNAME)
+atapi.registerType(Sample, PROJECTNAME)

@@ -1,3 +1,5 @@
 bika_kittemplates,KitTemplates
 bika_biospectypes,BiospecTypes
 bika_storagetypes,StorageTypes
+bika_products,Products
+bika_stockitems,StockItems

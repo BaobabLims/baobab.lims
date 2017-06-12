@@ -6,7 +6,7 @@ from Products.CMFCore.utils import getToolByName
 from zope.schema import ValidationError
 from DateTime import DateTime
 
-from bika.lims.interfaces import IManagedStorage
+from bika.sanbi.interfaces import IManagedStorage
 from bika.lims.workflow import doActionFor
 from bika.sanbi.browser.project import get_storage_objects, count_storage_positions, objects_between_two_uids, \
     assign_items_to_storages, create_sample, create_samplepartition

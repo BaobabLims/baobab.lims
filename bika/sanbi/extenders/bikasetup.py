@@ -5,7 +5,7 @@ from bika.lims.browser.widgets import RecordsWidget
 from Products.CMFCore.utils import getToolByName
 from Products.Archetypes.public import *
 
-from bika.lims.fields import ExtRecordsField, ExtensionField
+from bika.lims.fields import ExtRecordsField, ExtensionField, ExtBooleanField
 from bika.lims.interfaces import IBikaSetup
 from bika.sanbi import bikaMessageFactory as _
 import plone.protect
@@ -53,6 +53,15 @@ class BikaSetupSchemaExtender(object):
                     },
                 },
             )
+        ),
+        ExtBooleanField(
+            'ShowPartitions',
+            schemata="Analyses",
+            default=False,
+            widget=BooleanWidget(
+                label=_("Display individual sample partitions "),
+                description=_("Turn this on if you want to work with sample partitions")
+            ),
         ),
     ]
 

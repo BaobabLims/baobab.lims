@@ -5,12 +5,24 @@ from zope.interface import alsoProvides
 from zope.schema import ValidationError
 from DateTime import DateTime
 
-from bika.lims.interfaces import IManagedStorage, IUnmanagedStorage
+from bika.sanbi.interfaces import IManagedStorage, IUnmanagedStorage
 from bika.lims.utils import tmpID
 from bika.lims.workflow import doActionFor
 from bika.sanbi.interfaces import IBiospecimen, IAliquot
 from project import ProjectView
 
+
+def get_first_sampletype(context):
+    """
+    This function is used to set the first sample type to a sample created using kit form. We do this
+    to allow idserver to generate an id to the sample created.
+    :param context:
+    :return:
+    """
+    portal = getToolByName(context, 'portal_url').getPortalObject()
+    bsc = getToolByName(context, 'bika_setup_catalog')
+    results = bsc.unrestrictedSearchResults({'portal_type': 'SampleType'})
+    return portal.unrestrictedTraverse(results[0].getPath()) if len(results) else None
 
 def get_storage_objects(context, storage_uids):
     """Take a list of UIDs from the form, and resolve to a list of Storages.
@@ -146,11 +158,5 @@ def create_samplepartition(context, data):
     """
     partition = _createObjectByType('SamplePartition', context, data['part_id'])
     partition.unmarkCreationFlag()
-    # Determine if the sampling workflow is enabled
-    workflow_enabled = context.bika_setup.getSamplingWorkflowEnabled()
-    # Perform the appropriate workflow action
-    workflow_action = 'sampling_workflow' if workflow_enabled \
-        else 'no_sampling_workflow'
-    context.portal_workflow.doActionFor(partition, workflow_action)
-    # Return the created partition
+
     return partition

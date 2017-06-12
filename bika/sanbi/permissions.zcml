@@ -16,11 +16,26 @@
     <permission id="bika.sanbi.ManageShipments" title="SANBI: Manage Shipments"/>
     <permission id="bika.sanbi.permissions.AddAliquot" title="SANBI: Add Aliquot"/>
     <permission id="bika.sanbi.ManageAliquots" title="SANBI: Manage Aliquots"/>
-    <permission id="bika.sanbi.permissions.AddMultimage" title="BIKA: Add Multimage"/>
-    <permission id="bika.sanbi.permissions.AddStorageType" title="BIKA: Add Storage Type"/>
+    <permission id="bika.sanbi.permissions.AddMultimage" title="SANBI: Add Multimage"/>
+    <permission id="bika.sanbi.permissions.AddStorageType" title="SANBI: Add Storage Type"/>
+
+    <permission id="bika.sanbi.permissions.AddInventoryOrder" title="SANBI: Add Inventory Order"/>
+    <permission id="bika.sanbi.DispatchInventoryOrder" title="SANBI: Dispatch Inventory Order"/>
+    <permission id="bika.sanbi.ReceiveInventoryOrder" title="SANBI: Receive Inventory Order"/>
+    <permission id="bika.sanbi.StoreInventoryOrder" title="SANBI: Store Inventory Order"/>
+
+    <permission id="bika.sanbi.permissions.AddStorageUnit" title="SANBI: Add Storage Unit"/>
+    <permission id="bika.sanbi.permissions.AddManagedStorage" title="SANBI: Add Managed Storage"/>
+    <permission id="bika.sanbi.permissions.AddUnmanagedStorage" title="SANBI: Add Unmanaged Storage"/>
+    <permission id="bika.sanbi.permissions.AddStoragePosition" title="SANBI: Add Storage Position"/>
+
 
     # Other
     # ------
-    <permission id="bika.sanbi.EditFieldBarcode" title="BIKA: Edit Field Barcode"/>
-    <permission id="bika.sanbi.ViewBarcode" title="BIKA: View Barcode"/>
+    <permission id="bika.sanbi.EditFieldBarcode" title="SANBI: Edit Field Barcode"/>
+    <permission id="bika.sanbi.ViewBarcode" title="SANBI: View Barcode"/>
+
+    # For sample workflow transition
+    <permission id="bika.sanbi.DueSample" title="SANBI: Due Sample"/>
+
 </configure>

@@ -1,0 +1,125 @@
+<html>
+<body>
+<style type="text/css">
+
+    .add-storage{
+      padding: 10px 0px;
+    }
+    .add-storage .discreet{
+      font-size:50%;
+      color:#ddd;
+    }
+    .add-storage input{
+      margin-bottom:5px;
+    }
+
+    /*The collapse-header is positioned upwards, compensate here with margin.
+    extra compensation since we only use the one collapsible, and we want to
+    position it away from the green-bar. */
+    .collapsible {
+      margin-top: 2em !important;
+    }
+
+    .discreet li {padding:0;margin:0;line-height:1em !important;}
+
+    table {width:100%;}
+    td {padding:5px 10px 5px 0;}
+
+    td.bordertop {border-top: 1px solid #ddd;}
+
+    select.storage_types {margin-left:15px;}
+
+    fieldset {
+        padding-top: 15px;
+    }
+
+</style>
+
+<dl tal:attributes="class python:view.dlclass()">
+
+    <dt class="collapsibleHeader">
+        &nbsp;<img src="++resource++bika.lims.images/add.png">&nbsp;
+        <span i18n:translate="">Create new storages</span>
+    </dt>
+
+    <dd class="collapsibleContent">
+        <form class="enableFormTabbing"
+              name="add-storage"
+              action="addstorage_submit"
+              method="POST">
+
+            <fieldset id="fieldset-units">
+                <legend id="fieldsetlegend-units">Storage units</legend>
+                <p>
+                    Storage units are used for creating the structure that
+                    matches the physical storage. Storage units can contain more
+                    storage units as well as managed or unmanaged storages, but
+                    items cannot be stored directly in storage units. In the
+                    following simple layout Room, Freezer and Shelf are storage
+                    units:
+                </p>
+                <ul>
+                    <li>
+                        Room -> Freezer -> Shelf -> Box [ -> Position]
+                    </li>
+                </ul>
+
+                <div tal:replace="structure python:view.add_units()"/>
+
+                <input name="add_units_submitted"
+                       type="submit"
+                       class="units-add-units"
+                       value="Create Storage units">
+            </fieldset>
+
+            <fieldset id="fieldset-managed" tal:condition='python:view.show_managed()'>
+                <legend id="fieldsetlegend-managed">Managed storage</legend>
+                <p>
+                    Managed storage contains a set number of positions for
+                    storing objects, e.g. boxes which can store 36 tubes each,
+                    or shelves which can store three of a type of stock item.
+
+                    Once all positions are occupied, the storage itself will be
+                    flagged as occupied, and when a position next becomes
+                    available the storage becomes available too.
+
+                    Items can be stored in specific positions, or the storage
+                    itself can be selected, in which case a position is chosen
+                    automatically.
+                </p>
+
+                <div tal:replace="structure python:view.add_managed()"/>
+
+                <input name="addstorage_managed_submitted"
+                       type="submit"
+                       class="managed-add-managed"
+                       value="Create storages">
+
+            </fieldset>
+
+            <fieldset id="fieldset-unmanaged" tal:condition='python:view.show_unmanaged()'>
+                <legend id="fieldsetlegend-unmanaged">Unmanaged storage</legend>
+                <p>
+                    Unmanaged storage does not restrict the number of items
+                    which can be stored. These storages will be available for
+                    selection until they are manually flagged as occupied or
+                    available.
+                </p>
+
+                <div tal:replace="structure python:view.add_unmanaged()"/>
+
+                <input name="addstorage_unmanaged_submitted"
+                       type="submit"
+                       class="unmanaged-add-unmanaged"
+                       value="Create storages">
+            </fieldset>
+
+        </form>
+    </dd>
+
+</dl>
+
+</body>
+</html>
+
+

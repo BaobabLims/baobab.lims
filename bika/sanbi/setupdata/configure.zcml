@@ -15,12 +15,6 @@
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
 
     <adapter
-      name="productcategory"
-      factory="bika.sanbi.setupdata.Product_Categories"
-      provides="bika.lims.interfaces.ISetupDataImporter"
-      for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
-
-    <adapter
       name="storagetype"
       factory="bika.sanbi.setupdata.Storage_Types"
       provides="bika.lims.interfaces.ISetupDataImporter"

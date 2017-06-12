@@ -7,7 +7,7 @@ from plone.app.layout.viewlets import ViewletBase
 from zope.schema import ValidationError
 from DateTime import DateTime
 
-from bika.lims.interfaces import IUnmanagedStorage, IStoragePosition, \
+from bika.sanbi.interfaces import IUnmanagedStorage, IStoragePosition, \
     IManagedStorage
 
 

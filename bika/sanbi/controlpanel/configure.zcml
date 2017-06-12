@@ -5,27 +5,43 @@
     i18n_domain="bika">
 
     <browser:page
-      for="bika.sanbi.interfaces.IKitTemplates"
-      name="folder_view"
-      class=".bika_kittemplates.KitTemplatesView"
-      permission="bika.lims.ManageBika"
-      layer="bika.lims.interfaces.IBikaLIMS"
+        for="bika.sanbi.interfaces.IKitTemplates"
+        name="folder_view"
+        class=".bika_kittemplates.KitTemplatesView"
+        permission="bika.lims.ManageBika"
+        layer="bika.lims.interfaces.IBikaLIMS"
     />
 
     <browser:page
-      for="bika.sanbi.interfaces.IBiospecTypes"
-      name="folder_view"
-      class=".bika_biospectypes.BiospecTypesView"
-      permission="bika.lims.ManageBika"
-      layer="bika.lims.interfaces.IBikaLIMS"
+        for="bika.sanbi.interfaces.IBiospecTypes"
+        name="folder_view"
+        class=".bika_biospectypes.BiospecTypesView"
+        permission="bika.lims.ManageBika"
+        layer="bika.lims.interfaces.IBikaLIMS"
     />
 
     <browser:page
-      for="bika.sanbi.interfaces.IStorageTypes"
-      name="folder_view"
-      class=".bika_storagetypes.StorageTypesView"
-      permission="bika.lims.ManageBika"
-      layer="bika.lims.interfaces.IBikaLIMS"
+        for="bika.sanbi.interfaces.IStorageTypes"
+        name="folder_view"
+        class=".bika_storagetypes.StorageTypesView"
+        permission="bika.lims.ManageBika"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+        for="bika.sanbi.interfaces.IProducts"
+        name="folder_view"
+        class=".bika_products.ProductsView"
+        permission="bika.lims.ManageBika"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+        for="bika.sanbi.interfaces.IStockItems"
+        name="folder_view"
+        class=".bika_stockitems.StockItemsView"
+        permission="bika.lims.ManageBika"
+        layer="bika.lims.interfaces.IBikaLIMS"
     />
 
 </configure>

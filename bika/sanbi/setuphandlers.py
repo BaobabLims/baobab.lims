@@ -5,7 +5,7 @@ from Products.CMFCore.utils import getToolByName
 
 from bika.lims import logger
 from bika.sanbi.permissions import *
-
+from bika.lims.permissions import CancelAndReinstate
 
 class Empty:
     pass
@@ -13,13 +13,15 @@ class Empty:
 
 class BikaCustomGenerator:
     def setupPortalContent(self, portal):
-        # remove undesired content objects
+
         for obj_id in (
                 'kits',
                 'projects',
                 'shipments',
                 'aliquots',
-                'biospecimens'):
+                'biospecimens',
+                'inventoryorders',
+                'storage',):
             try:
                 obj = portal._getOb(obj_id)
                 obj.unmarkCreationFlag()
@@ -31,7 +33,9 @@ class BikaCustomGenerator:
         for obj_id in (
                 'bika_kittemplates',
                 'bika_biospectypes',
-                'bika_storagetypes'):
+                'bika_storagetypes',
+                'bika_products',
+                'bika_stockitems'):
 
             obj = bika_setup._getOb(obj_id)
             obj.unmarkCreationFlag()
@@ -68,6 +72,9 @@ class BikaCustomGenerator:
         at.setCatalogsByType('Aliquot', ['bika_catalog'])
         at.setCatalogsByType('Biospecimen', ['bika_catalog'])
 
+        addIndex(bc, 'getParentUID', 'FieldIndex')
+        addIndex(bc, 'getProjectUID', 'FieldIndex')
+
         # _______________________________#
         #      BIKA_SETUP_CATALOG        #
         # _______________________________#
@@ -78,11 +85,16 @@ class BikaCustomGenerator:
 
         # Add indexes and metadata columns here
         at = getToolByName(portal, 'archetype_tool')
-        at.setCatalogsByType('KitTemplate', ['bika_setup_catalog', ])
-        at.setCatalogsByType('StorageManagement', ['bika_setup_catalog', ])
-        at.setCatalogsByType('BiospecType', ['bika_setup_catalog', ])
-        at.setCatalogsByType('Multimage', ['bika_setup_catalog', ])
-        at.setCatalogsByType('StorageType', ['bika_setup_catalog', ])
+        at.setCatalogsByType('KitTemplate', ['bika_setup_catalog'])
+        at.setCatalogsByType('InventoryOrder', ['bika_setup_catalog'])
+        at.setCatalogsByType('StorageType', ['bika_setup_catalog'])
+        at.setCatalogsByType('Product', ['bika_setup_catalog'])
+        at.setCatalogsByType('StockItem', ['bika_setup_catalog', ])
+        at.setCatalogsByType('StorageLocation', ['bika_setup_catalog'])
+        at.setCatalogsByType('StorageUnit', ['bika_setup_catalog'])
+        at.setCatalogsByType('ManagedStorage', ['bika_setup_catalog'])
+        at.setCatalogsByType('UnmanagedStorage', ['bika_setup_catalog'])
+        at.setCatalogsByType('StoragePosition', ['bika_setup_catalog'])
 
         bac = getToolByName(portal, 'bika_analysis_catalog', None)
         if bsc is None:
@@ -108,6 +120,10 @@ class BikaCustomGenerator:
         mp(AddProject, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(AddKit, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(AddShipment, ['Manager', 'LabManager', 'LabClerk'], 1)
+        mp(AddStorageUnit, ['Manager', 'Owner', 'LabManager', ], 1)
+        mp(AddManagedStorage, ['Manager', 'Owner', 'LabManager', ], 1)
+        mp(AddUnmanagedStorage, ['Manager', 'Owner', 'LabManager', ], 1)
+        mp(AddStoragePosition, ['Manager', 'Owner', 'LabManager', ], 1)
 
         # projects
         mp = portal.projects.manage_permission
@@ -158,6 +174,28 @@ class BikaCustomGenerator:
         mp(permissions.DeleteObjects, ['Manager', 'LabManager', 'Owner'], 0)
         mp(permissions.View, ['Manager', 'LabManager', 'LabClerk'], 0)
         portal.aliquots.reindexObject()
+
+        # inventoryorders folder permissions
+        mp = portal.inventoryorders.manage_permission
+        mp(CancelAndReinstate, ['Manager', 'LabManager', 'LabClerk'], 0)
+        mp(AddInventoryOrder,  ['Manager', 'LabManager', 'Owner', 'LabClerk'], 1)
+        mp(DispatchInventoryOrder, ['Manager', 'LabManager', 'Owner', 'LabClerk'], 1)
+        mp(ReceiveInventoryOrder, ['Manager', 'LabManager', 'Owner', 'LabClerk'], 1)
+        mp(StoreInventoryOrder, ['Manager', 'LabManager', 'LabClerk', 'Owner'], 1)
+        mp(permissions.ListFolderContents, ['Member'], 1)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'Owner', 'LabClerk'], 0)
+        mp(permissions.DeleteObjects, ['Manager', 'LabManager', 'Owner', 'LabClerk'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk'], 0)
+        portal.inventoryorders.reindexObject()
+
+        # /storage folder permissions (StorageUnits)
+        mp = portal.storage.manage_permission
+        mp(CancelAndReinstate, ['Manager', 'LabManager', 'LabClerk'], 0)
+        mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'LabClerk', 'Analyst'], 0)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
+        mp(permissions.DeleteObjects, ['Manager', 'LabManager', 'Owner'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk'], 0)
+        portal.invoices.reindexObject()
 
 
 def setupCustomVarious(context):

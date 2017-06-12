@@ -1,0 +1,109 @@
+<configure
+        xmlns:browser="http://namespaces.zope.org/browser"
+        xmlns="http://namespaces.zope.org/zope"
+        i18n_domain="bika.lims">
+
+    <browser:page
+            for="bika.sanbi.interfaces.IStorageUnit"
+            name="view"
+            class=".storageunits.StorageUnitsView"
+            permission="zope2.View"
+            layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+            for="bika.sanbi.interfaces.IStorageUnits"
+            name="view"
+            class=".storageunits.StorageUnitsView"
+            permission="zope2.View"
+            layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:viewlet
+            for="bika.sanbi.interfaces.IStorageUnit"
+            name="addstorage_viewlet"
+            class=".addstorage_viewlet.AddStorageViewlet"
+            manager="plone.app.layout.viewlets.interfaces.IBelowContentTitle"
+            permission="zope2.View"
+            layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+            for="bika.sanbi.interfaces.IStorageUnit"
+            name="addstorage_submit"
+            class=".addstorage_viewlet.AddStorageSubmit"
+            permission="zope2.View"
+            layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:viewlet
+            for="bika.sanbi.interfaces.IStorageUnits"
+            name="addstorage_viewlet"
+            class=".addstorage_viewlet.AddStorageViewlet"
+            manager="plone.app.layout.viewlets.interfaces.IBelowContentTitle"
+            permission="zope2.View"
+            layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+            for="bika.sanbi.interfaces.IStorageUnits"
+            name="addstorage_submit"
+            class=".addstorage_viewlet.AddStorageSubmit"
+            permission="zope2.View"
+            layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+            for="*"
+            name="add_units"
+            template="templates/add_units.pt"
+            permission="zope2.View"
+    />
+
+    <adapter
+            for="*"
+            provides="bika.sanbi.interfaces.IStorageTypeRegistration"
+            name="bika.lims.storagetypes"
+            factory="bika.sanbi.browser.storage.defaultStorageTypes"
+    />
+
+    <browser:page
+            for="bika.sanbi.interfaces.IManagedStorage"
+            name="view"
+            class=".managedstorage.ManagedStorageView"
+            permission="zope2.View"
+    />
+
+    <browser:page
+            for="bika.sanbi.interfaces.IUnmanagedStorage"
+            name="view"
+            class=".unmanagedstorage.UnmanagedStorageView"
+            permission="zope2.View"
+            layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+            for="bika.sanbi.interfaces.IUnmanagedStorage"
+            name="content"
+            class=".unmanagedstorage.UnmanagedStorageContent"
+            permission="zope2.View"
+            layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+            for="bika.sanbi.interfaces.IManagedStorage"
+            name="positions_info"
+            class="bika.sanbi.browser.storage.managedstorage.PositionsInfo"
+            permission="zope.Public"
+            layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+            for="bika.sanbi.interfaces.IManagedStorage"
+            name="sample_info"
+            class="bika.sanbi.browser.storage.managedstorage.SampleInfo"
+            permission="zope.Public"
+            layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+</configure>

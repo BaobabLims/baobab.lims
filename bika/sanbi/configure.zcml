@@ -24,9 +24,20 @@
   <include package=".reports"/>
   <include package=".static"/>
   <include package=".setupdata"/>
+  <include package=".monkey"/>
 
   <include file="profiles.zcml" />
 
   <cmf:registerDirectory name="skins" directory="skins" recursive="True" />
+
+  <browser:resource
+    file="skins/bika_sanbi/logo.png"
+    name="bika-health-logo.png"
+   />
+
+  <browser:resource
+    file="skins/bika_sanbi/logo.png"
+    name="logo.png"
+  />
 
 </configure>

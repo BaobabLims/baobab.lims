@@ -14,7 +14,7 @@ from bika.lims.browser.widgets import DateTimeWidget
 from bika.lims.content.bikaschema import BikaSchema, BikaFolderSchema
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from bika.sanbi import bikaMessageFactory as _
-from bika.sanbi.interfaces import IBiospecimen, IBioSpecimenStorage
+from bika.sanbi.interfaces import IBiospecimen, IBiospecimenStorage
 from bika.sanbi.config import PROJECTNAME
 
 import sys
@@ -102,7 +102,7 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
             render_own_label=True,
             base_query={'inactive_state': 'active',
                         'review_state': 'available',
-                        'object_provides': IBioSpecimenStorage.__identifier__},
+                        'object_provides': IBiospecimenStorage.__identifier__},
             colModel=[{'columnName': 'UID', 'hidden': True},
                       {'columnName': 'Title', 'width': '50', 'label': _('Title')},
                       {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "50"}
