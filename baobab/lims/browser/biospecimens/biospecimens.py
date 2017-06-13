@@ -10,7 +10,7 @@ from bika.lims.utils import isActive
 from bika.lims.interfaces import ISample
 
 from baobab.lims.config import VOLUME_UNITS
-from baobab.lims.permissions import ManageAliquots, AddProject
+from baobab.lims.permissions import AddProject, ManageProjects
 from baobab.lims import bikaMessageFactory as _
 
 
@@ -26,7 +26,7 @@ class BiospecimensView(BikaListingView):
         request.set('disable_plone.rightcolumn', 1)
         self.contentFilter = {
             'portal_type': 'Sample',
-            'sort_on': 'created',
+            'sort_on': 'sortable_title',
             'sort_order': 'ascending'
         }
         self.context_actions = {_('Add'):
@@ -294,7 +294,7 @@ class BiospecimensView(BikaListingView):
                                            (items[x]['url'], items[x]['Title'])
             # TODO: SPECIFY OBJ STATES WHERE USER CAN EDIT BARCODE
             if self.allow_edit and isActive(self.context) and \
-                    getSecurityManager().checkPermission(ManageAliquots, obj):
+                    getSecurityManager().checkPermission(ManageProjects, obj):
                 if items[x]['review_state'] == "sample_registered":
                     items[x]['allow_edit'] = ['Type', 'Barcode']
                     items[x]['choices']['Type'] = biospecimen_types

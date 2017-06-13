@@ -18,7 +18,6 @@ class BikaCustomGenerator:
                 'kits',
                 'projects',
                 'shipments',
-                'aliquots',
                 'biospecimens',
                 'inventoryorders',
                 'storage',):
@@ -69,7 +68,6 @@ class BikaCustomGenerator:
         at.setCatalogsByType('Kit', ['bika_catalog'])
         at.setCatalogsByType('Project', ['bika_catalog'])
         at.setCatalogsByType('Shipment', ['bika_catalog'])
-        at.setCatalogsByType('Aliquot', ['bika_catalog'])
         at.setCatalogsByType('Biospecimen', ['bika_catalog'])
 
         addIndex(bc, 'getParentUID', 'FieldIndex')
@@ -116,7 +114,6 @@ class BikaCustomGenerator:
         mp(ManageProjects, ['Manager', 'LabManager', 'Owner'], 1)
         mp(ManageShipments, ['Manager', 'LabManager', 'Owner', 'Member'], 1)
         mp(ManageKits, ['Manager', 'LabManager', 'LabClerk'], 1)
-        mp(ManageAliquots, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(AddProject, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(AddKit, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(AddShipment, ['Manager', 'LabManager', 'LabClerk'], 1)
@@ -157,23 +154,12 @@ class BikaCustomGenerator:
 
         # Biospecimens
         mp = portal.biospecimens.manage_permission
-        mp(ManageAliquots, ['Manager', 'LabManager', 'LabClerk'], 0)
         mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
         mp(permissions.ListFolderContents, ['LabClerk', ''], 0)
         mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'Owner', 'LabClerk'], 0)
         mp(permissions.DeleteObjects, ['Manager', 'LabManager', 'Owner'], 0)
         mp(permissions.View, ['Manager', 'LabManager', 'LabClerk'], 0)
         portal.biospecimens.reindexObject()
-
-        # Aliquots
-        mp = portal.aliquots.manage_permission
-        mp(ManageAliquots, ['Manager', 'LabManager', 'LabClerk'], 0)
-        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
-        mp(permissions.ListFolderContents, ['LabClerk', ''], 0)
-        mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'Owner', 'LabClerk'], 0)
-        mp(permissions.DeleteObjects, ['Manager', 'LabManager', 'Owner'], 0)
-        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk'], 0)
-        portal.aliquots.reindexObject()
 
         # inventoryorders folder permissions
         mp = portal.inventoryorders.manage_permission
@@ -266,7 +252,6 @@ def setupCustomVarious(context):
                           'kits',
                           'shipments',
                           'biospecimens',
-                          'aliquots',
                           'analysisrequests',
                           'pricelists',
                           'invoices']):

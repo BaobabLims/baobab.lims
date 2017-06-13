@@ -16,11 +16,6 @@ msgstr ""
 
 #. Default: "Complete"
 #: ../profiles/default/workflows/bika_aliquot_workflow/definition.xml
-msgid "complete_aliquot_transition_title"
-msgstr "Complete"
-
-#. Default: "Complete"
-#: ../profiles/default/workflows/bika_aliquot_workflow/definition.xml
 msgid "complete_biospecimen_transition_title"
 msgstr "Complete"
 

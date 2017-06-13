@@ -37,7 +37,7 @@
                     "<tr><td> Subject ID </td>" +
                     "<td>" + d["subject"] + "</td><tr>";
 
-                    if(portalType === "Aliquot" || portalType === "Biospecimen"){
+                    if(portalType === "Biospecimen"){
                         html += subjectID;
                         html += volumeHTML;
                     }

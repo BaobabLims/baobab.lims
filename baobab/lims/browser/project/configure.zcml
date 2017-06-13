@@ -45,33 +45,9 @@
     />
 
     <browser:page
-      for="baobab.lims.interfaces.IProject"
-      name="aliquots"
-      class=".project.ProjectAliquotsView"
-      permission="zope.Public"
-      layer="bika.lims.interfaces.IBikaLIMS"
-    />
-
-    <browser:page
         for="baobab.lims.interfaces.IProject"
         name="add_kits_submit"
         class=".add_kits_viewlet.AddKitsSubmitHandler"
-        permission="zope2.View"
-        layer="bika.lims.interfaces.IBikaLIMS"
-    />
-
-    <browser:page
-        for="baobab.lims.interfaces.IProject"
-        name="add_biospecimens_submit"
-        class=".add_biospecimens_viewlet.AddBiospecimensSubmitHandler"
-        permission="zope2.View"
-        layer="bika.lims.interfaces.IBikaLIMS"
-    />
-
-    <browser:page
-        for="baobab.lims.interfaces.IProject"
-        name="add_aliquots_submit"
-        class=".add_aliquots_viewlet.AddAliquotsSubmitHandler"
         permission="zope2.View"
         layer="bika.lims.interfaces.IBikaLIMS"
     />
@@ -93,6 +69,14 @@
         layer="bika.lims.interfaces.IBikaLIMS"
     />
 
+    <!--<browser:page
+        for="baobab.lims.interfaces.IProject"
+        name="add_biospecimens_submit"
+        class=".add_biospecimens_viewlet.AddBiospecimensSubmitHandler"
+        permission="zope2.View"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
     <browser:viewlet
             for="baobab.lims.interfaces.IProject"
             name="add_biospecimens_viewlet"
@@ -100,16 +84,7 @@
             manager="plone.app.layout.viewlets.interfaces.IBelowContentTitle"
             permission="bika.lims.EditClient"
             layer="bika.lims.interfaces.IBikaLIMS"
-    />
-
-    <browser:viewlet
-        for="baobab.lims.interfaces.IProject"
-        name="add_aliquots_viewlet"
-        class=".add_aliquots_viewlet.AddAliquotsViewlet"
-        manager="plone.app.layout.viewlets.interfaces.IBelowContentTitle"
-        permission="bika.lims.EditClient"
-        layer="bika.lims.interfaces.IBikaLIMS"
-    />
+    />-->
 
     <!-- Workflow action button clicked in Biospecimens folder list -->
     <browser:page

@@ -1,5 +1,4 @@
-from baobab.lims.interfaces import IBiospecimenStorage, \
-    IAliquotStorage, IKitStorage
+from baobab.lims.interfaces import  IKitStorage
 
 
 def defaultStorageTypes(context):

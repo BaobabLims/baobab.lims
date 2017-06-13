@@ -28,8 +28,6 @@ def initialize(context):
     from content.kits import Kits
     from content.project import Project
     from content.projects import Projects
-    from content.aliquot import Aliquot
-    from content.aliquots import Aliquots
     from content.biospecimens import Biospecimens
     from content.inventoryorder import InventoryOrder
     from content.inventoryorderfolder import InventoryOrderFolder

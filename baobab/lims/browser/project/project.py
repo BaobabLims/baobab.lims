@@ -5,7 +5,6 @@ from bika.lims.browser.client import ClientAnalysisRequestsView
 from bika.lims.controlpanel.bika_analysisservices import AnalysisServicesView
 from bika.lims.controlpanel.bika_sampletypes import SampleTypesView
 from bika.lims.browser.invoicefolder import InvoiceFolderContentsView
-from baobab.lims.browser.aliquots.folder_view import AliquotsView
 from baobab.lims.browser.analysisrequest import hide_actions_and_columns
 from baobab.lims.browser.biospecimens.biospecimens import BiospecimensView
 from baobab.lims.browser.kits.folder_view import KitsView
@@ -196,32 +195,15 @@ class ProjectBiospecimensView(BiospecimensView):
 
         # Filter biospecimens by project uid
         self.columns.pop('Project', None)
-        path = '/'.join(self.context.getPhysicalPath())
+        # path = '/'.join(self.context.getPhysicalPath())
         for state in self.review_states:
-            state['contentFilter']['path'] = {'query': path, 'depth': 1}
+            # state['contentFilter']['path'] = {'query': path, 'depth': 1}
+            state['contentFilter']['getProjectUID'] = self.context.UID()
+            state['contentFilter']['sort_on'] = 'sortable_title'
             state['columns'].remove('Project')
 
     def folderitems(self, full_objects=False):
         items = BiospecimensView.folderitems(self)
-
-        return items
-
-
-class ProjectAliquotsView(AliquotsView):
-    def __init__(self, context, request):
-        super(ProjectAliquotsView, self).__init__(context, request)
-        self.context = context
-        self.context_actions = {}
-
-        # Filter biospecimens by project uid
-        self.columns.pop('Project', None)
-        path = '/'.join(self.context.getPhysicalPath())
-        for state in self.review_states:
-            state['contentFilter']['path'] = {'query': path, 'depth': 1}
-            state['columns'].remove('Project')
-
-    def folderitems(self, full_objects=False):
-        items = AliquotsView.folderitems(self)
 
         return items
 

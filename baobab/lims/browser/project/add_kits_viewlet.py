@@ -219,6 +219,7 @@ class AddKitsSubmitHandler(BrowserView):
         seq_start = int(self.form.get('seq-start', None))
         kit_count = int(self.form.get('kit-count', None))
         kit_template_uid = self.form.get('kit-template-uid', None)
+        spec_per_kit = int(self.form.get('specimen-count', None))
         # kit storages
         kits = []
         kit_storages = self.get_kit_storages()
@@ -246,8 +247,9 @@ class AddKitsSubmitHandler(BrowserView):
         self.assign_kit_to_storage(kits, kit_storages)
         # generate biospecimens
         for kit in kits:
-            sample = self.samples_gen.create_sample(kit, self.sample_type)
-            samples.append(sample)
+            for i in range(spec_per_kit):
+                sample = self.samples_gen.create_sample(kit, self.sample_type)
+                samples.append(sample)
         self.samples_gen.store_samples(samples, sample_storages)
 
         return kits

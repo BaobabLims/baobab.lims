@@ -9,7 +9,6 @@ AddKitTemplate = 'BAOBAB: Add KitTemplate'
 AddProject = 'BAOBAB: Add Project'
 AddKit = 'BAOBAB: Add Kit'
 AddShipment = 'BAOBAB: Add Shipment'
-AddAliquot = "BAOBAB: Add Aliquot"
 AddMultimage = 'BAOBAB: Add Multimage'
 EditFieldBarcode = "BAOBAB: Edit Field Barcode"
 ViewBarcode = "BAOBAB: View Barcode"
@@ -34,7 +33,6 @@ ADD_CONTENT_PERMISSIONS = {
     'Project': AddProject,
     'Shipment': AddShipment,
     'Multimage': AddMultimage,
-    'Aliquot': AddAliquot,
     'StorageType': AddStorageType,
     'InventoryOrder': AddInventoryOrder,
     'StorageUnit': AddStorageUnit,
@@ -48,6 +46,5 @@ ManageKits = "BAOBAB: Manage Kits"
 ManageKitTemplates = "BAOBAB: Manage KitTemplates"
 ManageProjects = 'BAOBAB: Manage Projects'
 ManageShipments= "BAOBAB: Manage Shipments"
-ManageAliquots = "BAOBAB: Manage Aliquots"
 
 DueSample = 'BAOBAB: Due Sample'

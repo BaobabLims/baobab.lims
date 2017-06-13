@@ -39,12 +39,6 @@ class IBiospecimens(Interface):
 class IMultimage(Interface):
     """Interface for a multimage"""
 
-class IAliquot(Interface):
-    """Interface for a aliquot"""
-
-class IAliquots(Interface):
-    """Interface for aliquots"""
-
 class IStockItemStorage(Interface):
     """A StorageLocation or StorageLevel that can store StockItems must
     provide this interface"""
@@ -52,10 +46,6 @@ class IStockItemStorage(Interface):
 class IBiospecimenStorage(Interface):
     """A StorageLocation or StorageLevel that can store BioSpecimen objects
      must provide this interface"""
-
-class IAliquotStorage(Interface):
-    """A StorageLocation or StorageLevel that can store Aliquots must
-    provide this interface"""
 
 class IKitStorage(Interface):
     """A StorageLocation or StorageLevel that can store Kits must

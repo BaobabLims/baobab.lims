@@ -1,5 +1,4 @@
 from bika.lims.browser.sample import SampleEdit as SE
-from baobab.lims.interfaces import IAliquot, IBiospecimen
 
 
 class SampleEdit(SE):

@@ -10,8 +10,6 @@
     <object name="Projects" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="BiospecType" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="BiospecTypes" meta_type="Factory-based Type Information with dynamic views"/>
-    <object name="Aliquot" meta_type="Factory-based Type Information with dynamic views"/>
-    <object name="Aliquots" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Biospecimen" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Biospecimens" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Multimage" meta_type="Factory-based Type Information with dynamic views"/>

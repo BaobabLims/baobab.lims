@@ -17,8 +17,6 @@ where the widget.visible flag is used to control adapters in bika.lims.
 from zope.interface import implements
 
 from bika.lims.interfaces import IATWidgetVisibility
-from baobab.lims.interfaces import IAliquot, IBiospecimen
-from baobab.lims import bikaMessageFactory as _
 
 class ARFieldWidgetVisibility(object):
     """Forces a set of AnalysisRequest fields to be invisible depending on

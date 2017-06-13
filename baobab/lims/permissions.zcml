@@ -14,8 +14,6 @@
     <permission id="baobab.lims.ManageProjects" title="BAOBAB: Manage Projects"/>
     <permission id="baobab.lims.permissions.AddShipment" title="BAOBAB: Add Shipment"/>
     <permission id="baobab.lims.ManageShipments" title="BAOBAB: Manage Shipments"/>
-    <permission id="baobab.lims.permissions.AddAliquot" title="BAOBAB: Add Aliquot"/>
-    <permission id="baobab.lims.ManageAliquots" title="BAOBAB: Manage Aliquots"/>
     <permission id="baobab.lims.permissions.AddMultimage" title="BAOBAB: Add Multimage"/>
     <permission id="baobab.lims.permissions.AddStorageType" title="BAOBAB: Add Storage Type"/>
 

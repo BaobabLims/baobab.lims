@@ -21,8 +21,6 @@
     <include package=".biospectype"/>
     <include package=".biospecimens"/>
     <include package=".biospecimen"/>
-    <include package=".aliquots"/>
-    <include package=".aliquot"/>
     <include package=".multimage"/>
     <include package=".invoices"/>
     <include package=".inventory"/>

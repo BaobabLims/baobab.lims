@@ -165,12 +165,6 @@ class PositionsInfo:
                     volume = item.getField("Volume").get(item)
                     unit = item.getField("Unit").get(item)
                     subject = item.getField("SubjectID").get(item) and item.getField("SubjectID").get(item) or ''
-                elif item.portal_type == 'Aliquot':
-                    # volume = item.getVolume()
-                    volume = item.getField("Volume").get(item)
-                    unit = item.getUnit()
-                    subject = item.getBiospecimen().getSubjectID() and \
-                              item.getBiospecimen().getSubjectID() or ''
 
             state = workflow.getInfoFor(position, 'review_state')
             portal_type = position.getStoredItem() and position.getStoredItem().portal_type or ''

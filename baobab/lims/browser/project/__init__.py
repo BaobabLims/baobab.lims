@@ -8,7 +8,7 @@ from DateTime import DateTime
 from baobab.lims.interfaces import IManagedStorage, IUnmanagedStorage
 from bika.lims.utils import tmpID
 from bika.lims.workflow import doActionFor
-from baobab.lims.interfaces import IBiospecimen, IAliquot
+from baobab.lims.interfaces import IBiospecimen
 from project import ProjectView
 
 
@@ -142,7 +142,7 @@ def create_sample(context, request, values, j, x):
         field = sample.getField('LinkedSample')
         field.set(sample, values['biospecimens'][j].UID())
         # sample.setLinkedSample(values['biospecimens'][j].UID())
-        alsoProvides(sample, IAliquot)
+        # alsoProvides(sample, IAliquot)
     context.manage_renameObject(sample.id, values['id_template'].format(id=x), )
     # Perform the appropriate workflow action
     workflow_action = 'sampling_workflow' if workflow_enabled \
