@@ -49,4 +49,150 @@
   <permission>BIKA: Manage Bika</permission>
 </configlet>
 
+<!-- HIDE ELEMENTS FROM BIKA CONTROL PANEL -->
+<configlet title="AR Templates" action_id="bika_artemplates"
+    appId="bika.lims" category="bika" condition_expr=""
+    icon_expr="string:++resource++bika.lims.images/artemplate.png"
+    url_expr="string:$portal_url/bika_setup/bika_artemplates"
+    visible="False"
+    i18n:attributes="title">
+  <permission>BIKA: Manage Bika</permission>
+ </configlet>
+
+<configlet title="Analysis Profiles" action_id="bika_analysisprofiles"
+    appId="bika.lims" category="bika" condition_expr=""
+    icon_expr="string:++resource++bika.lims.images/analysisprofile.png"
+    url_expr="string:$portal_url/bika_setup/bika_analysisprofiles"
+    visible="False"
+    i18n:attributes="title">
+  <permission>BIKA: Manage Bika</permission>
+ </configlet>
+
+<configlet title="Batch Labels" action_id="bika_batchlabels"
+    appId="bika.lims" category="bika" condition_expr=""
+    icon_expr="string:++resource++bika.lims.images/batchlabel.png"
+    url_expr="string:$portal_url/bika_setup/bika_batchlabels"
+    visible="False"
+    i18n:attributes="title">
+  <permission>BIKA: Manage Bika</permission>
+ </configlet>
+
+<configlet title="Containers" action_id="bika_containers"
+    appId="bika.lims" category="bika" condition_expr=""
+    icon_expr="string:++resource++bika.lims.images/container.png"
+    url_expr="string:$portal_url/bika_setup/bika_containers"
+    visible="False"
+    i18n:attributes="title">
+  <permission>BIKA: Manage Bika</permission>
+ </configlet>
+
+ <configlet title="Container Types" action_id="bika_containertypes"
+    appId="bika.lims" category="bika" condition_expr=""
+    icon_expr="string:++resource++bika.lims.images/container.png"
+    url_expr="string:$portal_url/bika_setup/bika_containertypes"
+    visible="False"
+    i18n:attributes="title">
+  <permission>BIKA: Manage Bika</permission>
+ </configlet>
+
+ <configlet title="Identifier Types" action_id="bika_identifiertypes"
+    appId="bika.lims" category="bika" condition_expr=""
+    icon_expr="string:++resource++bika.lims.images/identifiertype.png"
+    url_expr="string:$portal_url/bika_setup/bika_identifiertypes"
+    visible="False"
+    i18n:attributes="title">
+  <permission>BIKA: Manage Bika</permission>
+</configlet>
+
+<configlet title="Lab Products" action_id="bika_labproducts"
+    appId="bika.lims" category="bika" condition_expr=""
+    icon_expr="string:++resource++bika.lims.images/product.png"
+    url_expr="string:$portal_url/bika_setup/bika_labproducts"
+    visible="False"
+    i18n:attributes="title">
+  <permission>BIKA: Manage Bika</permission>
+</configlet>
+
+<configlet title="Manufacturers"
+    action_id="bika_manufacturers"
+    appId="bika.lims" category="bika" condition_expr=""
+    icon_expr="string:++resource++bika.lims.images/manufacturer.png"
+    url_expr="string:$portal_url/bika_setup/bika_manufacturers"
+    visible="False"
+    i18n:attributes="title">
+  <permission>BIKA: Manage Bika</permission>
+</configlet>
+
+<configlet title="Preservations" action_id="bika_preservations"
+    appId="bika.lims" category="bika" condition_expr=""
+    icon_expr="string:++resource++bika.lims.images/preservation.png"
+    url_expr="string:$portal_url/bika_setup/bika_preservations"
+    visible="False"
+    i18n:attributes="title">
+  <permission>BIKA: Manage Bika</permission>
+</configlet>
+
+<configlet title="Sample Matrices" action_id="bika_samplematrices"
+    appId="bika.lims" category="bika" condition_expr=""
+    icon_expr="string:++resource++bika.lims.images/samplematrix.png"
+    url_expr="string:$portal_url/bika_setup/bika_samplematrices"
+    visible="False"
+    i18n:attributes="title">
+  <permission>BIKA: Manage Bika</permission>
+</configlet>
+
+<configlet title="Sample Points" action_id="bika_samplepoints"
+    appId="bika.lims" category="bika" condition_expr=""
+    icon_expr="string:++resource++bika.lims.images/samplepoint.png"
+    url_expr="string:$portal_url/bika_setup/bika_samplepoints"
+    visible="False"
+    i18n:attributes="title">
+  <permission>BIKA: Manage Bika</permission>
+</configlet>
+
+ <configlet title="Sampling Deviations" action_id="bika_samplingdeviations"
+    appId="bika.lims" category="bika" condition_expr=""
+    icon_expr="string:++resource++bika.lims.images/samplingdeviation.png"
+    url_expr="string:$portal_url/bika_setup/bika_samplingdeviations"
+    visible="False"
+    i18n:attributes="title">
+  <permission>BIKA: Manage Bika</permission>
+</configlet>
+
+<configlet title="Sampling Round Templates" action_id="bika_srtemplates"
+    appId="bika.lims" category="bika" condition_expr=""
+    icon_expr="string:++resource++bika.lims.images/srtemplate.png"
+    url_expr="string:$portal_url/bika_setup/bika_srtemplates"
+    visible="False"
+    i18n:attributes="title">
+  <permission>BIKA: Manage Bika</permission>
+</configlet>
+
+<configlet title="Sub-groups" action_id="bika_subgroups"
+    appId="bika.lims" category="bika" condition_expr=""
+    icon_expr="string:++resource++bika.lims.images/batch.png"
+    url_expr="string:$portal_url/bika_setup/bika_subgroups"
+    visible="False"
+    i18n:attributes="title">
+  <permission>BIKA: Manage Bika</permission>
+</configlet>
+
+<configlet title="Sampling Rounds" action_id="bika_samplingrounds"
+    appId="bika.lims" category="bika" condition_expr=""
+    icon_expr="string:++resource++bika.lims.images/batch.png"
+    url_expr="string:$portal_url/bika_setup/bika_samplingrounds"
+    visible="False"
+    i18n:attributes="title">
+  <permission>BIKA: Manage Bika</permission>
+</configlet>
+
+<configlet title="Worksheet Templates" action_id="bika_worksheettemplates"
+    appId="bika.lims" category="bika" condition_expr=""
+    icon_expr="string:++resource++bika.lims.images/worksheettemplate.png"
+    url_expr="string:$portal_url/bika_setup/bika_worksheettemplates"
+    visible="False"
+    i18n:attributes="title">
+  <permission>BIKA: Manage Bika</permission>
+</configlet>
+
 </object>

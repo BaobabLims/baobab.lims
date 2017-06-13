@@ -219,8 +219,44 @@ def setupCustomVarious(context):
               'methods',
               'inventoryorders',
               'supplyorders',
-              'arimports', ]:
+              'arimports',
+              'bika_setup',
+              ]:
         obj = portal[x]
+        obj.schema['excludeFromNav'].set(obj, True)
+        obj.reindexObject()
+
+    bika_setup = portal._getOb('bika_setup')
+    for x in [
+        'bika_analysiscategories',
+        'bika_analysisspecs',
+        'bika_arpriorities',
+        'bika_artemplates',
+        'bika_analysisprofiles',
+        'bika_attachmenttypes',
+        'bika_batchlabels',
+        'bika_containers',
+        'bika_containertypes',
+        'bika_identifiertypes',
+        'bika_instrumentlocations',
+        'bika_instrumenttypes',
+        'bika_labcontacts',
+        'bika_departments',
+        'bika_labproducts',
+        'bika_manufacturers',
+        'bika_preservations',
+        'bika_referencedefinitions',
+        'bika_sampleconditions',
+        'bika_samplematrices',
+        'bika_samplingdeviations',
+        'bika_samplepoints',
+        'bika_srtemplates',
+        'bika_storagelocations',
+        'bika_subgroups',
+        'bika_worksheettemplates',
+        'bika_samplingrounds',
+    ]:
+        obj = bika_setup._getOb(x)
         obj.schema['excludeFromNav'].set(obj, True)
         obj.reindexObject()
 
