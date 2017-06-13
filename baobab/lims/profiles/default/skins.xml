@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<object name="portal_skins"
+        meta_type="Plone Skins Tool"
+        allow_any="False"
+        cookie_persistence="False"
+        default_skin="Sunburst Theme"
+        request_varname="plone_skin">
+
+  <object name="baobab_lims"
+          meta_type="Filesystem Directory View"
+          directory="baobab.lims:skins/baobab_lims"/>
+
+  <skin-path name="*">
+    <layer name="baobab_lims" insert-after="custom"/>
+  </skin-path>
+
+</object>

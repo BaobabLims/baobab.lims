@@ -1,0 +1,21 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    i18n_domain="baobab.lims">
+
+  <genericsetup:registerProfile
+      name="default"
+      title="Baobab LIMS"
+      directory="profiles/default"
+      description='Baobab extension profile for Bika LIMS'
+      provides="Products.GenericSetup.interfaces.EXTENSION"/>
+
+  <genericsetup:importStep
+      name="baobab.lims.various"
+      title="baobab: Various baobab python setup actions"
+      description="Final site configuration actions"
+      handler="baobab.lims.setuphandlers.setupCustomVarious">
+    <depends name="content" />
+  </genericsetup:importStep>
+
+</configure>

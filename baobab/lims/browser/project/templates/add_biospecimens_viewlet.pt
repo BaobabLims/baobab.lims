@@ -1,0 +1,251 @@
+<html>
+
+<head>
+    <script tal:attributes="src python:context.absolute_url() + '/bika_widgets/referencewidget.js'"
+            type="text/javascript"></script>
+    <script type="text/javascript">
+        (function($) {
+            $(function() {
+
+                var biospecimenUIDs = [];
+
+                /* Help functions */
+
+                function updateArrayUIDs(UID, operation){
+
+                    if (operation == 'ADD'){
+                        biospecimenUIDs.push(UID);
+                    }else if (operation == 'REMOVE'){
+                        biospecimenUIDs = biospecimenUIDs.filter(function (uid) {
+                            return uid != UID;
+                        });
+                    }
+
+                    $("#b-storage-uids").val(biospecimenUIDs);
+                }
+
+                function createStorageRow(idRefField, idUID, idTable){
+                    console.log($(idRefField));
+                    var storageVal = $(idRefField).val();
+                    var storageUID = $(idUID).val();
+                    var html = '<tr id="'+ storageUID +'"><td>' + storageVal + '</td><td>' +
+                               '<img src="++resource++bika.lims.images/delete.png" class="remove-tr">' +
+                               '</td></tr>';
+                    $(html).appendTo(idTable);
+
+                    updateArrayUIDs(storageUID, 'ADD');
+                }
+
+                /* Adjust button names */
+
+                $("#biospecimen_uid").on("focus", function (e) {
+                    $("#b-button").val("Add");
+                });
+
+                /* Process */
+
+                $("#b-button").on("click", function (e) {
+                    createStorageRow('#StorageLevel', '#biospecimen_uid', '#biospecimen-table-storages');
+                });
+
+                $("#biospecimen-table-storages").on("click", ".remove-tr", function (e) {
+                    $(this).parents("tr").remove();
+                    var uid = $(this).parents('tr')[0].id;
+                    updateArrayUIDs(uid, 'REMOVE')
+                });
+
+            });
+        })(jQuery);
+    </script>
+</head>
+
+<body>
+<style type="text/css">
+    .add-biospecimens .discreet{
+      font-size:50%;
+      color:#ddd;
+    }
+    .add-biospecimens input{
+      margin-bottom:5px;
+    }
+
+    /*The collapse-header is positioned upwards, compensate here with margin.
+    extra compensation since we only use the one collapsible, and we want to
+    position it away from the green-bar.
+    */
+    .collapsible {
+      margin-top: 2em !important;
+    }
+
+    .discreet li {padding:0;margin:0;line-height:1em !important;}
+
+    table {width:100%;}
+    td {padding:5px 10px 5px 0;}
+
+    td.bordertop {border-top: 1px solid #ddd;}
+
+    input.add-button{
+        padding:2px 15px;
+        border:none;
+        color:#fff;
+        font-size:1.1em;
+        cursor:pointer;
+        background-color:#0B486B;
+    }
+</style>
+
+<dl class="collapsible collapsedOnLoad">
+    <dt class="collapsibleHeader">
+        &nbsp;<img src="++resource++bika.lims.images/add.png">&nbsp;
+        <span i18n:translate="">Add new biospecimens</span>
+    </dt>
+    <dd class="collapsibleContent">
+        <div class="discreet helptext">
+            Biospecimens are materials taken from human body, such as tissue, blood, plasma, stool and urine
+            that can be used for diagnosis and analysis.<br/> Biobank's clients collect the biospecimen from
+            participants and send them in kits to the biobank for storage or for further down stream analysis.
+            <br/>This form allow to generate a bunch of biospecimens at once.
+        </div>
+        <div class="add-biospecimens" style="padding: 10px 0px;">
+            <form name="add-biospecimens" action="add_biospecimens_submit" method="POST">
+                <table>
+                    <tr>
+                        <td>Template for new Titles:
+                            <div class="discreet">The display titles with {id}
+                                included.
+                            </div>
+                        </td>
+                        <td><input name="titletemplate"
+                                   class="titletemplate"
+                                   placeholder="Title For {id}"
+                                   tabindex="1"
+                                   tal:attributes="value python: request.get('titletemplate', '')"/>
+                        </td>
+                        <td>ID Sequence Start:</td>
+                        <td>
+                            <input name="seq_start"
+                                   type="number"
+                                   class="seq_start"
+                                   tabindex="3"
+                                   min="1"
+                                   tal:attributes="value python: request.get('seq_start', '1')"/>
+                        </td>
+                    <tr>
+                    <tr>
+                        <td>Template for new IDs:
+                            <div class="discreet">IDs should not include spaces
+                                or non-ascii characters.
+                            </div>
+                        </td>
+                        <td>
+                            <input name="idtemplate"
+                                   class="idtemplate"
+                                   placeholder="prefix-{id}"
+                                   tabindex="2"
+                                   tal:attributes="value python: request.get('idtemplate', '')"/>
+                        </td>
+                        <td>Biospecimen per kit</td>
+                        <td>
+                            <input name="biospecimen_per_kit"
+                                   type="number"
+                                   class="biospecimen_per_kit"
+                                   tabindex="4"
+                                   min="1"
+                                   tal:attributes="value python: request.get('biospecimen_per_kit', '1')"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="bordertop">Kits
+                            <div class="discreet">Select first and last kit
+                                limits. The number of kits between the two
+                                limits included, are used in computing the
+                                number of biospecimens to generate.
+                            </div>
+                        </td>
+                        <td>
+                            From:
+                            <select tabindex="6" name="first_kit_limit" id="first-kit-limit">
+                                <tal:x tal:repeat="kit view/kits">
+                                    <option tal:content="python:kit['title']" tal:attributes="value python:kit['uid']"/>
+                                </tal:x>
+                            </select>
+                        </td>
+                        <td>
+                            To:
+                            <select tabindex="7" name="last_kit_limit" id="last-kit-limit">
+                                <tal:x tal:repeat="kit view/kits">
+                                    <option tal:content="python:kit['title']" tal:attributes="value python:kit['uid']"/>
+                                </tal:x>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <div id="storage-management">
+                    <fieldset>
+                        <legend>Biospecimen Storage Management</legend>
+                        <span></span>
+                    </fieldset>
+
+                    <div style="display: inline-block;">
+                        <div style="width:100%" class="field ArchetypesReferenceWidget">
+                            <input
+                                    type="text"
+                                    name="StorageLevel"
+                                    id="StorageLevel"
+                                    required="True"
+                                    class="blurrable firstToFocus referencewidget"
+                                    value=""
+                                    base_query='{"portal_type": ["ManagedStorage", "UnmanagedStorage"], "object_provides": "baobab.lims.interfaces.IBiospecimenStorage", "review_state": "available", "inactive_state": "active"}'
+                                    search_query='{}'
+                                    catalog_name="bika_setup_catalog"
+                                    ui_item="Title"
+                                    autocomplete="false"
+                                    tabindex="8"
+                                    combogrid_options='{"colModel": [{"columnName": "Title", "align": "left", "label": "Title", "width": "30"},
+                                                                 {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "50"},
+                                                                 {"columnName": "FreePositions", "align": "left", "label": "Free", "width": "20"},
+                                                                 {"columnName": "UID", "hidden": true}],
+                                                    "search_fields": ["Title"],
+                                                    "catalog_name": "bika_setup_catalog",
+                                                    "url": "referencewidget_search",
+                                                    "discard_empty": [],
+                                                    "popup_width": "650px",
+                                                    "showOn": true,
+                                                    "searchIcon": true,
+                                                    "minLength": "0",
+                                                    "resetButton": false,
+                                                    "sord": "asc",
+                                                    "sidx": "Title",
+                                                    "force_all": true,
+                                                    "portal_types": {}}'/>
+
+                            <input type="hidden" name="biospecimen_uid" id="biospecimen_uid">
+
+                            <input type="button" id='b-button' class="add-button" value="Add"/>
+                        </div>
+                    </div>
+                    <div class="discreet helptext" style="display: inline-block; margin-left: 100px;">
+                        Select storage(s) for the generated biospecimens.<br/>In case more than one storage is
+                        selected, the storages are filled in the order they are specified.<br/>
+                    </div>
+
+                    <table id="biospecimen-table-storages" style="width: 35%;"></table>
+                </div>
+
+                <input type="hidden" name="biospecimen_storage_uids" id="b-storage-uids" />
+
+                <input name="viewlet_submitted"
+                       type="submit"
+                       class="biospecimens-add"
+                       tabindex="9"
+                       value="Add Biospecimens">
+
+            </form>
+
+        </div>
+    </dd>
+</dl>
+
+</body>
+
+</html>

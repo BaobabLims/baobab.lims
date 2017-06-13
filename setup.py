@@ -3,7 +3,7 @@ import os
 
 version = '1.0'
 
-setup(name='bika.sanbi',
+setup(name='baobab.lims',
       version=version,
       description="Starting point for creating Bika LIMS extension packages",
       long_description=open("README.md").read(),
@@ -19,7 +19,7 @@ setup(name='bika.sanbi',
       url='http://www.bikalabs.com',
       license='GPL',
       packages=find_packages(exclude=['ez_setup']),
-      namespace_packages=['bika'],
+      namespace_packages=['baobab'],
       include_package_data=True,
       zip_safe=False,
       install_requires=[

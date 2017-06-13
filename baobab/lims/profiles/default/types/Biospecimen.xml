@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<object name="Biospecimen"
+        meta_type="Factory-based Type Information with dynamic views"
+        xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+        i18n:domain="plone">
+ <property name="title" i18n:translate="">Biospecimen</property>
+ <property name="description"></property>
+ <property name="content_icon">++resource++baobab.lims.images/biospecimen.png</property>
+ <property name="content_meta_type">Biospecimen</property>
+ <property name="product">baobab.lims</property>
+ <property name="factory">addBiospecimen</property>
+ <property name="add_view_expr"></property>
+ <property name="link_target"></property>
+ <property name="global_allow">False</property>
+ <property name="filter_content_types">True</property>
+ <property name="allowed_content_types">
+  <element value="Multimage"/>
+ </property>
+ <property name="allow_discussion">False</property>
+ <property name="default_view_fallback">False</property>
+
+ <alias from="(Default)" to="base_view"/>
+ <alias from="view" to="base_view"/>
+ <alias from="edit" to="base_edit"/>
+
+ <action title="View"
+         action_id="view"
+         category="object"
+         condition_expr=""
+         url_expr="string:${object_url}/base_view"
+         i18n:attributes="title"
+         i18n:domain="plone"
+         visible="True">
+  <permission value="View"/>
+ </action>
+
+ <action title="Edit"
+         action_id="edit"
+         category="object"
+         condition_expr=""
+         url_expr="string:${object_url}/edit"
+         i18n:attributes="title"
+         i18n:domain="plone"
+         visible="True">
+  <permission value="Modify portal content"/>
+ </action>
+
+ <action title="Documents"
+        action_id="biospecimenmultimage"
+        category="object"
+        condition_expr=""
+        icon_expr="string:${portal_url}/images/instrumentcertification.png"
+        url_expr="string:${object_url}/multimage"
+        i18n:attributes="title"
+        visible="True">
+    <permission value="Modify portal content"/>
+ </action>
+
+</object>

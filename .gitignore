@@ -14,7 +14,7 @@
 .idea/*
 .installed.cfg
 .settings
-bika.sanbi.egg-info
+baobab.lims.egg-info
 bin
 build
 develop-eggs

@@ -1,0 +1,16 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:cmf="http://namespaces.zope.org/cmf"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    i18n_domain="baobab.lims">
+
+    <include package="archetypes.schemaextender" />
+
+    <adapter name="biospecimen_project_uid" factory=".biospecimen.get_biospecimen_project_uid" />
+    <adapter name="biospecimen_kit_uid" factory=".biospecimen.get_biospecimen_kit_uid" />
+    <adapter name="aliquot_project_uid" factory=".aliquot.get_aliquot_project_uid" />
+
+</configure>

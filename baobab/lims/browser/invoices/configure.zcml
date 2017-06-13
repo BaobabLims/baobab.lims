@@ -1,0 +1,23 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    i18n_domain="baobab.lims">
+
+    <browser:viewlet
+        for="bika.lims.interfaces.IInvoiceFolder"
+        name="add_invoice_viewlet"
+        class=".invoice.AddInvoiceViewlet"
+        manager="plone.app.layout.viewlets.interfaces.IBelowContentTitle"
+        permission="zope2.View"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+        for="bika.lims.interfaces.IInvoiceFolder"
+        name="add_invoice_submit"
+        class=".invoice.AddInvoiceSubmitHandler"
+        permission="zope2.View"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+</configure>

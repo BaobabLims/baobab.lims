@@ -1,0 +1,23 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser">
+
+    <adapter
+      name="baobab.lims"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      factory="baobab.lims.setupdata.SetupDataSetList"
+      provides="bika.lims.interfaces.ISetupDataSetList"/>
+
+    <adapter
+      name="KitTemplates"
+      factory="baobab.lims.setupdata.Kit_Templates"
+      provides="bika.lims.interfaces.ISetupDataImporter"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
+
+    <adapter
+      name="storagetype"
+      factory="baobab.lims.setupdata.Storage_Types"
+      provides="bika.lims.interfaces.ISetupDataImporter"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
+
+</configure>

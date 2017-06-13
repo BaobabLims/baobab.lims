@@ -1,0 +1,16 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:cmf="http://namespaces.zope.org/cmf"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    xmlns:monkey="http://namespaces.plone.org/monkey">
+
+    <monkey:patch
+        description="This adds the baobab.lims category to controlpanel-overview."
+        class="plone.app.controlpanel.overview.OverviewControlPanel"
+        original="categories"
+        replacement="baobab.lims.monkey.controlpanel.overview_controlpanel_categories"
+    />
+
+</configure>

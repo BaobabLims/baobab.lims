@@ -1,0 +1,40 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    i18n_domain="bika">
+
+    <!--<browser:page
+      for="baobab.lims.interfaces.IBiospecimen"
+      name="multimage"
+      class="baobab.lims.browser.biospecimen.BiospecimenMultimageView"
+      permission="zope.Public"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="baobab.lims.interfaces.IBiospecimen"
+      name="get_box_positions"
+      class=".biospecimen.AjaxBoxPositions"
+      permission="zope.Public"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />-->
+
+    <browser:page
+        for="bika.lims.interfaces.ISample"
+        name="aliquots"
+        class="baobab.lims.browser.biospecimen.biospecimen.AliquotsView"
+        permission="zope.Public"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <!-- Workflow action button clicked in Biospecimens folder list -->
+    <browser:page
+        for="baobab.lims.interfaces.IBiospecimens"
+        name="workflow_action"
+        class="baobab.lims.browser.biospecimen.workflow.BiospecimenWorkflowAction"
+        permission="zope.Public"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+</configure>

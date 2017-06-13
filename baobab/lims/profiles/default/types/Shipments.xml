@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<object name="Shipments"
+        meta_type="Factory-based Type Information with dynamic views"
+        xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+        i18n:domain="plone">
+ <property name="title" i18n:translate="">Shipments</property>
+ <property name="description"></property>
+ <property name="content_icon">++resource++baobab.lims.images/shipments.png</property>
+ <property name="content_meta_type">Shipments</property>
+ <property name="product">baobab.lims</property>
+ <property name="factory">addShipments</property>
+ <property name="add_view_expr"></property>
+ <property name="link_target"></property>
+ <property name="global_allow">False</property>
+ <property name="filter_content_types">True</property>
+ <property name="allowed_content_types">
+  <element value="Shipment"/>
+  <element value="Attachment"/>
+ </property>
+ <property name="allow_discussion">False</property>
+ <property name="default_view_fallback">False</property>
+
+ <alias from="(Default)" to="folder_view"/>
+ <alias from="view" to="folder_view"/>
+ <alias from="edit" to="base_edit"/>
+
+</object>

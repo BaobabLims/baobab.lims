@@ -1,0 +1,31 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    i18n_domain="baobab.lims">
+
+    <browser:page
+      for="baobab.lims.interfaces.IShipment"
+      name="base_view"
+      class=".shipment.ShipmentView"
+      permission="cmf.ModifyPortalContent"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="baobab.lims.interfaces.IShipment"
+      name="print"
+      class=".shipment.PrintView"
+      permission="cmf.ModifyPortalContent"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="baobab.lims.interfaces.IShipment"
+      name="multifile"
+      class=".shipment.ShipmentMultifileView"
+      permission="zope.Public"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+</configure>

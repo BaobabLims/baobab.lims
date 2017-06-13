@@ -1,0 +1,395 @@
+<html>
+<head>
+    <script tal:attributes="src python:context.absolute_url() + '/bika_widgets/referencewidget.js'"
+            type="text/javascript"></script>
+    <script type="text/javascript">
+        (function ($) {
+            $(function () {
+
+                var stockItemUIDs = [];
+                var kitUIDs = [];
+
+                /* Help functions */
+
+                function updateArrayUIDs(storageType, UID, operation) {
+
+                    if (storageType == "StockItem") {
+
+                        if (operation == 'ADD') {
+                            stockItemUIDs.push(UID);
+                        } else if (operation == 'REMOVE') {
+                            stockItemUIDs = stockItemUIDs.filter(function (uid) {
+                                return uid != UID;
+                            });
+                        }
+
+                        $("#si-storage-uids").val(stockItemUIDs);
+
+                    } else if (storageType == "Kit") {
+
+                        if (operation == 'ADD') {
+                            kitUIDs.push(UID);
+                        } else if (operation == 'REMOVE') {
+                            kitUIDs = kitUIDs.filter(function (uid) {
+                                return uid != UID;
+                            });
+                        }
+
+                        $("#kit-storage-uids").val(kitUIDs);
+                    }
+
+                }
+
+                function createStorageRow(idRefField, idUID, idTable, storageType) {
+                    console.log($(idRefField));
+                    var storageVal = $(idRefField).val();
+                    var storageUID = $(idUID).val();
+                    var html = '<tr id="' + storageUID + '"><td>' + storageVal + '</td><td>' +
+                            '<img src="++resource++bika.lims.images/delete.png" class="remove-tr">' +
+                            '</td></tr>';
+                    $(html).appendTo(idTable);
+
+                    updateArrayUIDs(storageType, storageUID, 'ADD');
+                }
+
+                /* Adjust button names */
+
+                $("#stockItem_uid").on("focus", function (e) {
+                    $("#si-button").val("Add");
+                });
+
+                $("#kit_uid").on("focus", function (e) {
+                    $("#k-button").val("Add");
+                });
+
+                /* Process */
+
+                $("#si-button").on("click", function (e) {
+                    createStorageRow('#stockItem', '#stockItem_uid', '#stockitem-table-storages', 'StockItem');
+                });
+
+                $("#k-button").on("click", function (e) {
+                    createStorageRow('#kitAssembly', '#kit_uid', '#kit-table-storages', 'Kit');
+                });
+
+                $("#stockitem-table-storages").on("click", ".remove-tr", function (e) {
+                    $(this).parents("tr").remove();
+                    var uid = $(this).parents('tr')[0].id;
+                    updateArrayUIDs('StockItem', uid, 'REMOVE')
+                });
+
+                $("#kit-table-storages").on("click", ".remove-tr", function (e) {
+                    $(this).parents("tr").remove();
+                    var uid = $(this).parents('tr')[0].id;
+                    updateArrayUIDs('Kit', uid, 'REMOVE');
+                });
+
+            });
+        })(jQuery);
+    </script>
+</head>
+<body>
+<style type="text/css">
+    .add-kits .discreet {
+        font-size: 50%;
+        color: #ddd;
+    }
+
+    .add-kits input {
+        margin-bottom: 5px;
+    }
+
+    /*The collapse-header is positioned upwards, compensate here with margin.
+    extra compensation since we only use the one collapsible, and we want to
+    position it away from the green-bar.
+    */
+    .collapsible {
+        margin-top: 2em !important;
+    }
+
+    .discreet li {
+        padding: 0;
+        margin: 0;
+        line-height: 1em !important;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    td {
+        padding: 5px 10px 5px 0;
+    }
+
+    td.bordertop {
+        border-top: 1px solid #ddd;
+    }
+
+    input.add-button {
+        padding: 2px 15px;
+        border: none;
+        color: #fff;
+        font-size: 1.1em;
+        cursor: pointer;
+        background-color: #0B486B;
+    }
+</style>
+
+<dl class="collapsible collapsedOnLoad">
+    <dt class="collapsibleHeader">
+        &nbsp;<img src="++resource++bika.lims.images/add.png">&nbsp;
+        <span i18n:translate="">Add new Kits</span>
+    </dt>
+    <dd class="collapsibleContent">
+        <div class="discreet" class="helptext">
+            Kit Assembly is a process of assembling components/products in boxes. To avoid importing
+            same products for different kits a kit template could be defined.<br/> In kit template
+            a list of components could be created. Instead of importing components in Kit Assembly
+            kit templates are used.
+        </div>
+        <div class="add-kits" style="padding: 10px 0px;">
+            <form name="add-kits" action="add_kits_submit" method="POST">
+                <table>
+                    <tr>
+                        <td>Template for new Titles:
+                            <div class="discreet">The display titles with {id}
+                                included.
+                            </div>
+                        </td>
+                        <td><input name="titletemplate"
+                                   class="titletemplate"
+                                   placeholder="Title For {id}"
+                                   tabindex="1"
+                                tal:attributes="value python: request.get('titletemplate', '')"/>
+                        </td>
+                        <td>ID Sequence Start:</td>
+                        <td>
+                            <input name="seq_start"
+                                   type="number"
+                                   class="seq_start"
+                                   tabindex="3"
+                                    tal:attributes="value python: request.get('seq_start', '1')"/>
+                        </td>
+                    <tr>
+                    <tr>
+                        <td>Template for new IDs:
+                            <div class="discreet">IDs should not include spaces
+                                or non-ascii characters.
+                            </div>
+                        </td>
+                        <td>
+                            <input name="idtemplate"
+                                   class="idtemplate"
+                                   placeholder="prefix-{id}"
+                                   tabindex="2"
+                                    tal:attributes="value python: request.get('idtemplate', '')"/>
+                        </td>
+                        <td>Number of Kits to assemble
+                        </td>
+                        <td>
+                            <input name="kit_count"
+                                   type="number"
+                                   class="kit_count"
+                                   tabindex="4"
+                                    tal:attributes="value python: request.get('kit_count', '1')"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="bordertop">Project
+                            <div class="discreet">Kit's project
+                            </div>
+                        </td>
+                        <td colspan="2" class="bordertop">
+                            <div style="width:100%" class="field ArchetypesReferenceWidget">
+                                <input
+                                        type="text"
+                                        name="Project"
+                                        id="Project"
+                                        required="True"
+                                        class="blurrable firstToFocus referencewidget"
+                                        value=""
+                                        base_query='{"portal_type": "Project", "inactive_state": "active"}'
+                                        search_query='{}'
+                                        catalog_name="bika_catalog"
+                                        ui_item="Title"
+                                        autocomplete="false"
+                                        tabindex="5"
+                                        combogrid_options='{"colModel": [{"columnName": "Title", "align": "left", "label": "Project Title", "width": "100"},
+                                                                        {"columnName": "UID", "hidden": true}],
+                                                            "search_fields": ["Title"],
+                                                            "catalog_name": "bika_catalog",
+                                                            "url": "referencewidget_search",
+                                                            "discard_empty": [],
+                                                            "popup_width": "550px",
+                                                            "showOn": true,
+                                                            "searchIcon": true,
+                                                            "minLength": "0",
+                                                            "resetButton": false,
+                                                            "sord": "asc",
+                                                            "sidx": "Title",
+                                                            "force_all": true,
+                                                            "portal_types": {}}'/>
+
+                                <input type="hidden" name="Project_uid" id="Project_uid">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Kit Template
+                            <div class="discreet">Templates referencing components/products kits will contain
+                            </div>
+                        </td>
+                        <td colspan="2">
+                            <div style="width:100%" class="field ArchetypesReferenceWidget">
+                                <input
+                                        type="text"
+                                        name="KitTemplate"
+                                        id="KitTemplate"
+                                        required="True"
+                                        class="blurrable firstToFocus referencewidget"
+                                        value=""
+                                        base_query='{"portal_type": "KitTemplate", "inactive_state": "active"}'
+                                        search_query='{}'
+                                        catalog_name="bika_setup_catalog"
+                                        ui_item="Title"
+                                        autocomplete="false"
+                                        tabindex="6"
+                                        combogrid_options='{"colModel": [{"columnName": "Title", "align": "left", "label": "Template Title", "width": "50"},
+                                                                         {"columnName": "UID", "hidden": true}],
+                                                            "search_fields": ["Title"],
+                                                            "catalog_name": "bika_setup_catalog",
+                                                            "url": "referencewidget_search",
+                                                            "discard_empty": [],
+                                                            "popup_width": "550px",
+                                                            "showOn": true,
+                                                            "searchIcon": true,
+                                                            "minLength": "0",
+                                                            "resetButton": false,
+                                                            "sord": "asc",
+                                                            "sidx": "Title",
+                                                            "force_all": true,
+                                                            "portal_types": {}}'/>
+
+                                <input type="hidden" name="KitTemplate_uid" id="KitTemplate_uid">
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- Storage Management -->
+                <div id="storage-management">
+                    <div id="stockitem-storage" style="display: inline-block; width: 45%; margin-right: 7px;">
+                        <fieldset>
+                            <legend>Stock-Item Storage Management</legend>
+                            <span></span>
+                        </fieldset>
+                        <div class="discreet" class="helptext">
+                            Select Stock-Item storage to use in kit assembling. In case of more than one storage
+                            selected, storages are
+                            searched in the order they are specified.
+                        </div>
+                        <div style="width:100%" class="field ArchetypesReferenceWidget">
+                            <input
+                                    type="text"
+                                    name="stockItem"
+                                    id="stockItem"
+                                    required="True"
+                                    class="blurrable firstToFocus referencewidget"
+                                    value=""
+                                    base_query='{"portal_type": ["ManagedStorage", "UnmanagedStorage"], "object_provides": "bika.lims.interfaces.IStockItemStorage", "review_state": "available", "inactive_state": "active"}'
+                                    search_query='{}'
+                                    catalog_name="bika_setup_catalog"
+                                    ui_item="Title"
+                                    autocomplete="false"
+                                    tabindex="6"
+                                    combogrid_options='{"colModel": [{"columnName": "Title", "align": "left", "label": "Title", "width": "30"},
+                                                                 {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "50"},
+                                                                 {"columnName": "UID", "hidden": true}],
+                                                        "search_fields": ["Title"],
+                                                        "catalog_name": "bika_setup_catalog",
+                                                        "url": "referencewidget_search",
+                                                        "discard_empty": [],
+                                                        "popup_width": "650px",
+                                                        "showOn": true,
+                                                        "searchIcon": true,
+                                                        "minLength": "0",
+                                                        "resetButton": false,
+                                                        "sord": "asc",
+                                                        "sidx": "Title",
+                                                        "force_all": true,
+                                                        "portal_types": {}}'/>
+
+                            <input type="hidden" name="stockItem_uid" id="stockItem_uid">
+
+                            <input type="button" id='si-button' class="add-button" value="Add"/>
+                        </div>
+
+                        <table id="stockitem-table-storages"></table>
+
+                    </div>
+                    <div id="kit-storage" style="display: inline-block; width: 45%">
+                        <fieldset>
+                            <legend>Kit Storage Management</legend>
+                            <span></span>
+                        </fieldset>
+                        <div class="discreet" class="helptext">
+                            Select Kit storage to store the generated kits. In case of more than one storage selected,
+                            storages are
+                            filled in the order they are specified.
+                        </div>
+                        <div style="width:100%" class="field ArchetypesReferenceWidget">
+                            <input
+                                    type="text"
+                                    name="kitAssembly"
+                                    id="kitAssembly"
+                                    required="True"
+                                    class="blurrable firstToFocus referencewidget"
+                                    value=""
+                                    base_query='{"portal_type": ["ManagedStorage", "UnmanagedStorage"], "object_provides": "baobab.lims.interfaces.IKitStorage", "review_state": "available", "inactive_state": "active"}'
+                                    search_query='{}'
+                                    catalog_name="bika_setup_catalog"
+                                    ui_item="Title"
+                                    autocomplete="false"
+                                    tabindex="6"
+                                    combogrid_options='{"colModel": [{"columnName": "Title", "align": "left", "label": "Title", "width": "30"},
+                                                                     {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "50"},
+                                                                     {"columnName": "FreePositions", "align": "left", "label": "Free", "width": "20"},
+                                                                     {"columnName": "UID", "hidden": true}],
+                                                        "search_fields": ["Title"],
+                                                        "catalog_name": "bika_setup_catalog",
+                                                        "url": "referencewidget_search",
+                                                        "discard_empty": [],
+                                                        "popup_width": "650px",
+                                                        "showOn": true,
+                                                        "searchIcon": true,
+                                                        "minLength": "0",
+                                                        "resetButton": false,
+                                                        "sord": "asc",
+                                                        "sidx": "Title",
+                                                        "force_all": true,
+                                                        "portal_types": {}}'/>
+
+                            <input type="hidden" name="kit_uid" id="kit_uid">
+
+                            <input type="button" id='k-button' class="add-button" value="Add"/>
+                        </div>
+
+                        <table id="kit-table-storages"></table>
+
+                    </div>
+                </div>
+
+                <input type="hidden" name="si_storage_uids" id="si-storage-uids"/>
+                <input type="hidden" name="kit_storage_uids" id="kit-storage-uids"/>
+
+                <input name="viewlet_submitted"
+                       type="submit"
+                       class="kits-add"
+                       tabindex="7"
+                       value="Add Kits">
+            </form>
+        </div>
+    </dd>
+</dl>
+</body>
+</html>

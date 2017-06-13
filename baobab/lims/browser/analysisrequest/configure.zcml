@@ -1,0 +1,16 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:zcml="http://namespaces.zope.org/browser"
+           xmlns:fss="http://namespaces.zope.org/browser"
+           xmlns:browser="http://namespaces.zope.org/browser"
+           xmlns:plone="http://namespaces.plone.org/plone"
+           xmlns:five="http://namespaces.zope.org/five"
+  i18n_domain="bika.custm">
+
+  <include package="plone.resource" file="meta.zcml"/>
+  <plone:static
+       directory="templates/reports"
+       type="reports"
+       name="baobab"
+   />
+
+</configure>

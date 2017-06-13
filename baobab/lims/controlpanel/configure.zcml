@@ -1,0 +1,47 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    i18n_domain="bika">
+
+    <browser:page
+        for="baobab.lims.interfaces.IKitTemplates"
+        name="folder_view"
+        class=".bika_kittemplates.KitTemplatesView"
+        permission="bika.lims.ManageBika"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+        for="baobab.lims.interfaces.IBiospecTypes"
+        name="folder_view"
+        class=".bika_biospectypes.BiospecTypesView"
+        permission="bika.lims.ManageBika"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+        for="baobab.lims.interfaces.IStorageTypes"
+        name="folder_view"
+        class=".bika_storagetypes.StorageTypesView"
+        permission="bika.lims.ManageBika"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+        for="baobab.lims.interfaces.IProducts"
+        name="folder_view"
+        class=".bika_products.ProductsView"
+        permission="bika.lims.ManageBika"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+        for="baobab.lims.interfaces.IStockItems"
+        name="folder_view"
+        class=".bika_stockitems.StockItemsView"
+        permission="bika.lims.ManageBika"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+</configure>

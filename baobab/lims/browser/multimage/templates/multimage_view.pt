@@ -1,0 +1,132 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:tal="http://xml.zope.org/namespaces/tal"
+	xmlns:metal="http://xml.zope.org/namespaces/metal"
+	xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+	metal:use-macro="here/main_template/macros/master"
+	i18n:domain="bika">
+
+<head>
+
+    <metal:javascript_head_slot fill-slot="javascript_head_slot">
+        <script type="text/javascript" charset="utf-8"
+                tal:define="navroot context/@@plone_portal_state/navigation_root_url"
+                tal:attributes="href string:${navroot}/++resource++baobab.lims.js/lightbox.js"></script>
+    </metal:javascript_head_slot>
+
+    <metal:block fill-slot="style_slot">
+        <style type="text/css">
+            img#biospec {
+                padding:1px;
+                border:1px solid #021a40;
+                background-color:#ff0;
+                width:auto; /* you can use % */
+                height: auto;
+            }
+            table.image-info tr td {
+                border: 1px solid #cecfd5;
+                padding: 10px 15px;
+            }
+            table.image-info tr td.header-table{
+                background: #eeeeee;
+                color: #000;
+                font-weight:bold;
+            }
+        </style>
+    </metal:block>
+
+</head>
+
+<body>
+<metal:title fill-slot="content-title">
+    <h3>
+        <img tal:attributes="src string:${view/portal_url}/++resource++baobab.lims.images/picture_big.png"/>
+        Biospecimen Picture
+    </h3>
+</metal:title>
+
+<metal:content-description fill-slot="content-description">
+</metal:content-description>
+
+<metal:content-core fill-slot="content-core">
+    <metal:block define-macro="content-core"
+                     tal:define="kssClassesView context/@@kss_field_decorator_view;
+                                 getKssClasses nocall:kssClassesView/getKssClassesInlineEditable;
+                                 size view/size;
+                                 portal_state context/@@plone_portal_state;
+                                 context_state context/@@plone_context_state;
+                                 tag python:context.tag(scale='preview');
+                                 webformatimage python:context.content_type in ('image/png', 'image/jpeg', 'image/gif');
+                                 fullscreenview python:webformatimage and 'image_view_fullscreen' or 'download'">
+
+    <table class="image-info" summary="Biospecimen image" style="border-collapse: collapse; width: 400px;">
+
+        <tbody>
+        <tr>
+            <td class="header-table">Image ID</td>
+            <td tal:content="python:context.getDocumentID()"></td>
+        </tr>
+        <tr>
+            <td class="header-table">Description</td>
+            <td tal:content="python:context.getSmallDescription()"></td>
+        </tr>
+        <tr>
+            <td class="header-table">Date</td>
+            <td tal:content="python:context.getDatetimeCreated()"></td>
+        </tr>
+        <tr>
+            <td class="header-table">Filename</td>
+            <td tal:content="view/filename"></td>
+        </tr>
+        </tbody>
+
+    </table>
+
+    <a href=""
+       tal:attributes="href string:${context_state/object_url}/$fullscreenview">
+        <tal:block condition="size" replace="structure tag" />
+        <br />
+    </a>
+
+    <span id="plone-image-details" class="discreet visualNoPrint">
+
+              <span tal:condition="size"
+	                class="discreet">
+                <span i18n:translate="label_full_size">Full-size image:</span>
+
+                <span tal:condition="size"
+                      tal:define="toLocalizedSize nocall:context/@@plone/toLocalizedSize"
+                      tal:content="python:toLocalizedSize(size)">
+                    File size
+                </span>
+				&#124;
+	            <a href=""
+	               tal:condition="webformatimage"
+	               tal:attributes="href string:${context_state/object_url}/$fullscreenview">
+	                <span class="visualNoPrint">
+                    <img tal:attributes="src string:${portal_state/portal_url}/search_icon.png"
+                         alt="View image" title="View image"
+                         i18n:attributes="alt; title" />
+                    <span i18n:translate="">View</span>
+                	</span>
+	            </a>
+
+	            <a href=""
+	               tal:attributes="href string:${context_state/object_url}/download">
+	                <span class="visualNoPrint">
+                    <img tal:attributes="src string:${portal_state/portal_url}/download_icon.png"
+                         alt="Download image" title="Download image"
+                         i18n:attributes="alt; title" />
+                    <span i18n:translate="">Download</span>
+                	</span>
+	            </a>
+
+		      </span>
+              <span tal:condition="not:size"
+                    i18n:translate="no_image_uploaded">
+                  (No image has been uploaded yet)
+              </span>
+            </span>
+    </metal:block>
+</metal:content-core>
+</body>
+</html>

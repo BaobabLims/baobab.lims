@@ -1,0 +1,32 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    i18n_domain="baobab.lims">
+
+    <browser:page
+        for="baobab.lims.interfaces.IKits"
+        name="folder_view"
+        class=".folder_view.KitsView"
+        permission="baobab.lims.ManageKits"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <!--<browser:viewlet
+        for="baobab.lims.interfaces.IKits"
+        name="add_kits_viewlet"
+        class=".add_kits_viewlet.AddKitsViewlet"
+        manager="plone.app.layout.viewlets.interfaces.IBelowContentTitle"
+        permission="zope2.View"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+        for="baobab.lims.interfaces.IKits"
+        name="add_kits_submit"
+        class=".add_kits_viewlet.AddKitsSubmitHandler"
+        permission="zope2.View"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />-->
+
+</configure>

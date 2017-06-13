@@ -1,0 +1,41 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:cmf="http://namespaces.zope.org/cmf"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    i18n_domain="baobab.lims">
+
+    <permission id="baobab.lims.permissions.AddKitTemplate" title="BAOBAB: Add kit template"/>
+    <permission id="baobab.lims.ManageKitTemplates" title="BAOBAB: Manage KitTemplates"/>
+    <permission id="baobab.lims.permissions.AddKit" title="BAOBAB: Add Kit"/>
+    <permission id="baobab.lims.ManageKits" title="BAOBAB: Manage Kits"/>
+    <permission id="baobab.lims.permissions.AddProject" title="BAOBAB: Add Project"/>
+    <permission id="baobab.lims.ManageProjects" title="BAOBAB: Manage Projects"/>
+    <permission id="baobab.lims.permissions.AddShipment" title="BAOBAB: Add Shipment"/>
+    <permission id="baobab.lims.ManageShipments" title="BAOBAB: Manage Shipments"/>
+    <permission id="baobab.lims.permissions.AddAliquot" title="BAOBAB: Add Aliquot"/>
+    <permission id="baobab.lims.ManageAliquots" title="BAOBAB: Manage Aliquots"/>
+    <permission id="baobab.lims.permissions.AddMultimage" title="BAOBAB: Add Multimage"/>
+    <permission id="baobab.lims.permissions.AddStorageType" title="BAOBAB: Add Storage Type"/>
+
+    <permission id="baobab.lims.permissions.AddInventoryOrder" title="BAOBAB: Add Inventory Order"/>
+    <permission id="baobab.lims.DispatchInventoryOrder" title="BAOBAB: Dispatch Inventory Order"/>
+    <permission id="baobab.lims.ReceiveInventoryOrder" title="BAOBAB: Receive Inventory Order"/>
+    <permission id="baobab.lims.StoreInventoryOrder" title="BAOBAB: Store Inventory Order"/>
+
+    <permission id="baobab.lims.permissions.AddStorageUnit" title="BAOBAB: Add Storage Unit"/>
+    <permission id="baobab.lims.permissions.AddManagedStorage" title="BAOBAB: Add Managed Storage"/>
+    <permission id="baobab.lims.permissions.AddUnmanagedStorage" title="BAOBAB: Add Unmanaged Storage"/>
+    <permission id="baobab.lims.permissions.AddStoragePosition" title="BAOBAB: Add Storage Position"/>
+
+
+    # Other
+    # ------
+    <permission id="baobab.lims.EditFieldBarcode" title="BAOBAB: Edit Field Barcode"/>
+    <permission id="baobab.lims.ViewBarcode" title="BAOBAB: View Barcode"/>
+
+    # For sample workflow transition
+    <permission id="baobab.lims.DueSample" title="BAOBAB: Due Sample"/>
+
+</configure>

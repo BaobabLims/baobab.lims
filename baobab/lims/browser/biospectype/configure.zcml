@@ -1,0 +1,20 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    i18n_domain="bika">
+
+    <adapter
+      factory="baobab.lims.browser.biospectype.JSONReadExtender"
+      provides="bika.lims.interfaces.IJSONReadExtender"
+    />
+
+    <browser:page
+      for="baobab.lims.interfaces.IBiospecType"
+      name="biospectype_analysesview"
+      class="baobab.lims.browser.widgets.ProjectAnalysesWidget"
+      permission="zope.Public"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+</configure>
