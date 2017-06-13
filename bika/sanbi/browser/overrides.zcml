@@ -11,11 +11,20 @@
     <include package=".browser.client" file="overrides.zcml" />
     <include package=".browser.supplier" file="overrides.zcml" />
 
+    <!-- Use unconfigure if there is conflicts between overrides. This will cancel the one cited here -->
     <unconfigure>
         <subscriber
             for="bika.lims.interfaces.IInvoiceBatch
                 zope.lifecycleevent.interfaces.IObjectModifiedEvent"
             handler="bika.lims.content.invoicebatch.ObjectModifiedEventHandler"
+        />
+
+        <browser:page
+            for="OFS.interfaces.IApplication"
+            name="plone-addsite"
+            class="Products.CMFPlone.browser.admin.AddPloneSite"
+            permission="zope2.ViewManagementScreens"
+            template="templates/plone-addsite.pt"
         />
     </unconfigure>
 
@@ -33,6 +42,14 @@
         title="Baobab LIMS front-page"
         action="bika-frontpage"
         description="Baobab LIMS front-page"
+    />
+
+    <browser:page
+        for="OFS.interfaces.IApplication"
+        name="plone-addsite"
+        class="Products.CMFPlone.browser.admin.AddPloneSite"
+        permission="zope2.ViewManagementScreens"
+        template="templates/plone-addsite.pt"
     />
 
 </configure>

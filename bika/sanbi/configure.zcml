@@ -31,13 +31,8 @@
   <cmf:registerDirectory name="skins" directory="skins" recursive="True" />
 
   <browser:resource
-    file="skins/bika_sanbi/logo.png"
-    name="bika-health-logo.png"
-   />
-
-  <browser:resource
-    file="skins/bika_sanbi/logo.png"
-    name="logo.png"
+    file="skins/bika_sanbi/baobab-logo-crop.png"
+    name="baobabonly-logo.png"
   />
 
 </configure>
