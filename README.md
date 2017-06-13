@@ -18,4 +18,4 @@ Feedback and Support
 --------------------
 
 * Sanbi Team on Slack <https://sanbi.slack.com/>
-* Issue Tracker: http://jira.bikalabs.com/ <http://jira.bikalabs.com>
+* Issue Tracker: http://jira.bikalabs.com/
