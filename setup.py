@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '1.0'
+version = '1.2'
 
 setup(name='baobab.lims',
       version=version,
