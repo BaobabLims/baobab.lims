@@ -5,11 +5,11 @@
     i18n_domain="bika">
 
     <browser:page
-      for="bika.lims.interfaces.ISupplier"
-      name="base_view"
-      class="baobab.lims.browser.supplier.orders.SupplierOrdersView"
-      permission="bika.lims.ManageSuppliers"
-      layer="bika.lims.interfaces.IBikaLIMS"
+        for="bika.lims.interfaces.ISupplier"
+        name="base_view"
+        class="baobab.lims.browser.supplier.products.SupplierProductsView"
+        permission="zope.Public"
+        layer="bika.lims.interfaces.IBikaLIMS"
     />
 
 </configure>

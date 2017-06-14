@@ -206,6 +206,10 @@ class SampleSchemaExtender(object):
                          },
                 showOn=True,
                 render_own_label=True,
+                base_query={
+                    'cancellation_state': 'active',
+                    'review_state': 'sample_received'
+                },
                 colModel=[{'columnName': 'UID', 'hidden': True},
                           {'columnName': 'Title', 'width': '50', 'label': _('Title')},
                           {"columnName": "LocationTitle", "align": "left", "label": "Location", "width": "50"}

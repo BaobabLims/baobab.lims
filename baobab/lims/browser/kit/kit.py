@@ -9,9 +9,9 @@ from Products.CMFPlone.utils import _createObjectByType
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from bika.lims.browser import BrowserView
-from bika.lims.utils import to_utf8
 from baobab.lims import bikaMessageFactory as _
 from baobab.lims.browser import _lab_data, _printedby_data, _createdby_data
+from baobab.lims.browser.biospecimens.biospecimens import BiospecimensView
 
 
 class KitView(BrowserView):
@@ -124,6 +124,36 @@ class KitView(BrowserView):
             })
         return attachments
 
+class KitBiospecimensView(BiospecimensView):
+    """ Biospecimens veiw from project view.
+    """
+    def __init__(self, context, request):
+        BiospecimensView.__init__(self, context, request)
+        self.context = context
+        self.context_actions = {}
+
+        # Filter biospecimens by project uid
+        self.columns.pop('Project', None)
+        # path = '/'.join(self.context.getPhysicalPath())
+        for state in self.review_states:
+            # state['contentFilter']['path'] = {'query': path, 'depth': 1}
+            state['contentFilter']['getProjectUID'] = self.context.aq_parent.UID()
+            state['contentFilter']['sort_on'] = 'sortable_title'
+            state['columns'].remove('Project')
+
+    def folderitems(self, full_objects=False):
+        items = BiospecimensView.folderitems(self)
+        out_items = []
+        for item in items:
+            if "obj" not in item:
+                continue
+            obj = item['obj']
+            kit = obj.getField('Kit').get(obj)
+            if kit:
+                kit_uid = kit.UID()
+                if kit_uid == self.context.UID():
+                    out_items.append(item)
+        return out_items
 
 class PrintView(KitView):
     template = ViewPageTemplateFile('templates/print.pt')
@@ -180,11 +210,9 @@ class PrintView(KitView):
         return reptemplate
 
     def getKitInfo(self):
-        data = {
-            'date_printed': self.ulocalized_time(DateTime(), long_format=1),
-            'date_created': self.ulocalized_time(self.context.created(),
-                                                 long_format=1),
-        }
+        data = dict()
+        data['date_printed'] = self.ulocalized_time(DateTime(), long_format=1)
+        data['date_created'] = self.ulocalized_time(self.context.created(), long_format=1)
         data['createdby'] = _createdby_data(self)
         data['printedby'] = _printedby_data(self)
         data['laboratory'] = _lab_data(self)

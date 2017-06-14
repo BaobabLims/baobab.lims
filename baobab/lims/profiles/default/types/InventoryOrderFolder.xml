@@ -6,7 +6,7 @@
         purge="True">
  <property name="title" i18n:translate="">Inventory Orders</property>
  <property name="description"></property>
- <property name="content_icon">++resource++baobab.lims.images/supplyorder.png</property>
+ <property name="content_icon">++resource++bika.lims.images/supplyorder.png</property>
  <property name="content_meta_type">InventoryOrderFolder</property>
  <property name="product">baobab.lims</property>
  <property name="factory">addInventoryOrderFolder</property>

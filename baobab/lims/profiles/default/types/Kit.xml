@@ -58,6 +58,19 @@
   <permission value="View"/>
  </action>-->
 
+ <action title="Biospecimens"
+         action_id="biospecimens"
+         category="object"
+         condition_expr=""
+         icon_expr=""
+         link_target=""
+         url_expr="string:${object_url}/biospecimens"
+         i18n:attributes="title"
+         i18n:domain="plone"
+         visible="True">
+   <permission value="Modify portal content"/>
+ </action>
+
  <action title="Log"
          action_id="log"
          category="object"

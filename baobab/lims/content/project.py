@@ -68,7 +68,7 @@ schema = BikaSchema.copy() + Schema((
 
     ReferenceField(
         'Service',
-        required=1,
+        required=0,
         multiValued=1,
         allowed_types=('AnalysisService',),
         relationship='BiospecimenAnalysisService',

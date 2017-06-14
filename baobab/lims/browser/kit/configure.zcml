@@ -5,19 +5,27 @@
     i18n_domain="baobab.lims">
 
     <browser:page
-      for="baobab.lims.interfaces.IKit"
-      name="base_view"
-      class="baobab.lims.browser.kit.KitView"
-      permission="cmf.ModifyPortalContent"
-      layer="bika.lims.interfaces.IBikaLIMS"
+        for="baobab.lims.interfaces.IKit"
+        name="base_view"
+        class="baobab.lims.browser.kit.KitView"
+        permission="cmf.ModifyPortalContent"
+        layer="bika.lims.interfaces.IBikaLIMS"
     />
 
     <browser:page
-      for="baobab.lims.interfaces.IKit"
-      name="print"
-      class="baobab.lims.browser.kit.PrintView"
-      permission="cmf.ModifyPortalContent"
-      layer="bika.lims.interfaces.IBikaLIMS"
+        for="baobab.lims.interfaces.IKit"
+        name="print"
+        class="baobab.lims.browser.kit.PrintView"
+        permission="cmf.ModifyPortalContent"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+        for="baobab.lims.interfaces.IKit"
+        name="biospecimens"
+        class=".kit.KitBiospecimensView"
+        permission="cmf.ModifyPortalContent"
+        layer="bika.lims.interfaces.IBikaLIMS"
     />
 
     <!-- Ajax signatures -->

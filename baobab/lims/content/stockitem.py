@@ -32,7 +32,7 @@ schema = BikaSchema.copy() + Schema((
 
     ReferenceField(
         'StorageLocation',
-        allowed_types=('UnmanagedStorage', 'StoragePosition'),
+        allowed_types=('UnmanagedStorage'),
         relationship='ItemStorageLocation',
         widget=bika_ReferenceWidget(
             label=_("Storage Location"),
