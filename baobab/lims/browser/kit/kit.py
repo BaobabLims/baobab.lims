@@ -125,7 +125,7 @@ class KitView(BrowserView):
         return attachments
 
 class KitBiospecimensView(BiospecimensView):
-    """ Biospecimens veiw from project view.
+    """ Biospecimens veiw from kit view.
     """
     def __init__(self, context, request):
         BiospecimensView.__init__(self, context, request)
