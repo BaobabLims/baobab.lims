@@ -119,4 +119,8 @@ class Project(BaseFolder):
         return self.aq_parent if self.aq_parent.portal_type == 'Client' \
                               else ''
 
+    def getClientID(self):
+        return self.aq_parent.getId() if self.aq_parent.portal_type == 'Client' \
+                                      else ''
+
 registerType(Project, config.PROJECTNAME)
