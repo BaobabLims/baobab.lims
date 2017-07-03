@@ -7,17 +7,8 @@ import transaction
 
 
 def generateUniqueId(context):
-
-    def getLastCounter(context, config):
-        if config.get('counter_type', '') == 'backreference':
-            return len(context.getBackReferences(config['counter_reference']))-1
-        elif config.get('counter_type', '') == 'contained':
-            return len(context.objectItems(config['counter_reference']))-1
-        else:
-            raise RuntimeError('ID Server: missing values in configuration')
-
-    number_generator = getUtility(INumberGenerator)
-
+    """Id generation specific to Baoabab lims (overriding Bika lims)
+    """
     if context.portal_type == "Sample":
         barcode = context.getField('Barcode')
         barcode_value = barcode.get(context)
