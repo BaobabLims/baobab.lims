@@ -58,8 +58,3 @@ msgstr "Liberate"
 #: ../profiles/default/workflows/bika_kit_assembly_workflow/definition.xml
 msgid "ship_transition_title"
 msgstr "Ship"
-
-#. Default: "Sample due"
-#: ../profiles/default/workflows/bika_sample_workflow/definition.xml
-msgid "sample_due_transition_title"
-msgstr "Register"

@@ -10,7 +10,6 @@ from bika.lims.utils import isActive
 from bika.lims.interfaces import ISample
 
 from baobab.lims.config import VOLUME_UNITS
-from baobab.lims.permissions import AddProject, ManageProjects
 from baobab.lims import bikaMessageFactory as _
 
 
