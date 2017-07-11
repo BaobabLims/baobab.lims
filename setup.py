@@ -7,7 +7,7 @@ setup(name='baobab.lims',
       version=version,
       description="Starting point for creating Bika LIMS extension packages",
       long_description=open("README.md").read(),
-      # Get more strings from
+      # Get more strings from ...
       # http://pypi.python.org/pypi?:action=list_classifiers
       classifiers=[
         "Framework :: Plone",
