@@ -6,15 +6,8 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="baobab.lims">
 
-    <permission id="baobab.lims.permissions.AddKitTemplate" title="BAOBAB: Add kit template"/>
-    <permission id="baobab.lims.ManageKitTemplates" title="BAOBAB: Manage KitTemplates"/>
-    <permission id="baobab.lims.permissions.AddKit" title="BAOBAB: Add Kit"/>
-    <permission id="baobab.lims.ManageKits" title="BAOBAB: Manage Kits"/>
     <permission id="baobab.lims.permissions.AddProject" title="BAOBAB: Add Project"/>
     <permission id="baobab.lims.ManageProjects" title="BAOBAB: Manage Projects"/>
-    <permission id="baobab.lims.permissions.AddShipment" title="BAOBAB: Add Shipment"/>
-    <permission id="baobab.lims.ManageShipments" title="BAOBAB: Manage Shipments"/>
-    <permission id="baobab.lims.permissions.AddMultimage" title="BAOBAB: Add Multimage"/>
     <permission id="baobab.lims.permissions.AddStorageType" title="BAOBAB: Add Storage Type"/>
 
     <permission id="baobab.lims.permissions.AddInventoryOrder" title="BAOBAB: Add Inventory Order"/>
@@ -31,7 +24,6 @@
     # Other
     # ------
     <permission id="baobab.lims.EditFieldBarcode" title="BAOBAB: Edit Field Barcode"/>
-    <permission id="baobab.lims.ViewBarcode" title="BAOBAB: View Barcode"/>
 
     # For sample workflow transition
     <permission id="baobab.lims.DueSample" title="BAOBAB: Due Sample"/>

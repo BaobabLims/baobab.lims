@@ -58,8 +58,10 @@ class BiospecimenWorkflowAction(WorkflowAction):
                 doActionFor(partition, 'receive')
 
         self.destination_url = self.context.absolute_url()
-        if self.context.portal_type == 'Project':
-            self.destination_url += '/biospecimens'
+        if form['portal_type'] == 'Kit':
+            self.destination_url = form['view_url']
+
+        self.destination_url += '/biospecimens'
         self.request.response.redirect(self.destination_url)
 
     def workflow_action_sample_due(self):
@@ -89,6 +91,8 @@ class BiospecimenWorkflowAction(WorkflowAction):
                 doActionFor(partition, 'sample_due')
 
         self.destination_url = self.context.absolute_url()
-        if self.context.portal_type == 'Project':
-            self.destination_url += '/biospecimens'
+        if form['portal_type'] == 'Kit':
+            self.destination_url = form['view_url']
+
+        self.destination_url += '/biospecimens'
         self.request.response.redirect(self.destination_url)

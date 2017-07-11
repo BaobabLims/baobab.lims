@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<portlets
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="plone">
+
+    <assignment
+            name="accreditation-pt"
+            category="context"
+            key="/"
+            manager="plone.leftcolumn"
+            type="portlets.Classic"
+            visible="True">
+        <property name="macro">portlet</property>
+        <property name="template">portlet_accreditation</property>
+    </assignment>
+</portlets>

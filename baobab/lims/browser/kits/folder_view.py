@@ -1,10 +1,8 @@
 from AccessControl import getSecurityManager
-from Products.CMFCore.utils import getToolByName
 from plone.app.content.browser.interfaces import IFolderContentsView
 from plone.app.layout.globals.interfaces import IViewView
 from zope.interface.declarations import implements
 
-from bika.lims import ManageClients
 from bika.lims.browser.bika_listing import BikaListingView
 from baobab.lims import bikaMessageFactory as _
 from baobab.lims.permissions import *

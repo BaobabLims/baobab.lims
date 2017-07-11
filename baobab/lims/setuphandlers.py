@@ -12,6 +12,7 @@ class Empty:
 
 
 class BikaCustomGenerator:
+
     def setupPortalContent(self, portal):
 
         for obj_id in (
@@ -39,6 +40,17 @@ class BikaCustomGenerator:
             obj = bika_setup._getOb(obj_id)
             obj.unmarkCreationFlag()
             obj.reindexObject()
+
+    def setupGroups(self, portal):
+        """
+            Remove some undesired groups
+        """
+        groups = ["Samplers", "Preservers", "RegulatoryInspectors", "SamplingCoordinators"]
+
+        portal_groups = portal.portal_groups
+
+        for group_id in groups:
+            portal_groups.removeGroup(group_id)
 
     def setupCatalogs(self, portal):
 
@@ -106,80 +118,101 @@ class BikaCustomGenerator:
 
         # Root permissions
         mp = portal.manage_permission
-        mp(AddMultimage, ['Manager', 'LabManager', 'LabClerk'], 1)
-        mp(EditFieldBarcode, ['Manager', 'LabManager', 'LabClerk'], 1)
-        mp(ViewBarcode, ['Manager', 'LabManager', 'LabClerk'], 1)
-        mp(AddStorageType, ['Manager', 'LabManager', 'LabClerk'], 1)
-        mp(AddKitTemplate, ['Manager', 'LabManager', 'LabClerk'], 1)
-        mp(ManageProjects, ['Manager', 'LabManager', 'Owner'], 1)
-        mp(ManageShipments, ['Manager', 'LabManager', 'Owner', 'Member'], 1)
-        mp(ManageKits, ['Manager', 'LabManager', 'LabClerk'], 1)
+        mp(ManageProjects, ['Manager', 'LabManager'], 1)
         mp(AddProject, ['Manager', 'LabManager', 'LabClerk'], 1)
-        mp(AddKit, ['Manager', 'LabManager', 'LabClerk'], 1)
-        mp(AddShipment, ['Manager', 'LabManager', 'LabClerk'], 1)
-        mp(AddStorageUnit, ['Manager', 'Owner', 'LabManager', ], 1)
-        mp(AddManagedStorage, ['Manager', 'Owner', 'LabManager', ], 1)
-        mp(AddUnmanagedStorage, ['Manager', 'Owner', 'LabManager', ], 1)
-        mp(AddStoragePosition, ['Manager', 'Owner', 'LabManager', ], 1)
+        mp(AddStorageUnit, ['Manager', 'LabManager', 'LabClerk'], 1)
+        mp(AddManagedStorage, ['Manager', 'Owner', 'LabManager'], 1)
+        mp(AddUnmanagedStorage, ['Manager', 'Owner', 'LabManager'], 1)
+        mp(AddStoragePosition, ['Manager', 'Owner', 'LabManager'], 1)
 
         # projects
         mp = portal.projects.manage_permission
-        mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'Member', 'LabClerk', 'Analyst'], 0)
-        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Member', 'Analyst'], 0)
-        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'LabClerk'], 0)
-        mp('Access contents information', ['Manager', 'LabManager', 'Member', 'LabClerk', 'Analyst'], 0)
-        mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'LabClerk'], 0)
+
+        # Allow authenticated users to see the contents of the client folder
+        mp(permissions.View, ['Authenticated'], 0)
+        mp(permissions.AccessContentsInformation, ['Authenticated'], 0)
+        mp(permissions.ListFolderContents, ['Authenticated'], 0)
+
+        mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'LabClerk', 'Analyst'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst'], 0)
+        # mp(permissions.ModifyPortalContent, ['Manager', 'LabManager'], 0)
+        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst'], 0)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager'], 0)
         portal.projects.reindexObject()
 
         # kits
         mp = portal.kits.manage_permission
-        mp(AddKit, ['Manager', 'LabManager', 'LabClerk'], 0)
-        mp(ManageKits, ['Manager', 'LabManager', 'LabClerk'], 0)
-        mp(permissions.ListFolderContents, ['Manager', 'LabClerk'], 0)
-        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'LabClerk', 'Owner'], 0)
-        mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'Owner', 'LabClerk'], 0)
-        mp(permissions.DeleteObjects, ['Manager', 'LabManager', 'Owner'], 0)
-        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk'], 0)
+
+        # Allow authenticated users to see the contents of the client folder
+        mp(permissions.View, ['Authenticated'], 0)
+        mp(permissions.AccessContentsInformation, ['Authenticated'], 0)
+        mp(permissions.ListFolderContents, ['Authenticated'], 0)
+
+        mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'LabClerk', 'Analyst'], 0)
+        # mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'LabClerk'], 0)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'LabClerk'], 0)
+        mp(permissions.DeleteObjects, ['Manager', 'LabManager'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst'], 0)
         portal.kits.reindexObject()
 
         # shipments
         mp = portal.shipments.manage_permission
-        mp(AddShipment, ['Manager', 'LabManager', 'LabClerk'], 0)
-        mp(ManageShipments, ['Manager', 'LabManager', 'Member'], 0)
-        mp(permissions.ListFolderContents, ['Manager', 'LabClerk'], 0)
+
+        # Allow authenticated users to see the contents of the client folder
+        mp(permissions.View, ['Authenticated'], 0)
+        mp(permissions.AccessContentsInformation, ['Authenticated'], 0)
+        mp(permissions.ListFolderContents, ['Authenticated'], 0)
+
+        mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'LabClerk', 'Analyst'], 0)
         mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'LabClerk'], 0)
-        mp(permissions.DeleteObjects, ['Manager', 'LabManager', 'Owner'], 0)
-        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk'], 0)
+        mp(permissions.DeleteObjects, ['Manager', 'LabManager'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst'], 0)
         portal.shipments.reindexObject()
 
         # Biospecimens
         mp = portal.biospecimens.manage_permission
-        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
-        mp(permissions.ListFolderContents, ['LabClerk', ''], 0)
-        mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'Owner', 'LabClerk'], 0)
-        mp(permissions.DeleteObjects, ['Manager', 'LabManager', 'Owner'], 0)
-        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk'], 0)
+
+        # Allow authenticated users to see the contents of the client folder
+        mp(permissions.View, ['Authenticated'], 0)
+        mp(permissions.AccessContentsInformation, ['Authenticated'], 0)
+        mp(permissions.ListFolderContents, ['Authenticated'], 0)
+
+        mp(CancelAndReinstate, ['Manager', 'LabManager', 'LabClerk'], 0)
+        mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'LabClerk', 'Analyst'], 0)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'LabClerk', 'Analyst'], 0)
+        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'LabClerk', 'Analyst'], 0)
+        mp(permissions.DeleteObjects, ['Manager', 'LabManager'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst'], 0)
+        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst'], 0)
         portal.biospecimens.reindexObject()
 
         # inventoryorders folder permissions
         mp = portal.inventoryorders.manage_permission
         mp(CancelAndReinstate, ['Manager', 'LabManager', 'LabClerk'], 0)
-        mp(AddInventoryOrder,  ['Manager', 'LabManager', 'Owner', 'LabClerk'], 1)
-        mp(DispatchInventoryOrder, ['Manager', 'LabManager', 'Owner', 'LabClerk'], 1)
-        mp(ReceiveInventoryOrder, ['Manager', 'LabManager', 'Owner', 'LabClerk'], 1)
-        mp(StoreInventoryOrder, ['Manager', 'LabManager', 'LabClerk', 'Owner'], 1)
+        mp(AddInventoryOrder,  ['Manager', 'LabManager', 'LabClerk'], 1)
+        mp(DispatchInventoryOrder, ['Manager', 'LabManager', 'LabClerk'], 1)
+        mp(ReceiveInventoryOrder, ['Manager', 'LabManager', 'LabClerk'], 1)
+        mp(StoreInventoryOrder, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(permissions.ListFolderContents, ['Member'], 1)
-        mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'Owner', 'LabClerk'], 0)
-        mp(permissions.DeleteObjects, ['Manager', 'LabManager', 'Owner', 'LabClerk'], 0)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'LabClerk'], 0)
+        mp(permissions.DeleteObjects, ['Manager', 'LabManager', 'LabClerk'], 0)
         mp(permissions.View, ['Manager', 'LabManager', 'LabClerk'], 0)
         portal.inventoryorders.reindexObject()
 
         # /storage folder permissions (StorageUnits)
         mp = portal.storage.manage_permission
-        mp(CancelAndReinstate, ['Manager', 'LabManager', 'LabClerk'], 0)
-        mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'LabClerk', 'Analyst'], 0)
-        mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
-        mp(permissions.DeleteObjects, ['Manager', 'LabManager', 'Owner'], 0)
+
+        # Allow authenticated users to see the contents of the client folder
+        mp(permissions.View, ['Authenticated'], 0)
+        mp(permissions.AccessContentsInformation, ['Authenticated'], 0)
+        mp(permissions.ListFolderContents, ['Authenticated'], 0)
+
+        # mp(CancelAndReinstate, ['Manager', 'LabManager', 'LabClerk'], 0)
+        mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'LabClerk'], 0)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'LabClerk'], 0)
+        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'LabClerk'], 0)
+        mp(permissions.DeleteObjects, ['Manager', 'LabManager'], 0)
+        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk'], 0)
         mp(permissions.View, ['Manager', 'LabManager', 'LabClerk'], 0)
         portal.invoices.reindexObject()
 
@@ -193,6 +226,7 @@ def setupCustomVarious(context):
     portal = context.getSite()
 
     gen = BikaCustomGenerator()
+    # gen.setupGroups(portal)
     gen.setupCatalogs(portal)
     gen.setupPortalContent(portal)
     gen.setupPermissions(portal)

@@ -7,7 +7,7 @@
         for="baobab.lims.interfaces.IBiospecimens"
         name="folder_view"
         class=".biospecimens.BiospecimensView"
-        permission="bika.lims.ManageBika"
+        permission="zope2.View"
         layer="bika.lims.interfaces.IBikaLIMS"
     />
 

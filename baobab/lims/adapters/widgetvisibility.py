@@ -46,8 +46,6 @@ class ARFieldWidgetVisibility(object):
                 field.widget.base_query = {
                     'cancellation_state': 'active',
                     'review_state': ['sample_received'],
-                    # 'path': {'query': '/'.join(self.context.aq_parent.getPhysicalPath()),
-                    #          'level': 0}
                     'getProjectUID': self.context.aq_parent.UID()
                 }
         if fieldName in self.hidden_fields:

@@ -1,9 +1,9 @@
 from Products.CMFCore.utils import getToolByName
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone.app.content.browser.interfaces import IFolderContentsView
 from plone.app.layout.globals.interfaces import IViewView
 from zope.interface.declarations import implements
 from AccessControl import getSecurityManager
+from Products.CMFCore.permissions import AddPortalContent, ModifyPortalContent
 
 from bika.lims.browser.bika_listing import BikaListingView
 from bika.lims.utils import isActive
@@ -102,7 +102,7 @@ class BiospecimensView(BikaListingView):
                 'title': _('Active'),
                 'contentFilter': {
                     'cancellation_state': 'active',
-                    'sort_on': 'created',
+                    'sort_on': 'sortable_title',
                     'sort_order': 'ascending'
                 },
                 'transitions': [
@@ -245,7 +245,7 @@ class BiospecimensView(BikaListingView):
         ]
 
     def __call__(self):
-        if getSecurityManager().checkPermission(AddProject, self.context):
+        if getSecurityManager().checkPermission(AddPortalContent, self.context):
             self.show_select_row = True
             self.show_select_column = True
 
@@ -294,7 +294,7 @@ class BiospecimensView(BikaListingView):
                                            (items[x]['url'], items[x]['Title'])
             # TODO: SPECIFY OBJ STATES WHERE USER CAN EDIT BARCODE
             if self.allow_edit and isActive(self.context) and \
-                    getSecurityManager().checkPermission(ManageProjects, obj):
+                    getSecurityManager().checkPermission(ModifyPortalContent, obj):
                 if items[x]['review_state'] == "sample_registered":
                     items[x]['allow_edit'] = ['Type', 'Barcode']
                     items[x]['choices']['Type'] = biospecimen_types

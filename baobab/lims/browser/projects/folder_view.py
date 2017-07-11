@@ -1,12 +1,11 @@
-import json
-
 from Products.CMFCore.utils import getToolByName
 
-from bika.lims import ManageAnalysisRequests
 from bika.lims.browser.bika_listing import BikaListingView
 from bika.lims.utils import isActive
 from baobab.lims import bikaMessageFactory as _
 from baobab.lims.permissions import *
+
+import json
 
 
 class ProjectsView(BikaListingView):

@@ -2,6 +2,7 @@ from Products.CMFCore.utils import getToolByName
 from plone.app.content.browser.interfaces import IFolderContentsView
 from plone.app.layout.globals.interfaces import IViewView
 from zope.interface.declarations import implements
+from Products.CMFCore.permissions import AddPortalContent
 
 from bika.lims.browser.bika_listing import BikaListingView
 from baobab.lims import bikaMessageFactory as _
@@ -116,16 +117,15 @@ class ShipmentsView(BikaListingView):
     def __call__(self):
 
         mtool = getToolByName(self.context, 'portal_membership')
-        if mtool.checkPermission(AddShipment, self.context) and \
+
+        if mtool.checkPermission(AddPortalContent, self.context) and \
                 self.context.portal_type == 'Project':
             self.context_actions[_('Add')] = {
                 'url': 'createObject?type_name=Shipment',
                 'icon': '++resource++bika.lims.images/add.png'
             }
 
-        if mtool.checkPermission(ManageShipments, self.context):
-            stat = self.request.get("%s_review_state" % self.form_id, 'default')
-            # self.show_select_column = stat != 'all'
+
         return super(ShipmentsView, self).__call__()
 
     def folderitems(self):

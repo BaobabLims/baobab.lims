@@ -10,7 +10,6 @@ from plone.app.content.browser.interfaces import IFolderContentsView
 from plone.app.folder.folder import ATFolder, ATFolderSchema
 from zope.interface.declarations import implements
 from baobab.lims.interfaces import IKitTemplates
-from baobab.lims.permissions import AddKitTemplate, ManageKitTemplates
 
 
 class KitTemplatesView(BikaListingView):
