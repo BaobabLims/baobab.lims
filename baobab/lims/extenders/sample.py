@@ -3,7 +3,6 @@ from archetypes.schemaextender.interfaces import IOrderableSchemaExtender
 from archetypes.schemaextender.interfaces import ISchemaModifier
 from zope.component import adapts
 from Products.CMFCore import permissions
-from DateTime import DateTime
 
 from bika.lims.fields import *
 from bika.lims.interfaces import ISample

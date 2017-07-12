@@ -16,6 +16,7 @@
     <adapter name='baobab.lims' factory=".invoicebatch.InvoiceBatchSchemaExtender" />
     <adapter name='baobab.lims' factory=".sampletype.SampleTypeSchemaExtender" />
     <adapter name='baobab.lims' factory=".sample.SampleSchemaExtender" />
+    <adapter name='baobab.lims' factory=".instrument.InstrumentSchemaExtender" />
 
     <browser:page
       for="bika.lims.interfaces.IBikaSetup"

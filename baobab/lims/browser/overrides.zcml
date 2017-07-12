@@ -26,6 +26,14 @@
             permission="zope2.ViewManagementScreens"
             template="templates/plone-addsite.pt"
         />
+
+        <browser:page
+            for="OFS.interfaces.IApplication"
+            name="plone-overview"
+            class="Products.CMFPlone.browser.admin.Overview"
+            permission="zope.Public"
+            template="templates/plone-overview.pt"
+        />
     </unconfigure>
 
     <browser:page
@@ -50,6 +58,14 @@
         class="Products.CMFPlone.browser.admin.AddPloneSite"
         permission="zope2.ViewManagementScreens"
         template="templates/plone-addsite.pt"
+    />
+
+    <browser:page
+        for="OFS.interfaces.IApplication"
+        name="plone-overview"
+        class="Products.CMFPlone.browser.admin.Overview"
+        permission="zope.Public"
+        template="templates/plone-overview.pt"
     />
 
 </configure>
