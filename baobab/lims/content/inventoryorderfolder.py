@@ -4,7 +4,7 @@ from Products.ATContentTypes.content import schemata
 from Products.Archetypes import atapi
 from baobab.lims.config import PROJECTNAME
 from AccessControl import ClassSecurityInfo
-from baobab.lims.interfaces import IInventoryOrder
+from baobab.lims.interfaces import IInventoryOrderFolder
 from bika.lims.interfaces import IHaveNoBreadCrumbs
 
 from plone.app.folder import folder
@@ -14,7 +14,7 @@ schema = folder.ATFolderSchema.copy()
 
 
 class InventoryOrderFolder(folder.ATFolder):
-    implements(IInventoryOrder, IHaveNoBreadCrumbs)
+    implements(IInventoryOrderFolder, IHaveNoBreadCrumbs)
     schema = schema
     displayContentsTab = False
     security = ClassSecurityInfo()
