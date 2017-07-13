@@ -5,7 +5,7 @@ from zope.interface.declarations import implements
 
 from bika.lims.browser.bika_listing import BikaListingView
 from baobab.lims import bikaMessageFactory as _
-from baobab.lims.permissions import *
+from baobab.lims.permissions import ManageKits
 
 
 class KitsView(BikaListingView):
@@ -143,7 +143,7 @@ class KitsView(BikaListingView):
         ]
 
     def __call__(self):
-        if getSecurityManager().checkPermission(AddProject, self.context):
+        if getSecurityManager().checkPermission(ManageKits, self.context):
             self.show_select_row = True
             self.show_select_column = True
         return BikaListingView.__call__(self)

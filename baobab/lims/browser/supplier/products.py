@@ -17,7 +17,6 @@ class SupplierProductsView(ProductsView):
         outitems = []
         for x in range(len(items)):
             obj = items[x].get('obj', None)
-            print type(obj.getSuppliers())
             for uid in obj.getSuppliers():
                 if uid == uidsup:
                     after_icons = ''

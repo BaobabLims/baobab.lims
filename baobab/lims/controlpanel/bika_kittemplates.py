@@ -22,7 +22,7 @@ class KitTemplatesView(BikaListingView):
 
         self.catalog = "bika_setup_catalog"
         self.contentFilter = {'portal_type': 'KitTemplate',
-                              'sort_on': 'created',
+                              'sort_on': 'sortable_title',
                               'sort_order': 'reverse',
                               #'path': {"query": "/", "level": 0},
                               'inactive_state': 'active',

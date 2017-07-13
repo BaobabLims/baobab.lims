@@ -13,6 +13,9 @@ class SetupDataSetList(SDL):
     def __call__(self, projectname="bika.lims"):
         return SDL.__call__(self, projectname="baobab.lims")
 
+
+
+
 class Kit_Components(WorksheetImporter):
     """ This class is called from Kit_Templates and not from LoadSetupData class
     """
@@ -62,18 +65,47 @@ class Kit_Templates(WorksheetImporter):
             template_name = row.get('templateName')
             kit_component = Kit_Components(self, self.workbook, self.dataset_project, self.dataset_name, template_name, catalog)
             product_list = kit_component.get_product_list()
-            #category = self.get_object(catalog, 'ProductCategory', title=row.get('category'))
+            # category = self.get_object(catalog, 'ProductCategory', title=row.get('category'))
             obj = _createObjectByType('KitTemplate', folder, tmpID())
             obj.edit(
                 title=template_name,
                 ProductList=product_list,
                 Quantity=row.get('quantity')
             )
-            #obj.setCategory(category)
+            # obj.setCategory(category)
 
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
 
+
+class Products(WorksheetImporter):
+    """ Import test products
+    """
+    def Import(self):
+        folder = self.context.bika_setup.bika_products
+        rows = self.get_rows(3)
+        bsc = getToolByName(self.context, 'bika_setup_catalog')
+        suppliers = [o.getObject() for o in bsc(portal_type="Supplier")]
+        for row in rows:
+            title = row.get('Title')
+            description = row.get('description', '')
+            obj = _createObjectByType('Product', folder, tmpID())
+            obj.edit(
+                title=title,
+                description=description,
+                Hazardous=self.to_bool(row.get('Hazardous', '')),
+                Quantity=self.to_int(row.get('Quantity', 0)),
+                Unit=row.get('Unit', ''),
+                Price=str(row.get('Price', '0.00'))
+            )
+
+            for supplier in suppliers:
+                if supplier.Title() == row.get('Suppliers', ''):
+                    obj.setSupplier(supplier)
+                    break
+
+            obj.unmarkCreationFlag()
+            renameAfterCreation(obj)
 
 class Storage_Types(WorksheetImporter):
     """Add some dummy product categories

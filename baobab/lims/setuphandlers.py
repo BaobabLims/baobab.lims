@@ -106,6 +106,8 @@ class BikaCustomGenerator:
         at.setCatalogsByType('UnmanagedStorage', ['bika_setup_catalog'])
         at.setCatalogsByType('StoragePosition', ['bika_setup_catalog'])
 
+        addIndex(bsc, 'getProductUID', 'FieldIndex')
+
         bac = getToolByName(portal, 'bika_analysis_catalog', None)
         if bsc is None:
             logger.warning('Could not find the bika_analysis_catalog tool.')
@@ -119,12 +121,18 @@ class BikaCustomGenerator:
         # Root permissions
         mp = portal.manage_permission
         mp(ManageProjects, ['Manager', 'LabManager'], 1)
-        mp(AddProject, ['Manager', 'LabManager', 'LabClerk'], 1)
+        mp(ManageShipments, ['Manager', 'LabManager', 'LabClerk'], 1)
+        mp(ManageKits, ['Manager', 'LabManager', 'LabClerk'], 1)
+        mp(AddProject, ['Manager', 'LabManager'], 1)
         mp(AddStorageUnit, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(AddManagedStorage, ['Manager', 'Owner', 'LabManager'], 1)
         mp(AddUnmanagedStorage, ['Manager', 'Owner', 'LabManager'], 1)
         mp(AddStoragePosition, ['Manager', 'Owner', 'LabManager'], 1)
+
         mp(AddInventoryOrder, ['Manager', 'Owner', 'LabManager'], 1)
+        mp(DispatchInventoryOrder, ['Manager', 'Owner', 'LabManager'], 1)
+        mp(ReceiveInventoryOrder, ['Manager', 'LabManager', 'LabClerk'], 1)
+        mp(StoreInventoryOrder, ['Manager', 'LabManager', 'LabClerk'], 1)
 
         # projects
         mp = portal.projects.manage_permission

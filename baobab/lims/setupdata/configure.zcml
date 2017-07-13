@@ -20,4 +20,10 @@
       provides="bika.lims.interfaces.ISetupDataImporter"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
 
+    <adapter
+      name="test_products"
+      factory="baobab.lims.setupdata.Products"
+      provides="bika.lims.interfaces.ISetupDataImporter"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
+
 </configure>

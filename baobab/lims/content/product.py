@@ -70,7 +70,8 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
         expression = 'context.getVATAmount()',
         widget = ComputedWidget(
             label=_("VAT"),
-            visible = {'edit':'hidden', }
+            default='14.00',
+            visible={'edit': 'hidden'}
         ),
     ),
     ComputedField('TotalPrice',

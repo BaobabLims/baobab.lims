@@ -7,8 +7,10 @@
     i18n_domain="baobab.lims">
 
     <permission id="baobab.lims.permissions.AddProject" title="BAOBAB: Add Project"/>
-    <permission id="baobab.lims.ManageProjects" title="BAOBAB: Manage Projects"/>
     <permission id="baobab.lims.permissions.AddStorageType" title="BAOBAB: Add Storage Type"/>
+    <permission id="baobab.lims.ManageProjects" title="BAOBAB: Manage Projects"/>
+    <permission id="baobab.lims.ManageKits" title="BAOBAB: Manage Kits"/>
+    <permission id="baobab.lims.ManageShipments" title="BAOBAB: Manage Shipments"/>
 
     <permission id="baobab.lims.permissions.AddInventoryOrder" title="BAOBAB: Add Inventory Order"/>
     <permission id="baobab.lims.DispatchInventoryOrder" title="BAOBAB: Dispatch Inventory Order"/>

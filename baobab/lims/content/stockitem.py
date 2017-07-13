@@ -1,4 +1,3 @@
-from plone.indexer import indexer
 from zope.interface import implements
 from bika.lims import bikaMessageFactory as _
 from bika.lims.browser.widgets import DateTimeWidget as bika_DateTimeWidget
@@ -8,11 +7,6 @@ from baobab.lims.config import PROJECTNAME
 from bika.lims.content.bikaschema import BikaSchema
 from Products.Archetypes.public import *
 import sys
-
-
-@indexer(IStockItem)
-def get_product_uid(instance):
-    return instance.getProduct().UID()
 
 
 schema = BikaSchema.copy() + Schema((
@@ -151,5 +145,7 @@ class StockItem(BaseContent):
     def is_stored(self):
         return self.getStorageLocation() is not None
 
+    def getProductUID(self):
+        return self.getProduct().UID()
 
 registerType(StockItem, PROJECTNAME)
