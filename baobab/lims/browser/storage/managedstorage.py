@@ -17,7 +17,7 @@ class ManagedStorageView(BikaListingView):
     template = ViewPageTemplateFile("templates/managedstorage_view.pt")
 
     def __init__(self, context, request):
-        super(ManagedStorageView, self).__init__(context, request)
+        BikaListingView.__init__(self, context, request)
         self.context = context
         self.request = request
 
@@ -44,7 +44,7 @@ class StoragePositionsView(BikaListingView):
     implements(IFolderContentsView, IViewView)
 
     def __init__(self, context, request):
-        super(StoragePositionsView, self).__init__(context, request)
+        BikaListingView.__init__(self, context, request)
         self.context = context
         self.request = request
         self.catalog = 'bika_setup_catalog'
@@ -98,8 +98,6 @@ class StoragePositionsView(BikaListingView):
         ]
 
     def folderitem(self, obj, item, index):
-        workflow = getToolByName(self.context, "portal_workflow")
-        mtool = getToolByName(self.context, 'portal_membership')
         if not item.has_key('obj'):
             return item
         obj = item['obj']

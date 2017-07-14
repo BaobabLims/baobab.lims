@@ -14,9 +14,10 @@ class UnmanagedStorageView(BikaListingView):
     template = ViewPageTemplateFile("templates/unmanagedstorage_view.pt")
 
     def __init__(self, context, request):
-        super(UnmanagedStorageView, self).__init__(context, request)
+        BikaListingView.__init__(self, context, request)
         self.context = context
         self.request = request
+        self.request.set('disable_plone.rightcolumn', 1)
 
     def __call__(self):
 
@@ -32,13 +33,17 @@ class StoredItemsView(BikaListingView):
     implements(IFolderContentsView, IViewView)
 
     def __init__(self, context, request):
-        super(StoredItemsView, self).__init__(context, request)
+        BikaListingView.__init__(self, context, request)
 
         self.context = context
         self.request = request
         self.catalog = 'bika_setup_catalog'
         path = '/'.join(context.getPhysicalPath())
-        self.contentFilter = {}
+        self.contentFilter = {
+            'portal_type': 'StockItem',
+            'sort_on': 'sortable_title',
+            'path': {'query': path, 'depth': 1, 'level': 0}
+        }
         self.context_actions = {}
         self.title = ''
         self.description = ''
@@ -72,20 +77,21 @@ class StoredItemsView(BikaListingView):
                          'review_state']},
         ]
 
-    def folderitems(self, full_objects=False):
-        items = BikaListingView.folderitems(self)
-        for x in range(len(items)):
-            obj = items[x]['obj']
-            items[x]['ItemID'] = obj.getId()
-            items[x]['ItemTitle'] = obj.Title()
-            items[x]['ItemType'] = obj.portal_type
-            items[x]['Location'] = obj.getStorageLocation().getHierarchy()
-            items[x]['replace']['ItemID'] = \
-                "<a href='%s'>%s</a>" % (items[x]['url'], items[x]['ItemID'])
-            stitles = [s['title'] for s in obj.getStorageLocation().getStorageTypes()]
-            items[x]['StorageTypes'] = ','.join(stitles)
+    def folderitem(self, obj, item, index):
+        if not item.has_key('obj'):
+            return item
+        obj = item['obj']
 
-        return items
+        item['ItemID'] = obj.getId()
+        item['ItemTitle'] = obj.Title()
+        item['ItemType'] = obj.portal_type
+        item['Location'] = obj.getStorageLocation().getHierarchy()
+        item['replace']['ItemID'] = \
+            "<a href='%s'>%s</a>" % (item['url'], item['ItemID'])
+        stitles = [s['title'] for s in obj.getStorageLocation().getStorageTypes()]
+        item['StorageTypes'] = ','.join(stitles)
+
+        return item
 
     def contentsMethod(self, contentFilter):
         return self.context.getBackReferences("ItemStorageLocation")
@@ -95,7 +101,6 @@ class StoredItemsView(BikaListingView):
         return self.contents_table(table_only=True)
 
 
-# Todo: Hocine added this class to this file
 class UnmanagedStorageContent(ProductsView):
     """This class shows the products in this storage and their quantities
     """

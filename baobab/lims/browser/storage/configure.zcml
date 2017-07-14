@@ -79,7 +79,6 @@
             name="view"
             class=".unmanagedstorage.UnmanagedStorageView"
             permission="zope2.View"
-            layer="bika.lims.interfaces.IBikaLIMS"
     />
 
     <browser:page
