@@ -1,0 +1,24 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:zcml="http://namespaces.zope.org/browser"
+           xmlns:fss="http://namespaces.zope.org/browser"
+           xmlns:browser="http://namespaces.zope.org/browser"
+           xmlns:five="http://namespaces.zope.org/five">
+
+
+    <browser:page
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        name="import"
+        class="baobab.lims.setupdata.dataimport.ImportView"
+        permission="bika.lims.ImportInstrumentResults"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+        for="*"
+        name="getImportTemplate"
+        class="baobab.lims.setupdata.dataimport.ajaxGetImportTemplate"
+        permission="zope.Public"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+</configure>

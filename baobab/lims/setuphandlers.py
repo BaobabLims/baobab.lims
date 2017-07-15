@@ -121,16 +121,16 @@ class BikaCustomGenerator:
         # Root permissions
         mp = portal.manage_permission
         mp(ManageProjects, ['Manager', 'LabManager'], 1)
-        mp(ManageShipments, ['Manager', 'LabManager', 'LabClerk'], 1)
+        mp(ManageShipments, ['Manager', 'LabManager', 'LabClerk', 'Member'], 1)
         mp(ManageKits, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(AddProject, ['Manager', 'LabManager'], 1)
         mp(AddStorageUnit, ['Manager', 'LabManager', 'LabClerk'], 1)
-        mp(AddManagedStorage, ['Manager', 'Owner', 'LabManager'], 1)
-        mp(AddUnmanagedStorage, ['Manager', 'Owner', 'LabManager'], 1)
-        mp(AddStoragePosition, ['Manager', 'Owner', 'LabManager'], 1)
+        mp(AddManagedStorage, ['Manager', 'LabManager', 'LabClerk'], 1)
+        mp(AddUnmanagedStorage, ['Manager', 'LabManager', 'LabClerk'], 1)
+        mp(AddStoragePosition, ['Manager', 'LabManager', 'LabClerk'], 1)
 
-        mp(AddInventoryOrder, ['Manager', 'Owner', 'LabManager'], 1)
-        mp(DispatchInventoryOrder, ['Manager', 'Owner', 'LabManager'], 1)
+        mp(AddInventoryOrder, ['Manager', 'LabManager'], 1)
+        mp(DispatchInventoryOrder, ['Manager', 'LabManager'], 1)
         mp(ReceiveInventoryOrder, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(StoreInventoryOrder, ['Manager', 'LabManager', 'LabClerk'], 1)
 
@@ -202,7 +202,7 @@ class BikaCustomGenerator:
         mp(DispatchInventoryOrder, ['Manager', 'LabManager', 'LabClerk'], 0)
         mp(ReceiveInventoryOrder, ['Manager', 'LabManager', 'LabClerk'], 0)
         mp(StoreInventoryOrder, ['Manager', 'LabManager', 'LabClerk'], 0)
-        mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'LabClerk', 'Member'], 0)
+        mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'LabClerk'], 0)
         mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'LabClerk'], 0)
         mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'LabClerk', 'Analyst'], 0)
         mp(permissions.DeleteObjects, ['Manager', 'LabManager', 'LabClerk'], 0)

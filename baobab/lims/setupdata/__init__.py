@@ -14,8 +14,6 @@ class SetupDataSetList(SDL):
         return SDL.__call__(self, projectname="baobab.lims")
 
 
-
-
 class Kit_Components(WorksheetImporter):
     """ This class is called from Kit_Templates and not from LoadSetupData class
     """

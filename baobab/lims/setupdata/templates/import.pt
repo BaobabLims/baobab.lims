@@ -1,0 +1,86 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:metal="http://xml.zope.org/namespaces/metal"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    metal:use-macro="here/main_template/macros/master"
+    i18n:domain="baobab">
+<body>
+
+<metal:content-title fill-slot="content-title">
+    <h1>
+        <img tal:condition="view/icon | nothing"
+             src="" tal:attributes="src view/icon"/>
+        <span class="documentFirstHeading" tal:content="view/title"/>
+    </h1>
+</metal:content-title>
+
+<metal:content-description fill-slot="content-description">
+    <div class="documentDescription"
+        tal:content="view/description"
+        tal:condition="view/description"/>
+</metal:content-description>
+
+<metal:content-core fill-slot="content-core">
+
+    <form name="import" class="enableFormTabbing" method="POST" enctype="multipart/form-data">
+        <input tal:replace="structure context/@@authenticator/authenticator"/>
+        <input type="hidden" name="submitted" value="1"/>
+
+        <fieldset id="fieldset-instrumentimport">
+            <legend id="fieldsetlegend-instrumentimport" i18n:translate="">Instrument Import</legend>
+            <select name="exim" id="exim"
+                tal:define="importers view/getDataInterfaces">
+                <tal:options repeat="option importers">
+                    <option
+                        tal:attributes="value python:option;"
+                        tal:content="python:importers.getValue(option)"/>
+                </tal:options>
+            </select>
+            <!-- import_form can be pre-completed for the case where zope test browser
+                 calls this screen; it can't use javascript.
+            -->
+            <div id="import_form"
+                 tal:content="structure view/import_form"/>
+            <div id="intermediate" style="display:none"/>
+        </fieldset>
+
+        <fieldset id="fieldset-setupdata"
+            tal:condition="python:checkPermission('BIKA: Manage Bika', context)">
+            <legend id="fieldsetlegend-setupdata" i18n:translate="">Load Setup Data</legend>
+            <p></p>
+            <span i18n:translate="">Submit a valid Open XML (.XLSX) file containing Bika setup records to continue.</span>
+            <div style="margin-bottom:30px;">
+                <div style="float:left;width:47%;">
+                    <h2 style="margin-bottom:10px;border-bottom:1px solid #888;font-size:1.6em;">
+                        <span i18n:translate="">Load from file</span>
+                    </h2>
+                    <input type="file" name="import_file"/>
+                    <input name="setupfile" type="submit" value="Submit" i18n:attributes="value"/>
+                    <p></p>
+                    <span i18n:translate="">Tip. Attached documents will not be loaded unless they are present in the instance.</span>
+                </div>
+                <div style="float:right;width:47%;">
+                    <h2 style="margin-bottom:10px;border-bottom:1px solid #888;font-size:1.6em;">
+                        <span i18n:translate="">Select existing file</span>
+                    </h2>
+                    <select
+                        name="existing"
+                        id="existing">
+                        <tal:options tal:repeat="option view/getSetupDatas">
+                            <option tal:attributes="value python:'%(projectname)s:%(dataset)s'%(option)">
+                                <span tal:content="python:'%(projectname)s: %(dataset)s'%(option)"/>
+                            </option>
+                        </tal:options>
+                    </select>
+                    <input name="setupexisting" type="submit" value="Submit" i18n:attributes="value"/>
+                </div>
+            </div>
+            <input type="hidden" name="projectname" tal:attributes="value view/getProjectName"/>
+        </fieldset>
+
+    </form>
+
+</metal:content-core>
+
+</body>
+</html>
