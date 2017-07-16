@@ -15,6 +15,7 @@
       title="baobab: Various baobab python setup actions"
       description="Final site configuration actions"
       handler="baobab.lims.setuphandlers.setupCustomVarious">
+    <depends name="rolemap" />
     <depends name="content" />
   </genericsetup:importStep>
 

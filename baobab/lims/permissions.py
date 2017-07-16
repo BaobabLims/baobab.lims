@@ -19,6 +19,8 @@ DispatchInventoryOrder = 'BAOBAB: Dispatch Inventory Order'
 ReceiveInventoryOrder = 'BAOBAB: Receive Inventory Order'
 StoreInventoryOrder = 'BAOBAB: Store Inventory Order'
 
+ReceiveShipment = 'BAOBAB: Client Receive Shipment'
+
 # Add Permissions for specific types, if required
 ADD_CONTENT_PERMISSIONS = {
     'Project': AddProject,

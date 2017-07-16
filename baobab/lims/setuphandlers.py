@@ -121,7 +121,7 @@ class BikaCustomGenerator:
         # Root permissions
         mp = portal.manage_permission
         mp(ManageProjects, ['Manager', 'LabManager'], 1)
-        mp(ManageShipments, ['Manager', 'LabManager', 'LabClerk', 'Member'], 1)
+        # mp(ManageShipments, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(ManageKits, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(AddProject, ['Manager', 'LabManager'], 1)
         mp(AddStorageUnit, ['Manager', 'LabManager', 'LabClerk'], 1)

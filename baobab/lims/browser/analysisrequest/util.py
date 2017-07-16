@@ -46,6 +46,7 @@ def create_analysisrequest(context, request, values, analyses=None,
     ar.setSample(sample)
     values['Sample'] = sample
     values['SampleType'] = sample.getSampleType()
+    values['StorageLocation'] = sample.getField('StorageLocation').get(sample)
     ar.processForm(REQUEST=request, values=values)
     # Object has been renamed
     ar.edit(RequestID=ar.getId())

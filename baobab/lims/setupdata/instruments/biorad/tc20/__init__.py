@@ -46,7 +46,7 @@ class TC20TXTParser(InstrumentResultsFileParser):
                 if re.search('Gated count', result):
                     gated_count = 'Y'
 
-                if self.analysiskey == 'diffcellcount':
+                if self.analysiskey == 'dnaex':
                     raw_result[self.analysiskey] = {
                         'Request ID': frid,
                         'TCC': self.calculate(ftc_count),

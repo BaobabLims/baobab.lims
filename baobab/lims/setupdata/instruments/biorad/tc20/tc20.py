@@ -18,7 +18,6 @@ def Import(context, request):
     logs = []
     warns = []
     analysis = request.form.get('analysis', None)
-
     parser = TC20TXTParser(infile, analysis)
 
     if parser:

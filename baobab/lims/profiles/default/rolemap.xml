@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<rolemap>
+
+  <roles>
+    <role name="Analyst"/>
+    <role name="Client"/>
+    <role name="LabClerk"/>
+    <role name="LabManager"/>
+    <role name="Member"/>
+    <role name="Publisher"/>
+    <role name="Reviewer"/>
+    <role name="Verifier"/>
+  </roles>
+
+  <permissions>
+
+      <permission name="BAOBAB: Client Receive Shipment" acquire="False">
+          <role name="Client"/>
+          <role name="LabManager"/>
+          <role name="Manager"/>
+      </permission>
+
+      <permission name="BAOBAB: Manage Shipments" acquire="True">
+          <role name="Client"/>
+          <role name="LabManager"/>
+          <role name="Manager"/>
+      </permission>
+  </permissions>
+
+</rolemap>
