@@ -33,7 +33,6 @@ class TC20TXTParser(InstrumentResultsFileParser):
 
                 rid = re.findall('\sSample:\s(\S+)', result)
                 frid = rid[0] if len(rid) > 0 else ''
-
                 tc_count = re.findall('\sTotal cell count:\s(\S+)', result)
                 ftc_count = tc_count[0] if len(tc_count) > 0 else 0
 
@@ -46,7 +45,7 @@ class TC20TXTParser(InstrumentResultsFileParser):
                 if re.search('Gated count', result):
                     gated_count = 'Y'
 
-                if self.analysiskey == 'dnaex':
+                if self.analysiskey in ['dnaex', 'rnaex']:
                     raw_result[self.analysiskey] = {
                         'Request ID': frid,
                         'TCC': self.calculate(ftc_count),
