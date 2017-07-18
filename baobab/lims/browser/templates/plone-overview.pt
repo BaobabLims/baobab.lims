@@ -114,7 +114,7 @@
                     <input type="hidden" name="site_id" value="Plone" />
                     <input type="submit"
                            i18n:attributes="value;"
-                           value="Install a Bika distribution" />
+                           value="Install a Baobab distribution" />
                 </form>
             </li>
             <li>
