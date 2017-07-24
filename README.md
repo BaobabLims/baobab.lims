@@ -17,5 +17,4 @@ Documentation
 Feedback and Support
 --------------------
 
-* Sanbi Team on Slack <https://sanbi.slack.com/>
-* Issue Tracker: http://jira.bikalabs.com/
+* BaobabLims Team on Gitter <https://gitter.im/BaobabLims/Lobby>
