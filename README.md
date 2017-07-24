@@ -18,3 +18,4 @@ Feedback and Support
 --------------------
 
 * BaobabLims Team on Gitter <https://gitter.im/BaobabLims/Lobby>
+* New Issues: <https://github.com/BaobabLims/baobab.lims/issues>
