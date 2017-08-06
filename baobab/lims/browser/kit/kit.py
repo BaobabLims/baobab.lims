@@ -39,11 +39,11 @@ class KitView(BrowserView):
         self.title = context.Title()
         self.project = context.aq_parent.Title()
         kit_template = context.getKitTemplate()
-        self.kit_template_title = kit_template.Title()
-        self.items = kit_template.kit_components()
-        self.subtotal = '%.2f' % context.getKitTemplate().getSubtotal()
-        self.vat = '%.2f' % context.getKitTemplate().getVATAmount()
-        self.total = '%.2f' % float(context.getKitTemplate().getTotal())
+        self.kit_template_title = kit_template and kit_template.Title() or ''
+        self.items = kit_template and kit_template.kit_components() or []
+        self.subtotal = kit_template and '%.2f' % kit_template.getSubtotal() or '0.00'
+        self.vat = kit_template and '%.2f' % kit_template.getVATAmount() or '0.00'
+        self.total = kit_template and '%.2f' % float(kit_template.getTotal()) or '0.00'
 
         self.items = sorted(self.items, key=itemgetter('title'))
         if 'form.action.addKitAttachment' in self.request:

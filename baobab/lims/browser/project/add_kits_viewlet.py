@@ -239,12 +239,14 @@ class AddKitsSubmitHandler(BrowserView):
                 KitTemplate=kit_template_uid,
                 DateCreated=DateTime()
             )
-            self.assign_stockitems_to_kit(obj)
-            self.update_qtty_products(obj)
+            if kit_template_uid:
+                self.assign_stockitems_to_kit(obj)
+                self.update_qtty_products(obj)
             self.context.manage_renameObject(obj.id, id_template.format(id=x))
             kits.append(obj)
-        # store kits
-        self.assign_kit_to_storage(kits, kit_storages)
+        if kit_template_uid:
+            # store kits
+            self.assign_kit_to_storage(kits, kit_storages)
         # generate biospecimens
         for kit in kits:
             for i in range(spec_per_kit):
@@ -283,8 +285,8 @@ class AddKitsSubmitHandler(BrowserView):
 
         # Kit template required
         kit_template_uid = self.form.get('kit-template-uid', None)
-        if not kit_template_uid:
-            raise ValidationError(u'Kit Template field is required.')
+        # if not kit_template_uid:
+        #     raise ValidationError(u'Kit Template field is required.')
 
         # Kit storage destination is required field.
         kit_storage_uids = form.get('kit-storage-uids', '')
@@ -306,14 +308,15 @@ class AddKitsSubmitHandler(BrowserView):
                     u'The ID %s exists, cannot be created.' % id_kit)
 
         # Check there are enough stock items in stock to create the kits
-        kit_template = self.bsc(UID=kit_template_uid)[0].getObject()
-        for item in kit_template.getProductList():
-            items = self.product_stockitems(item['product_uid'])
-            items = self.filter_stockitems_by_storage_location(items)
-            if len(items) < int(item['quantity']) * kit_count:
-                raise ValidationError(
-                    u"There is insufficient stock available for " \
-                    u"product '%s'." % item['product'])
+        if kit_template_uid:
+            kit_template = self.bsc(UID=kit_template_uid)[0].getObject()
+            for item in kit_template.getProductList():
+                items = self.product_stockitems(item['product_uid'])
+                items = self.filter_stockitems_by_storage_location(items)
+                if len(items) < int(item['quantity']) * kit_count:
+                    raise ValidationError(
+                        u"There is insufficient stock available for " \
+                        u"product '%s'." % item['product'])
 
         kit_storages = self.get_kit_storages()
         if all([IManagedStorage.providedBy(storage) for storage in kit_storages]):

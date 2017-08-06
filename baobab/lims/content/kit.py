@@ -32,7 +32,7 @@ Project = ReferenceField(
 
 KitTemplate = ReferenceField(
     'KitTemplate',
-    required=1,
+    required=0,
     allowed_types=('KitTemplate',),
     relationship='KitAssemblyTemplate',
     referenceClass=HoldingReference,

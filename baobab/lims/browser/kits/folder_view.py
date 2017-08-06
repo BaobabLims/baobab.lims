@@ -154,7 +154,7 @@ class KitsView(BikaListingView):
             if not items[x].has_key('obj'):
                 continue
             obj = items[x]['obj']
-            items[x]['kitTemplate'] = obj.getKitTemplate().Title()
+            items[x]['kitTemplate'] = obj.getKitTemplate() and obj.getKitTemplate().Title() or ''
             items[x]['Project'] = ''
             if obj.aq_parent.portal_type == 'Project':
                 items[x]['Project'] = obj.aq_parent.Title()

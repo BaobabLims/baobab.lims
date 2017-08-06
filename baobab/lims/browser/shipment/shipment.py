@@ -100,11 +100,12 @@ class ShipmentKitsView(BikaListingView):
         if not item.has_key('obj'):
             return item
         obj = item['obj']
-        item['kitTemplate'] = obj.getKitTemplate().Title()
+        item['kitTemplate'] = obj.getKitTemplate() and obj.getKitTemplate().Title() or ''
         item['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                     (item['url'], obj.title)
-        item['replace']['kitTemplate'] = "<a href='%s'>%s</a>" % \
-                                         (obj.getKitTemplate().absolute_url(), obj.getKitTemplate().Title())
+        if obj.getKitTemplate():
+            item['replace']['kitTemplate'] = "<a href='%s'>%s</a>" % \
+                                             (obj.getKitTemplate().absolute_url(), obj.getKitTemplate().Title())
         return item
 
 

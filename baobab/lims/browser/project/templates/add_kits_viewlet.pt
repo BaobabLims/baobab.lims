@@ -177,17 +177,6 @@
             <form name="add-kits" action="add_kits_submit" method="POST">
                 <table>
                     <tr>
-                        <!--<td>Template for new Titles:
-                            <div class="discreet">The display titles with {id}
-                                included.
-                            </div>
-                        </td>
-                        <td><input name="titletemplate"
-                                   class="titletemplate"
-                                   placeholder="Title For {id}"
-                                   tabindex="1"
-                                   tal:attributes="value python: request.get('titletemplate', '')"/>
-                        </td>-->
                         <td>Prefix Text:
                             <div class="discreet">
                                 The display titles and IDs for new storage units. Provide the prefix to
@@ -210,18 +199,6 @@
                         </td>
                     <tr>
                     <tr>
-                        <!--<td>Template for new IDs:
-                            <div class="discreet">IDs should not include spaces
-                                or non-ascii characters.
-                            </div>
-                        </td>
-                        <td>
-                            <input name="idtemplate"
-                                   class="idtemplate"
-                                   placeholder="prefix-{id}"
-                                   tabindex="2"
-                                    tal:attributes="value python: request.get('idtemplate', '')"/>
-                        </td>-->
                         <td>Leading Zeros:
                             <div class="discreet">
                                 Prepend the zeros specified here to the sequence numbers of the storage units to create, ex: 00
@@ -254,7 +231,6 @@
                                         type="text"
                                         name="KitTemplate"
                                         id="KitTemplate"
-                                        required="True"
                                         class="blurrable firstToFocus referencewidget"
                                         value=""
                                         base_query='{"portal_type": "KitTemplate", "inactive_state": "active"}'
