@@ -34,6 +34,8 @@ class ARFieldWidgetVisibility(object):
             'SamplingDeviation', 'SampleCondition',
             'Template', 'ClientReference', 'Profiles',
             'DefaultContainerType', 'ClientSampleID',
+            'SubGroup', 'ClientOrderNumber', 'Project',
+            'PreparationWorkflow',
         ]
         self.random = 4  # fair dice roll
 

@@ -117,8 +117,9 @@
 <body>
 <style type="text/css">
     .add-kits .discreet {
-        font-size: 50%;
-        color: #ddd;
+        color: #666;
+        font-size: 85%;
+        font-weight: normal;
     }
 
     .add-kits input {
@@ -285,7 +286,6 @@
                                     type="text"
                                     name="stockItem"
                                     id="stockItem"
-                                    required="True"
                                     class="blurrable firstToFocus referencewidget"
                                     value=""
                                     base_query='{"portal_type": ["UnmanagedStorage"], "object_provides": "bika.lims.interfaces.IStockItemStorage", "review_state": "available", "inactive_state": "active"}'
@@ -423,11 +423,13 @@
                 <input type="hidden" name="kit-storage-uids" id="kit-storage-uids"/>
                 <input type="hidden" name="biospecimen-storage-uids" id="b-storage-uids" />
 
-                <input name="viewlet_submitted"
-                       type="submit"
-                       class="kits-add"
-                       tabindex="11"
-                       value="Add Kits">
+                <div class="formControls">
+                    <input name="viewlet_submitted"
+                           type="submit"
+                           class="kits-add"
+                           tabindex="11"
+                           value="Add Kits">
+                </div>
             </form>
         </div>
     </dd>

@@ -66,10 +66,12 @@
 
                 <div tal:replace="structure python:view.add_units()"/>
 
-                <input name="add_units_submitted"
-                       type="submit"
-                       class="units-add-units"
-                       value="Create Storage units">
+                <div class="formControls">
+                    <input name="add_units_submitted"
+                           type="submit"
+                           class="add-button"
+                           value="Create Storage units">
+                </div>
             </fieldset>
 
             <fieldset id="fieldset-managed" tal:condition='python:view.show_managed()'>
@@ -90,11 +92,12 @@
 
                 <div tal:replace="structure python:view.add_managed()"/>
 
-                <input name="addstorage_managed_submitted"
-                       type="submit"
-                       class="managed-add-managed"
-                       value="Create storages">
-
+                <div class="formControls">
+                    <input name="addstorage_managed_submitted"
+                           type="submit"
+                           class="managed-add-managed"
+                           value="Create storages">
+                </div>
             </fieldset>
 
             <fieldset id="fieldset-unmanaged" tal:condition='python:view.show_unmanaged()'>
@@ -107,11 +110,12 @@
                 </p>
 
                 <div tal:replace="structure python:view.add_unmanaged()"/>
-
-                <input name="addstorage_unmanaged_submitted"
-                       type="submit"
-                       class="unmanaged-add-unmanaged"
-                       value="Create storages">
+                <div class="formControls">
+                    <input name="addstorage_unmanaged_submitted"
+                           type="submit"
+                           class="unmanaged-add-unmanaged"
+                           value="Create storages">
+                </div>
             </fieldset>
 
         </form>

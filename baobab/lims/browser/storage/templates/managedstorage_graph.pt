@@ -10,7 +10,8 @@
         (function ($) {
             $(function () {
                 // Get Positions info
-                var path = window.location.href.split('/graphic')[0] + '/positions_info';
+                console.log(window.location.href);
+                var path = window.location.href.split('/view')[0] + '/positions_info';
                 $.getJSON(path, function (data) {
                     if (data['positions'].length > 0) {
                         createGraphic(data);

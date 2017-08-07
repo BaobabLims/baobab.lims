@@ -295,9 +295,9 @@ class AddKitsSubmitHandler(BrowserView):
 
         # Stock Item storage (where items will be taken from) is required
         si_storage_uids = form.get('si-storage-uids', '')
-        if not si_storage_uids:
-            raise ValidationError(u'You must select the Storage where the '
-                                  u'stock items will be taken from.')
+        if not si_storage_uids and kit_template_uid:
+            raise ValidationError(u'You must select the Storage from where the '
+                                  u'stock items will be used for the assembling.')
 
         # Check that none of the IDs conflict with existing items
         ids = [x.id for x in self.context.objectValues()]

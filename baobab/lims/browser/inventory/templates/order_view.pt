@@ -139,7 +139,9 @@
                     </tr>
                     </tbody>
                 </table>
-                <input type="submit" name="submit" value="Store" tal:condition="received"/>
+                <div class="formControls">
+                    <input type="submit" name="submit" value="Store" tal:condition="received"/>
+                </div>
             </form>
         </metal:core>
 
