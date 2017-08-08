@@ -37,37 +37,37 @@
         <tbody>
         <tr>
             <th i18n:translate="" style="border: 1px solid #cecfd5;
-                                         padding: 10px 15px;">Title </th>
+                                         padding: 10px 15px;text-align: left;">Title </th>
             <td tal:content="view/title" style="border: 1px solid #cecfd5;
-                                               padding: 10px 15px;"></td>
+                                               padding: 10px 15px;width:70%"></td>
         </tr>
         <tr style="background: #f0f0f2;">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
-                                         padding: 10px 15px;">Description </th>
+                                         padding: 10px 15px;text-align: left;">Description </th>
             <td tal:content="view/description" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
         <tr>
             <th i18n:translate="" style="padding-bottom: .2em;border: 1px solid #cecfd5;
-                                         padding: 10px 15px;">Client </th>
+                                         padding: 10px 15px;text-align: left;">Client </th>
             <td tal:content="structure view/client" style="padding-bottom: .5em;border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
         <tr style="background: #f0f0f2;">
             <th i18n:translate="" style="padding-bottom: .2em;border: 1px solid #cecfd5;
-                                         padding: 10px 15px;">Study Type </th>
+                                         padding: 10px 15px;text-align: left;">Study Type </th>
             <td tal:content="view/study_type" style="padding-bottom: .5em;border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
         <tr>
             <th i18n:translate="" style="padding-bottom: .2em;border: 1px solid #cecfd5;
-                                         padding: 10px 15px;">Number of Participants </th>
+                                         padding: 10px 15px;text-align: left;">Number of Participants </th>
             <td tal:content="view/participants" style="padding-bottom: .5em;border: 1px solid #cecfd5;
-                                               padding: 10px 15px;"></td>
+                                                       padding: 10px 15px;"></td>
         </tr>
         <tr style="background: #f0f0f2;">
             <th i18n:translate="" style="padding-bottom: .2em;border: 1px solid #cecfd5;
-                                         padding: 10px 15px;">Age low - Age high </th>
+                                         padding: 10px 15px;text-align: left;">Age low - Age high </th>
             <td tal:content="view/age_interval" style="padding-bottom: .5em;border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>

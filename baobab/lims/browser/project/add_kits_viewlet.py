@@ -57,9 +57,9 @@ class AddKitsSubmitHandler(BrowserView):
             self.context.plone_utils.addPortalMessage(msg)
             self.request.response.redirect(self.context.absolute_url() + '/kits')
 
-    def get_kit_storages(self):
+    def get_kit_storage(self):
         """Take a list of UIDs from the form, and resolve to a list of Storages.
-        Accepts ManagedStorage, UnmanagedStorage, or StoragePosition UIDs.
+        Accepts ManagedStorage, UnmanagedStorage, or StoragePosition UIDs. Not used!
         """
         kit_storages = []
         form_uids = self.form['kit-storage-uids'].split(',')
@@ -220,13 +220,10 @@ class AddKitsSubmitHandler(BrowserView):
         kit_count = int(self.form.get('kit-count', None))
         kit_template_uid = self.form.get('kit-template-uid', None)
         spec_per_kit = int(self.form.get('specimen-count', None))
-        # kit storages
         kits = []
-        kit_storages = self.get_kit_storages()
-        # sample storages
+        # sample storage
         samples = []
-        sample_storages = self.samples_gen.get_biospecimen_storages()
-
+        sample_storage = self.samples_gen.get_biospecimen_storages()
 
         for x in range(seq_start, seq_start + kit_count):
             id_template = prefix_text + '-' + str(x).zfill(len(leading_zeros))
@@ -244,15 +241,13 @@ class AddKitsSubmitHandler(BrowserView):
                 self.update_qtty_products(obj)
             self.context.manage_renameObject(obj.id, id_template.format(id=x))
             kits.append(obj)
-        if kit_template_uid:
-            # store kits
-            self.assign_kit_to_storage(kits, kit_storages)
+
         # generate biospecimens
         for kit in kits:
             for i in range(spec_per_kit):
                 sample = self.samples_gen.create_sample(kit, self.sample_type)
                 samples.append(sample)
-        self.samples_gen.store_samples(samples, sample_storages)
+        self.samples_gen.store_samples(samples, sample_storage)
 
         return kits
 
@@ -285,13 +280,6 @@ class AddKitsSubmitHandler(BrowserView):
 
         # Kit template required
         kit_template_uid = self.form.get('kit-template-uid', None)
-        # if not kit_template_uid:
-        #     raise ValidationError(u'Kit Template field is required.')
-
-        # Kit storage destination is required field.
-        kit_storage_uids = form.get('kit-storage-uids', '')
-        if not kit_storage_uids:
-            raise ValidationError(u'Kit storage required.')
 
         # Stock Item storage (where items will be taken from) is required
         si_storage_uids = form.get('si-storage-uids', '')
@@ -318,15 +306,7 @@ class AddKitsSubmitHandler(BrowserView):
                         u"There is insufficient stock available for " \
                         u"product '%s'." % item['product'])
 
-        kit_storages = self.get_kit_storages()
-        if all([IManagedStorage.providedBy(storage) for storage in kit_storages]):
-            nr_positions = self.count_storage_positions(kit_storages)
-            if kit_count > nr_positions:
-                raise ValidationError(
-                    u"Not enough kit storage positions available. Please select "
-                    u"or create additional storages for kits.")
-
-        # Check that the storages selected has sufficient positions to contain
+        # Check that the storage selected has sufficient positions to contain
         # the biospecimen to generate.
         biospecimens_per_kit = int(form.get('specimen-count', None))
         biospecimen_count = kit_count * biospecimens_per_kit
@@ -336,7 +316,7 @@ class AddKitsSubmitHandler(BrowserView):
             if biospecimen_count > nr_positions:
                 raise ValidationError(
                     u"Not enough kit storage positions available.  Please select "
-                    u"or create additional storages for kits.")
+                    u"or create additional storage for kits.")
 
     def form_error(self, msg):
         self.context.plone_utils.addPortalMessage(msg, 'error')

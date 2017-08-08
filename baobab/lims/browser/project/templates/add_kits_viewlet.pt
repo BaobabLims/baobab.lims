@@ -278,7 +278,7 @@
                             <legend>Stock-Item Storage Management</legend>
                             <span></span>
                         </fieldset>
-                        <div class="discreet" class="helptext">
+                        <div class="discreet helptext">
                             Select the storage of items to use in kit assembling. Possibility to select multiple storages.
                         </div>
                         <div style="width:100%" class="field ArchetypesReferenceWidget">
@@ -315,33 +315,32 @@
 
                             <input type="button" id='si-button' class="add-button" value="Add"/>
                         </div>
-
                         <table id="stockitem-table-storages"></table>
-
                     </div>
-                    <div id="kit-storage" style="display: inline-block; width: 45%">
+
+                    <div id="storage-management" style="display: inline-block; width: 45%">
                         <fieldset>
-                            <legend>Kit Storage Management</legend>
+                            <legend>Biospecimen Storage Management</legend>
                             <span></span>
                         </fieldset>
-                        <div class="discreet" class="helptext">
-                            Select a location to store the kits to generate. Possibility to select multiple locations.
+                        <div class="discreet helptext">
+                            Select the storage(s) to contain the biospecimens created. Possibility to select multiple locations.<br/>
                         </div>
-                        <div style="width:100%" class="field ArchetypesReferenceWidget">
-                            <input
-                                    type="text"
-                                    name="kitAssembly"
-                                    id="kitAssembly"
-                                    required="True"
-                                    class="blurrable firstToFocus referencewidget"
-                                    value=""
-                                    base_query='{"portal_type": ["UnmanagedStorage"], "object_provides": "baobab.lims.interfaces.IKitStorage", "review_state": "available", "inactive_state": "active"}'
-                                    search_query='{}'
-                                    catalog_name="bika_setup_catalog"
-                                    ui_item="Title"
-                                    autocomplete="false"
-                                    tabindex="9"
-                                    combogrid_options='{"colModel": [{"columnName": "Title", "align": "left", "label": "Title", "width": "30"},
+                        <div style="display: inline-block;">
+                            <div style="width:100%" class="field ArchetypesReferenceWidget">
+                                <input
+                                        type="text"
+                                        name="StorageLevel"
+                                        id="StorageLevel"
+                                        class="blurrable firstToFocus referencewidget"
+                                        value=""
+                                        base_query='{"portal_type": ["ManagedStorage"], "object_provides": "baobab.lims.interfaces.IBiospecimenStorage", "review_state": "available", "inactive_state": "active"}'
+                                        search_query='{}'
+                                        catalog_name="bika_setup_catalog"
+                                        ui_item="Title"
+                                        autocomplete="false"
+                                        tabindex="10"
+                                        combogrid_options='{"colModel": [{"columnName": "Title", "align": "left", "label": "Title", "width": "30"},
                                                                      {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "50"},
                                                                      {"columnName": "FreePositions", "align": "left", "label": "Free", "width": "20"},
                                                                      {"columnName": "UID", "hidden": true}],
@@ -359,65 +358,16 @@
                                                         "force_all": true,
                                                         "portal_types": {}}'/>
 
-                            <input type="hidden" name="kit_uid" id="kit_uid">
-
-                            <input type="button" id='k-button' class="add-button" value="Add"/>
+                                <input type="hidden" name="biospecimen_uid" id="biospecimen_uid">
+                                <input type="button" id='b-button' class="add-button" value="Add"/>
+                            </div>
                         </div>
-
-                        <table id="kit-table-storages"></table>
-
+                        <table id="biospecimen-table-storages"></table>
                     </div>
+
                 </div>
 
-                <div id="storage-management">
-                    <fieldset>
-                        <legend>Biospecimen Storage Management</legend>
-                        <span></span>
-                    </fieldset>
 
-                    <div style="display: inline-block;">
-                        <div style="width:100%" class="field ArchetypesReferenceWidget">
-                            <input
-                                    type="text"
-                                    name="StorageLevel"
-                                    id="StorageLevel"
-                                    class="blurrable firstToFocus referencewidget"
-                                    value=""
-                                    base_query='{"portal_type": ["ManagedStorage"], "object_provides": "baobab.lims.interfaces.IBiospecimenStorage", "review_state": "available", "inactive_state": "active"}'
-                                    search_query='{}'
-                                    catalog_name="bika_setup_catalog"
-                                    ui_item="Title"
-                                    autocomplete="false"
-                                    tabindex="10"
-                                    combogrid_options='{"colModel": [{"columnName": "Title", "align": "left", "label": "Title", "width": "30"},
-                                                                 {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "50"},
-                                                                 {"columnName": "FreePositions", "align": "left", "label": "Free", "width": "20"},
-                                                                 {"columnName": "UID", "hidden": true}],
-                                                    "search_fields": ["Title"],
-                                                    "catalog_name": "bika_setup_catalog",
-                                                    "url": "referencewidget_search",
-                                                    "discard_empty": [],
-                                                    "popup_width": "650px",
-                                                    "showOn": true,
-                                                    "searchIcon": true,
-                                                    "minLength": "0",
-                                                    "resetButton": false,
-                                                    "sord": "asc",
-                                                    "sidx": "Title",
-                                                    "force_all": true,
-                                                    "portal_types": {}}'/>
-
-                            <input type="hidden" name="biospecimen_uid" id="biospecimen_uid">
-
-                            <input type="button" id='b-button' class="add-button" value="Add"/>
-                        </div>
-                    </div>
-                    <div class="discreet helptext" style="display: inline-block; margin-left: 100px;">
-                        Select the storage(s) to contain the biospecimens created.<br/>Possibility to select multiple locations.<br/>
-                    </div>
-
-                    <table id="biospecimen-table-storages" style="width: 35%;"></table>
-                </div>
 
                 <input type="hidden" name="si-storage-uids" id="si-storage-uids"/>
                 <input type="hidden" name="kit-storage-uids" id="kit-storage-uids"/>
