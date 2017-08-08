@@ -7,6 +7,7 @@ from bika.lims.utils.samplepartition import create_samplepartition
 from bika.lims.workflow import doActionFor
 from bika.lims.utils.analysisrequest import get_sample_from_values, _resolve_items_to_service_uids
 
+
 def create_analysisrequest(context, request, values, analyses=None,
                            partitions=None, specifications=None, prices=None):
     """Override the one in bika.lims
@@ -29,11 +30,10 @@ def create_analysisrequest(context, request, values, analyses=None,
         raise RuntimeError(
                 "create_analysisrequest: no analyses services provided")
 
-    # Create new sample or locate the existing for secondary AR
+    # Baobab do not create a sample when the sample is not selected in AR
     if not values.get('Sample', False):
-        secondary = False
-        workflow_enabled = context.bika_setup.getSamplingWorkflowEnabled()
-        sample = create_sample(context, request, values)
+        raise RuntimeError(
+            "create_analysisrequest: no sample selected for analysise")
     else:
         secondary = True
         sample = get_sample_from_values(context, values)
@@ -83,51 +83,6 @@ def create_analysisrequest(context, request, values, analyses=None,
         if analysis_state not in skip_receive:
             doActionFor(analysis, 'receive')
 
-    if not secondary:
-        # Create sample partitions
-        if not partitions:
-            partitions = [{'services': service_uids}]
-        for n, partition in enumerate(partitions):
-            # Calculate partition id
-            partition_prefix = sample.getId() + "-P"
-            partition_id = '%s%s' % (partition_prefix, n + 1)
-            partition['part_id'] = partition_id
-            # Point to or create sample partition
-            if partition_id in sample.objectIds():
-                partition['object'] = sample[partition_id]
-            else:
-                partition['object'] = create_samplepartition(
-                    sample,
-                    partition,
-                    analyses
-                )
-        # If Preservation is required for some partitions,
-        # and the SamplingWorkflow is disabled, we need
-        # to transition to to_be_preserved manually.
-        if not workflow_enabled:
-            to_be_preserved = []
-            sample_due = []
-            lowest_state = 'sample_due'
-            for p in sample.objectValues('SamplePartition'):
-                if p.getPreservation():
-                    lowest_state = 'to_be_preserved'
-                    to_be_preserved.append(p)
-                else:
-                    sample_due.append(p)
-            for p in to_be_preserved:
-                doActionFor(p, 'to_be_preserved')
-            for p in sample_due:
-                doActionFor(p, 'sample_due')
-            doActionFor(sample, lowest_state)
-            doActionFor(ar, lowest_state)
-
-        # Transition pre-preserved partitions
-        for p in partitions:
-            if 'prepreserved' in p and p['prepreserved']:
-                part = p['object']
-                state = workflow.getInfoFor(part, 'review_state')
-                if state == 'to_be_preserved':
-                    workflow.doActionFor(part, 'preserve')
     # Once the ar is fully created, check if there are rejection reasons
     reject_field = values.get('RejectionReasons', '')
     if reject_field and reject_field.get('checkbox', False):

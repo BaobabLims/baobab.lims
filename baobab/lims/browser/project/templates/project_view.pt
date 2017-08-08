@@ -44,7 +44,7 @@
         <tr style="background: #f0f0f2;">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;">Description </th>
-            <td tal:content="here/description" style="border: 1px solid #cecfd5;
+            <td tal:content="view/description" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
         <tr>

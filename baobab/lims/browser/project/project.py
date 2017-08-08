@@ -125,6 +125,7 @@ class ProjectView(BrowserView):
         # __Collect general data__ #
         self.id = context.getId()
         self.title = context.Title()
+        self.description = context.Description()
         self.client = "<a href='%s'>%s</a>" % (
             context.aq_parent.absolute_url(),
             context.aq_parent.Title()

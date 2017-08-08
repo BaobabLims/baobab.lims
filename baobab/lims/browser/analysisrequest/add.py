@@ -207,7 +207,7 @@ class ajaxAnalysisRequestSubmit():
         for arnum, state in valid_states.items():
             # Create the Analysis Request
             ar = crar(
-                portal_catalog(UID=state['Client'])[0].getObject(),
+                self.context,
                 self.request,
                 state
             )
