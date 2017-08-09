@@ -63,8 +63,15 @@
     <adapter
             for="*"
             provides="baobab.lims.interfaces.IStorageTypeRegistration"
-            name="bika.lims.storagetypes"
-            factory="baobab.lims.browser.storage.defaultStorageTypes"
+            name="baobab.lims.unmanagedstoragetypes"
+            factory="baobab.lims.browser.storage.defaultUnmanagedStorageTypes"
+    />
+
+    <adapter
+            for="*"
+            provides="baobab.lims.interfaces.IStorageTypeRegistration"
+            name="baobab.lims.managedstoragetypes"
+            factory="baobab.lims.browser.storage.defaultManagedStorageTypes"
     />
 
     <browser:page

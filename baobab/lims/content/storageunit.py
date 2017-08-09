@@ -11,7 +11,7 @@ from bika.lims.content.bikaschema import BikaFolderSchema
 
 from baobab.lims import bikaMessageFactory as _
 from baobab.lims.config import PROJECTNAME
-from baobab.lims.browser.storage import getStorageTypes
+from baobab.lims.browser.storage import getStorageTypesByName
 from baobab.lims.interfaces import IStorageUnit
 
 schema = BikaFolderSchema.copy() + Schema((
@@ -73,10 +73,10 @@ class StorageUnit(ATFolder):
     def getDepartmentTitle(self):
         return self.getDepartment() and self.getDepartment().Title() or ''
 
-    def getStorageTypes(self, show_all=False):
+    def getStorageTypes(self, name_adapter, show_all=False):
         """Return a list of types of storage which are supported here.
         """
-        types = getStorageTypes()
+        types = getStorageTypesByName(name_adapter)
         if not show_all:
             types = [x for x in types if x['interface'].providedBy(self)]
         return types

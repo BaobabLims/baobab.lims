@@ -120,8 +120,8 @@
             </div>
         </td>
         <td>
-            <select id="managed-storage-types" name="managed-storage-types" size="6" multiple>
-                <tal:x tal:repeat="stype python:context.getStorageTypes(show_all=True)">
+            <select id="managed-storage-types" name="managed-storage-types" style="width: 180px;">
+                <tal:x tal:repeat="stype python:context.getStorageTypes(name_adapter='baobab.lims.managedstoragetypes', show_all=True)">
                     <option tal:attributes="value python:stype['identifier']">
                         <tal:t tal:replace="python: stype['title']"/>
                     </option>
