@@ -266,17 +266,22 @@ class AddKitsSubmitHandler(BrowserView):
         try:
             seq_start = int(form.get('seq-start', None))
             kit_count = int(form.get('kit-count', None))
+            biospecimen_count = int(form.get('specimen-count', None))
         except:
             raise ValidationError(
                 u'Sequence start and all counts must be integers')
 
         # verify ID sequence start
         if seq_start < 1:
-            raise ValidationError(u'Sequence Start should be > 0')
+            raise ValidationError(u'Sequence Start must be > 0')
 
         # verify number of kits
         if kit_count < 1:
-            raise ValidationError(u'Kit count should be > 0')
+            raise ValidationError(u'Kit count must be > 0')
+
+        # verify number of biospecimen per kit
+        if biospecimen_count < 1:
+            raise ValidationError(u'Number of biospecimens per kit must be > 0')
 
         # Kit template required
         kit_template_uid = self.form.get('kit-template-uid', None)
@@ -306,7 +311,13 @@ class AddKitsSubmitHandler(BrowserView):
                         u"There is insufficient stock available for " \
                         u"product '%s'." % item['product'])
 
-        # Check that the storage selected has sufficient positions to contain
+        # Biospecimen storage (where biospecimen items will be stored) is required to be booked
+        biospecimen_storage_uids = form.get('biospecimen-storage-uids', '')
+        if not biospecimen_storage_uids:
+            raise ValidationError(u'You must select the Biospecimen Storage from where the '
+                                  u'specimen items will be stored.')
+
+                        # Check that the storage selected has sufficient positions to contain
         # the biospecimen to generate.
         biospecimens_per_kit = int(form.get('specimen-count', None))
         biospecimen_count = kit_count * biospecimens_per_kit
