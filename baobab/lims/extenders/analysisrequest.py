@@ -72,6 +72,7 @@ class AnalysisRequestSchemaModifier(object):
     def fiddle(self, schema):
         return schema
 
+
 def ObjectModifiedEventHandler(instance, event):
     """update certain field values of the AR created
     """

@@ -36,9 +36,9 @@
         <tbody>
         <tr>
             <th i18n:translate="" style="border: 1px solid #cecfd5;
-                                                     padding: 10px 15px;">Study Name</th>
+                                         padding: 10px 15px;text-align: left;">Study Name</th>
             <td tal:content="view/study_name" style="border: 1px solid #cecfd5;
-                                                     padding: 10px 15px;"></td>
+                                                     padding: 10px 15px;width:70%"></td>
             </tr>
         <tr>
         <tr style="background: #f0f0f2;">

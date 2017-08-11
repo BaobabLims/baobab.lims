@@ -300,7 +300,6 @@ class Sample(BaseSample):
     def at_post_create_script(self):
         """Execute once the object is created
         """
-
         if self.aq_parent.Title() == 'Biospecimens':
             self.container = self.getField('Project').get(self)
             doActionFor(self, 'sample_due')
@@ -312,11 +311,19 @@ class Sample(BaseSample):
         if location:
             doActionFor(location, 'occupy')
 
+            print location.aq_parent
+            raise ValueError
+            # TODO: CHECK IF BOX FULL, IF IT IS THEN CHANGE ITS STATE TO OCCUPY
+
     def at_post_edit_script(self):
         """Execute once the object is edited
         """
-        print 'salammmmmmmmmmmm'
-        raise ValueError
+        location = self.getStorageLocation()
+        state = self.portal_workflow.getInfoFor(location, 'review_state')
+        if location and state != 'occupied':
+            doActionFor(location, 'occupy')
+        elif not location and state == 'occupied':
+            doActionFor(location, 'liberate')
 
     # TODO: CHECK ObjectModifiedEventHandler IN SANBI ANALYSISREQUEST.PY
 

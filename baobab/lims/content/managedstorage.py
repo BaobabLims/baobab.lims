@@ -1,6 +1,7 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.Archetypes.public import *
+from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import safe_unicode
 from plone.app.folder.folder import ATFolder
@@ -153,8 +154,9 @@ class ManagedStorage(ATFolder):
         For managed storage levels, this transition is allowed when all
         available storage locations are occupied.
         """
-        if not self.get_free_positions:
+        if not self.get_free_positions():
             return True
+        return False
 
     def guard_liberate_transition(self):
         """Liberate transition means this storage can now be selected as
@@ -163,8 +165,14 @@ class ManagedStorage(ATFolder):
         For managed storage levels, this transition is allowed when some
         available storage locations are available.
         """
-        if self.get_free_positions:
-            return True
+        wf = getToolByName(self, 'portal_workflow')
+        if self.get_free_positions():
+            try:
+                wf.doActionFor(self, 'liberate')
+            except WorkflowException:
+                raise RuntimeError(
+                    "Liberate Box {} not working. This should not happen!".format(self.getId()))
+        return False
 
 
 registerType(ManagedStorage, PROJECTNAME)

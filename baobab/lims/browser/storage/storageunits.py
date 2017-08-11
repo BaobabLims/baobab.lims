@@ -86,7 +86,8 @@ class StorageUnitsView(BikaListingView):
                     'portal_type': 'ManagedStorage'
                 },
                 'transitions': [
-                    {'id': 'deactivate'}
+                    {'id': 'deactivate'},
+                    {'id': 'occupy'}
                 ],
                 'columns': [
                     'Title',
@@ -122,6 +123,26 @@ class StorageUnitsView(BikaListingView):
                 'contentFilter': {
                     'inactive_state': 'active',
                     'portal_type': 'UnmanagedStorage',
+                    'review_state': 'occupied'
+                },
+                'transitions': [
+                    {'id': 'deactivate'},
+                    {'id': 'liberate'}
+                ],
+                'columns': [
+                    'Title',
+                    'Type',
+                    'Description',
+                    'Temperature',
+                    'Department'
+                ]
+            },
+            {
+                'id': 'occupied_boxes',
+                'title': _('Occupied Boxes'),
+                'contentFilter': {
+                    'inactive_state': 'active',
+                    'portal_type': 'ManagedStorage',
                     'review_state': 'occupied'
                 },
                 'transitions': [
