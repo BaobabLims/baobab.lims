@@ -158,7 +158,7 @@ class StorageUnitsView(BikaListingView):
                 ]
             }
         ]
-        return super(StorageUnitsView, self).__call__()
+        return BikaListingView.__call__(self)
 
     def folderitem(self, obj, item, index):
         if not item.has_key('obj'):

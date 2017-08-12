@@ -58,6 +58,11 @@ class AddStorageViewlet(ViewletBase):
             return False
         return True
 
+    def show_units(self):
+        if self.request.URL.endswith('/fullboxes'):
+            return False
+        return True
+
 class AddStorageSubmit(BrowserView):
     """
     """

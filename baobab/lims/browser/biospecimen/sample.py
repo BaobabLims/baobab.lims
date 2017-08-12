@@ -27,8 +27,11 @@ class SampleView(SampleEdit):
         self.allow_edit = False
         return SampleEdit.__call__(self)
 
-class UpdateBoxes(BrowserView):
 
+class UpdateBoxes(BrowserView):
+    """
+    Verify the status of the box when a new biospecimen stored
+    """
     def __init__(self, context, request):
         BrowserView.__init__(self, context, request)
         self.context = context
@@ -44,10 +47,18 @@ class UpdateBoxes(BrowserView):
                 state = self.context.portal_workflow.getInfoFor(location, 'review_state')
                 if state != 'occupied':
                     doActionFor(location, 'occupy')
+                    self.context.update_box_status(location)
+
+                prev_location = self.context.getStorageLocation()
+                if prev_location != location:
+                    state = self.context.portal_workflow.getInfoFor(prev_location, 'review_state')
+                    if state == 'occupied':
+                        doActionFor(prev_location, 'liberate')
+                        self.context.update_box_status(prev_location)
             else:
                 location = self.context.getStorageLocation()
                 if location:
                     doActionFor(location, 'liberate')
+                    self.context.update_box_status(location)
 
-            # TODO: UPDATE THE STATE OF THE BOXES.
         return []

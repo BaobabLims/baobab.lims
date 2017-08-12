@@ -111,7 +111,7 @@ class ManagedStorage(ATFolder):
         return True if wf.getInfoFor(self, 'review_state') == 'available' \
             else False
 
-    def getPositions(self):
+    def get_positions(self):
         bsc = getToolByName(self, 'bika_setup_catalog')
         path = "/".join(self.getPhysicalPath())
         brains = bsc.searchResults(
@@ -138,7 +138,7 @@ class ManagedStorage(ATFolder):
     def only_items_of_portal_type(self, portal_type):
         """ Return items of a @portal_type stored in this storage.
         """
-        positions = self.getPositions()
+        positions = self.get_positions()
         items = []
         for position in positions:
             item = position.getStoredItem()
@@ -167,11 +167,7 @@ class ManagedStorage(ATFolder):
         """
         wf = getToolByName(self, 'portal_workflow')
         if self.get_free_positions():
-            try:
-                wf.doActionFor(self, 'liberate')
-            except WorkflowException:
-                raise RuntimeError(
-                    "Liberate Box {} not working. This should not happen!".format(self.getId()))
+            return True
         return False
 
 
