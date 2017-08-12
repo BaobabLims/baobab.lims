@@ -13,4 +13,15 @@
         <property name="macro">portlet</property>
         <property name="template">portlet_accreditation</property>
     </assignment>
+
+    <assignment
+            name="portlet_full_boxes-pt"
+            category="context"
+            key="/"
+            manager="plone.rightcolumn"
+            type="portlets.Classic"
+            visible="True">
+        <property name="macro">portlet</property>
+        <property name="template">portlet_full_boxes</property>
+    </assignment>
 </portlets>

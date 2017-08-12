@@ -6,7 +6,7 @@
         purge="True">
  <property name="title" i18n:translate="">Managed storage</property>
  <property name="description"></property>
- <property name="content_icon">++resource++bika.lims.images/storage.png</property>
+ <property name="content_icon">++resource++baobab.lims.images/storageunit.png</property>
  <property name="content_meta_type">ManagedStorage</property>
  <property name="product">baobab.lims</property>
  <property name="factory">addManagedStorage</property>

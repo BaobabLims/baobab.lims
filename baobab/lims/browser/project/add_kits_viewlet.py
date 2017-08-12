@@ -286,7 +286,7 @@ class AddKitsSubmitHandler(BrowserView):
         # Kit template required
         kit_template_uid = self.form.get('kit-template-uid', None)
 
-        # Stock Item storage (where items will be taken from) is required
+        # Stock Item storage (where items will be taken from), is required
         si_storage_uids = form.get('si-storage-uids', '')
         if not si_storage_uids and kit_template_uid:
             raise ValidationError(u'You must select the Storage from where the '

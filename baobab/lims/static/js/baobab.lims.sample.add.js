@@ -11,6 +11,19 @@ function BaobabSampleView() {
             var element = $("#Kit");
             filterKitByProject(element, "getParentUID", uid);
         });
+
+        $('input[type=submit]').on('click', function (event) {
+            var path = window.location.href.split('/base_view')[0] + '/update_boxes';
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: path,
+                data: {'locTitle': $('#StorageLocation').val()}
+            }).done(function (data) {
+                console.log(data);
+            })
+        })
+
     };
 
     function filterKitByProject(element, filterKey, filterValue) {

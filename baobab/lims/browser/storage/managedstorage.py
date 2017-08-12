@@ -37,6 +37,74 @@ class ManagedStorageView(BikaListingView):
         return self.template()
 
 
+class FullBoxesView(BikaListingView):
+
+    implements(IFolderContentsView, IViewView)
+
+    def __init__(self, context, request):
+        BikaListingView.__init__(self, context, request)
+        self.context = context
+        self.request = request
+
+    def __call__(self):
+        self.catalog = 'bika_setup_catalog'
+        self.contentFilter = {'portal_type': 'ManagedStorage',
+                              'review_state': 'occupied'}
+        self.context_actions = {}
+        self.title = self.context.Title()
+        self.description = ""
+        self.icon = self.portal_url + \
+                    '/++resource++baobab.lims.images/storageunit_big.png'
+        self.show_sort_column = False
+        self.show_select_row = False
+        self.show_select_column = True
+        self.pagesize = 25
+        self.columns = {
+            'Title': {'title': _('Title'),
+                      'index': 'sortable_title'},
+            'Description': {'title': _('Description'),
+                            'toggle': False},
+            'Type': {'title': _('Type')},
+            'Temperature': {'title': _('Temperature'),
+                            'toggle': True},
+            'Department': {'title': _('Department'),
+                           'toggle': True},
+        }
+        self.review_states = [
+            {
+                'id': 'default',
+                'title': _('All'),
+                'contentFilter': {
+                    'inactive_state': 'active'
+                },
+                'transitions': [
+                    {'id': 'deactivate'},
+                    {'id': 'liberate'}
+                ],
+                'columns': [
+                    'Title',
+                    'Type',
+                    'Description',
+                    'Temperature',
+                    'Department'
+                ]
+            }
+        ]
+
+        return BikaListingView.__call__(self)
+
+    def folderitem(self, obj, item, index):
+        if not item.has_key('obj'):
+            return item
+        obj = item['obj']
+        item['Temperature'] = obj.getTemperature()
+        item['Type'] = obj.Type()
+        item['Department'] = obj.getDepartment()and obj.getDepartmentTitle() or ''
+        item['replace']['Title'] = \
+            "<a href='%s'>%s</a>" % (item['url'], item['Title'])
+
+        return item
+
 class StoragePositionsView(BikaListingView):
     """This is the listing that shows Storage Positions at this location.
     """
@@ -149,7 +217,7 @@ class PositionsInfo:
             'y': self.context.getYAxis()
         }
 
-        children = self.context.getPositions()
+        children = self.context.get_positions()
         for position in children:
             aid, name, subject, volume, unit, path, pos = '', '', '', 0, '', '', ''
             if not position.available():
@@ -207,3 +275,5 @@ class SampleInfo:
         }
 
         return json.dumps(ret)
+
+

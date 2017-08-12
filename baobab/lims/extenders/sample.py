@@ -14,6 +14,7 @@ from bika.lims.workflow import doActionFor
 from baobab.lims import bikaMessageFactory as _
 from baobab.lims.interfaces import ISampleStorageLocation
 from baobab.lims.browser.project import create_samplepartition
+from baobab.lims.browser.biospecimen.sample import UpdateBoxes
 
 import sys
 
@@ -166,6 +167,7 @@ class SampleSchemaExtender(object):
         ),
         ExtStringField(
             'Unit',
+            default="ml",
             widget=StringWidget(
                 label=_("Unit"),
                 visible={'edit': 'visible',
@@ -297,10 +299,18 @@ class Sample(BaseSample):
             return 0
         return last_ar_number
 
+    def update_box_status(self, location):
+        box = location.aq_parent
+        state = self.portal_workflow.getInfoFor(box, 'review_state')
+        free_pos = box.get_free_positions()
+        if not free_pos and state == 'available':
+            doActionFor(box, 'occupy')
+        elif free_pos and state == 'occupied':
+            doActionFor(box, 'liberate')
+
     def at_post_create_script(self):
         """Execute once the object is created
         """
-
         if self.aq_parent.Title() == 'Biospecimens':
             self.container = self.getField('Project').get(self)
             doActionFor(self, 'sample_due')
@@ -311,14 +321,7 @@ class Sample(BaseSample):
         location = self.getStorageLocation()
         if location:
             doActionFor(location, 'occupy')
-
-    def at_post_edit_script(self):
-        """Execute once the object is edited
-        """
-        print 'salammmmmmmmmmmm'
-        raise ValueError
-
-    # TODO: CHECK ObjectModifiedEventHandler IN SANBI ANALYSISREQUEST.PY
+            self.update_box_status(location)
 
 from Products.Archetypes import atapi
 from bika.lims.config import PROJECTNAME
