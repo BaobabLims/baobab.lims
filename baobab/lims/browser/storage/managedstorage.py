@@ -133,7 +133,7 @@ class StoragePositionsView(BikaListingView):
             'id': {'title': _('ID'), 'index': 'id'},
             'StorageTypes': {'title': _('Storage Types'), 'toggle': True},
             'StoredItem': {'title': _('Stored Item'), 'toggle': True},
-            'review_state': {'title': _('State'), 'toggle': True},
+            'review_state': {'title': _('State'), 'index': 'review_state', 'toggle': True},
         }
         self.review_states = [
             {'id': 'default',
@@ -177,8 +177,6 @@ class StoragePositionsView(BikaListingView):
 
         si = obj.getStoredItem()
         item['StoredItem'] = si.Title() if si else ''
-
-        item['review_state'] = 'occupied' if si else 'available'
 
         return item
 
@@ -227,7 +225,6 @@ class PositionsInfo:
                 aid = item.getId()
                 name = item.Title()
                 if item.portal_type == 'Sample':
-                    # volume = item.getVolume()
                     volume = item.getField("Volume").get(item)
                     unit = item.getField("Unit").get(item)
                     subject = item.getField("SubjectID").get(item) and item.getField("SubjectID").get(item) or ''

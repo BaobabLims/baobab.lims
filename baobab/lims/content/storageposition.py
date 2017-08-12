@@ -61,13 +61,12 @@ class StoragePosition(BaseContent):
         items = self.getBackReferences('ItemStorageLocation')
         wf_tool = getToolByName(self, 'portal_workflow')
         review_state = wf_tool.getInfoFor(self, 'review_state')
-
         if items:
             if review_state == 'available':
                 wf_tool.doActionFor(self.aq_inner, 'occupy')
                 self.reindexObject(idxs=["review_state", ])
             return items[0]
-        elif review_state == 'occupied':
+        elif review_state == 'occupied' or review_state == 'reserved':
             wf_tool.doActionFor(self.aq_inner, 'liberate')
             self.reindexObject(idxs=["review_state", ])
         return None
@@ -109,8 +108,7 @@ class StoragePosition(BaseContent):
 
     def available(self):
         wf = getToolByName(self, 'portal_workflow')
-        return wf.getInfoFor(self, 'review_state') == 'available' or \
-               wf.getInfoFor(self, 'review_state') == 'reserved'
+        return wf.getInfoFor(self, 'review_state') == 'available'
 
     def at_post_create_script(self):
         """Execute once the object is created

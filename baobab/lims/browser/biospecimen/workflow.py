@@ -44,6 +44,10 @@ class BiospecimenWorkflowAction(WorkflowAction):
                     if u['ResultValue'] == form['Unit'][0][uid]:
                         unit = u['ResultText']
                 obj.getField('Unit').set(obj, unit)
+                location = obj.getStorageLocation()
+                if location:
+                    doActionFor(location, 'occupy')
+
                 obj.reindexObject()
                 biospecimens.append(obj)
             except ReferenceException:

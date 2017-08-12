@@ -47,11 +47,11 @@ class SampleGeneration:
                 if len(items) <= len(free_positions):
                     for i, item in enumerate(items):
                         item.setStorageLocation(free_positions[i])
-                        wf.doActionFor(free_positions[i], 'occupy')
+                        wf.doActionFor(free_positions[i], 'reserve')
                 else:
                     for i, position in enumerate(free_positions):
                         items[i].setStorageLocation(position)
-                        wf.doActionFor(position, 'occupy')
+                        wf.doActionFor(position, 'reserve')
 
     def get_biospecimen_storages(self):
         """Take a list of UIDs from the form, and resolve to a list of Storages.
