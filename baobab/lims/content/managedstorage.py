@@ -14,15 +14,6 @@ from baobab.lims.interfaces import IManagedStorage
 from baobab.lims import bikaMessageFactory as _
 from baobab.lims.config import PROJECTNAME
 
-Temperature = StringField(
-    'Temperature',
-    widget=StringWidget(
-        label=_('Temperature'),
-        description=_('If this level has a different temperature from '
-                      'the parent object, it can be overridden here.'),
-    )
-)
-
 Containers = StringField(
     'Containers',
     widget=StringWidget(
@@ -62,7 +53,6 @@ YAxis = IntegerField(
 )
 
 schema = BikaFolderSchema.copy() + Schema((
-    Temperature,
     Containers,
     FreePositions,
     Hierarchy,

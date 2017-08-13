@@ -90,16 +90,6 @@
         </td>
     </tr>
     <tr>
-        <td>Temperature:
-        </td>
-        <td>
-            <input name="managed-temperature"
-                   class="temperature"
-                   autocomplete="false"
-                   tal:attributes="value python: request.get('managed-temperature', '')"/>
-        </td>
-    </tr>
-    <tr>
         <td class="bordertop">Number of positions:
             <div class="discreet">
                     Enter the number of possible storage positions

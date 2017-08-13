@@ -41,8 +41,8 @@ schema = BikaFolderSchema.copy() + Schema((
         referenceClass=HoldingReference,
         widget=ReferenceWidget(
             checkbox_bound=0,
-            label=_('Unit Types'),
-            description=_('Select a storage unit type.'),
+            label=_('Storage Type'),
+            description=_('Select the type of the storage units.'),
         ),
     ),
 ))

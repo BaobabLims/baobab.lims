@@ -88,15 +88,6 @@
         </td>
     </tr>
     <tr>
-        <td>Temperature
-        </td>
-        <td>
-            <input name="unmanaged-temperature"
-                   class="temperature"
-                   tal:attributes="value python: request.get('unmanaged-temperature', '')"/>
-        </td>
-    </tr>
-    <tr>
         <td>Storage Types:
             <div class="discreet">
                 Select the types of objects that can be stored here.

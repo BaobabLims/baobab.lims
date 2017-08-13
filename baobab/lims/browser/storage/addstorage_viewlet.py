@@ -2,13 +2,14 @@ import string
 
 from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from baobab.lims.browser.storage import getStorageTypes
+from Products.CMFCore.utils import getToolByName
 from plone import api
 from plone.app.layout.viewlets import ViewletBase
 from zExceptions import BadRequest
 from zope.dottedname.resolve import resolve
 from zope.interface import alsoProvides
 from zope.schema import ValidationError
+from baobab.lims.browser.storage import getStorageTypes
 
 
 class AddStorageViewlet(ViewletBase):
@@ -60,6 +61,12 @@ class AddStorageViewlet(ViewletBase):
 
     def show_units(self):
         if self.request.URL.endswith('/fullboxes'):
+            return False
+        return True
+
+    def show_department(self):
+        if self.context.portal_type == 'StorageUnit' and \
+                self.context.getDepartment():
             return False
         return True
 
@@ -147,14 +154,24 @@ class AddStorageUnits(Storage):
         """Create the new storage unit items from form values.
         """
         form = self.request.form
+        bsc = getToolByName(self, 'bika_setup_catalog')
         # titles
         prefix_text = form.get('units-prefix-text', None)
         leading_zeros = form.get('units-leading-zeros', None)
         # schema
         unit_type = form.get('units_type_uid', None)
-        temperature = form.get('units_temperature', '')
-        department = form.get('units_department_uid', None)
+        # temperature = form.get('units_temperature', '')
+        temperature = ''
+        if unit_type:
+            brains = bsc(portal_type='StorageType', UID=unit_type)
+            temperature = brains[0].getObject().getTemperature()
+        if not temperature:
+            if self.context.portal_type == 'StorageUnit':
+                temperature = self.context.getTemperature()
         address = form.get('units_address', None)  # schema
+        department = form.get('units_department_uid', None)
+        if not department and self.context.portal_type == 'StorageUnit':
+            department = self.context.getDepartment()
 
         start = form['units_start']
         nr_items = int(form['units_nr_items'])
@@ -263,7 +280,7 @@ class AddManagedStorage(Storage):
         prefix_text = form.get('managed-prefix-text', None)
         leading_zeros = form.get('managed-leading-zeros', None)
         # schema
-        temperature = form.get('managed-temperature', '')
+        # temperature = form.get('managed-temperature', '')
 
         start = form['managed-start']
         nr_items = int(form['managed-nr-items'])
@@ -291,8 +308,7 @@ class AddManagedStorage(Storage):
             )
             # schema
             self.set_inputs_into_schema(
-                storage,
-                temperature
+                storage
             )
             # storage types are set on this managed storage:
             self.set_storage_types(storage, storage_types)
@@ -411,7 +427,7 @@ class AddUnmanagedStorage(Storage):
         prefix_text = form.get('unmanaged-prefix-text', None)
         leading_zeros = form.get('unmanaged-leading-zeros', None)
         # schema
-        temperature = form.get('unmanaged-temperature', '')
+        # temperature = form.get('unmanaged-temperature', '')
 
         start = form['unmanaged-start']
         nr_items = int(form['unmanaged-nr-items'])
@@ -431,8 +447,7 @@ class AddUnmanagedStorage(Storage):
                 title=title_template.format(id=x))
             # schema
             self.set_inputs_into_schema(
-                instance,
-                temperature
+                instance
             )
 
             if instance.id != id_template:

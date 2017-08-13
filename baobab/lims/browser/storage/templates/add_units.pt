@@ -74,7 +74,7 @@
                    tal:attributes="value python: request.get('units_nr_items', '1')"/>
         </td>
     </tr>
-    <tr>
+    <tr tal:condition="python:False">
         <td>Temperature
             <div class="discreet">
                 If these storage units have individually controlled temperatures
@@ -123,7 +123,7 @@
             </div>
         </td>
     </tr>
-    <tr>
+    <tr tal:condition="python:view.show_department()">
         <td>Department
         </td>
         <td>

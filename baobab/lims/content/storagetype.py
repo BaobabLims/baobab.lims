@@ -1,11 +1,25 @@
 from AccessControl import ClassSecurityInfo
-from baobab.lims.config import PROJECTNAME
-from bika.lims.content.bikaschema import BikaSchema
-from baobab.lims.interfaces import IStorageType
 from Products.Archetypes.public import *
 from zope.interface import implements
 
-schema = BikaSchema.copy()
+from bika.lims.content.bikaschema import BikaSchema
+
+from baobab.lims.config import PROJECTNAME
+from baobab.lims.interfaces import IStorageType
+from baobab.lims import bikaMessageFactory as _
+
+Temperature = StringField(
+    'Temperature',
+    widget=StringWidget(
+        label=_('Temperature'),
+        description=_('The associated temperature to storage with this type.'),
+    )
+)
+
+schema = BikaSchema.copy() + Schema((
+    Temperature
+))
+
 schema['description'].widget.visible = True
 schema['description'].schemata = 'default'
 
