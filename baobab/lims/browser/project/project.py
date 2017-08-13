@@ -15,7 +15,7 @@ from baobab.lims import bikaMessageFactory as _
 class ProjectAnalysisServicesView(AnalysisServicesView):
     def __init__(self, context, request, uids):
         self.uids = uids
-        super(ProjectAnalysisServicesView, self).__init__(context, request)
+        AnalysisServicesView.__init__(self, context, request)
         self.show_sort_column = False
         self.show_select_row = False
         self.show_select_column = False

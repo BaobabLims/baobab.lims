@@ -62,6 +62,7 @@ class OrderView(BrowserView):
     def getPreferredCurrencyAbreviation(self):
         return self.context.bika_setup.getCurrency()
 
+
 class EditView(BrowserView):
 
     template = ViewPageTemplateFile('templates/order_edit.pt')
@@ -81,10 +82,10 @@ class EditView(BrowserView):
         # Allow adding items to this context
         context.setConstrainTypesMode(0)
         # Collect the products
-        #products = context.aq_parent.objectValues('Product')
+        # products = context.aq_parent.objectValues('Product')
         products = context.get_supplier_products()
         # Handle for submission and regular request
-    	if 'submit' in request:
+        if 'submit' in request:
             portal_factory = getToolByName(context, 'portal_factory')
             context = portal_factory.doCreate(context, context.id)
             context.processForm()
@@ -97,11 +98,11 @@ class EditView(BrowserView):
                     data.append(e)
             data.sort(key=lambda tup: tup[0])
 
-            for prodid, qty in data:
-                prodid = prodid.replace('product_', '')
-                product = [pro for pro in products if pro.getId() == prodid][0]
+            for prod_id, qty in data:
+                prod_id = prod_id.replace('product_', '')
+                product = [pro for pro in products if pro.getId() == prod_id][0]
                 context.order_lineitems.append(
-                        {'Product': prodid,
+                        {'Product': prod_id,
                          'Quantity': int(qty),
                          'Stored': 0,
                          'Price': product.getPrice(),
@@ -139,6 +140,7 @@ class EditView(BrowserView):
 
     def getPreferredCurrencyAbreviation(self):
         return self.context.bika_setup.getCurrency()
+
 
 class PrintView(OrderView):
 
@@ -220,14 +222,14 @@ class OrderStore(BrowserView):
         uc = getToolByName(context, 'uid_catalog')
         catalog = [pi.getObject() for pi in bsc(portal_type='StockItem')]
         # Remaining stock items of this order
-        stockitems = [pi for pi in catalog \
-                            if (pi.getOrderId() == self.context.getId() and
-                                pi.is_stored() == False)]
+        stock_items = [pi for pi in catalog
+                      if (pi.getOrderId() == self.context.getId() and
+                          pi.is_stored() is False)]
         # Organize items as per their product
         products_dict = {}
-        for pi in stockitems:
+        for pi in stock_items:
             product_id = pi.getProduct().getId()
-            if not product_id in products_dict:
+            if product_id not in products_dict:
                 products_dict[product_id] = []
             products_dict[product_id].append(pi)
 
@@ -265,7 +267,7 @@ class OrderStore(BrowserView):
                 product_id = name.lstrip('storage-')
                 product_name = product_names[product_id]
 
-                stockitems = products_dict[product_id]
+                stock_items = products_dict[product_id]
 
                 nid = 'number-' + product_id
                 if nid in request.form and request.form[nid]:
@@ -279,20 +281,21 @@ class OrderStore(BrowserView):
 
                 message = ''
 
-                if number > len(stockitems):
-                    message = _('Number entered for ' + product_name + ' is invalid.')
+                if len(stock_items) != 1:
+                    message = _('Length of stock items should be 1. This should not happen.')
 
-                stockitems = stockitems[:number]
+                if number > stock_items[0].getQuantity():
+                    message = _('The quantity to store entered for ' + product_name + ' is invalid.')
+
+                stock_item = stock_items[0]
                 container = [c.getObject() for c in uc(UID=uid)][0]
-                if container.portal_type == 'ManagedStorage':
-                    message = store_item_managed_storage(self.context, container, stockitems, number,
-                                                         product_name, product_id)
-                elif container.portal_type == 'UnmanagedStorage':
-                    message = store_item_unmanaged_storage(self.context, container, stockitems, number,
+
+                if container.portal_type == 'UnmanagedStorage':
+                    message = store_item_unmanaged_storage(self.context, container, stock_item, number,
                                                            product_id)
-                elif container.portal_type == 'StorageUnit':
-                    # Todo
-                    pass
+                else:
+                    raise RuntimeError('This should not happen. Stock items could be stored only '
+                                       'in unmanaged storage type.')
 
                 if message:
                     self.context.plone_utils.addPortalMessage(_(message), 'error')

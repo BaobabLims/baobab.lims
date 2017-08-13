@@ -63,6 +63,15 @@ schema = BikaSchema.copy() + Schema((
         ),
     ),
 
+    IntegerField(
+        'Quantity',
+        widget=IntegerWidget(
+            label=_("Quantity"),
+            description=_("The number of items of this product already in "
+                          "storage. eg. 15, 100"),
+        ),
+    ),
+
     StringField(
         'orderId',
         widget=StringWidget(

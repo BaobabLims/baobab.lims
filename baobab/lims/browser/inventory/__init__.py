@@ -32,6 +32,7 @@ class mailto_link_from_contacts:
             ret.append(mailto)
         return ",".join(ret)
 
+
 def mailto_link_from_ccemails(ccemails):
     def __init__(self, context):
         self.context = context
@@ -65,13 +66,14 @@ def store_item_managed_storage(order, storage, stockitems, num_items, product_na
         wf_tool = getToolByName(position, 'portal_workflow')
         wf_tool.doActionFor(position, 'occupy')
 
-        for lineitem in order.order_lineitems:
-            if lineitem['Product'] == product_id:
-                lineitem['Stored'] += 1
+        for line_item in order.order_lineitems:
+            if line_item['Product'] == product_id:
+                line_item['Stored'] += 1
 
     return ''
 
-def store_item_unmanaged_storage(order, storage, stockitems, num_items, product_id):
+
+def store_item_unmanaged_storage(order, storage, stock_item, quantity, product_id):
     """Store stock items in unmanaged storage
     """
     wf_tool = storage.portal_workflow
@@ -79,12 +81,11 @@ def store_item_unmanaged_storage(order, storage, stockitems, num_items, product_
     if review_state == 'occupied':
         return 'The storage %s is no more available' % storage.getHierarchy()
 
-    for pi in stockitems:
-        pi.setStorageLocation(storage.UID())
+    stock_item.setStorageLocation(storage.UID())
 
-        for lineitem in order.order_lineitems:
-            if lineitem['Product'] == product_id:
-                lineitem['Stored'] += 1
+    for line_item in order.order_lineitems:
+        if line_item['Product'] == product_id:
+            line_item['Stored'] = quantity
 
 
 def store_item_storage_unit():

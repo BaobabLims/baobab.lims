@@ -237,7 +237,7 @@ class AddStorageUnits(Storage):
                 raise ValidationError(msg)
 
     def set_inputs_into_schema(
-            self, instance, temperature, department, address, unittype):
+            self, instance, temperature, department, address, unit_type):
         # Set field values across each object if possible
         schema = instance.Schema()
         if temperature and 'Temperature' in schema:
@@ -246,8 +246,8 @@ class AddStorageUnits(Storage):
             instance.Schema()['Department'].set(instance, department)
         if address and 'Address' in schema:
             instance.Schema()['Address'].set(instance, address)
-        if unittype and 'UnitType' in schema:
-            instance.Schema()['UnitType'].set(instance, unittype)
+        if unit_type and 'UnitType' in schema:
+            instance.Schema()['UnitType'].set(instance, unit_type)
 
 
 class AddManagedStorage(Storage):
@@ -306,10 +306,7 @@ class AddManagedStorage(Storage):
                 XAxis=int(XAxis),
                 YAxis=int(YAxis)
             )
-            # schema
-            self.set_inputs_into_schema(
-                storage
-            )
+
             # storage types are set on this managed storage:
             self.set_storage_types(storage, storage_types)
             storage.reindexObject()
@@ -389,13 +386,6 @@ class AddManagedStorage(Storage):
                 msg = u'The ID %s already exists.' % id_storage
                 raise ValidationError(msg)
 
-    def set_inputs_into_schema(
-            self, instance, temperature):
-        # Set field values across each object if possible
-        schema = instance.Schema()
-        if temperature and 'Temperature' in schema:
-            instance.Schema()['Temperature'].set(instance, temperature)
-
 
 class AddUnmanagedStorage(Storage):
     def __init__(self, context, request):
@@ -445,10 +435,6 @@ class AddUnmanagedStorage(Storage):
                 type="UnmanagedStorage",
                 id=id_template,
                 title=title_template.format(id=x))
-            # schema
-            self.set_inputs_into_schema(
-                instance
-            )
 
             if instance.id != id_template:
                 self.context.manage_renameObject(
@@ -513,9 +499,3 @@ class AddUnmanagedStorage(Storage):
         if not storage_types:
             raise ValidationError(
                 u'To create managed storage, at least one storage type must be selected.')
-
-    def set_inputs_into_schema(self, instance, temperature):
-        # Set field values across each object if possible
-        schema = instance.Schema()
-        if temperature and 'Temperature' in schema:
-            instance.Schema()['Temperature'].set(instance, temperature)
