@@ -108,5 +108,17 @@ class StorageUnit(ATFolder):
             item = item.aq_parent
         return separator.join(reversed(hierarchy))
 
+    def workflow_script_deactivate(self):
+        # Deactivate all sub objects in the hierarchy
+        catalog = getToolByName(self, 'bika_setup_catalog')
+        unit_path = '/'.join(self.getPhysicalPath())
+        units = catalog(portal_type=['StorageUnit', 'UnmanagedStorage', 'ManagedStorage'],
+                        path={'query': unit_path, 'level': 0})
+        for unit in units:
+            obj = unit.getObject()
+            review_state = self.portal_workflow.getInfoFor(obj, 'inactive_state')
+            if review_state == 'active':
+                self.portal_workflow.doActionFor(obj, 'deactivate')
+
 schemata.finalizeATCTSchema(schema, folderish=True, moveDiscussion=False)
 registerType(StorageUnit, PROJECTNAME)
