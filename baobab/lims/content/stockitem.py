@@ -157,4 +157,10 @@ class StockItem(BaseContent):
     def getProductUID(self):
         return self.getProduct().UID()
 
+    def workflow_script_use(self):
+        self.setStorageLocation(None)
+        if self.getQuantity():
+            product = self.getProduct()
+            product.setQuantity(product.getQuantity() - self.getQuantity())
+
 registerType(StockItem, PROJECTNAME)

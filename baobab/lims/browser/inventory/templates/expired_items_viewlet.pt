@@ -1,0 +1,23 @@
+<div tal:omit-tag=""
+     tal:condition="python:view.nr_expired > 0"
+     i18n:domain="baobab">
+
+    <div class="visualClear"><!-- --></div>
+
+    <div id="portal-alert"
+            tal:define="items python:view.expired_items;"
+            tal:condition="python: len(items) > 0">
+         <div class="portlet-alert-item" tal:condition="python:len(items) > 0">
+            <p class="title" tal:condition="python:len(items) == 1">
+                <span tal:content="python:len(items)"/>
+                <span i18n:translate="">Expired Stock-item:</span>
+            </p>
+            <p class="title" tal:condition="python:len(items) > 1">
+                <span tal:content="python:len(items)"/>
+                <span i18n:translate="">Expired Stock-items:</span>
+            </p>
+            <p tal:content="structure python:', '.join([i['link'] for i in items])"/>
+        </div>
+    </div>
+
+</div>

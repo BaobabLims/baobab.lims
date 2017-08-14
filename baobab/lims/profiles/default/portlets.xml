@@ -24,4 +24,5 @@
         <property name="macro">portlet</property>
         <property name="template">portlet_full_boxes</property>
     </assignment>
+
 </portlets>
