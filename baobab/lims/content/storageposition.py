@@ -66,7 +66,7 @@ class StoragePosition(BaseContent):
                 wf_tool.doActionFor(self.aq_inner, 'occupy')
                 self.reindexObject(idxs=["review_state", ])
             return items[0]
-        elif review_state == 'occupied' or review_state == 'reserved':
+        elif review_state == 'occupied':
             wf_tool.doActionFor(self.aq_inner, 'liberate')
             self.reindexObject(idxs=["review_state", ])
         return None
