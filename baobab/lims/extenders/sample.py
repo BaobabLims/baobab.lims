@@ -14,7 +14,6 @@ from bika.lims.workflow import doActionFor
 from baobab.lims import bikaMessageFactory as _
 from baobab.lims.interfaces import ISampleStorageLocation
 from baobab.lims.browser.project import create_samplepartition
-from baobab.lims.browser.biospecimen.sample import UpdateBoxes
 
 import sys
 

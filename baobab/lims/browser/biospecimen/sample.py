@@ -50,7 +50,7 @@ class UpdateBoxes(BrowserView):
                     self.context.update_box_status(location)
 
                 prev_location = self.context.getStorageLocation()
-                if prev_location != location:
+                if prev_location and prev_location != location:
                     state = self.context.portal_workflow.getInfoFor(prev_location, 'review_state')
                     if state == 'occupied':
                         doActionFor(prev_location, 'liberate')

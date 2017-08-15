@@ -9,6 +9,7 @@ from bika.lims.utils import tmpID
 
 from baobab.lims.interfaces import IManagedStorage
 
+
 class SampleGeneration:
 
     def __init__(self, form, project):
@@ -33,8 +34,6 @@ class SampleGeneration:
             field_p = sample.getField('Project')
             field_p.set(sample, self.project)
 
-
-        # Return the newly created sample
         return sample
 
     def store_samples(self, items, storages):

@@ -167,6 +167,7 @@ class ajaxAnalysisRequestSubmit():
 
         # in valid_states, all ars that pass validation will be stored
         valid_states = {}
+        samples_volumes = {}
         for arnum, state in nonblank_states.items():
             # Secondary ARs are a special case, these fields are not required
             if state.get('Sample', ''):
@@ -174,6 +175,10 @@ class ajaxAnalysisRequestSubmit():
                     required.remove('SamplingDate')
                 if 'SampleType' in required:
                     required.remove('SampleType')
+            else:
+                ajax_form_error(self.errors, field='Sample', arnum=arnum)
+                continue
+
             # fields flagged as 'hidden' are not considered required because
             # they will already have default values inserted in them
             for fieldname in required:
@@ -187,6 +192,20 @@ class ajaxAnalysisRequestSubmit():
                           mapping={'field_names': ', '.join(missing)}))
                 ajax_form_error(self.errors, arnum=arnum, message=msg)
                 continue
+
+            # HOCINE: Verify Sample volume availability
+            uc = getToolByName(self.context, 'uid_catalog')
+            sample = uc(UID=state['Sample'])[0].getObject()
+            total_volume = float(sample.getField('Volume').get(sample))
+            sample_volume = samples_volumes.get(state['Sample'], 0.00)
+            samples_volumes[state['Sample']] = sample_volume + float(state['Volume'])
+            if total_volume < samples_volumes.get(state['Sample']):
+                msg = t(_('The volume of sample ${sample} for this AR exceeds the sample volume available: '
+                          '${total_volume}',
+                           mapping={'sample': sample.getId(), 'total_volume': total_volume}))
+                ajax_form_error(self.errors, arnum=arnum, message=msg)
+                continue
+
             # This ar is valid!
             valid_states[arnum] = state
 
@@ -213,6 +232,13 @@ class ajaxAnalysisRequestSubmit():
             )
             field = ar.getField('Project')
             field.set(ar, self.context)
+            # HOCINE: UPDATE SAMPLE VOLUME
+            uc = getToolByName(self.context, 'uid_catalog')
+            sample = uc(UID=state['Sample'])[0].getObject()
+            field = sample.getField('Volume')
+            total_volume = float(field.get(sample))
+            volume = ar.getField('Volume').get(ar)
+            field.set(sample, str(total_volume - float(volume)))
             ARs.append(ar.Title())
 
         # Display the appropriate message after creation
