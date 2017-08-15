@@ -41,7 +41,7 @@
     <tr>
         <td>Leading Zeros:
             <div class="discreet">
-                Prepend the zeros specified here to the sequence numbers of the storage units to create, ex: 00
+                Prepend zeros specified to the sequence ID of the storage units to create, ex: 00
             </div>
         </td>
         <td><input name="units-leading-zeros"
@@ -60,11 +60,9 @@
         </td>
     </tr>
     <tr>
-        <td>Number of items:
+        <td>How many items of this type to create:
             <div class="discreet">
-                The number of storage units to create. If the sequence start
-                is 'A' and the number of items is 5, items A,B,C,D and E will
-                be created.
+                The maximum number of storage units to create.
             </div>
         </td>
         <td>
