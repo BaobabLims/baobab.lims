@@ -74,11 +74,9 @@
         </td>
     </tr>
     <tr>
-        <td>Number of items:
+        <td>Maximum number of boxes:
             <div class="discreet">
-                The number of storage units to create. If the sequence start
-                is 'A' and the number of items is 5, items A,B,C,D and E will
-                be created.
+                The maximun number of boxes to create.
             </div>
         </td>
         <td>
