@@ -33,7 +33,7 @@
 
 <table>
     <tr>
-        <td>Prefix Text:
+        <td><strong>Prefix Text</strong>
             <div class="discreet">
                 The display titles and IDs for new storage units. Provide the prefix to
                 be append to the leading zeros number.
@@ -47,9 +47,9 @@
 
     <tr>
     <tr>
-        <td>Leading Zeros:
+        <td><strong>Leading Zeros</strong>
             <div class="discreet">
-                Prepend the zeros specified here to the sequence numbers of the storage units to create, ex: 00
+                Prepend zeros to the sequence ID of the boxes to create, ex: 00
             </div>
         </td>
         <td><input name="managed-leading-zeros"
@@ -59,7 +59,7 @@
         </td>
     </tr>
     <tr>
-        <td>ID Sequence Start:
+        <td><strong>ID Sequence Start</strong>
             <div class="discreet">
                 The number of the first item in the ID sequence. This can be a
                 simple number like '1', or it can be a string like 'A' or 'AA'.
@@ -74,9 +74,9 @@
         </td>
     </tr>
     <tr>
-        <td>Maximum number of boxes:
+        <td><strong>Maximum number of boxes</strong>
             <div class="discreet">
-                The maximun number of boxes to create.
+                The maximum number of boxes to create.
             </div>
         </td>
         <td>
@@ -88,7 +88,7 @@
         </td>
     </tr>
     <tr>
-        <td class="bordertop">Number of positions:
+        <td class="bordertop"><strong>Number of positions</strong>
             <div class="discreet">
                     Enter the number of possible storage positions
                     located inside these storages.
@@ -102,7 +102,7 @@
         </td>
     </tr>
     <tr>
-        <td>Storage Types:
+        <td><strong>Storage Types</strong>
             <div class="discreet">
                 Select the types of objects that can be stored here.
             </div>
@@ -118,7 +118,7 @@
         </td>
     </tr>
     <tr>
-        <td>Graphical representation:
+        <td><strong>Graphical representation</strong>
             <div class="discreet">
                 Select a dimension and set number of columns and rows to represent positions in a grid.
             </div>

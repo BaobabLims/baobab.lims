@@ -25,7 +25,7 @@
 
 <table>
     <tr>
-        <td>Prefix Text:
+        <td><strong>Prefix Text</strong>
             <div class="discreet">
                 The display titles and IDs for new storage units. Provide the prefix to
                 be append to the leading zeros number.
@@ -39,9 +39,9 @@
 
     <tr>
     <tr>
-        <td>Leading Zeros:
+        <td><strong>Leading Zeros</strong>
             <div class="discreet">
-                Prepend zeros specified to the sequence ID of the storage units to create, ex: 00
+                Prepend zeros to the sequence ID of the storage units to create, ex: 00
             </div>
         </td>
         <td><input name="units-leading-zeros"
@@ -51,7 +51,7 @@
         </td>
     </tr>
     <tr>
-        <td>ID Sequence Start:</td>
+        <td><strong>ID Sequence Start</strong></td>
         <td>
             <input name="units_start"
                    class="start"
@@ -60,7 +60,7 @@
         </td>
     </tr>
     <tr>
-        <td>How many items of this type to create:
+        <td><strong>How many items of this type to create</strong>
             <div class="discreet">
                 The maximum number of storage units to create.
             </div>
@@ -73,7 +73,7 @@
         </td>
     </tr>
     <tr tal:condition="python:False">
-        <td>Temperature
+        <td><strong>Temperature</strong>
             <div class="discreet">
                 If these storage units have individually controlled temperatures
                 which are different to the temperature of their parent unit,
@@ -87,7 +87,7 @@
         </td>
     </tr>
     <tr>
-        <td>Storage unit type
+        <td><strong>Storage-unit type</strong>
         </td>
         <td>
             <div style="width:100%" class="field ArchetypesReferenceWidget">
@@ -122,7 +122,10 @@
         </td>
     </tr>
     <tr tal:condition="python:view.show_department()">
-        <td>Department
+        <td><strong>Facility</strong>
+            <div class="discreet">
+                The department containing the storage unit.
+            </div>
         </td>
         <td>
             <div style="width:100%" class="field ArchetypesReferenceWidget">
