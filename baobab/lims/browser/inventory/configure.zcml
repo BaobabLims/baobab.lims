@@ -94,7 +94,7 @@
     <browser:page
       for="baobab.lims.interfaces.IInventoryOrder"
       name="store"
-      class="baobab.lims.browser.inventory.order.OrderStore"
+      class="baobab.lims.browser.inventory.order.OrderStore2"
       permission="cmf.ModifyPortalContent"
       layer="bika.lims.interfaces.IBikaLIMS"
     />

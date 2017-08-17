@@ -82,10 +82,9 @@ def store_item_unmanaged_storage(order, storage, stock_item, quantity, product_i
         return 'The storage %s is no more available' % storage.getHierarchy()
 
     stock_item.setStorageLocation(storage.UID())
-
     for line_item in order.order_lineitems:
         if line_item['Product'] == product_id:
-            line_item['Stored'] = quantity
+            line_item['Stored'] += quantity
 
 
 def store_item_storage_unit():

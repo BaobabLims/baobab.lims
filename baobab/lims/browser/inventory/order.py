@@ -1,46 +1,72 @@
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from operator import itemgetter, methodcaller
+from Products.CMFPlone.utils import _createObjectByType
+from plone.app.layout.viewlets.common import ViewletBase
+from zope.component import getMultiAdapter
+from DateTime import DateTime
 
-from baobab.lims.browser.inventory import store_item_managed_storage, store_item_unmanaged_storage
+from bika.lims.idserver import renameAfterCreation
+from bika.lims.utils import tmpID
 from bika.lims.utils import to_utf8
 from bika.lims import bikaMessageFactory as _
 from bika.lims.browser import BrowserView
-from plone.app.layout.viewlets.common import ViewletBase
-from zope.component import getMultiAdapter
+
+from baobab.lims.browser.inventory import store_item_unmanaged_storage
 
 
 class OrderView(BrowserView):
     template = ViewPageTemplateFile('templates/order_view.pt')
     title = _('Inventory Order')
 
+    def __init__(self, context, request):
+        BrowserView.__init__(self, context, request)
+        self.context = context
+        self.request = request
+
+    def stored_quantity_items(self, product):
+        """ When the client1 restarted the stored quantity in order_lineitems is reset to 0.
+            Here we use the stock-items quantities linked to the order.
+        """
+        brains = self.bika_setup_catalog(
+            portal_type='StockItem',
+            getProductUID=product.UID())
+
+        quantity = 0
+        for brain in brains:
+            item = brain.getObject()
+            if item.getOrderId() == self.context.getId():
+                quantity += item.getQuantity()
+
+        return quantity
+
     def __call__(self):
-        context = self.context
         portal = self.portal
         setup = portal.bika_setup
         # Disabling the add new menu item
-        context.setConstrainTypesMode(1)
-        context.setLocallyAllowedTypes(())
+        self.context.setConstrainTypesMode(1)
+        self.context.setLocallyAllowedTypes(())
         # Collect general data
-        self.orderDate = self.ulocalized_time(context.getOrderDate())
+        self.orderDate = self.ulocalized_time(self.context.getOrderDate())
         # self.supplier = context.getsupplier()
         # self.supplier = self.supplier.getFullname() if self.supplier else ''
-        self.subtotal = '%.2f' % context.getSubtotal()
-        self.vat = '%.2f' % context.getVATAmount()
-        self.total = '%.2f' % context.getTotal()
+        self.subtotal = '%.2f' % self.context.getSubtotal()
+        self.vat = '%.2f' % self.context.getVATAmount()
+        self.total = '%.2f' % self.context.getTotal()
         # Set the title
-        self.title = context.Title()
+        self.title = self.context.Title()
         # Collect order item data
-        items = context.order_lineitems
+        items = self.context.order_lineitems
         # products = context.aq_parent.objectValues('Product')
-        products = context.get_supplier_products()
+        products = self.context.get_supplier_products()
         self.items = []
         for item in items:
-            prodid = item['Product']
-            product = [pro for pro in products if pro.getId() == prodid][0]
+            product_id = item['Product']
+            product = [p for p in products if p.getId() == product_id][0]
             price = float(item['Price'])
             vat = float(item['VAT'])
             qty = item['Quantity']
+            item['Stored'] = item['Stored'] and item['Stored'] or self.stored_quantity_items(product)
             stored = item['Stored']
             all_stored = qty == stored
             self.items.append({
@@ -51,11 +77,12 @@ class OrderView(BrowserView):
                 'vat': '%s%%' % vat,
                 'quantity': qty,
                 'totalprice': '%.2f' % (price * qty),
-                'prodid': prodid,
+                'prodid': product_id,
                 'stored': stored,
                 'all_stored': all_stored,
             })
-        self.items = sorted(self.items, key = itemgetter('title'))
+
+        self.items = sorted(self.items, key=itemgetter('title'))
         # Render the template
         return self.template()
 
@@ -69,6 +96,7 @@ class EditView(BrowserView):
     field = ViewPageTemplateFile('templates/row_field.pt')
 
     def __init__(self, context, request):
+        BrowserView.__init__(self, context, request)
         self.context = context
         self.request = request
 
@@ -147,12 +175,16 @@ class PrintView(OrderView):
     template = ViewPageTemplateFile('templates/order_print.pt')
     view_template = ViewPageTemplateFile('templates/order_view.pt')
 
+    def __init__(self, context, request):
+        OrderView.__init__(self, context, request)
+        self.context = context
+        self.request = request
+
     def __call__(self):
-        context = self.context
-        self.orderDate = context.getOrderDate()
+        self.orderDate = self.context.getOrderDate()
         # products = context.aq_parent.objectValues('Product')
-        products = context.get_supplier_products()
-        items = context.order_lineitems
+        products = self.context.get_supplier_products()
+        items = self.context.order_lineitems
         self.items = []
         for item in items:
             prodid = item['Product']
@@ -170,9 +202,9 @@ class PrintView(OrderView):
                 'totalprice': '%.2f' % (price * qty)
             })
         self.items = sorted(self.items, key = itemgetter('title'))
-        self.subtotal = '%.2f' % context.getSubtotal()
-        self.vat = '%.2f' % context.getVATAmount()
-        self.total = '%.2f' % context.getTotal()
+        self.subtotal = '%.2f' % self.context.getSubtotal()
+        self.vat = '%.2f' % self.context.getVATAmount()
+        self.total = '%.2f' % self.context.getTotal()
         self.supplier = self._supplier_data()
         return self.template()
 
@@ -204,10 +236,99 @@ class PrintView(OrderView):
         return self.context.bika_setup.getCurrency()
 
 
+class OrderStore2(BrowserView):
+
+    def __init__(self, context, request):
+        BrowserView.__init__(self, context, request)
+        self.context = context
+        self.request = request
+
+    def create_stock_items(self, product, quantity):
+
+        folder = self.context.bika_setup.bika_stockitems
+        item = _createObjectByType('StockItem', folder, tmpID())
+        item.setTitle(product.Title() + '-' + self.context.getId())
+        item.setProduct(product)
+        item.setOrderId(self.context.getId())
+        item.setDateReceived(DateTime())
+        item.setQuantity(quantity)
+        item.unmarkCreationFlag()
+        renameAfterCreation(item)
+        # Manually reindex stock item in catalog
+        self.context.bika_setup_catalog.reindexObject(item)
+
+        # Update product quantity
+        product_quantity = product.getQuantity() and product.getQuantity() or 0
+        product.setQuantity(product_quantity + quantity)
+
+        return item
+
+    def __call__(self):
+
+        self.context.setConstrainTypesMode(0)
+
+        if not 'submit' in self.request:
+            return self.request.response.redirect(self.context.absolute_url_path())
+
+        # products = context.aq_parent.objectValues('Product')
+        products = self.context.get_supplier_products()
+        uc = getToolByName(self.context, 'uid_catalog')
+
+        index = 0
+        for name, _ in sorted(self.request.form.iteritems(), key=lambda (k, v): (k, v)):
+
+            if not name.startswith('storage-'):
+                continue
+
+            if 'StorageInventory_uid' in self.request.form:
+                if isinstance(self.request.form['StorageInventory_uid'], list):
+                    uid = self.request.form['StorageInventory_uid'][index]
+                    index += 1
+                else:
+                    uid = self.request.form['StorageInventory_uid']
+
+                if not uid:
+                    continue
+
+                product_id = name.lstrip('storage-')
+
+                nid = 'number-' + product_id
+                if nid in self.request.form and self.request.form[nid]:
+                    quantity_to_store = int(self.request.form[nid])
+                else:
+                    continue
+
+                # Validate number and storage levels
+                quantity_ordered = [q['Quantity'] for q in self.context.order_lineitems if q['Product'] == product_id][0]
+                if quantity_to_store < 1 or quantity_to_store > quantity_ordered or quantity_ordered < 1:
+                    continue
+
+                # create stock-items
+                product = [p for p in products if p.getId() == product_id][0]
+                stock_item = self.create_stock_items(product, quantity_to_store)
+
+                # store item in inventory storage
+                container = [c.getObject() for c in uc(UID=uid)][0]
+
+                if container.portal_type == 'UnmanagedStorage':
+                    message = store_item_unmanaged_storage(self.context, container, stock_item, quantity_to_store,
+                                                           product_id)
+                else:
+                    raise RuntimeError('This should not happen. Stock items could be stored only '
+                                       'in unmanaged storage type.')
+
+                if message:
+                    self.context.plone_utils.addPortalMessage(_(message), 'error')
+                    continue
+
+        return self.request.response.redirect(self.context.absolute_url_path())
+
+
 class OrderStore(BrowserView):
     """Store order's stock items in storage.
     """
     def __init__(self, context, request):
+        BrowserView.__init__(self, context, request)
         self.context = context
         self.request = request
 
@@ -232,7 +353,6 @@ class OrderStore(BrowserView):
             if product_id not in products_dict:
                 products_dict[product_id] = []
             products_dict[product_id].append(pi)
-
         # Product names against their IDs used for error messages
         product_names = {}
         # products = context.aq_parent.objectValues('Product')

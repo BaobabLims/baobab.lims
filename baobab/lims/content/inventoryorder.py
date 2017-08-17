@@ -87,6 +87,7 @@ schema = BikaSchema.copy() + Schema((
 
 schema['title'].required = False
 
+
 class OrderLineItem(PersistentMapping):
     pass
 
@@ -174,30 +175,10 @@ class InventoryOrder(BaseFolder):
 
     def workflow_script_receive_order(self):
         """ receive order """
-        # products = self.aq_parent.objectValues('Product')
-        products = self.get_supplier_products()
-        items = self.order_lineitems
-        for item in items:
-            quantity = int(item['Quantity'])
-            if quantity < 1:
-                continue
-            product = [p for p in products if p.getId() == item['Product']][0]
-            folder = self.bika_setup.bika_stockitems
-            pi = _createObjectByType('StockItem', folder, tmpID())
-            pi.setTitle(product.Title() + '-' + self.getId())
-            pi.setProduct(product)
-            pi.setOrderId(self.getId())
-            pi.setDateReceived(DateTime())
-            pi.setQuantity(quantity)
-            pi.unmarkCreationFlag()
-            renameAfterCreation(pi)
-            # Manually reindex stock item in catalog
-            self.bika_setup_catalog.reindexObject(pi)
 
-            prd_qtty = product.getQuantity() and product.getQuantity() or 0
-            product.setQuantity(prd_qtty + quantity)
         self.setDateReceived(DateTime())
         self.reindexObject()
+
         # Print stock item stickers if opted for
         '''
         if self.bika_setup.getAutoPrintInventoryStickers():
