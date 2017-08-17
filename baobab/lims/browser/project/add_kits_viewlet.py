@@ -99,33 +99,33 @@ class AddKitsSubmitHandler(BrowserView):
         return count
 
     def get_si_storages(self):
-        """ return storages which could store stock items
+        """ return storage which could store stock-items
         """
-        si_storages = []
+        si_storage = []
         for uid in self.form['si-storage-uids'].split(','):
             brain = self.bsc(UID=uid)
             if not brain:
                 raise ValidationError(u'Bad uid. This should not happen.')
-            si_storages.append(brain[0].getObject())
+            si_storage.append(brain[0].getObject())
 
-        return si_storages
+        return si_storage
 
-    def filter_stockitems_by_storage_location(self, items):
-        """Return stockitems in the selected storages
+    def filter_stock_items_by_storage(self, items):
+        """Return stock-items in the selected storage
         """
-        si_storages = self.get_si_storages()
-        stockitems = []
-        for storage in si_storages:
+        si_storage = self.get_si_storages()
+        stock_items = []
+        for storage in si_storage:
             if IUnmanagedStorage.providedBy(storage):
                 sis = storage.getBackReferences('ItemStorageLocation')
-                stockitems += [si for si in sis if si in items]
+                stock_items += [si for si in sis if si in items]
             elif IManagedStorage.providedBy(storage):
                 sis = storage.only_items_of_portal_type('StockItem')
-                stockitems += [si for si in sis if si in items]
+                stock_items += [si for si in sis if si in items]
 
-        return stockitems
+        return stock_items
 
-    def product_stockitems(self, uid):
+    def product_stock_items(self, uid):
         """ stock items of a product uid
         """
         brains = self.bika_setup_catalog(
@@ -136,62 +136,60 @@ class AddKitsSubmitHandler(BrowserView):
 
         return items
 
-    def stockitems_for_template(self, template):
-        """ Return stockitems of kit template's products
+    def template_stock_items(self, template):
+        """ Return stock-items of kit template's products
         """
-        stockitems = []
+        stock_items = []
         for product in template.getProductList():
-            items = self.product_stockitems(product['product_uid'])
-            items = self.filter_stockitems_by_storage_location(items)
-            quantity = int(product['quantity'])
-            if len(items) < quantity:
+            items = self.product_stock_items(product['product_uid'])
+            items = self.filter_stock_items_by_storage(items)
+            quantity_product = int(product['quantity'])
+            quantity_stock_items = sum([item.getQuantity() for item in items])
+            if quantity_stock_items < quantity_product:
                 msg = u"There is insufficient stock available for the " \
                     u"product '%s'." % product['product']
                 self.form_error(msg)
                 raise ValidationError(msg)
 
-            stockitems += items[:quantity]
+            for item in items:
+                if item.getQuantity() <= quantity_product:
+                    quantity_product -= item.getQuantity()
+                    item.setQuantity(0)
+                    self.portal_workflow.doActionFor(item, 'use')
+                else:
+                    item.setQuantity(item.getQuantity() - quantity_product)
+                    quantity_product = 0
 
-        return stockitems
+                stock_items.append(item)
 
-    def assign_stockitems_to_kit(self, kit):
-        """Find required stock items, remove them from storage, and assign them
-        to the kit.
+                if quantity_product == 0:
+                    break
+
+        return stock_items
+
+    def assign_stock_items_to_kit(self, kit):
+        """Find required stock-items, remove them from storage and assign them to kit.
         """
         template = kit.getKitTemplate()
-        stockitems = self.stockitems_for_template(template)
-        for item in stockitems:
-            # Remove from storage and liberate storage position
-            location = item.getStorageLocation()
-            item.setStorageLocation(None)
-            # liberate storage position
-            if location.portal_type == 'StoragePosition':
-                self.portal_workflow.doActionFor(location, 'liberate')
-            # flag stockitem as "used"
-            self.portal_workflow.doActionFor(item, 'use')
-        # assign all stockitems to the Kit.
-        kit.setStockItems(stockitems)
+        stock_items = self.template_stock_items(template)
+        kit.setStockItems(stock_items)
 
-    def update_qtty_products(self, kit):
-        """ Update the qtty of products after assigning stock items to
-        kit
+    def update_quantity_products(self, kit):
+        """ Update the products quantity after assigning stock-items to kit
         """
         template = kit.getKitTemplate()
-        # stockitems = self.stockitems_for_template(template)
         products = []
         for item in template.getProductList():
             product = self.bsc(UID=item['product_uid'])[0].getObject()
             products.append(product)
         for product in products:
-            stockitems = product.getBackReferences("StockItemProduct")
-            qtty = 0
-            for si in stockitems:
-                if self.wf.getInfoFor(si, 'review_state') == 'available': qtty += 1
-            product.setQuantity(qtty)
+            stock_items = product.getBackReferences("StockItemProduct")
+            quantity = sum([item.getQuantity() for item in stock_items])
+            product.setQuantity(quantity)
             product.reindexObject()
 
     def assign_kit_to_storage(self, kits, storages):
-        """ assign position to created kits.
+        """ assign position to created kits. Not used anymore!
         """
         for storage in storages:
             if IManagedStorage.providedBy(storage):
@@ -236,9 +234,12 @@ class AddKitsSubmitHandler(BrowserView):
                 KitTemplate=kit_template_uid,
                 DateCreated=DateTime()
             )
+
+            obj.setProject(obj.aq_parent)
+
             if kit_template_uid:
-                self.assign_stockitems_to_kit(obj)
-                self.update_qtty_products(obj)
+                self.assign_stock_items_to_kit(obj)
+                self.update_quantity_products(obj)
             self.context.manage_renameObject(obj.id, id_template.format(id=x))
             kits.append(obj)
 
@@ -286,11 +287,11 @@ class AddKitsSubmitHandler(BrowserView):
         # Kit template required
         kit_template_uid = self.form.get('kit-template-uid', None)
 
-        # Stock Item storage (where items will be taken from) is required
+        # Stock Item storage (where items will be taken from), is required
         si_storage_uids = form.get('si-storage-uids', '')
         if not si_storage_uids and kit_template_uid:
-            raise ValidationError(u'You must select the Storage from where the '
-                                  u'stock items will be used for the assembling.')
+            raise ValidationError(u'You must select the items storage to use for '
+                                  u'the kit assembling.')
 
         # Check that none of the IDs conflict with existing items
         ids = [x.id for x in self.context.objectValues()]
@@ -303,13 +304,14 @@ class AddKitsSubmitHandler(BrowserView):
         # Check there are enough stock items in stock to create the kits
         if kit_template_uid:
             kit_template = self.bsc(UID=kit_template_uid)[0].getObject()
-            for item in kit_template.getProductList():
-                items = self.product_stockitems(item['product_uid'])
-                items = self.filter_stockitems_by_storage_location(items)
-                if len(items) < int(item['quantity']) * kit_count:
+            for product in kit_template.getProductList():
+                items = self.product_stock_items(product['product_uid'])
+                items = self.filter_stock_items_by_storage(items)
+                quantity = sum([item.getQuantity() for item in items])
+                if quantity < int(product['quantity']) * kit_count:
                     raise ValidationError(
-                        u"There is insufficient stock available for " \
-                        u"product '%s'." % item['product'])
+                        u"There is insufficient stock items available for "
+                        u"product '%s'." % product['product'])
 
         # Biospecimen storage (where biospecimen items will be stored) is required to be booked
         biospecimen_storage_uids = form.get('biospecimen-storage-uids', '')

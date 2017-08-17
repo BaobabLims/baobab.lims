@@ -9,6 +9,7 @@ from bika.lims.utils import tmpID
 
 from baobab.lims.interfaces import IManagedStorage
 
+
 class SampleGeneration:
 
     def __init__(self, form, project):
@@ -33,8 +34,6 @@ class SampleGeneration:
             field_p = sample.getField('Project')
             field_p.set(sample, self.project)
 
-
-        # Return the newly created sample
         return sample
 
     def store_samples(self, items, storages):
@@ -47,11 +46,11 @@ class SampleGeneration:
                 if len(items) <= len(free_positions):
                     for i, item in enumerate(items):
                         item.setStorageLocation(free_positions[i])
-                        wf.doActionFor(free_positions[i], 'occupy')
+                        wf.doActionFor(free_positions[i], 'reserve')
                 else:
                     for i, position in enumerate(free_positions):
                         items[i].setStorageLocation(position)
-                        wf.doActionFor(position, 'occupy')
+                        wf.doActionFor(position, 'reserve')
 
     def get_biospecimen_storages(self):
         """Take a list of UIDs from the form, and resolve to a list of Storages.

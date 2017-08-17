@@ -35,7 +35,8 @@
 
 </style>
 
-<dl tal:attributes="class python:view.dlclass()">
+<dl tal:attributes="class python:view.dlclass()"
+    tal:condition="python:view.show_units()">
 
     <dt class="collapsibleHeader">
         &nbsp;<img src="++resource++bika.lims.images/add.png">&nbsp;

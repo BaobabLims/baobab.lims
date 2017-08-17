@@ -2,15 +2,13 @@ from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import _createObjectByType
 
 from bika.lims.utils import tmpID
-from bika.lims.utils.sample import create_sample
-from bika.lims.utils.samplepartition import create_samplepartition
 from bika.lims.workflow import doActionFor
 from bika.lims.utils.analysisrequest import get_sample_from_values, _resolve_items_to_service_uids
 
 
 def create_analysisrequest(context, request, values, analyses=None,
                            partitions=None, specifications=None, prices=None):
-    """Override the one in bika.lims
+    """Overrides the method one in bika.lims
     """
 
     # Gather neccesary tools

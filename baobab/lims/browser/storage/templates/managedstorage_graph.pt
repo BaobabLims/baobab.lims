@@ -10,10 +10,10 @@
         (function ($) {
             $(function () {
                 // Get Positions info
-                console.log(window.location.href);
                 var path = window.location.href.split('/view')[0] + '/positions_info';
                 $.getJSON(path, function (data) {
                     if (data['positions'].length > 0) {
+                        console.log(data);
                         createGraphic(data);
                     }
                 });
@@ -50,7 +50,7 @@
 
                 function positionInfo(element, d) {
                     var sample = null;
-                    if (d['state'] == "occupied") {
+                    if (d['state'] == "occupied" || d['state'] == "reserved") {
                         renderSampleTable(d);
                     } else {
                         $("div#pos-info-div").addClass("hidden");
@@ -178,7 +178,6 @@
                             .attr("y", function (d) {
                                 var i = d3.select(this.parentNode).attr("i");
                                 var y = (i - data['x']) % data["y"] * Math.floor(heightPos / data["y"]) + marginTop;
-                                console.log(y)
                                 var w = heightPos / data["y"] - padding;
                                 return y + w / 2;
                             });

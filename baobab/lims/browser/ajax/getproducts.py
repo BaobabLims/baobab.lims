@@ -59,7 +59,7 @@ class ComputeTotalPrice(BrowserView):
     """
 
     def __init__(self, context, request):
-        super(ComputeTotalPrice, self).__init__(context, request)
+        BrowserView.__init__(self, context, request)
         self.context = context
         self.request = request
 

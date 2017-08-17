@@ -25,16 +25,85 @@ class ManagedStorageView(BikaListingView):
         self.positions = self.context.objectValues('StoragePosition')
         self.title = self.context.title
         self.icon = self.portal_url + "/++resource++baobab.lims.images/" \
-                    + "managedstorage_big.png"
+                                    + "managedstorage_big.png"
 
-        StoragePositions = StoragePositionsView(self.context, self.request)
+        storage_positions = StoragePositionsView(self.context, self.request)
         # self.positions_table = StoragePositions.contents_table(table_only=True)
-        self.positions_table = StoragePositions.__call__()
+        self.positions_table = storage_positions.__call__()
 
-        StorageGraph = StorageGraphView(self.context, self.request)
-        self.graph = StorageGraph()
+        storage_graph = StorageGraphView(self.context, self.request)
+        self.graph = storage_graph()
 
         return self.template()
+
+
+class FullBoxesView(BikaListingView):
+
+    implements(IFolderContentsView, IViewView)
+
+    def __init__(self, context, request):
+        BikaListingView.__init__(self, context, request)
+        self.context = context
+        self.request = request
+
+    def __call__(self):
+        self.catalog = 'bika_setup_catalog'
+        self.contentFilter = {'portal_type': 'ManagedStorage',
+                              'review_state': 'occupied'}
+        self.context_actions = {}
+        self.title = self.context.Title()
+        self.description = ""
+        self.icon = self.portal_url + \
+                    '/++resource++baobab.lims.images/storageunit_big.png'
+        self.show_sort_column = False
+        self.show_select_row = False
+        self.show_select_column = True
+        self.pagesize = 25
+        self.columns = {
+            'Title': {'title': _('Title'),
+                      'index': 'sortable_title'},
+            'Description': {'title': _('Description'),
+                            'toggle': False},
+            'Type': {'title': _('Type')},
+            'Temperature': {'title': _('Temperature'),
+                            'toggle': True},
+            'Department': {'title': _('Department'),
+                           'toggle': True},
+        }
+        self.review_states = [
+            {
+                'id': 'default',
+                'title': _('All'),
+                'contentFilter': {
+                    'inactive_state': 'active'
+                },
+                'transitions': [
+                    {'id': 'deactivate'},
+                    {'id': 'liberate'}
+                ],
+                'columns': [
+                    'Title',
+                    'Type',
+                    'Description',
+                    'Temperature',
+                    'Department'
+                ]
+            }
+        ]
+
+        return BikaListingView.__call__(self)
+
+    def folderitem(self, obj, item, index):
+        if not item.has_key('obj'):
+            return item
+        obj = item['obj']
+        item['Temperature'] = obj.getTemperature()
+        item['Type'] = obj.Type()
+        item['Department'] = obj.getDepartment()and obj.getDepartmentTitle() or ''
+        item['replace']['Title'] = \
+            "<a href='%s'>%s</a>" % (item['url'], item['Title'])
+
+        return item
 
 
 class StoragePositionsView(BikaListingView):
@@ -65,19 +134,19 @@ class StoragePositionsView(BikaListingView):
             'id': {'title': _('ID'), 'index': 'id'},
             'StorageTypes': {'title': _('Storage Types'), 'toggle': True},
             'StoredItem': {'title': _('Stored Item'), 'toggle': True},
-            'review_state': {'title': _('State'), 'toggle': True},
+            'review_state': {'title': _('State'), 'index': 'review_state', 'toggle': True},
         }
         self.review_states = [
             {'id': 'default',
              'title': _('Active'),
              'contentFilter': {'inactive_state': 'active'},
-             'transitions': [{'id': 'deactivate'}, {'id': 'reserve'},],
+             'transitions': [{'id': 'deactivate'}, {'id': 'reserve'}, {'id': 'liberate'}],
              'columns': ['id',
                          'StorageTypes',
                          'StoredItem',
                          'review_state']},
 
-            {'id': 'available',
+            {'id': 'reserved',
              'title': _('Reserved'),
              'contentFilter': {
                     'review_state': 'reserved'
@@ -110,8 +179,6 @@ class StoragePositionsView(BikaListingView):
         si = obj.getStoredItem()
         item['StoredItem'] = si.Title() if si else ''
 
-        item['review_state'] = 'occupied' if si else 'available'
-
         return item
 
     def __call__(self):
@@ -126,7 +193,7 @@ class StorageGraphView(BrowserView):
     title = _("Managed storage positions")
 
     def __init__(self, context, request):
-        super(StorageGraphView, self).__init__(context, request)
+        BrowserView.__init__(self, context, request)
         self.context = context
         self.request = request
         self.request.set('disable_plone.rightcolumn', 1)
@@ -149,20 +216,20 @@ class PositionsInfo:
             'y': self.context.getYAxis()
         }
 
-        children = self.context.getPositions()
+        children = self.context.get_positions()
         for position in children:
             aid, name, subject, volume, unit, path, pos = '', '', '', 0, '', '', ''
             if not position.available():
                 item = position.getStoredItem()
-                path = item.absolute_url_path()
+                if item:
+                    path = item.absolute_url_path()
+                    aid = item.getId()
+                    name = item.Title()
+                    if item.portal_type == 'Sample':
+                        volume = item.getField("Volume").get(item)
+                        unit = item.getField("Unit").get(item)
+                        subject = item.getField("SubjectID").get(item) and item.getField("SubjectID").get(item) or ''
                 pos = position.absolute_url_path()
-                aid = item.getId()
-                name = item.Title()
-                if item.portal_type == 'Sample':
-                    # volume = item.getVolume()
-                    volume = item.getField("Volume").get(item)
-                    unit = item.getField("Unit").get(item)
-                    subject = item.getField("SubjectID").get(item) and item.getField("SubjectID").get(item) or ''
 
             state = workflow.getInfoFor(position, 'review_state')
             portal_type = position.getStoredItem() and position.getStoredItem().portal_type or ''
@@ -207,3 +274,5 @@ class SampleInfo:
         }
 
         return json.dumps(ret)
+
+

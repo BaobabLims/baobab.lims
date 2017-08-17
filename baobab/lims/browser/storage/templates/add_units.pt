@@ -25,7 +25,7 @@
 
 <table>
     <tr>
-        <td>Prefix Text:
+        <td><strong>Prefix Text</strong>
             <div class="discreet">
                 The display titles and IDs for new storage units. Provide the prefix to
                 be append to the leading zeros number.
@@ -39,9 +39,9 @@
 
     <tr>
     <tr>
-        <td>Leading Zeros:
+        <td><strong>Leading Zeros</strong>
             <div class="discreet">
-                Prepend the zeros specified here to the sequence numbers of the storage units to create, ex: 00
+                Prepend zeros to the sequence ID of the storage units to create, ex: 00
             </div>
         </td>
         <td><input name="units-leading-zeros"
@@ -51,7 +51,7 @@
         </td>
     </tr>
     <tr>
-        <td>ID Sequence Start:</td>
+        <td><strong>ID Sequence Start</strong></td>
         <td>
             <input name="units_start"
                    class="start"
@@ -60,11 +60,9 @@
         </td>
     </tr>
     <tr>
-        <td>Number of items:
+        <td><strong>How many items of this type to create</strong>
             <div class="discreet">
-                The number of storage units to create. If the sequence start
-                is 'A' and the number of items is 5, items A,B,C,D and E will
-                be created.
+                The maximum number of storage units to create.
             </div>
         </td>
         <td>
@@ -74,8 +72,8 @@
                    tal:attributes="value python: request.get('units_nr_items', '1')"/>
         </td>
     </tr>
-    <tr>
-        <td>Temperature
+    <tr tal:condition="python:False">
+        <td><strong>Temperature</strong>
             <div class="discreet">
                 If these storage units have individually controlled temperatures
                 which are different to the temperature of their parent unit,
@@ -89,7 +87,7 @@
         </td>
     </tr>
     <tr>
-        <td>Storage unit type
+        <td><strong>Storage-unit type</strong>
         </td>
         <td>
             <div style="width:100%" class="field ArchetypesReferenceWidget">
@@ -123,8 +121,11 @@
             </div>
         </td>
     </tr>
-    <tr>
-        <td>Department
+    <tr tal:condition="python:view.show_department()">
+        <td><strong>Facility</strong>
+            <div class="discreet">
+                The department containing the storage unit.
+            </div>
         </td>
         <td>
             <div style="width:100%" class="field ArchetypesReferenceWidget">

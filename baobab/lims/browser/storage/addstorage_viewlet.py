@@ -2,13 +2,14 @@ import string
 
 from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from baobab.lims.browser.storage import getStorageTypes
+from Products.CMFCore.utils import getToolByName
 from plone import api
 from plone.app.layout.viewlets import ViewletBase
 from zExceptions import BadRequest
 from zope.dottedname.resolve import resolve
 from zope.interface import alsoProvides
 from zope.schema import ValidationError
+from baobab.lims.browser.storage import getStorageTypes
 
 
 class AddStorageViewlet(ViewletBase):
@@ -55,6 +56,17 @@ class AddStorageViewlet(ViewletBase):
     def show_unmanaged(self):
         if self.request.URL.endswith('/storage') \
                 or self.request.URL.endswith('/storage/view'):
+            return False
+        return True
+
+    def show_units(self):
+        if self.request.URL.endswith('/fullboxes'):
+            return False
+        return True
+
+    def show_department(self):
+        if self.context.portal_type == 'StorageUnit' and \
+                self.context.getDepartment():
             return False
         return True
 
@@ -142,14 +154,24 @@ class AddStorageUnits(Storage):
         """Create the new storage unit items from form values.
         """
         form = self.request.form
+        bsc = getToolByName(self, 'bika_setup_catalog')
         # titles
         prefix_text = form.get('units-prefix-text', None)
         leading_zeros = form.get('units-leading-zeros', None)
         # schema
         unit_type = form.get('units_type_uid', None)
-        temperature = form.get('units_temperature', '')
-        department = form.get('units_department_uid', None)
+        # temperature = form.get('units_temperature', '')
+        temperature = ''
+        if unit_type:
+            brains = bsc(portal_type='StorageType', UID=unit_type)
+            temperature = brains[0].getObject().getTemperature()
+        if not temperature:
+            if self.context.portal_type == 'StorageUnit':
+                temperature = self.context.getTemperature()
         address = form.get('units_address', None)  # schema
+        department = form.get('units_department_uid', None)
+        if not department and self.context.portal_type == 'StorageUnit':
+            department = self.context.getDepartment()
 
         start = form['units_start']
         nr_items = int(form['units_nr_items'])
@@ -215,7 +237,7 @@ class AddStorageUnits(Storage):
                 raise ValidationError(msg)
 
     def set_inputs_into_schema(
-            self, instance, temperature, department, address, unittype):
+            self, instance, temperature, department, address, unit_type):
         # Set field values across each object if possible
         schema = instance.Schema()
         if temperature and 'Temperature' in schema:
@@ -224,8 +246,8 @@ class AddStorageUnits(Storage):
             instance.Schema()['Department'].set(instance, department)
         if address and 'Address' in schema:
             instance.Schema()['Address'].set(instance, address)
-        if unittype and 'UnitType' in schema:
-            instance.Schema()['UnitType'].set(instance, unittype)
+        if unit_type and 'UnitType' in schema:
+            instance.Schema()['UnitType'].set(instance, unit_type)
 
 
 class AddManagedStorage(Storage):
@@ -258,7 +280,7 @@ class AddManagedStorage(Storage):
         prefix_text = form.get('managed-prefix-text', None)
         leading_zeros = form.get('managed-leading-zeros', None)
         # schema
-        temperature = form.get('managed-temperature', '')
+        # temperature = form.get('managed-temperature', '')
 
         start = form['managed-start']
         nr_items = int(form['managed-nr-items'])
@@ -284,11 +306,7 @@ class AddManagedStorage(Storage):
                 XAxis=int(XAxis),
                 YAxis=int(YAxis)
             )
-            # schema
-            self.set_inputs_into_schema(
-                storage,
-                temperature
-            )
+
             # storage types are set on this managed storage:
             self.set_storage_types(storage, storage_types)
             storage.reindexObject()
@@ -368,13 +386,6 @@ class AddManagedStorage(Storage):
                 msg = u'The ID %s already exists.' % id_storage
                 raise ValidationError(msg)
 
-    def set_inputs_into_schema(
-            self, instance, temperature):
-        # Set field values across each object if possible
-        schema = instance.Schema()
-        if temperature and 'Temperature' in schema:
-            instance.Schema()['Temperature'].set(instance, temperature)
-
 
 class AddUnmanagedStorage(Storage):
     def __init__(self, context, request):
@@ -406,7 +417,7 @@ class AddUnmanagedStorage(Storage):
         prefix_text = form.get('unmanaged-prefix-text', None)
         leading_zeros = form.get('unmanaged-leading-zeros', None)
         # schema
-        temperature = form.get('unmanaged-temperature', '')
+        # temperature = form.get('unmanaged-temperature', '')
 
         start = form['unmanaged-start']
         nr_items = int(form['unmanaged-nr-items'])
@@ -424,11 +435,6 @@ class AddUnmanagedStorage(Storage):
                 type="UnmanagedStorage",
                 id=id_template,
                 title=title_template.format(id=x))
-            # schema
-            self.set_inputs_into_schema(
-                instance,
-                temperature
-            )
 
             if instance.id != id_template:
                 self.context.manage_renameObject(
@@ -493,9 +499,3 @@ class AddUnmanagedStorage(Storage):
         if not storage_types:
             raise ValidationError(
                 u'To create managed storage, at least one storage type must be selected.')
-
-    def set_inputs_into_schema(self, instance, temperature):
-        # Set field values across each object if possible
-        schema = instance.Schema()
-        if temperature and 'Temperature' in schema:
-            instance.Schema()['Temperature'].set(instance, temperature)

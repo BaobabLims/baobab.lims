@@ -6,13 +6,8 @@
         purge="True">
 
     <property name="allowed_content_types">
-      <element value="AnalysisSpec"/>
-      <element value="SamplePoint"/>
       <element value="Contact"/>
-      <element value="Folder"/>
       <element value="Project"/>
-      <element value="AnalysisRequest"/>
-      <element value="ARTemplate"/>
     </property>
     <!-- Hides the normal Client tabs and add "Projects" tab. -->
 

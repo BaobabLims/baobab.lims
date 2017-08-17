@@ -1,11 +1,9 @@
 from Products.Archetypes.references import HoldingReference
 from archetypes.schemaextender.interfaces import IOrderableSchemaExtender
 from archetypes.schemaextender.interfaces import ISchemaModifier
-from Products.Archetypes import public as at
 from Products.CMFCore import permissions
 from Products.CMFCore.utils import getToolByName
 from zope.component import adapts
-from zope.interface import implements
 from zope.container.contained import ContainerModifiedEvent
 
 from bika.lims.fields import *
@@ -17,6 +15,11 @@ from bika.lims.content.analysisrequest import AnalysisRequest as BaseAR
 from baobab.lims import bikaMessageFactory as _
 
 import sys
+
+
+class ExtFixedPointField(ExtensionField, FixedPointField):
+    "Field extender"
+
 
 class AnalysisRequestSchemaExtender(object):
     adapts(IAnalysisRequest)
@@ -51,12 +54,38 @@ class AnalysisRequestSchemaExtender(object):
                 catalog_name='bika_catalog',
             ),
         ),
+        ExtFixedPointField(
+            'Volume',
+            required=1,
+            default="0.00",
+            widget=DecimalWidget(
+                label=_("Volume"),
+                size=15,
+                description=_("The sample volume needed for the analyses."),
+                visible={'edit': 'visible',
+                         'view': 'visible',
+                         'add': 'edit',
+                         'header_table': 'visible',
+                         'sample_due': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'invisible'},
+                         'to_be_verified': {'view': 'visible', 'edit': 'invisible'},
+                         'verified': {'view': 'visible', 'edit': 'invisible'},
+                         'published': {'view': 'visible', 'edit': 'invisible'},
+                         'invalid': {'view': 'visible', 'edit': 'invisible'},
+                         'rejected': {'view': 'visible', 'edit': 'invisible'},
+                         },
+                render_own_label=True,
+            )
+        ),
     ]
 
     def __init__(self, context):
         self.context = context
 
     def getOrder(self, schematas):
+        sch = schematas['default']
+        sch.remove('Volume')
+        sch.insert(sch.index('Batch'), 'Volume')
         return schematas
 
     def getFields(self):
@@ -71,6 +100,7 @@ class AnalysisRequestSchemaModifier(object):
 
     def fiddle(self, schema):
         return schema
+
 
 def ObjectModifiedEventHandler(instance, event):
     """update certain field values of the AR created

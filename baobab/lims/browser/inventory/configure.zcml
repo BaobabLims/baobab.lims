@@ -94,7 +94,7 @@
     <browser:page
       for="baobab.lims.interfaces.IInventoryOrder"
       name="store"
-      class="baobab.lims.browser.inventory.order.OrderStore"
+      class="baobab.lims.browser.inventory.order.OrderStore2"
       permission="cmf.ModifyPortalContent"
       layer="bika.lims.interfaces.IBikaLIMS"
     />
@@ -123,4 +123,13 @@
         layer="bika.lims.interfaces.IBikaLIMS"
     />
 
+    <browser:viewlet
+        for="*"
+        name="baobab.lims.expired_stockitems_viewlet"
+        class="baobab.lims.browser.inventory.expireditems.CheckNewExpiredItems"
+        manager="plone.app.layout.viewlets.interfaces.IAboveContent"
+        template="templates/expired_items_viewlet.pt"
+        permission="zope2.View"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
 </configure>

@@ -49,9 +49,9 @@ class StockItemsView(BikaListingView):
                        'toggle': True},
             'location': {'title': _('Location'),
                        'toggle': False},
+            'quantity': {'title': _('Quantity'),
+                        'toggle': True},
             'dateReceived': {'title': _('Date Received'),
-                       'toggle': True},
-            'dateOpened': {'title': _('Date Opened'),
                        'toggle': True},
             'expiryDate': {'title': _('Expiry Date'),
                        'toggle': False},
@@ -75,13 +75,13 @@ class StockItemsView(BikaListingView):
                          'storageLevelId',
                          'isStored',
                          'dateReceived',
-                         'dateOpened',
+                         'quantity',
                          'expiryDate',
                          'disposalDate']},
-            {'id':'discarded',
-             'title': _('Discarded'),
-             'contentFilter': {'review_state': 'used'},
-             'transitions': [{'id':'keep'}, ],
+            {'id': 'expired',
+             'title': _('Expired'),
+             'contentFilter': {'review_state': 'expired'},
+             'transitions': [{'id': 'reinstate'}, {'id': 'use'}],
              'columns': ['stockitemID',
                          'orderId',
                          'batchId',
@@ -90,7 +90,21 @@ class StockItemsView(BikaListingView):
                          'storageLevelId',
                          'isStored',
                          'dateReceived',
-                         'dateOpened',
+                         'quantity',
+                         'expiryDate',
+                         'disposalDate']},
+            {'id':'discarded',
+             'title': _('Discarded'),
+             'contentFilter': {'review_state': 'used'},
+             'columns': ['stockitemID',
+                         'orderId',
+                         'batchId',
+                         'product',
+                         'location',
+                         'storageLevelId',
+                         'isStored',
+                         'dateReceived',
+                         'quantity',
                          'expiryDate',
                          'disposalDate']},
             {'id':'all',
@@ -104,7 +118,7 @@ class StockItemsView(BikaListingView):
                          'storageLevelId',
                          'isStored',
                          'dateReceived',
-                         'dateOpened',
+                         'quantity',
                          'expiryDate',
                          'disposalDate']},
         ]
@@ -117,10 +131,10 @@ class StockItemsView(BikaListingView):
             items[x]['orderId'] = obj.getOrderId()
             items[x]['batchId'] = obj.getBatchId()
             items[x]['product'] = obj.getProductTitle()
+            items[x]['quantity'] = obj.getQuantity()
             items[x]['location'] = obj.getStorageLocation() and obj.getStorageLocation().getHierarchy() or None
             items[x]['isStored'] = 'yes' if obj.is_stored() else 'no'
             items[x]['dateReceived'] = self.ulocalized_time(obj.getDateReceived())
-            items[x]['dateOpened'] = self.ulocalized_time(obj.getDateOpened())
             items[x]['expiryDate'] = self.ulocalized_time(obj.getExpiryDate())
             items[x]['disposalDate'] = self.ulocalized_time(obj.getDisposalDate())
             items[x]['replace']['stockitemID'] = "<a href='%s'>%s</a>" % \

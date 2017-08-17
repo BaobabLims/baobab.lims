@@ -36,32 +36,32 @@
         <tbody>
         <tr>
             <th i18n:translate="" style="border: 1px solid #cecfd5;
-                                                     padding: 10px 15px;">Study Name</th>
+                                         padding: 10px 15px;text-align: left;">Study Name</th>
             <td tal:content="view/study_name" style="border: 1px solid #cecfd5;
-                                                     padding: 10px 15px;"></td>
+                                                     padding: 10px 15px;width:70%"></td>
             </tr>
         <tr>
         <tr style="background: #f0f0f2;">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
-                                         padding: 10px 15px;">From Contact</th>
+                                         padding: 10px 15px;text-align: left;">From Contact</th>
             <td tal:content="view/from_contact" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
         <tr>
             <th i18n:translate="" style="border: 1px solid #cecfd5;
-                                         padding: 10px 15px;">To Contact</th>
+                                         padding: 10px 15px;text-align: left;">To Contact</th>
             <td tal:content="view/to_contact" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
         <tr style="background: #f0f0f2;">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
-                                         padding: 10px 15px;">Delivery Address</th>
+                                         padding: 10px 15px;text-align: left;">Delivery Address</th>
             <td tal:content="view/sender_address" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
         <tr>
             <th i18n:translate="" style="border: 1px solid #cecfd5;
-                                         padding: 10px 15px;">Courier</th>
+                                         padding: 10px 15px;text-align: left;">Courier</th>
             <td tal:content="view/courier_name" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>

@@ -294,9 +294,8 @@ class Shipment(ATFolder):
         now = DateTime()
         self.setDateDispatched(now)
 
-
     def workflow_script_receive_shipment(self):
-        """executed after shipment state transition to received
+        """ Executed after shipment received by the client
         """
         to_contact = self.getToContact()
         from_contact = self.getFromContact()
@@ -306,12 +305,11 @@ class Shipment(ATFolder):
         lab = self.bika_setup.laboratory
         receiver = formataddr((lab.getName(), from_contact.getEmailAddress()))
         body = "Automatic email:\n"
-        body += '\"%s\" sent to client \"%s\" has been received.' % (self.Title(), client.getName())
+        body += 'The shipment \"%s\" sent to the client \"%s\" has been received.' % (self.Title(), client.getName())
         self.send_mail(sender, receiver, subject, body)
 
-
     def workflow_script_collect(self):
-        """executed after shipment state transition to collect
+        """ Executed after shipment ready for collection from the client
         """
         to_contact = self.getToContact()
         from_contact = self.getFromContact()
@@ -321,7 +319,21 @@ class Shipment(ATFolder):
         lab = self.bika_setup.laboratory
         receiver = formataddr((lab.getName(), from_contact.getEmailAddress()))
         body = "Automatic email:\n"
-        body += '\"%s\" sent to client \"%s\" ready for collection.' % (self.Title(), client.getName())
+        body += 'The shipment \"%s\" sent to the client \"%s\" is ready for collection.' % (self.Title(), client.getName())
+        self.send_mail(sender, receiver, subject, body)
+
+    def workflow_script_receive_back(self):
+        """ Executed after shipment received back by the biobank
+        """
+        to_contact = self.getToContact()
+        from_contact = self.getFromContact()
+        client = to_contact.aq_parent
+        subject = "Shipment reached the Biobank"
+        lab = self.bika_setup.laboratory
+        sender = formataddr((lab.getName(), from_contact.getEmailAddress()))
+        receiver = formataddr((encode_header(client.getName()), to_contact.getEmailAddress()))
+        body = "Automatic email:\n"
+        body += 'The shipment \"%s\" sent back is arrived at the Biobank \"%s\".' % (self.Title(), lab.getName())
         self.send_mail(sender, receiver, subject, body)
 
 schemata.finalizeATCTSchema(schema, folderish = True, moveDiscussion = False)

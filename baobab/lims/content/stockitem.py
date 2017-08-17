@@ -63,6 +63,15 @@ schema = BikaSchema.copy() + Schema((
         ),
     ),
 
+    IntegerField(
+        'Quantity',
+        widget=IntegerWidget(
+            label=_("Quantity"),
+            description=_("The number of items of this product already in "
+                          "storage. eg. 15, 100"),
+        ),
+    ),
+
     StringField(
         'orderId',
         widget=StringWidget(
@@ -147,5 +156,11 @@ class StockItem(BaseContent):
 
     def getProductUID(self):
         return self.getProduct().UID()
+
+    def workflow_script_use(self):
+        self.setStorageLocation(None)
+        if self.getQuantity():
+            product = self.getProduct()
+            product.setQuantity(product.getQuantity() - self.getQuantity())
 
 registerType(StockItem, PROJECTNAME)

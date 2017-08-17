@@ -3,6 +3,7 @@ from Products.CMFCore import permissions
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from zope.interface import implements
+from Products.CMFPlone.interfaces import IConstrainTypes
 
 from bika.lims.browser.widgets import DateTimeWidget
 from bika.lims.browser.fields import DateTimeField
@@ -97,7 +98,7 @@ schema['description'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 
 class Project(BaseFolder):
     security = ClassSecurityInfo()
-    implements(IProject)
+    implements(IProject, IConstrainTypes)
     schema = schema
 
     _at_rename_after_creation = True

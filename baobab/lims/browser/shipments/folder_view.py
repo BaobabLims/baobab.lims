@@ -13,7 +13,7 @@ class ShipmentsView(BikaListingView):
     implements(IFolderContentsView, IViewView)
 
     def __init__(self, context, request):
-        super(ShipmentsView, self).__init__(context, request)
+        BikaListingView.__init__(self, context, request)
         self.context = context
         self.request = request
         self.contentFilter = {'portal_type': 'Shipment',
@@ -57,7 +57,8 @@ class ShipmentsView(BikaListingView):
                 'transitions': [{'id': 'deactivate'},
                                 {'id': 'dispatch_shipment'},
                                 {'id': 'receive_shipment'},
-                                {'id': 'collect'}],
+                                {'id': 'collect'},
+                                {'id': 'receive_back'}],
                 'columns': [
                     'ShipmentID',
                     'Project',
@@ -103,6 +104,35 @@ class ShipmentsView(BikaListingView):
                 'contentFilter': {'review_state': 'received'},
                 'transitions': [{'id': 'deactivate'},
                                 {'id': 'collect'}],
+                'columns': [
+                    'ShipmentID',
+                    'Project',
+                    'Courier',
+                    'TrackingURL',
+                    'ShippingDate',
+                    'state_title'
+                ]
+            },
+            {
+                'id': 'to_collect',
+                'title': _('To collect'),
+                'contentFilter': {'review_state': 'to_collect'},
+                'transitions': [{'id': 'deactivate'},
+                                {'id': 'receive_back'}],
+                'columns': [
+                    'ShipmentID',
+                    'Project',
+                    'Courier',
+                    'TrackingURL',
+                    'ShippingDate',
+                    'state_title'
+                ]
+            },
+            {
+                'id': 'received_back',
+                'title': _('Received Back'),
+                'contentFilter': {'review_state': 'received_back'},
+                'transitions': [{'id': 'deactivate'}],
                 'columns': [
                     'ShipmentID',
                     'Project',
