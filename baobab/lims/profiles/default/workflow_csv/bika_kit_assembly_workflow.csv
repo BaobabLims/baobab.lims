@@ -10,7 +10,7 @@ State variable:,review_state,,,,,,,,,
 Id:,generated,,,,,,,,,
 Title:,Kit Created,,,,,,,,,
 Description:,,,,,,,,,,
-Transitions,"ship",,,,,,,,,
+Transitions,"ship, receive_kit",,,,,,,,,
 Permissions,Acquire,Anonymous,Manager,Owner,Reader,Editor,Contributor,Analyst,LabClerk,LabManager
 View,N,N,Y,Y,N,N,N,Y,Y,Y
 Modify portal content,N,N,Y,N,N,N,N,N,N,Y
