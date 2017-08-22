@@ -256,7 +256,7 @@
                                                             "force_all": true,
                                                             "portal_types": {}}'/>
 
-                                <input type="hidden" name="kit-template-uid" id="kit-template-uid">
+                                <input type="hidden" name="kit_template_uid" id="kit-template-uid" />
                             </div>
                         </td>
                         <td>Number of biospecimen per kit

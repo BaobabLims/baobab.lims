@@ -216,13 +216,12 @@ class AddKitsSubmitHandler(BrowserView):
         leading_zeros = self.form.get('kits-leading-zeros', None)
         seq_start = int(self.form.get('seq-start', None))
         kit_count = int(self.form.get('kit-count', None))
-        kit_template_uid = self.form.get('kit-template-uid', None)
+        kit_template_uid = self.form.get('kit_template_uid', None)
         spec_per_kit = int(self.form.get('specimen-count', None))
         kits = []
         # sample storage
         samples = []
         sample_storage = self.samples_gen.get_biospecimen_storages()
-
         for x in range(seq_start, seq_start + kit_count):
             id_template = prefix_text + '-' + str(x).zfill(len(leading_zeros))
             title_template = prefix_text + ' ' + str(x).zfill(len(leading_zeros))
@@ -285,7 +284,7 @@ class AddKitsSubmitHandler(BrowserView):
             raise ValidationError(u'Number of biospecimens per kit must be > 0')
 
         # Kit template required
-        kit_template_uid = self.form.get('kit-template-uid', None)
+        kit_template_uid = self.form.get('kit_template_uid', None)
 
         # Stock Item storage (where items will be taken from), is required
         si_storage_uids = form.get('si-storage-uids', '')
