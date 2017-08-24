@@ -126,6 +126,7 @@ class SampleSchemaExtender(object):
         ),
         ExtStringField(
             'Barcode',
+            required=1,
             searchable=True,
             widget=StringWidget(
                 label=_("Barcode"),
