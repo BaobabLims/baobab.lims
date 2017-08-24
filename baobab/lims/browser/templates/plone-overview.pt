@@ -39,7 +39,7 @@
                                tal:attributes="href site/absolute_url"
                                title="Go to your installation"
                                i18n:attributes="title;"
-                               i18n:translate="">View your Bika installation</a>
+                               i18n:translate="">View your Baobab installation</a>
                         </span>
                         <div class="upgrade-warning"
                              tal:condition="python:view.outdated(site)">
