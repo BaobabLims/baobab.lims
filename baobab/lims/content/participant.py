@@ -24,6 +24,34 @@ ParticipantID = StringField(
         )
     )
 
+FirstName = StringField(
+        'FirstName',
+        required=0,
+        searchable=True,
+        read_permission=permissions.View,
+        write_permission=permissions.ModifyPortalContent,
+        widget=StringWidget(
+            label=_("First Name"),
+            description=_("The first name of the participant."),
+            visible={'edit': 'visible',
+                     'view': 'visible'},
+        )
+    )
+
+LastName = StringField(
+        'LastName',
+        required=0,
+        searchable=True,
+        read_permission=permissions.View,
+        write_permission=permissions.ModifyPortalContent,
+        widget=StringWidget(
+            label=_("Last Name"),
+            description=_("The last name of the participant."),
+            visible={'edit': 'visible',
+                     'view': 'visible'},
+        )
+    )
+
 Sex = StringField(
         'Sex',
         read_permission=permissions.View,
@@ -65,6 +93,8 @@ AgeUnit = StringField(
 
 schema = BikaSchema.copy() + Schema((
     ParticipantID,
+    FirstName,
+    LastName,
     Sex,
     Age,
     AgeUnit

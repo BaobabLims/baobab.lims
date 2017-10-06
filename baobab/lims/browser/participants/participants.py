@@ -93,6 +93,7 @@ class ParticipantsView(BikaListingView):
                 continue
             obj = items[x]['obj']
             items[x]['ParticipantID'] = obj.getId()
+            name = obj.getFirstName() + " " + obj.getLastName()
             # if self.context.portal_type == 'Participantss':
             #     items[x]['replace']['Project'] = "<a href='%s'>%s</a>" % \
             #                                      (obj.aq_parent.absolute_url(),
@@ -103,5 +104,6 @@ class ParticipantsView(BikaListingView):
             #items[x]['AgeUnit'] = obj.getAgeUnit()
             items[x]['replace']['ParticipantID'] = "<a href='%s'>%s</a>" % \
                                                 (items[x]['url'],
-                                                 obj.getId())
+                                                #obj.getId()
+                                                name)
         return items
