@@ -21,6 +21,7 @@ class BikaCustomGenerator:
                 'shipments',
                 'biospecimens',
                 'inventoryorders',
+                'participants',
                 'storage',):
             try:
                 obj = portal._getOb(obj_id)
@@ -81,6 +82,7 @@ class BikaCustomGenerator:
         at.setCatalogsByType('Project', ['bika_catalog'])
         at.setCatalogsByType('Shipment', ['bika_catalog'])
         at.setCatalogsByType('Biospecimen', ['bika_catalog'])
+        at.setCatalogsByType('Participant', ['bika_catalog'])
 
         addIndex(bc, 'getParentUID', 'FieldIndex')
         addIndex(bc, 'getProjectUID', 'FieldIndex')
@@ -121,7 +123,6 @@ class BikaCustomGenerator:
         # Root permissions
         mp = portal.manage_permission
         mp(ManageProjects, ['Manager', 'LabManager'], 1)
-        # mp(ManageShipments, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(ManageKits, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(AddProject, ['Manager', 'LabManager'], 1)
         mp(AddStorageUnit, ['Manager', 'LabManager', 'LabClerk'], 1)

@@ -125,3 +125,11 @@ class IStorageUnit(Interface):
 class IStorageUnits(Interface):
     """
     """
+
+class IParticipant(Interface):
+    """
+    """
+
+class IParticipants(Interface):
+    """
+    """

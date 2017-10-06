@@ -52,6 +52,30 @@ class SampleSchemaExtender(object):
             )
         ),
         ExtReferenceField(
+            'Participant',
+            required=0,
+            allowed_types=('Participant',),
+            relationship='SampleParticipant',
+            referenceClass=HoldingReference,
+            widget=bika_ReferenceWidget(
+                label=_("Participant"),
+                catalog_name='bika_catalog',
+                visible={'edit': 'visible',
+                         'view': 'visible',
+                         'header_table': 'visible',
+                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         'sample_due': {'view': 'visible', 'edit': 'visible'},
+                         'sampled': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'visible'},
+                         'expired': {'view': 'visible', 'edit': 'invisible'},
+                         'disposed': {'view': 'visible', 'edit': 'invisible'},
+                         },
+                size=30,
+                showOn=True,
+                description=_("Select the sample participant."),
+            )
+        ),
+        ExtReferenceField(
             'Kit',
             vocabulary_display_path_bound=sys.maxint,
             allowed_types=('Kit',),

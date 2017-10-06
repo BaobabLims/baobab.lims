@@ -38,6 +38,8 @@ def initialize(context):
     from content.managedstorage import ManagedStorage
     from content.unmanagedstorage import UnmanagedStorage
     from content.storageposition import StoragePosition
+    from content.participant import Participant
+    from content.participants import Participants
 
     from controlpanel.bika_kittemplates import KitTemplates
     from controlpanel.bika_biospectypes import BiospecTypes

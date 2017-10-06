@@ -33,6 +33,12 @@
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>
 
+    <type type_id="Participants" />
+    <type type_id="Participant">
+        <bound-workflow workflow_id="bika_one_state_workflow"/>
+        <bound-workflow workflow_id="bika_inactive_workflow"/>
+    </type>
+
     <type type_id="Projects"/>
     <type type_id="Project">
         <bound-workflow workflow_id="bika_one_state_workflow"/>

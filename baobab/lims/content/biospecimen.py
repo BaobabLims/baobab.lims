@@ -110,6 +110,20 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
         )
     ),
 
+    ReferenceField(
+        'Participant',
+        required=0,
+        allowed_types=('Participant',),
+        relationship='BioSpecimenParticipant',
+        widget=bika_ReferenceWidget(
+            label=_("Participant"),
+            size=30,
+            catalog_name='bika_setup_catalog',
+            visible={'view': 'invisible', 'edit': 'visible'},
+            showOn=True,
+        )
+    ),
+
     DateTimeField(
         'DatetimeReceived',
         default_method=DateTime,

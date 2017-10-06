@@ -16,13 +16,13 @@
     <property name="metaTypesNotToList" type="lines" purge="False">
         <element value="Kit"/>
         <element value="Project"/>
-        <element value="BiospecType"/>
         <element value="Biospecimen"/>
         <element value="Shipment"/>
         <element value="InventoryOrder"/>
         <element value="Product"/>
         <element value="StockItem"/>
         <element value="StorageUnit"/>
+        <element value="Participant"/>
   </property>
 </object>
 
