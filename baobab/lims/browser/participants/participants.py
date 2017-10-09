@@ -93,17 +93,20 @@ class ParticipantsView(BikaListingView):
                 continue
             obj = items[x]['obj']
             items[x]['ParticipantID'] = obj.getId()
-            name = obj.getFirstName() + " " + obj.getLastName()
-            # if self.context.portal_type == 'Participantss':
-            #     items[x]['replace']['Project'] = "<a href='%s'>%s</a>" % \
-            #                                      (obj.aq_parent.absolute_url(),
-            #                                       obj.aq_parent.Title())
-            # #items[x]['ShippingDate'] = self.ulocalized_time(
-            #    obj.getShippingDate())
+            name = ""
+            first_name = obj.getFirstName()
+            last_name = obj.getLastName()
+            if first_name and last_name:
+                name = obj.getFirstName() + " " + obj.getLastName()
+            elif first_name:
+                name = first_name
+            elif last_name:
+                name = last_name
+            else:
+                name = obj.getId()
+
             items[x]['Age'] = ('%f' % float(obj.getAge())).rstrip('0').rstrip('.') + " " + obj.getAgeUnit()
-            #items[x]['AgeUnit'] = obj.getAgeUnit()
             items[x]['replace']['ParticipantID'] = "<a href='%s'>%s</a>" % \
                                                 (items[x]['url'],
-                                                #obj.getId()
                                                 name)
         return items
