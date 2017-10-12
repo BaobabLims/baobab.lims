@@ -1,0 +1,9 @@
+version: '2'
+services:
+  baobab_lims:
+    restart: always
+    build: ./docker/
+    image: baobab_lims
+    container_name: baobab_lims
+    ports:
+     - "8080:8080"
