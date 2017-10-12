@@ -1,17 +1,9 @@
 version: '2'
 services:
-#  plone:
-#    restart: always
-#    build: ./plone/
-#    image: plone
-#    container_name: plone
-
   baobab_lims:
     restart: always
-    build: .
+    build: ./docker/
     image: baobab_lims
     container_name: baobab_lims
     ports:
      - "8080:8080"
-#    links:
-#     - plone
