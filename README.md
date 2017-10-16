@@ -1,5 +1,8 @@
 Baobab LIMS
 ===========
+
+[![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](http://play-with-docker.com?stack=https://raw.githubusercontent.com/thobalose/baobab.lims/docker/stack.yml)
+
 An open source LIMS for human Biobanks.
 
 *Baobab* is a common name given to nine tree species in different countries in the world, mostly in Africa.

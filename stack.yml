@@ -1,0 +1,7 @@
+version: "3.0"
+
+services:
+  baobab_lims:
+    image: quay.io/thoba/baobab
+    ports:
+     - 8080:8080
