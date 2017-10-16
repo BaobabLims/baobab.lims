@@ -43,6 +43,14 @@ class ParticipantsView(BikaListingView):
                 'title': _('ParticipantID'),
                 'input_width': '10'
             },
+            'SelectedProject': {
+                'title': _('Project'),
+                'type': 'choices'
+            },
+            'CaseControl': {
+                'title': _('Type'),
+                'input_width': '20'
+            },
             'Sex': {
                 'title': _('Sex'),
                 'type': 'choices'
@@ -53,6 +61,10 @@ class ParticipantsView(BikaListingView):
             },
             'AgeUnit': {
                 'title': _('Age Unit'),
+                'type': 'choices'
+            },
+            'DiseasesList': {
+                'title': _('Diseases'),
                 'type': 'choices'
             }
         }
@@ -70,9 +82,11 @@ class ParticipantsView(BikaListingView):
                 ],
                 'columns': [
                     'ParticipantID',
+                    'SelectedProject',
+                    'CaseControl',
                     'Sex',
                     'Age',
-                    #'AgeUnit',
+                    'DiseasesList',
                 ]
             }
         ]
@@ -93,6 +107,8 @@ class ParticipantsView(BikaListingView):
                 continue
             obj = items[x]['obj']
             items[x]['ParticipantID'] = obj.getId()
+
+            #set up the participant name and the href that links to it
             name = ""
             first_name = obj.getFirstName()
             last_name = obj.getLastName()
@@ -105,8 +121,26 @@ class ParticipantsView(BikaListingView):
             else:
                 name = obj.getId()
 
-            items[x]['Age'] = ('%f' % float(obj.getAge())).rstrip('0').rstrip('.') + " " + obj.getAgeUnit()
             items[x]['replace']['ParticipantID'] = "<a href='%s'>%s</a>" % \
-                                                (items[x]['url'],
-                                                name)
+                                                   (items[x]['url'],
+                                                    name)
+            project = obj.getSelectedProject()
+            if project and hasattr(project, 'title'):
+                items[x]['SelectedProject'] = project.title
+
+            items[x]['Age'] = ('%f' % float(obj.getAge())).rstrip('0').rstrip('.') + " " + obj.getAgeUnit()
+            items[x]['DiseasesList'] = self.getStringified(obj.getDiseasesList())
+
         return items
+
+    #--------------------------------------------------------------------------
+    def getStringified(self, elements):
+        if not elements:
+            return ''
+
+        elements_list = []
+        for element in elements:
+            elements_list.append(element.title)
+
+        elements_string = ', '.join(map(str, elements_list))
+        return elements_string

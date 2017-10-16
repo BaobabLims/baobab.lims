@@ -4,11 +4,15 @@ from Products.CMFCore import permissions
 from Products.CMFPlone.interfaces import IConstrainTypes
 from zope.interface import implements
 
-from bika.lims.browser.widgets import SelectionWidget as BikaSelectionWidget
 from bika.lims.content.bikaschema import BikaSchema
 from baobab.lims import bikaMessageFactory as _
 from baobab.lims import config
 from baobab.lims.interfaces import IParticipant
+from Products.CMFCore.utils import getToolByName
+from Products.Archetypes.references import HoldingReference
+from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
+
+import sys
 
 ParticipantID = StringField(
         'ParticipantID',
@@ -21,6 +25,35 @@ ParticipantID = StringField(
             description=_("The unique ID code assigned to the participant."),
             visible={'edit': 'visible',
                      'view': 'visible'},
+        )
+    )
+
+SelectedProject = ReferenceField(
+        'SelectedProject',
+        #multiValued=1,
+        allowed_types=('Project'),
+        relationship='ParticipantProjects',
+        widget=bika_ReferenceWidget(
+            label=_("Select Projects"),
+            description=_("Select projects for participant"),
+            size=40,
+            visible={'edit': 'visible', 'view': 'visible'},
+            catalog_name='bika_catalog',
+            showOn=True
+        )
+    )
+
+CaseControl = StringField(
+        'CaseControl',
+        read_permission=permissions.View,
+        write_permission=permissions.ModifyPortalContent,
+        vocabulary='getCaseControl',
+        widget=SelectionWidget(
+            format='select',
+            label=_("Case or Control Group"),
+            description=_("Select whether the participant is in a control group or one of the case participants."),
+            visible={'edit': 'visible', 'view': 'visible'},
+            render_own_label=True,
         )
     )
 
@@ -57,11 +90,12 @@ Sex = StringField(
         read_permission=permissions.View,
         write_permission=permissions.ModifyPortalContent,
         vocabulary='getSexes',
-        widget=BikaSelectionWidget(
-            description=_("Select the sex of the participant"),
+        widget=SelectionWidget(
             format='select',
             label=_("Sex"),
+            description=_("Select the sex of the participant"),
             visible={'edit': 'visible', 'view': 'visible'},
+            render_own_label=True,
         )
     )
 
@@ -83,21 +117,40 @@ AgeUnit = StringField(
         read_permission=permissions.View,
         write_permission=permissions.ModifyPortalContent,
         vocabulary='getAgeUnits',
-        widget=BikaSelectionWidget(
-            description=_("Whether the age is in years, months, weeks, days etc"),
+        widget=SelectionWidget(
             format='select',
             label=_("Age Unit"),
+            description=_("Whether the age is in years, months, weeks, days etc"),
             visible={'edit': 'visible', 'view': 'visible'},
+            render_own_label=True,
+        )
+    )
+
+DiseasesList = ReferenceField(
+        'DiseasesList',
+        multiValued=1,
+        allowed_types=('Disease'),
+        relationship='ParticipantDiseases',
+        widget=bika_ReferenceWidget(
+            label=_("Diseases"),
+            description=_("Select diseases that affects participant"),
+            size=40,
+            visible={'edit': 'visible', 'view': 'visible'},
+            catalog_name='bika_catalog',
+            showOn=True
         )
     )
 
 schema = BikaSchema.copy() + Schema((
     ParticipantID,
+    SelectedProject,
+    CaseControl,
     FirstName,
     LastName,
     Sex,
     Age,
-    AgeUnit
+    AgeUnit,
+    DiseasesList
 ))
 schema['title'].widget.visible = {'view': 'invisible', 'edit': 'invisible'}
 schema['description'].widget.visible = {'view': 'invisible', 'edit': 'invisible'}
@@ -115,10 +168,12 @@ class Participant(BaseContent):
         renameAfterCreation(self)
 
     def getSexes(self):
-        return ['Female', 'Male', 'Unknown', 'Undifferentiated']
+        return ['Male', 'Female', 'Unknown', 'Undifferentiated']
 
     def getAgeUnits(self):
         return ['Years', 'Months', 'Weeks', 'Days', 'Hours', 'Minutes']
 
+    def getCaseControl(self):
+        return ['Case', 'Control']
 
 registerType(Participant, config.PROJECTNAME)

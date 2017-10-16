@@ -133,3 +133,11 @@ class IParticipant(Interface):
 class IParticipants(Interface):
     """
     """
+
+class IDisease(Interface):
+    """
+    """
+
+class IDiseases(Interface):
+    """
+    """

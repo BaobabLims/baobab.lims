@@ -23,6 +23,7 @@
         <element value="StockItem"/>
         <element value="StorageUnit"/>
         <element value="Participant"/>
+        <element value="Disease"/>
   </property>
 </object>
 

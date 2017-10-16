@@ -12,6 +12,7 @@ from baobab.lims import bikaMessageFactory as _
 from baobab.lims.interfaces import IProject
 from baobab.lims import config
 from baobab.lims.browser.widgets import ProjectAnalysesWidget
+from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 
 schema = BikaSchema.copy() + Schema((
 
@@ -23,6 +24,20 @@ schema = BikaSchema.copy() + Schema((
             visible={'edit': 'visible', 'view': 'visible'},
         )
     ),
+
+    ReferenceField(
+            'LinkedDisease',
+            allowed_types=('Disease'),
+            relationship='ProjectDisease',
+            widget=bika_ReferenceWidget(
+                label=_("Disease"),
+                description=_("Select disease linked to this project"),
+                size=40,
+                visible={'edit': 'visible', 'view': 'visible'},
+                catalog_name='bika_catalog',
+                showOn=True
+            )
+        ),
 
     IntegerField(
         'AgeHigh',

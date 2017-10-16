@@ -51,6 +51,20 @@ class SampleSchemaExtender(object):
                 description=_("Select the project of the sample."),
             )
         ),
+        ExtBooleanField(
+            'AllowSharing',
+            default = False,
+            #write_permission = ManageClients,
+            widget = BooleanWidget(
+                label=_("Allow Sharing"),
+                description=_("Check to allow researchers to share sample freely."),
+                visible={'edit': 'visible',
+                         'view': 'visible',
+                         'header_table': 'visible',
+                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         }
+            ),
+        ),
         ExtReferenceField(
             'Participant',
             required=0,
@@ -282,6 +296,7 @@ class SampleSchemaExtender(object):
         sch.remove('Kit')
         sch.insert(sch.index('SampleType'), 'Project')
         sch.insert(sch.index('SampleType'), 'Kit')
+        #sch.insert(sch.index('SampleType'), 'AllowSharing')
         return schematas
 
     def getFields(self):

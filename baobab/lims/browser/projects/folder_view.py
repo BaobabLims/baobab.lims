@@ -34,6 +34,8 @@ class ProjectsView(BikaListingView):
                           'toggle': True},
             'getStudyType': {'title': _('Study Type'),
                              'toggle': True},
+            'getLinkedDisease': {'title': _('Disease'),
+                             'toggle': True},
         }
 
         self.review_states = [
@@ -43,7 +45,8 @@ class ProjectsView(BikaListingView):
              'transitions': [],
              'columns': ['Title',
                          'getClient',
-                         'getStudyType']},
+                         'getStudyType',
+                         'getLinkedDisease']},
         ]
 
     def __call__(self):
@@ -72,7 +75,8 @@ class ProjectsView(BikaListingView):
                  'transitions': [{'id': 'activate'}, ],
                  'columns': ['Title',
                              'getClient',
-                             'getStudyType']})
+                             'getStudyType',
+                             'getLinkedDisease']})
             self.review_states.append(
                 {'id': 'all',
                  'title': _('All'),
@@ -80,7 +84,8 @@ class ProjectsView(BikaListingView):
                  'transitions': [{'id': 'empty'}],
                  'columns': ['Title',
                              'getClient',
-                             'getStudyType']})
+                             'getStudyType',
+                             'getLinkedDisease']})
             stat = self.request.get("%s_review_state" % self.form_id, 'default')
             self.show_select_column = stat != 'all'
         return super(ProjectsView, self).__call__()
@@ -93,6 +98,9 @@ class ProjectsView(BikaListingView):
             obj = items[x]['obj']
             items[x]['getClient'] = obj.aq_parent.Title()
             items[x]['getStudyType'] = obj.getStudyType()
+            disease = obj.getLinkedDisease()
+            if disease:
+                items[x]['getLinkedDisease'] = disease.title
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                            (items[x]['url'], items[x]['Title'])
 

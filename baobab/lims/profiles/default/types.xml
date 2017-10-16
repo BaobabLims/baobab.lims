@@ -30,6 +30,8 @@
     <object name="StoragePosition" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Participant" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Participants" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="Disease" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="Diseases" meta_type="Factory-based Type Information with dynamic views"/>
 
     <!-- Override values from bika.lims -->
     <object name="Client" meta_type="Factory-based Type Information with dynamic views"/>

@@ -40,6 +40,8 @@ def initialize(context):
     from content.storageposition import StoragePosition
     from content.participant import Participant
     from content.participants import Participants
+    from content.disease import Disease
+    from content.diseases import Diseases
 
     from controlpanel.bika_kittemplates import KitTemplates
     from controlpanel.bika_biospectypes import BiospecTypes
