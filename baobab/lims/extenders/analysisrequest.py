@@ -133,6 +133,22 @@ class AnalysisRequest(BaseAR):
         else:
             return self.aq_parent.getClient()
 
+    def getRequestedAnalyses(self):
+        """It returns all requested analyses, even if they belong to an
+        analysis profile or not.
+        """
+        #
+        # title=Get requested analyses
+        #
+        result = []
+        workflow = getToolByName(self, 'portal_workflow')
+        for analysis in self.getAnalyses(full_objects=True):
+            review_state = workflow.getInfoFor(analysis, 'review_state')
+            if review_state == 'not_requested':
+                continue
+            result.append(analysis)
+        return result
+
 
 from Products.Archetypes import atapi
 from bika.lims.config import PROJECTNAME

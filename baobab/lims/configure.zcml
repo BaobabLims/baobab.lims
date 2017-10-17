@@ -25,6 +25,7 @@
   <include package=".static"/>
   <include package=".setupdata"/>
   <include package=".monkey"/>
+  <include package=".subscribers"/>
 
   <include file="profiles.zcml" />
 
