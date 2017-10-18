@@ -141,3 +141,7 @@ class IDisease(Interface):
 class IDiseases(Interface):
     """
     """
+
+class ISharableSample(Interface):
+    """
+    """
