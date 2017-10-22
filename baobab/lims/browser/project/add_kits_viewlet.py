@@ -9,18 +9,16 @@ from DateTime import DateTime
 
 from baobab.lims.browser.project import get_first_sampletype
 from baobab.lims.browser.project.util import SampleGeneration
-from baobab.lims.interfaces import IUnmanagedStorage, IStoragePosition, \
-    IManagedStorage
-
+from baobab.lims.interfaces import IUnmanagedStorage, IStoragePosition, IManagedStorage
+from baobab.lims.permissions import ManageKits
 
 class AddKitsViewlet(ViewletBase):
     index = ViewPageTemplateFile("templates/add_kits_viewlet.pt")
 
-    # def render(self):
-    #     return self.index()
-
     def render(self):
-        if self.request.URL.endswith('kits'):
+        mtool = getToolByName(self.context, 'portal_membership')
+        checkPermission = mtool.checkPermission
+        if checkPermission(ManageKits, self.context) and self.request.URL.endswith('kits'):
             return self.index()
         else:
             return ''

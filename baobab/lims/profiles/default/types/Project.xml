@@ -50,7 +50,7 @@
          i18n:attributes="title"
          i18n:domain="plone"
          visible="True">
-  <permission value="BIKA: Edit Client"/>
+  <permission value="BAOBAB: Manage Projects"/>
  </action>
 
  <action title="Kits"
@@ -89,7 +89,7 @@
          i18n:attributes="title"
          i18n:domain="plone"
          visible="True">
-  <permission value="Modify portal content"/>
+  <permission value="BAOBAB: Manage Projects"/>
  </action>
 
  <action title="Analysis Requests"

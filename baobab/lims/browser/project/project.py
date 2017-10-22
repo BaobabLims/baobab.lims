@@ -190,7 +190,7 @@ class ProjectBiospecimensView(BiospecimensView):
     """ Biospecimens veiw from project view.
     """
     def __init__(self, context, request):
-        super(ProjectBiospecimensView, self).__init__(context, request)
+        BiospecimensView.__init__(self, context, request)
         self.context = context
         self.context_actions = {}
 

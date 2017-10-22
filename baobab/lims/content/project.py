@@ -97,8 +97,11 @@ schema['description'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 
 
 class Project(BaseFolder):
-    security = ClassSecurityInfo()
+
     implements(IProject, IConstrainTypes)
+
+    security = ClassSecurityInfo()
+    displayContentsTab = False
     schema = schema
 
     _at_rename_after_creation = True

@@ -10,8 +10,7 @@ import json
 
 class ProjectsView(BikaListingView):
     def __init__(self, context, request):
-        super(ProjectsView, self).__init__(context, request)
-        self.catalog = "bika_catalog"
+        BikaListingView.__init__(self, context, request)
         self.contentFilter = {'portal_type': 'Project',
                               'sort_on': 'sortable_title'}
         self.context_actions = {}
@@ -83,10 +82,10 @@ class ProjectsView(BikaListingView):
                              'getStudyType']})
             stat = self.request.get("%s_review_state" % self.form_id, 'default')
             self.show_select_column = stat != 'all'
-        return super(ProjectsView, self).__call__()
+        return BikaListingView.__call__(self)
 
     def folderitems(self):
-        items = super(ProjectsView, self).folderitems()
+        items = BikaListingView.folderitems(self)
         for x in range(len(items)):
             if not items[x].has_key('obj'):
                 continue

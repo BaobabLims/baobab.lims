@@ -78,7 +78,7 @@ class BikaCustomGenerator:
         # Add indexes and metadata columns here
         at = getToolByName(portal, 'archetype_tool')
         at.setCatalogsByType('Kit', ['bika_catalog'])
-        at.setCatalogsByType('Project', ['bika_catalog'])
+        # at.setCatalogsByType('Project', ['bika_catalog'])
         at.setCatalogsByType('Shipment', ['bika_catalog'])
         at.setCatalogsByType('Biospecimen', ['bika_catalog'])
 
@@ -121,7 +121,6 @@ class BikaCustomGenerator:
         # Root permissions
         mp = portal.manage_permission
         mp(ManageProjects, ['Manager', 'LabManager'], 1)
-        # mp(ManageShipments, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(ManageKits, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(AddProject, ['Manager', 'LabManager'], 1)
         mp(AddStorageUnit, ['Manager', 'LabManager', 'LabClerk'], 1)
@@ -137,22 +136,21 @@ class BikaCustomGenerator:
         # projects
         mp = portal.projects.manage_permission
 
-        # Allow authenticated users to see the contents of the client folder
+        # Allow authenticated users to see the contents of the project folder
         mp(permissions.View, ['Authenticated'], 0)
         mp(permissions.AccessContentsInformation, ['Authenticated'], 0)
         mp(permissions.ListFolderContents, ['Authenticated'], 0)
 
-        mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Client'], 0)
-        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Client'], 0)
-        # mp(permissions.ModifyPortalContent, ['Manager', 'LabManager'], 0)
-        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Client'], 0)
+        mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner'], 0)
+        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
+        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner'], 0)
         mp(permissions.AddPortalContent, ['Manager', 'LabManager'], 0)
         portal.projects.reindexObject()
 
         # kits
         mp = portal.kits.manage_permission
 
-        # Allow authenticated users to see the contents of the client folder
         mp(permissions.View, ['Authenticated'], 0)
         mp(permissions.AccessContentsInformation, ['Authenticated'], 0)
         mp(permissions.ListFolderContents, ['Authenticated'], 0)
@@ -212,19 +210,18 @@ class BikaCustomGenerator:
         # /storage folder permissions (StorageUnits)
         mp = portal.storage.manage_permission
 
-        # Allow authenticated users to see the contents of the client folder
+        # Allow authenticated users to see the contents of the storage folder
         mp(permissions.View, ['Authenticated'], 0)
         mp(permissions.AccessContentsInformation, ['Authenticated'], 0)
         mp(permissions.ListFolderContents, ['Authenticated'], 0)
 
-        # mp(CancelAndReinstate, ['Manager', 'LabManager', 'LabClerk'], 0)
         mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'LabClerk'], 0)
         mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'LabClerk'], 0)
         mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'LabClerk'], 0)
         mp(permissions.DeleteObjects, ['Manager', 'LabManager'], 0)
         mp('Access contents information', ['Manager', 'LabManager', 'LabClerk'], 0)
         mp(permissions.View, ['Manager', 'LabManager', 'LabClerk'], 0)
-        portal.invoices.reindexObject()
+        portal.storage.reindexObject()
 
 
 def setupCustomVarious(context):

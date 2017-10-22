@@ -33,6 +33,5 @@ ADD_CONTENT_PERMISSIONS = {
 
 ManageStoragePositions = 'BAOBAB: Manage Storage Positions'
 ManageProjects = 'BAOBAB: Manage Projects'
-ManageShipments = 'BAOBAB: Manage Shipments'
 ManageKits = 'BAOBAB: Manage Kits'
 DueSample = 'BAOBAB: Due Sample'

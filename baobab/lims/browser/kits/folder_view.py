@@ -22,7 +22,7 @@ class KitsView(BikaListingView):
             'sort_on': 'sortable_title',
             'sort_order': 'reverse'
         }
-        # Todo: I add these two line to set the sort and the order of kit listing because
+        # Todo: I added these two line to set the sort and the order of kit listing because
         # Todo: the values in self.contentFilter seems have no effect!
         self.sort_on = 'sortable_title'
         self.request.set('list_sort_order', 'reverse')

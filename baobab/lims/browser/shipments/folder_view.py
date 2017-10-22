@@ -2,11 +2,10 @@ from Products.CMFCore.utils import getToolByName
 from plone.app.content.browser.interfaces import IFolderContentsView
 from plone.app.layout.globals.interfaces import IViewView
 from zope.interface.declarations import implements
-from Products.CMFCore.permissions import AddPortalContent
 
 from bika.lims.browser.bika_listing import BikaListingView
 from baobab.lims import bikaMessageFactory as _
-from baobab.lims.permissions import *
+from baobab.lims.permissions import ManageKits
 
 
 class ShipmentsView(BikaListingView):
@@ -148,7 +147,7 @@ class ShipmentsView(BikaListingView):
 
         mtool = getToolByName(self.context, 'portal_membership')
 
-        if mtool.checkPermission(AddPortalContent, self.context) and \
+        if mtool.checkPermission(ManageKits, self.context) and \
                 self.context.portal_type == 'Project':
             self.context_actions[_('Add')] = {
                 'url': 'createObject?type_name=Shipment',

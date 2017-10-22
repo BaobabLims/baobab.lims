@@ -35,7 +35,7 @@ class SampleSchemaExtender(object):
             referenceClass=HoldingReference,
             widget=bika_ReferenceWidget(
                 label=_("Project"),
-                catalog_name='bika_catalog',
+                # catalog_name='bika_catalog',
                 visible={'edit': 'visible',
                          'view': 'visible',
                          'header_table': 'visible',
@@ -126,7 +126,7 @@ class SampleSchemaExtender(object):
         ),
         ExtStringField(
             'Barcode',
-            required=1,
+            required=0,
             searchable=True,
             widget=StringWidget(
                 label=_("Barcode"),

@@ -14,14 +14,13 @@ from baobab.lims import bikaMessageFactory as _
 
 
 class BiospecimensView(BikaListingView):
-    # template = ViewPageTemplateFile('templates/biospecimens.pt')
-    # table_template = ViewPageTemplateFile("templates/biospecimens_table.pt")
+
     implements(IFolderContentsView, IViewView)
 
     def __init__(self, context, request):
-        super(BiospecimensView, self).__init__(context, request)
+        BikaListingView.__init__(self, context, request)
         self.context = context
-        self.catalog = 'bika_catalog'
+        # self.catalog = 'bika_catalog'
         request.set('disable_plone.rightcolumn', 1)
         self.contentFilter = {
             'portal_type': 'Sample',
@@ -248,7 +247,7 @@ class BiospecimensView(BikaListingView):
             self.show_select_row = True
             self.show_select_column = True
 
-        return super(BiospecimensView, self).__call__()
+        return BikaListingView.__call__(self)
 
     def folderitems(self, full_objects=False):
         items = BikaListingView.folderitems(self)

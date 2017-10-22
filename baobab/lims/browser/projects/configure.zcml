@@ -8,7 +8,7 @@
       for="baobab.lims.interfaces.IProjects"
       name="folder_view"
       class=".folder_view.ProjectsView"
-      permission="cmf.ListFolderContents"
+      permission="zope2.View"
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
