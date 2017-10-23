@@ -86,7 +86,7 @@ class Products(WorksheetImporter):
         suppliers = [o.getObject() for o in bsc(portal_type="Supplier")]
         for row in rows:
             title = row.get('Title')
-            description = row.get('description', '')
+            description = row.get('Description', '')
             obj = _createObjectByType('Product', folder, tmpID())
             obj.edit(
                 title=title,

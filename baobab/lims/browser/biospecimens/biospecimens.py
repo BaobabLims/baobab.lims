@@ -8,6 +8,8 @@ from Products.CMFCore.permissions import AddPortalContent, ModifyPortalContent
 from bika.lims.browser.bika_listing import BikaListingView
 from bika.lims.utils import isActive
 from bika.lims.interfaces import ISample
+from baobab.lims.interfaces import ISharableSample
+
 
 from baobab.lims.config import VOLUME_UNITS
 from baobab.lims import bikaMessageFactory as _
@@ -21,13 +23,17 @@ class BiospecimensView(BikaListingView):
     def __init__(self, context, request):
         super(BiospecimensView, self).__init__(context, request)
         self.context = context
-        self.catalog = 'bika_catalog'
+        #self.catalog = 'bika_catalog'
+        self.catalog = 'portal_catalog'
         request.set('disable_plone.rightcolumn', 1)
+
         self.contentFilter = {
             'portal_type': 'Sample',
             'sort_on': 'sortable_title',
-            'sort_order': 'ascending'
+            #'sort_order': 'ascending'
+            'sort_order': 'reverse'
         }
+
         self.context_actions = {_('Add'):
                                 {'url': 'createObject?type_name=Sample',
                                 'icon': '++resource++bika.lims.images/add.png'}}
@@ -251,6 +257,13 @@ class BiospecimensView(BikaListingView):
         return super(BiospecimensView, self).__call__()
 
     def folderitems(self, full_objects=False):
+        # Show only ISharable samples for EMS.  Skip others.
+        pm = getToolByName(self.context, 'portal_membership')
+        roles = pm.getAuthenticatedMember().getRoles()
+        print roles
+        if 'EMS' in roles:
+             self.contentFilter['object_provides'] = ISharableSample.__identifier__
+
         items = BikaListingView.folderitems(self)
         bsc = getToolByName(self.context, 'bika_setup_catalog')
         brains = bsc(portal_type='SampleType', inactive_state='active')
