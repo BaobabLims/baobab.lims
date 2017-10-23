@@ -1,0 +1,16 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    i18n_domain="bika">
+
+ <genericsetup:upgradeStep
+        title="Client contact security access to projects"
+        description="Change Project content type catalog to portal catalog"
+        source="1300"
+        destination="1310"
+        handler="baobab.lims.upgrade.to1310.upgrade"
+        sortkey="1"
+        profile="baobab.lims:default"/>
+
+
+</configure>

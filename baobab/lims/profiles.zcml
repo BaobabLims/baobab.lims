@@ -19,4 +19,6 @@
     <depends name="content" />
   </genericsetup:importStep>
 
+  <include package=".upgrade"/>
+
 </configure>
