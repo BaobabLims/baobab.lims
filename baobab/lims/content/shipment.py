@@ -294,6 +294,17 @@ class Shipment(ATFolder):
         now = DateTime()
         self.setDateDispatched(now)
 
+        to_contact = self.getToContact()
+        from_contact = self.getFromContact()
+        client = to_contact.aq_parent
+        lab = self.bika_setup.laboratory
+        subject = "Kits dispatched from {}".format(lab.getName())
+        sender = formataddr((lab.getName(), from_contact.getEmailAddress()))
+        receiver = formataddr((encode_header(client.getName()), to_contact.getEmailAddress()))
+        body = "Automatic email:\n"
+        body += 'The shipment \"%s\" has been sent from the Biobank \"%s\".' % (self.Title(), lab.getName())
+        self.send_mail(sender, receiver, subject, body)
+
     def workflow_script_receive_shipment(self):
         """ Executed after shipment received by the client
         """
