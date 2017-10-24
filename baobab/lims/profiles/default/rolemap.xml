@@ -10,6 +10,7 @@
     <role name="Publisher"/>
     <role name="Reviewer"/>
     <role name="Verifier"/>
+    <role name="EMS"/>
   </roles>
 
   <permissions>
@@ -25,6 +26,10 @@
           <role name="LabClerk"/>
           <role name="LabManager"/>
           <role name="Manager"/>
+      </permission>
+
+      <permission name="BAOBAB: Show Sharable Samples" acquire="False">
+          <role name="EMS"/>
       </permission>
   </permissions>
 

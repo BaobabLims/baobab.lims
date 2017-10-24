@@ -125,3 +125,7 @@ class IStorageUnit(Interface):
 class IStorageUnits(Interface):
     """
     """
+
+class ISharableSample(Interface):
+    """
+    """

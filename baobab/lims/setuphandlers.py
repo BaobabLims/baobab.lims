@@ -52,6 +52,9 @@ class BikaCustomGenerator:
         for group_id in groups:
             portal_groups.removeGroup(group_id)
 
+        if 'EMSystems' not in portal_groups.listGroupIds():
+            portal_groups.addGroup('EMSystems', title="EMSystems", roles = ['EMS'])
+
     def setupCatalogs(self, portal):
 
         def addIndex(cat, *args):
@@ -189,8 +192,8 @@ class BikaCustomGenerator:
         mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'LabClerk', 'Analyst'], 0)
         mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'LabClerk', 'Analyst'], 0)
         mp(permissions.DeleteObjects, ['Manager', 'LabManager'], 0)
-        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst'], 0)
-        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'EMS'], 0)
+        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'EMS'], 0)
         portal.biospecimens.reindexObject()
 
         # inventoryorders folder permissions
@@ -233,7 +236,7 @@ def setupCustomVarious(context):
     portal = context.getSite()
 
     gen = BikaCustomGenerator()
-    # gen.setupGroups(portal)
+    gen.setupGroups(portal)
     gen.setupCatalogs(portal)
     gen.setupPortalContent(portal)
     gen.setupPermissions(portal)

@@ -51,6 +51,20 @@ class SampleSchemaExtender(object):
                 description=_("Select the project of the sample."),
             )
         ),
+        ExtBooleanField(
+            'AllowSharing',
+            default=False,
+            # write_permission = ManageClients,
+            widget=BooleanWidget(
+                label=_("Allow Sharing"),
+                description=_("Check to allow researchers to share sample freely."),
+                visible={'edit': 'visible',
+                         'view': 'visible',
+                         'header_table': 'visible',
+                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         }
+            ),
+        ),
         ExtReferenceField(
             'Kit',
             vocabulary_display_path_bound=sys.maxint,

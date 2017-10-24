@@ -20,6 +20,7 @@ ReceiveInventoryOrder = 'BAOBAB: Receive Inventory Order'
 StoreInventoryOrder = 'BAOBAB: Store Inventory Order'
 
 ReceiveShipment = 'BAOBAB: Client Receive Shipment'
+ShowSharableSamples = 'BAOBAB: Show Sharable Samples'
 
 # Add Permissions for specific types, if required
 ADD_CONTENT_PERMISSIONS = {
