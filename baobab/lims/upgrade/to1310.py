@@ -16,6 +16,3 @@ def upgrade(tool):
         obj = brain.getObject()
         obj.unmarkCreationFlag()
         obj.reindexObject()
-    # for brain in brains:
-    #     pc.reindexObject(brain.getObject())
-    #     bc.uncatalog_object(brain.getPath())

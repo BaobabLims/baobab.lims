@@ -12,6 +12,7 @@ class ClientProjectsView(ProjectsView):
         ProjectsView.__init__(self, context, request)
         self.context = context
         self.request = request
+        self.context.setConstrainTypesMode(0)
         self.contentFilter['path'] = {
             'query': '/'.join(self.context.getPhysicalPath()),
             'level': 0
