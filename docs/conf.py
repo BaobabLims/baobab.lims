@@ -48,7 +48,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Baobab LIMS'
-copyright = u'2017, SANBI(UWC)'
+copyright = u'2017, BAOBAB-LIMS(SANBI)'
 author = u'SANBI(UWC)'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -90,12 +90,19 @@ html_theme = 'alabaster'
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = {
+    'logo': 'logo.png',
+    'github_user': 'BaobabLims',
+    'github_repo': 'baobab.lims',
+    'description': 'Open-source laboratory information management system (LIMS).',
+    'github_button': True,
+    'travis_button': True
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ['_static', '_static/custom.css']
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.

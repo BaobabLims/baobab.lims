@@ -62,6 +62,9 @@ class BiospecimensView(BikaListingView):
             },
             'Unit': {
                 'title': _('Unit'),
+                'allow_edit': True,
+                'input_class': 'text',
+                'input_width': '5',
                 'toggle': True
             },
             'SubjectID': {
