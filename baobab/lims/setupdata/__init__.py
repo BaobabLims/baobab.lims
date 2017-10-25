@@ -10,6 +10,7 @@ from bika.lims.idserver import renameAfterCreation
 class SetupDataSetList(SDL):
 
     implements(ISetupDataSetList)
+
     def __call__(self, projectname="bika.lims"):
         return SDL.__call__(self, projectname="baobab.lims")
 
@@ -49,6 +50,7 @@ class Kit_Components(WorksheetImporter):
         """ This method is called after Import to get computed product_list
         """
         return self.product_list
+
 
 class Kit_Templates(WorksheetImporter):
     """ Kit_Templates worksheet contains only Kit Template without components. Components are listed in another
@@ -104,6 +106,7 @@ class Products(WorksheetImporter):
 
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
+
 
 class Storage_Types(WorksheetImporter):
     """Add some dummy product categories
