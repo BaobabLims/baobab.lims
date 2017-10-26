@@ -131,21 +131,18 @@ class Projects(WorksheetImporter):
 
         rows = self.get_rows(3)
         for row in rows:
+            print row
+            #get the client
             client_list = pc(portal_type="Client", Title=row.get('Client'))
-
-            # room_l = pc(portal_type = "StorageUnit",
-            #              Title=row.get('UnitParent').split('/')[0])
-            # if room_l:
-            #     room_01 = room_l[0].getObject()
-            # # localhost:8080/Room-1
-            # path = room_01.getPhisycalPath() + ""
-            # children = pc(portal_type="StorageUnit",
-            #               path="{query:"+ room_01.getPhisycalPath()+" level: 0}")
 
             if client_list:
                 folder = client_list[0].getObject()
             else:
                 continue
+
+            sample_types = self.getProjectMultiItems(row.get("SampleTypes"), "SampleType")
+            analysis_services = self.getProjectMultiItems(row.get("AnalysisServices"), "AnalysisService")
+
             obj = _createObjectByType('Project', folder, tmpID())
             obj.edit(
                 title=row.get('title'),
@@ -154,11 +151,26 @@ class Projects(WorksheetImporter):
                 AgeHigh=self.to_int(row.get('AgeHigh', 0)),
                 AgeLow=self.to_int(row.get('AgeLow', 0)),
                 NumParticipants=self.to_int(row.get('NumParticipants', 0)),
-                #SampleType=row.get('SampleType', ''),
-                #Service=row.get('Service', ''),
-                #DateCreated=row.get('DateCreated', ''),
+                SampleType=sample_types,
+                Service=analysis_services,
+                DateCreated=row.get('DateCreated', ''),
             )
 
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
 
+    def getProjectMultiItems(self, items_string, portal_catalog):
+
+        if not items_string or not portal_catalog:
+            return []
+
+        pc = getToolByName(self.context, 'portal_catalog')
+        items = []
+        file_items = [x.strip() for x in items_string.split(';')]
+
+        for file_item in file_items:
+            item_list = pc(portal_type=portal_catalog, Title=file_item)
+            if item_list:
+                items.append(item_list[0].getObject().UID())
+
+        return items
