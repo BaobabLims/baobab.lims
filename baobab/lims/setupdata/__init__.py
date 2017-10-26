@@ -121,3 +121,44 @@ class Storage_Types(WorksheetImporter):
             )
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
+
+class Projects(WorksheetImporter):
+    """ Import projects
+    """
+    def Import(self):
+
+        pc = getToolByName(self.context, 'portal_catalog')
+
+        rows = self.get_rows(3)
+        for row in rows:
+            client_list = pc(portal_type="Client", Title=row.get('Client'))
+
+            # room_l = pc(portal_type = "StorageUnit",
+            #              Title=row.get('UnitParent').split('/')[0])
+            # if room_l:
+            #     room_01 = room_l[0].getObject()
+            # # localhost:8080/Room-1
+            # path = room_01.getPhisycalPath() + ""
+            # children = pc(portal_type="StorageUnit",
+            #               path="{query:"+ room_01.getPhisycalPath()+" level: 0}")
+
+            if client_list:
+                folder = client_list[0].getObject()
+            else:
+                continue
+            obj = _createObjectByType('Project', folder, tmpID())
+            obj.edit(
+                title=row.get('title'),
+                description=row.get('description'),
+                StudyType=row.get('StudyType', ''),
+                AgeHigh=self.to_int(row.get('AgeHigh', 0)),
+                AgeLow=self.to_int(row.get('AgeLow', 0)),
+                NumParticipants=self.to_int(row.get('NumParticipants', 0)),
+                #SampleType=row.get('SampleType', ''),
+                #Service=row.get('Service', ''),
+                #DateCreated=row.get('DateCreated', ''),
+            )
+
+            obj.unmarkCreationFlag()
+            renameAfterCreation(obj)
+
