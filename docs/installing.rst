@@ -2,12 +2,25 @@
 Installing
 ==========
 
-Fabric is best installed via `pip <http://pip-installer.org>`_ (highly
+Plone installation
+==================
+
+Here we describe how to install Plone onto the Ubuntu Linux System. For an installation in a different operating system, check the Plone online documentation, `here`_. The installation process requires users to have root priveledges and a basic knowledge of the Linux command lines using Terminal. If you are not familiar with a UNIX operating system, read this tutorial Linux shell tutorial. Please note that a single line must be completed at a time. 
+
+.. _here: http://google.com
+
+
+Plone dependencies
+------------------
+Plone framework 
+
+ric is best installed via `pip <http://pip-installer.org>`_ (highly
 recommended) or `easy_install
 <http://wiki.python.org/moin/CheeseShopTutorial>`_ (older, but still works
 fine), e.g.::
 
-    $ pip install fabric
+    $ sudo apt get install
+    $ sudo make tab
 
 You may also opt to use your operating system's package manager; the package is
 typically called ``fabric`` or ``python-fabric``. E.g.::
