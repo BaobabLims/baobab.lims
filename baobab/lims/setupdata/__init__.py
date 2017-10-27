@@ -7,6 +7,8 @@ from bika.lims.interfaces import ISetupDataSetList
 from zope.interface import implements
 from bika.lims.idserver import renameAfterCreation
 
+from pkg_resources import *
+
 
 def get_project_multi_items(context, string_elements, portal_type, portal_catalog):
 
@@ -29,7 +31,7 @@ class SetupDataSetList(SDL):
 
     implements(ISetupDataSetList)
 
-    def __call__(self, projectname="bika.lims"):
+    def __call__(self):
         return SDL.__call__(self, projectname="baobab.lims")
 
 

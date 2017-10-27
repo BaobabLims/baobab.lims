@@ -2,11 +2,13 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone.app.layout.globals.interfaces import IViewView
 from Products.Archetypes.public import DisplayList
 from zope.interface import implements
+from zope.component import getAdapters
 from pkg_resources import *
 from bika.lims import bikaMessageFactory as _
 from bika.lims.exportimport.load_setup_data import LoadSetupData
 from bika.lims.exportimport.dataimport import ImportView as IV
 from bika.lims.utils import t
+from bika.lims.interfaces import ISetupDataSetList
 from baobab.lims.setupdata import instruments
 
 import plone
@@ -23,7 +25,6 @@ class ImportView(IV):
         self.context = context
         self.request = request
 
-
     def import_form(self):
         """This is a trick to allow non-robot tests to access the import form
         without javascript.
@@ -38,6 +39,14 @@ class ImportView(IV):
             return ViewPageTemplateFile("instruments/%s_import.pt" % exim)(self)
         else:
             return ""
+
+    def getSetupDatas(self):
+        datasets = []
+        adapters = getAdapters((self.context, ), ISetupDataSetList)
+        for name, adapter in adapters:
+            if name == 'baobab.lims':
+                datasets.extend(adapter())
+        return datasets
 
     def __call__(self):
         if 'submitted' in self.request:
