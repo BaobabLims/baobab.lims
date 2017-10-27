@@ -17,6 +17,7 @@
 baobab.lims.egg-info
 bin
 build
+docs/_build
 develop-eggs
 dist
 eggs
