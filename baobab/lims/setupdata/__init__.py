@@ -7,6 +7,24 @@ from bika.lims.interfaces import ISetupDataSetList
 from zope.interface import implements
 from bika.lims.idserver import renameAfterCreation
 
+
+def get_project_multi_items(context, string_elements, portal_type, portal_catalog):
+
+    if not string_elements:
+        return []
+
+    pc = getToolByName(context, portal_catalog)
+
+    items = []
+    file_items = [x.strip() for x in string_elements.split(';')]
+
+    for file_item in file_items:
+        item_list = pc(portal_type=portal_type, Title=file_item)
+        if item_list:
+            items.append(item_list[0].getObject().UID())
+
+    return items
+
 class SetupDataSetList(SDL):
 
     implements(ISetupDataSetList)
@@ -109,7 +127,7 @@ class Products(WorksheetImporter):
 
 
 class Storage_Types(WorksheetImporter):
-    """Add some dummy product categories
+    """Add some dummy storage types
     """
     def Import(self):
         folder = self.context.bika_setup.bika_storagetypes
@@ -122,5 +140,42 @@ class Storage_Types(WorksheetImporter):
                 title=title,
                 description=description
             )
+            obj.unmarkCreationFlag()
+            renameAfterCreation(obj)
+
+
+class Projects(WorksheetImporter):
+    """ Import projects
+    """
+    def Import(self):
+
+        pc = getToolByName(self.context, 'portal_catalog')
+
+        rows = self.get_rows(3)
+        for row in rows:
+            # get the client object
+            client_list = pc(portal_type="Client", Title=row.get('Client'))
+
+            folder = client_list and client_list[0].getObject() or None
+            if not folder: continue
+
+            s_types = row.get('SampleTypes')
+            a_services = row.get('AnalysisServices')
+            st_objects = get_project_multi_items(self.context, s_types, 'SampleType', 'bika_setup_catalog')
+            as_objects = get_project_multi_items(self.context, a_services, 'AnalysisService', 'bika_setup_catalog')
+
+            obj = _createObjectByType('Project', folder, tmpID())
+            obj.edit(
+                title=row.get('title'),
+                description=row.get('description'),
+                StudyType=row.get('StudyType', ''),
+                AgeHigh=self.to_int(row.get('AgeHigh', 0)),
+                AgeLow=self.to_int(row.get('AgeLow', 0)),
+                NumParticipants=self.to_int(row.get('NumParticipants', 0)),
+                SampleType=st_objects,
+                Service=as_objects,
+                DateCreated=row.get('DateCreated', ''),
+            )
+
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
