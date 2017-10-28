@@ -5,196 +5,132 @@ Installing
 Plone installation
 ==================
 
-Here we describe how to install Plone onto the Ubuntu Linux System. For an installation in a different operating system, check the Plone online documentation, `here`_. The installation process requires users to have root priveledges and a basic knowledge of the Linux command lines using Terminal. If you are not familiar with a UNIX operating system, read this tutorial Linux shell tutorial. Please note that a single line must be completed at a time. 
+Here we describe how to install Plone onto the Ubuntu Linux System. For an installation in a different operating system, check the Plone online documentation, `here`_. The installation process requires users to have root priveledges and a basic knowledge of the Linux command lines using Terminal. If you are not familiar with a UNIX operating system, read this tutorial Linux shell `tutorial`_. Please note that a single line must be completed at a time. 
 
-.. _here: http://google.com
+.. _here: http://docs.plone.org/4/en/manage/installing/installation.html
+.. _tutorial: http://linuxcommand.org/learning_the_shell.php
 
 
 Plone dependencies
 ------------------
-Plone framework 
+ 
 
-ric is best installed via `pip <http://pip-installer.org>`_ (highly
-recommended) or `easy_install
-<http://wiki.python.org/moin/CheeseShopTutorial>`_ (older, but still works
-fine), e.g.::
+``Plone`` framework requires the installation of additional system packages. Without these packages available in your system, Plone will not compile.
 
-    $ sudo apt get install
-    $ sudo make tab
+    ``$ sudo apt-get install build-essential gcc python-dev git-core libffi-dev``
 
-You may also opt to use your operating system's package manager; the package is
-typically called ``fabric`` or ``python-fabric``. E.g.::
+    ``$ sudo apt-get install libpcre3 libpcre3-dev autoconf libtool pkg-config``
 
-    $ sudo apt-get install fabric
+    ``$ sudo apt-get install zlib1g-dev libssl-dev libexpat1-dev libxslt1.1``
 
-Advanced users wanting to install a development version may use ``pip`` to grab
-the latest master branch (as well as the dev version of the Paramiko
-dependency)::
-
-    $ pip install -e git+https://github.com/paramiko/paramiko/#egg=paramiko
-    $ pip install -e git+https://github.com/fabric/fabric/#egg=fabric
-
-.. warning::
-
-    Development installs of Fabric, regardless of whether they involve source
-    checkouts or direct ``pip`` installs, require the development version of
-    Paramiko to be installed beforehand or Fabric's installation may fail.
+    ``$ sudo apt-get install gnuplot libcairo2 libpango1.0-0 libgdk-pixbuf2.0-0``
 
 
-Dependencies
-============
+Download Plone 4.3 Unified Installer
+------------------------------------
 
-In order for Fabric's installation to succeed, you will need three primary pieces of software:
+The Baobab LIMS is implemented and tested with Plone 4.3.11, a version released in 2016-09-12. You can download Plone 4.3.x by visiting the `Plone`_ site. Select and click on the Unified installer of your choice or use ``wget`` command line in your terminal with the path to the Plone version to install. Only Plone 4.3.11 can be used.
 
-* the Python programming language;
-* the ``setuptools`` packaging/installation library;
-* and the Python `Paramiko <http://paramiko.org>`_ SSH library. Paramiko's dependencies differ
-  significantly between the 1.x and 2.x releases. See the `Paramiko installation docs 
-  <http://www.paramiko.org/installing.html>`_ for more info.
-
-and, if using the :ref:`parallel execution mode <parallel-execution>`:
-
-* the `multiprocessing`_ library.
-
-If you're using Paramiko 1.12 or above, you will also need an additional
-dependency for Paramiko:
-
-* the `ecdsa <https://pypi.python.org/pypi/ecdsa/>`_ library
-
-Please read on for important details on these --there are a few gotchas.
-
-Python
--------
-
-Fabric requires `Python <http://python.org>`_ version 2.5 - 2.7. Some caveats
-and notes about other Python versions:
-
-* We are not planning on supporting **Python 2.4** given its age and the number
-  of useful tools in Python 2.5 such as context managers and new modules.
-  That said, the actual amount of 2.5-specific functionality is not
-  prohibitively large, and we would link to -- but not support -- a third-party
-  2.4-compatible fork. (No such fork exists at this time, to our knowledge.)
-* Fabric has not yet been tested on **Python 3.x** and is thus likely to be
-  incompatible with that line of development. However, we try to be at least
-  somewhat forward-looking (e.g. using ``print()`` instead of ``print``) and
-  will definitely be porting to 3.x in the future once our dependencies do.
-
-setuptools
-----------
-
-`Setuptools`_ comes with some Python installations by default; if yours doesn't,
-you'll need to grab it. In such situations it's typically packaged as
-``python-setuptools``, ``py25-setuptools`` or similar. Fabric may drop its
-setuptools dependency in the future, or include alternative support for the
-`Distribute`_ project, but for now setuptools is required for installation.
-
-.. _setuptools: http://pypi.python.org/pypi/setuptools
-.. _Distribute: http://pypi.python.org/pypi/distribute
-
-``multiprocessing``
--------------------
-
-An optional dependency, the ``multiprocessing`` library is included in Python's
-standard library in version 2.6 and higher. If you're using Python 2.5 and want
-to make use of Fabric's :ref:`parallel execution features <parallel-execution>`
-you'll need to install it manually; the recommended route, as usual, is via
-``pip``.  Please see the `multiprocessing PyPI page
-<http://pypi.python.org/pypi/multiprocessing/>`_ for details.
+.. _Plone: https://plone.org/download
 
 
-.. warning::
-    Early versions of Python 2.6 (in our testing, 2.6.0 through 2.6.2) ship
-    with a buggy ``multiprocessing`` module that appears to cause Fabric to
-    hang at the end of sessions involving large numbers of concurrent hosts.
-    If you encounter this problem, either use :ref:`env.pool_size / -z
-    <pool-size>` to limit the amount of concurrency, or upgrade to Python
-    >=2.6.3.
+    ``$ wget --no-check-certificate https://launchpad.net/plone/4.3/4.3.11/+download/Plone-4.3.11-r1-UnifiedInstaller.tgz``
+
+If the download has been done from the Plone site, the installer would be located in the  ``~/Downloads`` directory. If the second option used i.e, the wget command line, the installer should be downloaded into the current directory.
+
+Install Plone
+-------------
+
+To continue the installation, in the terminal, change directory to the folder containing the downloaded file then run the following command line to unpack the archive file.
+
+    ``$ tar -xf Plone-4.3.11-r1-UnifiedInstaller.tgz``
+
+Change to the extracted folder in the terminal.
+
+    ``$ cd Plone-4.3.11-r1-UnifiedInstaller``
+
+Run the following command to install Plone
     
-    Python 2.5 is unaffected, as it requires the PyPI version of
-    ``multiprocessing``, which is newer than that shipped with Python <2.6.3.
+    ``$ ./install.sh --target=/usr/local/Plone --build-python zeo``
 
-Development dependencies
-------------------------
+    ``$ ./install.sh --target=/home/ubuntu/Plone --build-python zeo``
 
-If you are interested in doing development work on Fabric (or even just running
-the test suite), you may also need to install some or all of the following
-packages:
+where ``--target`` parameter is used to specify the path to the installation folder, --build python will add and build Python package in your system, (this is optional if Python already exist) and finally zeo option will install Plone as a Client-Server application. Plone requires Python2.7 in order to operate. Run ./install.sh --help to obtain the full list of the available parameters and their meaning.
 
-* `git <http://git-scm.com>`_ and `Mercurial`_, in order to obtain some of the
-  other dependencies below;
-* `Nose <https://github.com/nose-devs/nose>`_
-* `Coverage <http://nedbatchelder.com/code/modules/coverage.html>`_
-* `PyLint <http://www.logilab.org/857>`_
-* `Fudge <http://farmdev.com/projects/fudge/index.html>`_
-* `Sphinx <http://sphinx.pocoo.org/>`_
-
-For an up-to-date list of exact testing/development requirements, including
-version numbers, please see the ``requirements.txt`` file included with the
-source distribution. This file is intended to be used with ``pip``, e.g. ``pip
-install -r requirements.txt``.
-
-.. _Mercurial: http://mercurial.selenic.com/wiki/
+.. Note:: In production mode, prepend the previous command line with ``sudo`` and run.
 
 
-.. _downloads:
+Install Baobab LIMS
+===================
 
-Downloads
-=========
+In the new folder created ``/usr/local/Plone`` , another folder named zeocluster can be found. This folder contains the configuration file, buildout.cfg. Find in the configuration file, and in the section starting with eggs=, add bika.lims and baobab.lims  to the existing entries. 
 
-To obtain a tar.gz or zip archive of the Fabric source code, you may visit
-`Fabric's PyPI page <http://pypi.python.org/pypi/Fabric>`_, which offers manual
-downloads in addition to being the entry point for ``pip`` and
-``easy-install``.
+.. Note:: Bika LIMS is a dependency that Baobab LIMS needs to function. Some of modules in Baobab LIMS reference modules in Bika LIMS.
+
+   ``$ eggs =``
+
+ 		``Plone``
+
+ 		``Pillow``
+
+ 		``bika.lims``
+
+ 		``baobab.lims``
+
+Add to the section developer = the path to your version of Baobab LIMS and BIKA LIMS that should be already downloaded into your local machine. By convention it is preferable to put the source code in zeocluster/src of your Plone installation folder.
+
+Add to the section developer = the path to your version of Baobab LIMS and BIKA LIMS that should be already downloaded into your local machine. By convention it is preferable to put the source code in ``zeocluster/src`` of your Plone installation folder.
+
+   ``$ developer =``
+
+   		``src/baobab.lims``
+
+   		``src/bika.lims``
+
+Use git clone or fork this project to have your own copy in your local machine. For developers, any change in your source code that you judge interesting and useful for the community please create a ``Pull`` request and let us know if you want to become a collaborator in the Baobab LIMS project.
+
+Links below;
+`Bika labs`_
+`Baobab LIMS`_
+
+.. _Bika labs: https://github.com/bikalabs/bika.lims.git
+.. _Baobab LIMS: https://github.com/BaobabLims/baobab.lims.git
+
+Save the file, and run ``bin/buildout -n``. Buildout will download and install all the declared dependencies.
+
+If you installed ``Plone`` as a root user i.e., using sudo, you should run the buildout command line with the user plone_buildout, this user is automatically created during the Plone installation:
+
+    ``$ sudo -u plone_buildout bin/buildout``
 
 
-.. _source-code-checkouts:
+Test your installation
+======================
 
-Source code checkouts
-=====================
+First, you will need to start the zeoserver (this is the database process).
 
-The Fabric developers manage the project's source code with the `Git
-<http://git-scm.com>`_ DVCS. To follow Fabric's development via Git instead of
-downloading official releases, you have the following options:
+    ``$ bin/zeoserver start``
 
-* Clone the canonical repository straight from `the Fabric organization's
-  repository on Github <https://github.com/fabric/fabric>`_,
-  ``git://github.com/fabric/fabric.git``
-* Make your own fork of the Github repository by making a Github account,
-  visiting `fabric/fabric <http://github.com/fabric/fabric>`_ and clicking the
-  "fork" button.
+To start a Plone client in debug mode, run this command:
 
-.. note::
+    ``$ bin/client1 fg``
 
-    If you've obtained the Fabric source via source control and plan on
-    updating your checkout in the future, we highly suggest using ``python
-    setup.py develop`` instead -- it will use symbolic links instead of file
-    copies, ensuring that imports of the library or use of the command-line
-    tool will always refer to your checkout.
+If you installed Plone as a root user, you will need to use the following commands instead:
 
-For information on the hows and whys of Fabric development, including which
-branches may be of interest and how you can help out, please see the
-:doc:`development` page.
+    ``$ sudo -u plone_daemon bin/zeoserver start``
+
+    ``$ sudo -u plone_daemon bin/client1 fg``
+
+.. Note:: any error messages, and take corrective action if required. If no errors are encountered, you can press Control+C to exit.
+
+In your preferred browser, Firefox or google chrome, run `http://localhost:8080/'_ and start working with Baobab LIMS. Enjoy it!
+
+If installed on a remote server, an IP address (of the server) is associated with the use of LIMS eg: https://192.168.1.1:8080/
+
+In production mode, other important tools need to be installed and configured, like ``Supervisorctl`` and nginx. The following `article`_ details the process to follow to add those tools cited before.
 
 
-.. _pypm:
+.. _http://localhost8080/: http://localhost:8080/
+.. _article: http://docs.plone.org/manage/deploying/production/ubuntu_production.html
 
-ActivePython and PyPM
-=====================
 
-Windows users who already have ActiveState's `ActivePython
-<http://www.activestate.com/activepython/downloads>`_ distribution installed
-may find Fabric is best installed with `its package manager, PyPM
-<http://code.activestate.com/pypm/>`_. Below is example output from an
-installation of Fabric via ``pypm``::
-
-    C:\> pypm install fabric
-    The following packages will be installed into "%APPDATA%\Python" (2.7):
-     paramiko-1.7.8 pycrypto-2.4 fabric-1.3.0
-    Get: [pypm-free.activestate.com] fabric 1.3.0
-    Get: [pypm-free.activestate.com] paramiko 1.7.8
-    Get: [pypm-free.activestate.com] pycrypto 2.4
-    Installing paramiko-1.7.8
-    Installing pycrypto-2.4
-    Installing fabric-1.3.0
-    Fixing script %APPDATA%\Python\Scripts\fab-script.py
-    C:\>
+ 
