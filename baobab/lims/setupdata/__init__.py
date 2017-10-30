@@ -174,3 +174,46 @@ class Projects(WorksheetImporter):
                 items.append(item_list[0].getObject().UID())
 
         return items
+
+class Biospecimens(WorksheetImporter):
+    """ Import projects
+    """
+
+    def Import(self):
+        pc = getToolByName(self.context, 'portal_catalog')
+
+        rows = self.get_rows(3)
+        for row in rows:
+            # get the project
+            project_list = pc(portal_type="Project", Title=row.get('Project'))
+
+            if project_list:
+                project = project_list[0].getObject()
+            else:
+                continue
+
+            #get sample type
+            sampletype_list = pc(portal_type="SampleType", Title=row.get('SampleType'))
+            if sampletype_list:
+                sample_type = sampletype_list[0].getObject()
+                print sample_type
+
+            obj = _createObjectByType('Sample', project, tmpID())
+            obj.edit(
+                title=row.get('title'),
+                description=row.get('description'),
+                Project=project,
+                #Kit=kit,
+                SampleType=sample_type,
+                #StorageLocation=storage_location,
+                SubjectID=row.get('SubjectID'),
+                Barcode=row.get('Barcode'),
+                Volume=str(row.get('Volume')),
+                Unit=row.get('Unit'),
+                #LinkedSample=linked_samples,
+                LocationTitile=row.get('LocationTitile'),
+                DateCreated=row.get('DateCreated'),
+            )
+
+            obj.unmarkCreationFlag()
+            renameAfterCreation(obj)
