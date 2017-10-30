@@ -7,9 +7,28 @@ from bika.lims.interfaces import ISetupDataSetList
 from zope.interface import implements
 from bika.lims.idserver import renameAfterCreation
 
+
+def get_project_multi_items(context, string_elements, portal_type, portal_catalog):
+
+    if not string_elements:
+        return []
+
+    pc = getToolByName(context, portal_catalog)
+
+    items = []
+    file_items = [x.strip() for x in string_elements.split(';')]
+
+    for file_item in file_items:
+        item_list = pc(portal_type=portal_type, Title=file_item)
+        if item_list:
+            items.append(item_list[0].getObject().UID())
+
+    return items
+
 class SetupDataSetList(SDL):
 
     implements(ISetupDataSetList)
+
     def __call__(self, projectname="bika.lims"):
         return SDL.__call__(self, projectname="baobab.lims")
 
@@ -49,6 +68,7 @@ class Kit_Components(WorksheetImporter):
         """ This method is called after Import to get computed product_list
         """
         return self.product_list
+
 
 class Kit_Templates(WorksheetImporter):
     """ Kit_Templates worksheet contains only Kit Template without components. Components are listed in another
@@ -105,8 +125,9 @@ class Products(WorksheetImporter):
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
 
+
 class Storage_Types(WorksheetImporter):
-    """Add some dummy product categories
+    """Add some dummy storage types
     """
     def Import(self):
         folder = self.context.bika_setup.bika_storagetypes
@@ -122,6 +143,7 @@ class Storage_Types(WorksheetImporter):
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
 
+
 class Projects(WorksheetImporter):
     """ Import projects
     """
@@ -131,17 +153,16 @@ class Projects(WorksheetImporter):
 
         rows = self.get_rows(3)
         for row in rows:
-            print row
-            #get the client
+            # get the client object
             client_list = pc(portal_type="Client", Title=row.get('Client'))
 
-            if client_list:
-                folder = client_list[0].getObject()
-            else:
-                continue
+            folder = client_list and client_list[0].getObject() or None
+            if not folder: continue
 
-            sample_types = self.getProjectMultiItems(row.get("SampleTypes"), "SampleType")
-            analysis_services = self.getProjectMultiItems(row.get("AnalysisServices"), "AnalysisService")
+            s_types = row.get('SampleTypes')
+            a_services = row.get('AnalysisServices')
+            st_objects = get_project_multi_items(self.context, s_types, 'SampleType', 'bika_setup_catalog')
+            as_objects = get_project_multi_items(self.context, a_services, 'AnalysisService', 'bika_setup_catalog')
 
             obj = _createObjectByType('Project', folder, tmpID())
             obj.edit(
@@ -151,29 +172,13 @@ class Projects(WorksheetImporter):
                 AgeHigh=self.to_int(row.get('AgeHigh', 0)),
                 AgeLow=self.to_int(row.get('AgeLow', 0)),
                 NumParticipants=self.to_int(row.get('NumParticipants', 0)),
-                SampleType=sample_types,
-                Service=analysis_services,
+                SampleType=st_objects,
+                Service=as_objects,
                 DateCreated=row.get('DateCreated', ''),
             )
 
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
-
-    def getProjectMultiItems(self, items_string, portal_catalog):
-
-        if not items_string or not portal_catalog:
-            return []
-
-        pc = getToolByName(self.context, 'portal_catalog')
-        items = []
-        file_items = [x.strip() for x in items_string.split(';')]
-
-        for file_item in file_items:
-            item_list = pc(portal_type=portal_catalog, Title=file_item)
-            if item_list:
-                items.append(item_list[0].getObject().UID())
-
-        return items
 
 class Biospecimens(WorksheetImporter):
     """ Import projects
@@ -217,3 +222,4 @@ class Biospecimens(WorksheetImporter):
 
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
+
