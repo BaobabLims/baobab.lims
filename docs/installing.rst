@@ -38,7 +38,7 @@ The Baobab LIMS is implemented and tested with Plone 4.3.11, a version released 
 
 If the download has been done from the Plone site, the installer would be located in the  ``~/Downloads`` directory. If the second option used i.e, the wget command line, the installer should be downloaded into the current directory.
 
-Install Plone
+Install Ploner
 -------------
 
 To continue the installation, in the terminal, change directory to the folder containing the downloaded file then run the following command line to unpack the archive file.
@@ -55,7 +55,7 @@ Run the following command to install Plone
 
     ``$ ./install.sh --target=/home/ubuntu/Plone --build-python zeo``
 
-where ``--target`` parameter is used to specify the path to the installation folder, --build python will add and build Python package in your system, (this is optional if Python already exist) and finally zeo option will install Plone as a Client-Server application. Plone requires Python2.7 in order to operate. Run ./install.sh --help to obtain the full list of the available parameters and their meaning.
+where ``--target`` parameter is used to specify the path to the installation folder, ``--build`` python will add and build Python package in your system, (this is optional if Python already exist) and finally zeo option will install Plone as a Client-Server application. Plone requires Python2.7 in order to operate. Run ./install.sh --help to obtain the full list of the available parameters and their meaning.
 
 .. Note:: In production mode, prepend the previous command line with ``sudo`` and run.
 

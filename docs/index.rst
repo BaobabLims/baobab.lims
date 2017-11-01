@@ -41,7 +41,7 @@ Please see the navigation sidebar to the left to begin.
     Getting Started <getting_started>
     installing
     setup
-    Quick Tutorial <quick_tutorial>
+    User Manual <user_manual>
     troubleshooting
     development
     api
