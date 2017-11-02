@@ -306,8 +306,10 @@ class BiospecimensView(BikaListingView):
             if self.allow_edit and isActive(self.context) and \
                     getSecurityManager().checkPermission(ModifyPortalContent, obj):
                 if items[x]['review_state'] == "sample_registered":
-                    items[x]['allow_edit'] = ['Type', 'Barcode']
-                    items[x]['choices']['Type'] = biospecimen_types
+                    items[x]['allow_edit'] = ['Barcode']
+                    if not items[x]['Type']:
+                        items[x]['allow_edit'] = ['Type']
+                        items[x]['choices']['Type'] = biospecimen_types
                 elif items[x]['review_state'] == "sample_due":
                     items[x]['allow_edit'] = ['SubjectID', 'Volume', 'Unit']
 

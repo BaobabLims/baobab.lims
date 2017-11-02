@@ -6,7 +6,7 @@ from Products.CMFPlone.utils import safe_unicode, _createObjectByType
 from bika.lims.interfaces import ISetupDataSetList
 from zope.interface import implements
 from bika.lims.idserver import renameAfterCreation
-
+from bika.lims.workflow import doActionFor
 
 def get_project_multi_items(context, string_elements, portal_type, portal_catalog):
 
@@ -180,8 +180,9 @@ class Projects(WorksheetImporter):
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
 
+
 class Biospecimens(WorksheetImporter):
-    """ Import projects
+    """ Import biospecimens
     """
 
     def Import(self):
@@ -201,25 +202,37 @@ class Biospecimens(WorksheetImporter):
             sampletype_list = pc(portal_type="SampleType", Title=row.get('SampleType'))
             if sampletype_list:
                 sample_type = sampletype_list[0].getObject()
-                print sample_type
+
+            # get the linked sample
+            linked_sample_list = pc(portal_type="Sample", Title=row.get('LinkedSample'))
+            if linked_sample_list:
+                linked_sample = linked_sample_list[0].getObject()
 
             obj = _createObjectByType('Sample', project, tmpID())
+
+            #get the barcode
+            barcode = row.get('Barcode')
+            if not barcode:
+                barcode = obj.getId()
+
             obj.edit(
                 title=row.get('title'),
                 description=row.get('description'),
                 Project=project,
                 #Kit=kit,
+                AllowSharing=row.get('AllowSharing'),
                 SampleType=sample_type,
                 #StorageLocation=storage_location,
                 SubjectID=row.get('SubjectID'),
-                Barcode=row.get('Barcode'),
+                Barcode=barcode,
                 Volume=str(row.get('Volume')),
                 Unit=row.get('Unit'),
-                #LinkedSample=linked_samples,
+                LinkedSample=linked_sample,
                 LocationTitile=row.get('LocationTitile'),
                 DateCreated=row.get('DateCreated'),
             )
 
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
+            doActionFor(obj, "sample_due")
 
