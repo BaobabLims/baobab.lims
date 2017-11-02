@@ -5,19 +5,26 @@
            xmlns:five="http://namespaces.zope.org/five">
 
     <browser:page
-      for="bika.lims.interfaces.ISample"
-      name="base_view"
-      class="baobab.lims.browser.biospecimen.SampleView"
-      permission="bika.lims.ManageSamples"
-      layer="bika.lims.interfaces.IBikaLIMS"
+        for="bika.lims.interfaces.ISample"
+        name="base_view"
+        class="baobab.lims.browser.biospecimen.SampleView"
+        permission="bika.lims.ManageSamples"
+        layer="bika.lims.interfaces.IBikaLIMS"
     />
 
-    <browser:page
+    <!--<browser:page
       for="bika.lims.interfaces.ISample"
       name="base_edit"
       class="baobab.lims.browser.biospecimen.SampleEdit"
       permission="bika.lims.ManageSamples"
       layer="bika.lims.interfaces.IBikaLIMS"
-    />
+    />-->
 
+    <browser:page
+        for="bika.lims.interfaces.ISample"
+        name="base_edit"
+        class="baobab.lims.browser.biospecimen.sample.EditView"
+        permission="bika.lims.ManageSamples"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
 </configure>

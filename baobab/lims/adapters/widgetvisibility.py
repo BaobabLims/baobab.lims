@@ -101,10 +101,6 @@ class SampleFieldWidgetVisibility(object):
             field.widget.visible['sample_received'] = {'view': 'visible', 'edit': 'visible'}
             field.widget.visible['sample_due'] = {'view': 'visible', 'edit': 'visible'}
 
-        if review_state == 'sample_registered' and not context.aq_parent.hasObject(context.getId()):
-            field.widget.render_own_label = False
-        else:
-            field.widget.render_own_label = True
         return state
 
 
