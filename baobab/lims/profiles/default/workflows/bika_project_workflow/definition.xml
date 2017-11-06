@@ -34,6 +34,7 @@
       <permission-role>Analyst</permission-role>
       <permission-role>Client</permission-role>
       <permission-role>Owner</permission-role>
+      <permission-role>EMS</permission-role>
     </permission-map>
 
     <!-- Access contents information -->
@@ -44,6 +45,7 @@
       <permission-role>Analyst</permission-role>
       <permission-role>Client</permission-role>
       <permission-role>Owner</permission-role>
+      <permission-role>EMS</permission-role>
     </permission-map>
 
     <!-- List folder contents -->
@@ -54,6 +56,7 @@
       <permission-role>Analyst</permission-role>
       <permission-role>Client</permission-role>
       <permission-role>Owner</permission-role>
+      <permission-role>EMS</permission-role>
     </permission-map>
 
     <!-- Modify portal content -->
