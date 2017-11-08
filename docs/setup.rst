@@ -305,20 +305,20 @@ Set up your stock items for unmanaged storage
 Go to ‘Suppliers’ and navigate to the ‘Orders’ tab. Select ‘Add’ and enter a quantity which you would like
 to order and press ‘save’.
 
-.. image::
-.. image::
+.. image:: _static/setup_images/su52.PNG
+.. image:: _static/setup_images/su53.PNG
 
 Select ‘Dispatch the order’ and wait to ‘publish’, which opens in a new tab.
 
-.. image::
+.. image:: _static/setup_images/su54.PNG
 
 Once published and you have received the order, you can change the state of the order to ‘receive order’.
 
-.. image::
+.. image:: _static/setup_images/su55.PNG
 
 Now you can change the state of the item by selecting 'store order'
 
-.. image::
+.. image:: _static/setup_images/su56.PNG
 
 
 Set up your analysis category
@@ -340,15 +340,15 @@ Set up your Analysis services
 
 Navigate to the ‘Workflow’ tab and select ‘Analysis services’.
 
-.. image::
+.. image:: _static/setup_images/su57.PNG
 
 Add an analysis service by using the ‘Add’ button
 
-.. image::
+.. image:: _static/setup_images/su58.PNG
 
 Enter any details related to your analysis services and press ‘save’ Compulsory fields are indicated by a red square.
 
-.. image::
+.. image:: _static/setup_images/su59.PNG
 
 
 Set up your Samples
