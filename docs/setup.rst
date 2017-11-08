@@ -61,7 +61,7 @@ Your Baobab distribution
 
 With your installation complete, you can now set up your site. Baobab LIMS requires that your site is set
 up before you can start to manage clients and projects and certain compulsory information is required for
-each step. As such, we recommend that you follow this setup section in a stepwise manner.
+each step and is indicated by a red square or asterix. As such, we recommend that you follow this setup section in a stepwise manner.
 
 .. image:: _static/setup_images/su9.PNG
 
@@ -112,7 +112,8 @@ Mouse over the ‘Laboratory’ Tab and select ‘Laboratory’
 
 .. image:: _static/setup_images/su16.PNG
 
-Enter the details of the laboratory and press ‘save’. Compulsory fields are indicated by
+Enter the details of the laboratory and press ‘save’. Compulsory fields are indicated by a red square.
+
 
 .. image:: _static/setup_images/su17.PNG
 
@@ -121,7 +122,7 @@ Add a lab contact by selecting the ‘add’ button
 
 .. image:: _static/setup_images/su18.PNG
 
-Enter the details of the lab contact and press ‘save’. Compulsory fields are indicated by
+Enter the details of the lab contact and press ‘save’. Compulsory fields are indicated by a red square
 Select the ‘email, telephone, fax’ tab, enter the email address of the lab contact and press ‘save’.
 
 .. image:: _static/setup_images/su19.PNG
@@ -150,7 +151,7 @@ Set the new password and the user will now be able to login
 
 
 Mouse over ‘Laboratory’ and select ‘Lab Departments’
-Add a lab department by selecting the ‘add’ button. Compulsory fields are indicated by
+Add a lab department by selecting the ‘add’ button. Compulsory fields are indicated by a red square.
 
 .. image:: _static/setup_images/su24.PNG
 
@@ -164,7 +165,7 @@ Mouse over the ‘management’ tab and select ‘Suppliers’
 .. image:: _static/setup_images/su25.PNG
 
 Add a supplier by using the ‘Add’ button
-Enter the details of the supplier and press the ‘save’ . Compulsory fields are indicated by
+Enter the details of the supplier and press the ‘save’ . Compulsory fields are indicated by a red square.
 
 .. image:: _static/setup_images/su26.PNG
 
@@ -179,7 +180,7 @@ Enter the details of the product and press the ‘save’ . The suppliers which 
 
 .. image:: _static/setup_images/su28.PNG 
 
-Compulsory fields are indicated by
+Compulsory fields are indicated by a red square.
 
 Once products associated to suppliers have been added, the products are now available to be selected in the ‘Suppliers’ tab.
 
@@ -197,8 +198,8 @@ Add an instrument type by using the ‘Add’ button
 
 .. image:: _static/setup_images/su31.PNG
 
-Enter the details of the instrument type and press the ‘save’ . Compulsory fields are indicated by
-Once instrument types have been added, select the ‘Instruments’ tab. Add an instrument using the ‘Add’ button. Enter the details of the instrument and press ‘save’. Compulsory fields are indicated by
+Enter the details of the instrument type and press the ‘save’ . Compulsory fields are indicated by a red square.
+Once instrument types have been added, select the ‘Instruments’ tab. Add an instrument using the ‘Add’ button. Enter the details of the instrument and press ‘save’. Compulsory fields are indicated by a red square.
 
 .. image:: _static/setup_images/su32.PNG
 
@@ -206,7 +207,7 @@ Once an instrument has been added, a notification of expired calibration certifi
 
 .. image:: _static/setup_images/su33.PNG
 
-Select the ‘Calibration Certificates’ tab and add a certification specifically related to the instrument using the ‘Add’ button. Enter the details of an instruments calibration and press ‘save’. Compulsory fields are indicated by
+Select the ‘Calibration Certificates’ tab and add a certification specifically related to the instrument using the ‘Add’ button. Enter the details of an instruments calibration and press ‘save’. Compulsory fields are indicated by a red square.
 
 If the calibration dates are current, the notification which occurred, will automatically be removed
 
@@ -221,7 +222,7 @@ Add a storage type by using the ‘Add’ button
 
 .. image:: _static/setup_images/su35.PNG
 
-Enter the details of the storage type (e.g. a freezer) and press the ‘save’. Compulsory fields are indicated by
+Enter the details of the storage type (e.g. a freezer) and press the ‘save’. Compulsory fields are indicated by a red square.
 
 
 Set up your storage
@@ -298,10 +299,26 @@ In the example below, Room01 contains 3 shelves for storage of inventory items. 
 
 .. image:: _static/setup_images/su46.PNG
 
-Set up your orders and stock items
-----------------------------------
+Set up your stock items for unmanaged storage
+---------------------------------------------
 
-ADD MORE INFORMATION HERE!!!
+Go to ‘Suppliers’ and navigate to the ‘Orders’ tab. Select ‘Add’ and enter a quantity which you would like
+to order and press ‘save’.
+
+.. image::
+.. image::
+
+Select ‘Dispatch the order’ and wait to ‘publish’, which opens in a new tab.
+
+.. image::
+
+Once published and you have received the order, you can change the state of the order to ‘receive order’.
+
+.. image::
+
+Now you can change the state of the item by selecting 'store order'
+
+.. image::
 
 
 Set up your analysis category
@@ -315,14 +332,23 @@ Add an analysis category by using the ‘Add’ button
 
 .. image:: _static/setup_images/su48.PNG
 
-Enter the details of the analysis category and press the ‘save’. Compulsory fields are indicated by
+Enter the details of the analysis category and press the ‘save’. Compulsory fields are indicated by a red square.
 
 Set up your Analysis services
 -----------------------------
 
 
-ADD INFORMATION HERE!!
+Navigate to the ‘Workflow’ tab and select ‘Analysis services’.
 
+.. image::
+
+Add an analysis service by using the ‘Add’ button
+
+.. image::
+
+Enter any details related to your analysis services and press ‘save’ Compulsory fields are indicated by a red square.
+
+.. image::
 
 
 Set up your Samples
@@ -337,14 +363,14 @@ Add a sample type by using the ‘Add’ button
 .. image:: _static/setup_images/su50.PNG
 
 
-Enter the details of the sample type and press the ‘save’. Compulsory fields are indicated by
+Enter the details of the sample type and press the ‘save’. Compulsory fields are indicated by a red square.
 
 
 
 Set up your other parameters
 ----------------------------
 
-Once all the above categories have been set up, all other categories can be set up. These can be managed by simply selecting the category and adding information using the ‘Add’ button. Enter details related to the category and press the ‘save’ button. Compulsory fields are indicated by
+Once all the above categories have been set up, all other categories can be set up. These can be managed by simply selecting the category and adding information using the ‘Add’ button. Enter details related to the category and press the ‘save’ button. Compulsory fields are indicated by a red square.
 
 .. image:: _static/setup_images/su51.PNG
 
