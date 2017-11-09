@@ -102,6 +102,13 @@ If you installed ``Plone`` as a root user i.e., using sudo, you should run th
 
     ``$ sudo -u plone_buildout bin/buildout``
 
+.. warning::
+    If you encounter the ``packages not found`` issue, add the following line, 
+    issue related to this: https://github.com/BaobabLims/baobab.lims/issues/55
+    
+    ``index = https://pypi.python.org/simple/``
+    
+    Add the above line in the ``[buildout]`` section.
 
 Test your installation
 ======================
