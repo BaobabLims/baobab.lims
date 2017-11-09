@@ -48,5 +48,10 @@ recipe to manage your project, you can do this:
 
     $ ./bin/buildout
         
+* If you encounter the ``packages not found`` issue, add the following line, 
+  issue related to this: https://github.com/BaobabLims/baobab.lims/issues/55
+    
+    index = https://pypi.python.org/simple/
+
 You can skip the ZCML slug if you are going to explicitly include the package
 from another package's configure.zcml file.
