@@ -47,6 +47,12 @@
             <td tal:content="view/description" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
+        <tr style="background: #f0f0f2;">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Ethics Form Link </th>
+            <td tal:content="structure view/ethics_form" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
         <tr>
             <th i18n:translate="" style="padding-bottom: .2em;border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Client </th>

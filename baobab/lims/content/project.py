@@ -24,6 +24,15 @@ schema = BikaSchema.copy() + Schema((
         )
     ),
 
+    StringField(
+        'EthicsFormLink',
+        searchable=True,
+        widget=StringWidget(
+            label=_('Link to Ethics Form'),
+            visible={'edit': 'visible', 'view': 'visible'},
+        )
+    ),
+
     IntegerField(
         'AgeHigh',
         widget=IntegerWidget(
