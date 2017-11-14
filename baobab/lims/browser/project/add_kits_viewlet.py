@@ -211,18 +211,18 @@ class AddKitsSubmitHandler(BrowserView):
         """Create the new kits
         """
         prefix_text = self.form.get('kits-prefix-text', None)
-        leading_zeros = self.form.get('kits-leading-zeros', None)
         seq_start = int(self.form.get('seq-start', None))
         kit_count = int(self.form.get('kit-count', None))
         kit_template_uid = self.form.get('kit_template_uid', None)
         spec_per_kit = int(self.form.get('specimen-count', None))
+        leading_zeros = self.form.get('kits-leading-zeros', [])
         kits = []
         # sample storage
         samples = []
         sample_storage = self.samples_gen.get_biospecimen_storages()
         for x in range(seq_start, seq_start + kit_count):
-            id_template = prefix_text + '-' + str(x).zfill(len(leading_zeros))
-            title_template = prefix_text + ' ' + str(x).zfill(len(leading_zeros))
+            id_template = prefix_text + '-' + str(x).zfill(len(leading_zeros) + 1)
+            title_template = prefix_text + ' ' + str(x).zfill(len(leading_zeros) + 1)
             obj = api.content.create(
                 container=self.context,
                 type='Kit',
@@ -254,9 +254,9 @@ class AddKitsSubmitHandler(BrowserView):
         form = self.request.form
 
         prefix_text = form.get('kits-prefix-text', None)
-        leading_zeros = form.get('kits-leading-zeros', None)
-        if not prefix_text or not leading_zeros:
-            msg = u'Prefix text and Leading zeros are both required.'
+        leading_zeros = form.get('kits-leading-zeros', [])
+        if not prefix_text:
+            msg = u'Prefix text is required.'
             raise ValidationError(msg)
 
         # TODO: check if leading zeros has only zeros
@@ -293,7 +293,7 @@ class AddKitsSubmitHandler(BrowserView):
         # Check that none of the IDs conflict with existing items
         ids = [x.id for x in self.context.objectValues()]
         for x in range(kit_count):
-            id_kit = prefix_text + '-' + str(seq_start+ x).zfill(len(leading_zeros))
+            id_kit = prefix_text + '-' + str(seq_start + x).zfill(len(leading_zeros) + 1)
             if id_kit in ids:
                 raise ValidationError(
                     u'The ID %s exists, cannot be created.' % id_kit)
