@@ -9,6 +9,12 @@
       provides="bika.lims.interfaces.ISetupDataSetList"/>
 
     <adapter
+      name="Products"
+      factory="baobab.lims.setupdata.Products"
+      provides="bika.lims.interfaces.ISetupDataImporter"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
+
+    <adapter
       name="KitTemplates"
       factory="baobab.lims.setupdata.Kit_Templates"
       provides="bika.lims.interfaces.ISetupDataImporter"
@@ -17,12 +23,6 @@
     <adapter
       name="storagetype"
       factory="baobab.lims.setupdata.Storage_Types"
-      provides="bika.lims.interfaces.ISetupDataImporter"
-      for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
-
-    <adapter
-      name="test_products"
-      factory="baobab.lims.setupdata.Products"
       provides="bika.lims.interfaces.ISetupDataImporter"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
 
