@@ -7,7 +7,7 @@
     <browser:page
         for="bika.lims.interfaces.ISample"
         name="base_view"
-        class="baobab.lims.browser.biospecimen.SampleView"
+        class="baobab.lims.browser.biospecimen.sample.SampleView"
         permission="bika.lims.ManageSamples"
         layer="bika.lims.interfaces.IBikaLIMS"
     />
