@@ -2,30 +2,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from bika.lims.workflow import doActionFor
 from bika.lims.browser import BrowserView
-from bika.lims.browser.sample import SampleEdit as SE
-
-
-class SampleEdit(SE):
-    """This overrides the edit and view of sample.
-    """
-
-    def __init__(self, context, request):
-        SE.__init__(self, context, request)
-        self.icon = self.portal_url + \
-                    "/++resource++baobab.lims.images/biospecimen_big.png"
-        self.allow_edit = True
-
-    def __call__(self):
-        SE.__call__(self)
-        return self.template()
-
-
-class SampleView(SampleEdit):
-    """The view of a single sample
-    """
-    def __call__(self):
-        self.allow_edit = False
-        return SampleEdit.__call__(self)
+from baobab.lims import bikaMessageFactory as _
 
 
 class UpdateBoxes(BrowserView):
@@ -64,6 +41,56 @@ class UpdateBoxes(BrowserView):
         return []
 
 
+class SampleView(BrowserView):
+    """The view of a single sample
+    """
+    template = ViewPageTemplateFile("templates/sample_view.pt")
+    title = _("Biospecimen View")
+
+    def __call__(self):
+        context = self.context
+        self.absolute_url = context.absolute_url()
+
+        # __Disable the add new menu item__ #
+        context.setLocallyAllowedTypes(())
+
+        # __Collect general data__ #
+        self.id = context.getId()
+        self.title = context.Title()
+        self.icon = self.portal_url + "/++resource++baobab.lims.images/" \
+                                    + "biospecimen_big.png"
+        parent = context.getField('LinkedSample').get(context)
+        self.parent_aliquot = parent and "<a href='%s'>%s</a>" % (
+                                     parent.absolute_url(),
+                                     parent.Title()) or None
+
+        self.project = "<a href='%s'>%s</a>" % (
+            context.aq_parent.absolute_url(),
+            context.aq_parent.Title()
+        )
+
+        kit = context.getField('Kit').get(context)
+        self.kit = kit and "<a href='%s'>%s</a>" % (
+                       kit.absolute_url(),
+                       kit.Title()) or None
+
+        location = context.getField('StorageLocation').get(context)
+        self.location = location and "<a href='%s'>%s</a>" % (
+                                 location.absolute_url(),
+                                 location.Title()) or None
+
+        self.sampling_date = context.getSamplingDate()
+
+        sharing = context.getField('AllowSharing').get(context)
+        self.sharing = sharing and "Yes" or "No"
+
+        self.subjectID = context.getField('SubjectID').get(context)
+        self.barcode = context.getField('Barcode').get(context)
+        self.volume = context.getField('Volume').get(context) + " " + context.getField('Unit').get(context)
+
+        return self.template()
+
+
 class EditView(BrowserView):
     template = ViewPageTemplateFile('templates/sample_edit.pt')
 
@@ -96,7 +123,7 @@ class EditView(BrowserView):
 
             sample.processForm()
 
-            obj_url = context.absolute_url_path()
+            obj_url = sample.absolute_url_path()
             request.response.redirect(obj_url)
             return
 

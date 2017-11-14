@@ -12,14 +12,6 @@
         layer="bika.lims.interfaces.IBikaLIMS"
     />
 
-    <!--<browser:page
-      for="bika.lims.interfaces.ISample"
-      name="base_edit"
-      class="baobab.lims.browser.biospecimen.SampleEdit"
-      permission="bika.lims.ManageSamples"
-      layer="bika.lims.interfaces.IBikaLIMS"
-    />-->
-
     <browser:page
         for="bika.lims.interfaces.ISample"
         name="base_edit"

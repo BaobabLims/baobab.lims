@@ -18,7 +18,10 @@
 
 <body>
 <metal:title fill-slot="content-title">
-    <h1>Add a biospecimen</h1>
+    <h2>
+        <img tal:attributes="src string:${view/portal_url}/++resource++baobab.lims.images/biospecimen_big.png"/>
+        Add/Edit Biospecimen
+    </h2>
 </metal:title>
 <div metal:fill-slot="content-core"
      tal:define="
