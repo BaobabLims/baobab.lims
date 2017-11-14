@@ -204,6 +204,7 @@ class Biospecimens(WorksheetImporter):
                 sample_type = sampletype_list[0].getObject()
 
             # get the linked sample
+            linked_sample = None
             linked_sample_list = pc(portal_type="Sample", Title=row.get('LinkedSample'))
             if linked_sample_list:
                 linked_sample = linked_sample_list[0].getObject()
@@ -236,3 +237,39 @@ class Biospecimens(WorksheetImporter):
             renameAfterCreation(obj)
             doActionFor(obj, "sample_due")
 
+class Kits(WorksheetImporter):
+    """ Import projects
+    """
+    def Import(self):
+
+        pc = getToolByName(self.context, 'portal_catalog')
+
+        rows = self.get_rows(3)
+        for row in rows:
+            # get the project
+            project_list = pc(portal_type="Project", Title=row.get('Project'))
+            if project_list:
+                project = project_list[0].getObject()
+            else:
+                continue
+
+            #get the kit template if it exists
+            bsc = getToolByName(self.context, 'bika_setup_catalog')
+            kit_template_list = bsc(portal_type="KitTemplate", Title=row.get('KitTemplate'))
+            kit_template = None
+            if kit_template_list:
+                kit_template = kit_template_list[0].getObject()
+
+            obj = _createObjectByType('Kit', project, tmpID())
+            obj.edit(
+                title=row.get('title'),
+                description=row.get('description'),
+                Project=project,
+                KitTemplate=kit_template,
+                #StorageLocation=
+                FormsThere=row.get('FormsThere'),
+                DateCreated=row.get('DateCreated', ''),
+            )
+
+            obj.unmarkCreationFlag()
+            renameAfterCreation(obj)
