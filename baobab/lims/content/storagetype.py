@@ -12,7 +12,7 @@ Temperature = StringField(
     'Temperature',
     widget=StringWidget(
         label=_('Temperature'),
-        description=_('The associated temperature to storage with this type.'),
+        description=_('The associated temperature to storage with this type.')
     )
 )
 

@@ -6,12 +6,13 @@ from Products.CMFPlone.utils import safe_unicode, _createObjectByType
 from bika.lims.interfaces import ISetupDataSetList
 from zope.interface import implements
 from bika.lims.idserver import renameAfterCreation
+from bika.lims import logger
+from plone import api
 
 from pkg_resources import *
 
 
 def get_project_multi_items(context, string_elements, portal_type, portal_catalog):
-
     if not string_elements:
         return []
 
@@ -27,8 +28,8 @@ def get_project_multi_items(context, string_elements, portal_type, portal_catalo
 
     return items
 
-class SetupDataSetList(SDL):
 
+class SetupDataSetList(SDL):
     implements(ISetupDataSetList)
 
     def __call__(self):
@@ -38,6 +39,7 @@ class SetupDataSetList(SDL):
 class Kit_Components(WorksheetImporter):
     """ This class is called from Kit_Templates and not from LoadSetupData class
     """
+
     def __init__(self, lsd, workbook, dataset_project, dataset_name, template_name, catalog):
         self.lsd = lsd
         self.workbook = workbook
@@ -76,6 +78,7 @@ class Kit_Templates(WorksheetImporter):
     """ Kit_Templates worksheet contains only Kit Template without components. Components are listed in another
         worksheet (see Kit_Components class).
     """
+
     def Import(self):
         folder = self.context.bika_setup.bika_kittemplates
         rows = self.get_rows(3)
@@ -83,7 +86,8 @@ class Kit_Templates(WorksheetImporter):
         catalog = getToolByName(self.context, 'bika_setup_catalog')
         for row in rows:
             template_name = row.get('templateName')
-            kit_component = Kit_Components(self, self.workbook, self.dataset_project, self.dataset_name, template_name, catalog)
+            kit_component = Kit_Components(self, self.workbook, self.dataset_project, self.dataset_name, template_name,
+                                           catalog)
             product_list = kit_component.get_product_list()
             # category = self.get_object(catalog, 'ProductCategory', title=row.get('category'))
             obj = _createObjectByType('KitTemplate', folder, tmpID())
@@ -101,6 +105,7 @@ class Kit_Templates(WorksheetImporter):
 class Products(WorksheetImporter):
     """ Import test products
     """
+
     def Import(self):
         folder = self.context.bika_setup.bika_products
         rows = self.get_rows(3)
@@ -131,6 +136,7 @@ class Products(WorksheetImporter):
 class Storage_Types(WorksheetImporter):
     """Add some dummy storage types
     """
+
     def Import(self):
         folder = self.context.bika_setup.bika_storagetypes
         rows = self.get_rows(3)
@@ -140,7 +146,8 @@ class Storage_Types(WorksheetImporter):
             obj = _createObjectByType('StorageType', folder, tmpID())
             obj.edit(
                 title=title,
-                description=description
+                description=description,
+                Temperature=str(row.get('temperature'))
             )
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
@@ -149,6 +156,7 @@ class Storage_Types(WorksheetImporter):
 class Projects(WorksheetImporter):
     """ Import projects
     """
+
     def Import(self):
 
         pc = getToolByName(self.context, 'portal_catalog')
@@ -181,3 +189,31 @@ class Projects(WorksheetImporter):
 
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
+
+
+class Storage_Units(WorksheetImporter):
+    """ Import StorageUnits
+    """
+
+    def Import(self):
+        bsc = getToolByName(self.context, 'bika_setup_catalog')
+        folder = self.context.storage
+        for row in self.get_rows(3):
+            s_type, dep = None, None
+            s_types = bsc(portal_type="StorageType", Title=row.get('unittype'))
+            if s_types:
+                s_type = s_types[0].getObject() or ''
+
+            dep_list = bsc(portal_type="Department", inactive_state='active', Title=row.get('department'))
+            if dep_list:
+                dep = dep_list[0].getObject() or ''
+
+            obj = _createObjectByType('StorageUnits', folder, str(row.get('hierarchy')))
+            obj.edit(
+                title=str(row.get('title')),
+                Temperature=str(row.get('temperature'))
+            )
+            #obj.setDepartment(dep)
+            #obj.setUnitType(s_type)
+            obj.unmarkCreationFlag()
+            #obj.reindexObject()

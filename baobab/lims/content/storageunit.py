@@ -7,14 +7,14 @@ from Products.CMFCore.utils import getToolByName
 from plone.app.folder.folder import ATFolder
 from zope.interface import implements
 
-from bika.lims.content.bikaschema import BikaFolderSchema
+from bika.lims.content.bikaschema import BikaSchema, BikaFolderSchema
 
 from baobab.lims import bikaMessageFactory as _
 from baobab.lims.config import PROJECTNAME
 from baobab.lims.browser.storage import getStorageTypesByName
 from baobab.lims.interfaces import IStorageUnit
 
-schema = BikaFolderSchema.copy() + Schema((
+schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
     StringField(
         'Temperature',
         widget=StringWidget(
