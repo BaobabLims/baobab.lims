@@ -18,7 +18,9 @@ def generateUniqueId(context):
             return generate(context)
 
     # Analysis Request IDs
-    if context.portal_type == "AnalysisRequest":
+    elif context.portal_type == "AnalysisRequest":
+        return generate(context)
+    else:
         return generate(context)
 
 def renameAfterCreation(obj):
