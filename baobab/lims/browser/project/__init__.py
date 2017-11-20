@@ -160,5 +160,6 @@ def create_samplepartition(context, data):
     print data['part_id']
     partition = _createObjectByType('SamplePartition', context, data['part_id'])
     partition.unmarkCreationFlag()
+    partition.reindexObject()
 
     return partition

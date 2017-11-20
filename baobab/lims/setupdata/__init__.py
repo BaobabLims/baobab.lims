@@ -5,7 +5,7 @@ from bika.lims.utils import tmpID
 from Products.CMFPlone.utils import safe_unicode, _createObjectByType
 from bika.lims.interfaces import ISetupDataSetList
 from zope.interface import implements
-from bika.lims.idserver import renameAfterCreation
+from baobab.lims.idserver import renameAfterCreation
 from bika.lims.workflow import doActionFor
 from bika.lims import logger
 
@@ -233,11 +233,16 @@ class Biospecimens(WorksheetImporter):
                 LinkedSample=linked_sample,
                 DateCreated=row.get('DateCreated'),
             )
-            doActionFor(obj, "sample_due")
-            doActionFor(obj, "receive")
-            doActionFor(storage_location, 'occupy')
+
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
+
+            from baobab.lims.subscribers.sample import ObjectInitializedEventHandler
+            ObjectInitializedEventHandler(obj, None)
+            # doActionFor(obj, "sample_due")
+            # doActionFor(obj, "receive")
+            # doActionFor(storage_location, 'occupy')
+
 
 class Kits(WorksheetImporter):
     """ Import projects
