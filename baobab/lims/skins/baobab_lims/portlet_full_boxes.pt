@@ -11,7 +11,7 @@
      tal:define="portal context/portal_url/getPortalObject;
                  plone_view context/@@plone;
                  DateTime python:modules['DateTime'].DateTime;
-                 rs python:here.bika_setup_catalog(
+                 rs python:here.portal_catalog(
                     portal_type='ManagedStorage',
                     review_state='occupied');
                  results python:[p.getObject() for p in rs[:5]];"

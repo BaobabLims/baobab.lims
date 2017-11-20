@@ -18,8 +18,8 @@ class UpdateBoxes(BrowserView):
         if 'locTitle' in self.request.form:
             location_title = self.request.form['locTitle']
             if location_title:
-                bsc = getToolByName(self.context, "bika_setup_catalog")
-                brains = bsc.searchResults(title=location_title)
+                bsc = getToolByName(self.context, "portal_catalog")
+                brains = bsc.searchResults(portal_type='StoragePos', title=location_title)
                 location = brains[0].getObject()
                 state = self.context.portal_workflow.getInfoFor(location, 'review_state')
                 if state != 'occupied':

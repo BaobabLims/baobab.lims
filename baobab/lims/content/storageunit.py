@@ -110,7 +110,7 @@ class StorageUnit(ATFolder):
 
     def workflow_script_deactivate(self):
         # Deactivate all sub objects in the hierarchy
-        catalog = getToolByName(self, 'bika_setup_catalog')
+        catalog = getToolByName(self, 'portal_catalog')
         unit_path = '/'.join(self.getPhysicalPath())
         units = catalog(portal_type=['StorageUnit', 'UnmanagedStorage', 'ManagedStorage'],
                         path={'query': unit_path, 'level': 0})

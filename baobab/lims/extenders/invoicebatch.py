@@ -133,7 +133,7 @@ class Invoicing(InvoiceBatch):
                     id = storage_location.getHierarchy().split('.')[0]
                     hierarchy = storage_location.getHierarchy().split('.')
                     for i in xrange(len(hierarchy)-2, -1, -1):
-                        unit_brains = self.instance.bika_setup_catalog(portal_type='StorageUnit', id=hierarchy[i])
+                        unit_brains = self.instance.portal_catalog(portal_type='StorageUnit', id=hierarchy[i])
                         if unit_brains:
                             storage_type = unit_brains[0].getObject().getUnitType()
                             if storage_type:

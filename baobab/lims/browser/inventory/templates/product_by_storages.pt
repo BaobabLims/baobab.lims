@@ -14,11 +14,12 @@
                 var path = window.location.href.split('/storages')[0] + '/productqtty';
                 $.getJSON(path, function (data) {
                     createGraph(data);
+                    console.log(data);
                 });
                 function createGraph(data) {
-                    var margin = {top: 20, right: 20, bottom: 80, left: 40},
-                        width = 700 - margin.left - margin.right,
-                        height = 400 - margin.top - margin.bottom;
+                    var margin = {top: 20, right: 20, bottom: 150, left: 40},
+                        width = 800 - margin.left - margin.right,
+                        height = 600 - margin.top - margin.bottom;
 
                     var x = d3.scale.ordinal().rangeRoundBands([0, width], .2, .2);
                     var y = d3.scale.linear().range([height, 0]);

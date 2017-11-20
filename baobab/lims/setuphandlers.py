@@ -49,8 +49,9 @@ class BikaCustomGenerator:
 
         portal_groups = portal.portal_groups
 
-        for group_id in groups:
-            portal_groups.removeGroup(group_id)
+        for group_id in portal_groups.listGroupIds():
+            if group_id in groups:
+                portal_groups.removeGroup(group_id)
 
         if 'EMSystems' not in portal_groups.listGroupIds():
             portal_groups.addGroup('EMSystems', title="EMSystems", roles = ['EMS'])
@@ -104,10 +105,10 @@ class BikaCustomGenerator:
         at.setCatalogsByType('Product', ['bika_setup_catalog'])
         at.setCatalogsByType('StockItem', ['bika_setup_catalog', ])
         at.setCatalogsByType('StorageLocation', ['bika_setup_catalog'])
-        at.setCatalogsByType('StorageUnit', ['bika_setup_catalog'])
-        at.setCatalogsByType('ManagedStorage', ['bika_setup_catalog'])
-        at.setCatalogsByType('UnmanagedStorage', ['bika_setup_catalog'])
-        at.setCatalogsByType('StoragePosition', ['bika_setup_catalog'])
+        # at.setCatalogsByType('StorageUnit', ['bika_setup_catalog'])
+        # at.setCatalogsByType('ManagedStorage', ['bika_setup_catalog'])
+        # at.setCatalogsByType('UnmanagedStorage', ['bika_setup_catalog'])
+        # at.setCatalogsByType('StoragePosition', ['bika_setup_catalog'])
 
         addIndex(bsc, 'getProductUID', 'FieldIndex')
 

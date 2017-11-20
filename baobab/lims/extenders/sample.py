@@ -110,7 +110,7 @@ class SampleSchemaExtender(object):
                          'expired': {'view': 'visible', 'edit': 'invisible'},
                          'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
-                catalog_name='bika_setup_catalog',
+                catalog_name='portal_catalog',
                 showOn=True,
                 render_own_label=True,
                 base_query={'inactive_state': 'active',
@@ -210,7 +210,8 @@ class SampleSchemaExtender(object):
             read_permission=permissions.View,
             write_permission=permissions.ModifyPortalContent,
             widget=bika_ReferenceWidget(
-                label=_("Biospecimen"),
+                label=_("Parent Biospecimen"),
+                description=_("Create an Aliquot of the biospecimen selected."),
                 visible={'edit': 'visible',
                          'view': 'visible',
                          'header_table': 'visible',
