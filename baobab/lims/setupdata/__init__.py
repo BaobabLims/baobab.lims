@@ -2,11 +2,14 @@ from bika.lims.exportimport.dataimport import SetupDataSetList as SDL
 from bika.lims.exportimport.setupdata import WorksheetImporter
 from Products.CMFCore.utils import getToolByName
 from bika.lims.utils import tmpID
-from Products.CMFPlone.utils import safe_unicode, _createObjectByType
+from Products.CMFPlone.utils import _createObjectByType
 from bika.lims.interfaces import ISetupDataSetList
 from zope.interface import implements
 from bika.lims.idserver import renameAfterCreation
 from bika.lims.workflow import doActionFor
+
+import logging
+logger = logging.getLogger('Baobab')
 
 def get_project_multi_items(context, string_elements, portal_type, portal_catalog):
 
@@ -187,55 +190,60 @@ class Biospecimens(WorksheetImporter):
 
     def Import(self):
         pc = getToolByName(self.context, 'portal_catalog')
+        bsc = getToolByName(self.context, 'bika_setup_catalog')
+        wf = getToolByName(self.context, 'portal_workflow')
 
         rows = self.get_rows(3)
         for row in rows:
             # get the project
             project_list = pc(portal_type="Project", Title=row.get('Project'))
 
-            if project_list:
-                project = project_list[0].getObject()
-            else:
-                continue
+            project = project_list and project_list[0].getObject() or None
+            if not project: continue
 
-            #get sample type
             sampletype_list = pc(portal_type="SampleType", Title=row.get('SampleType'))
-            if sampletype_list:
-                sample_type = sampletype_list[0].getObject()
+            sample_type = sampletype_list and sampletype_list[0].getObject() or None
+            if not sample_type: continue
 
-            # get the linked sample
-            linked_sample = None
-            linked_sample_list = pc(portal_type="Sample", Title=row.get('LinkedSample'))
-            if linked_sample_list:
-                linked_sample = linked_sample_list[0].getObject()
+            linked_sample_list = pc(portal_type="Sample", Title=row.get('LinkedSample', ''))
+            linked_sample = linked_sample_list and linked_sample_list[0].getObject() or None
 
             obj = _createObjectByType('Sample', project, tmpID())
 
-            #get the barcode
             barcode = row.get('Barcode')
             if not barcode:
-                barcode = obj.getId()
+                continue
+
+            try:
+                volume = str(row.get('Volume'))
+                float_volume = float(volume)
+                if not float_volume:
+                    continue
+            except:
+                continue
+
+            st_loc_list = bsc(portal_type='StoragePosition', Id=row.get('StorageLocation'))
+            storage_location = st_loc_list and st_loc_list[0].getObject() or None
 
             obj.edit(
                 title=row.get('title'),
                 description=row.get('description'),
                 Project=project,
-                #Kit=kit,
                 AllowSharing=row.get('AllowSharing'),
                 SampleType=sample_type,
-                #StorageLocation=storage_location,
+                # StorageLocation=storage_location,
                 SubjectID=row.get('SubjectID'),
                 Barcode=barcode,
-                Volume=str(row.get('Volume')),
+                Volume=volume,
                 Unit=row.get('Unit'),
                 LinkedSample=linked_sample,
-                LocationTitile=row.get('LocationTitile'),
                 DateCreated=row.get('DateCreated'),
             )
-
+            logger.info(wf.getInfoFor(obj, 'review_state'))
+            doActionFor(obj, "sample_due")
+            doActionFor(obj, "sample_received")
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
-            doActionFor(obj, "sample_due")
 
 class Kits(WorksheetImporter):
     """ Import projects
