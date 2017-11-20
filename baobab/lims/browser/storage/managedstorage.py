@@ -116,7 +116,7 @@ class StoragePositionsView(BikaListingView):
         BikaListingView.__init__(self, context, request)
         self.context = context
         self.request = request
-        self.catalog = 'bika_setup_catalog'
+        # self.catalog = 'bika_setup_catalog'
         path = '/'.join(context.getPhysicalPath())
         self.contentFilter = {'portal_type': 'StoragePosition',
                               'sort_on': 'sortable_title',

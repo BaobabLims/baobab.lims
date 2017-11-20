@@ -102,9 +102,9 @@ class ManagedStorage(ATFolder):
             else False
 
     def get_positions(self):
-        bsc = getToolByName(self, 'bika_setup_catalog')
+        pc = getToolByName(self, 'portal_catalog')
         path = "/".join(self.getPhysicalPath())
-        brains = bsc.searchResults(
+        brains = pc.searchResults(
             portal_type='StoragePosition',
             inactive_state='active',
             sort_on='sortable_title',
@@ -113,7 +113,7 @@ class ManagedStorage(ATFolder):
         return [brain.getObject() for brain in brains]
 
     def get_free_positions(self):
-        bsc = getToolByName(self, 'bika_setup_catalog')
+        bsc = getToolByName(self, 'portal_catalog')
         path = "/".join(self.getPhysicalPath())
         brains = bsc.searchResults(
             portal_type='StoragePosition',

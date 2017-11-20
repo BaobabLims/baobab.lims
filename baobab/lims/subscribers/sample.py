@@ -14,14 +14,14 @@ def ObjectInitializedEventHandler(instance, event):
             alsoProvides(instance, ISharableSample)
             instance.reindexObject()
 
-        if float(instance.getField('Volume').get(instance)) > 0:
-            doActionFor(instance, 'sample_due')
-            doActionFor(instance, 'receive')
-
         if not instance.getField('Barcode').get(instance):
             instance.getField('Barcode').set(instance, instance.getId())
 
         create_samplepartition(instance, {'services': [], 'part_id': instance.getId() + "-P"})
+
+        if float(instance.getField('Volume').get(instance)) > 0:
+            doActionFor(instance, 'sample_due')
+            doActionFor(instance, 'receive')
 
         location = instance.getStorageLocation()
         if location:

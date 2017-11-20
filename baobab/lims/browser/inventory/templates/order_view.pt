@@ -84,17 +84,16 @@
                                             id="stockItem"
                                             class="blurrable firstToFocus referencewidget"
                                             value=""
-                                            base_query='{"portal_type": ["UnmanagedStorage"], "object_provides": "bika.lims.interfaces.IStockItemStorage", "review_state": "available", "inactive_state": "active"}'
+                                            base_query='{"portal_type": ["UnmanagedStorage"], "object_provides": "baobab.lims.interfaces.IStockItemStorage", "review_state": "available", "inactive_state": "active"}'
                                             search_query='{}'
-                                            catalog_name="bika_setup_catalog"
+                                            catalog_name="portal_catalog"
                                             ui_item="Title"
                                             autocomplete="false"
                                             combogrid_options='{"colModel": [{"columnName": "Title", "align": "left", "label": "Title", "width": "30"},
                                                                          {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "50"},
-                                                                         {"columnName": "FreePositions", "align": "left", "label": "Free", "width": "20"},
                                                                          {"columnName": "UID", "hidden": true}],
                                                                 "search_fields": ["Title"],
-                                                                "catalog_name": "bika_setup_catalog",
+                                                                "catalog_name": "portal_catalog",
                                                                 "url": "referencewidget_search",
                                                                 "discard_empty": [],
                                                                 "popup_width": "550px",

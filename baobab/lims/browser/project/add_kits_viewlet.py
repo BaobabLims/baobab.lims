@@ -33,7 +33,6 @@ class AddKitsSubmitHandler(BrowserView):
         self.request = request
         self.form = request.form
         self.uc = getToolByName(self.context, 'uid_catalog')
-        self.bsc = self.bika_setup_catalog
         self.bc = self.bika_catalog
         self.wf = self.portal_workflow
         self.samples_gen = SampleGeneration(self.form, self.context)
@@ -62,7 +61,7 @@ class AddKitsSubmitHandler(BrowserView):
         kit_storages = []
         form_uids = self.form['kit-storage-uids'].split(',')
         for uid in form_uids:
-            brain = self.bsc(UID=uid)[0]
+            brain = self.bika_setup_catalog(UID=uid)[0]
             instance = brain.getObject()
             # last-minute check if this storage is available
             if IUnmanagedStorage.providedBy(instance) \
@@ -101,7 +100,7 @@ class AddKitsSubmitHandler(BrowserView):
         """
         si_storage = []
         for uid in self.form['si-storage-uids'].split(','):
-            brain = self.bsc(UID=uid)
+            brain = self.portal_catalog(UID=uid)
             if not brain:
                 raise ValidationError(u'Bad uid. This should not happen.')
             si_storage.append(brain[0].getObject())
@@ -178,7 +177,7 @@ class AddKitsSubmitHandler(BrowserView):
         template = kit.getKitTemplate()
         products = []
         for item in template.getProductList():
-            product = self.bsc(UID=item['product_uid'])[0].getObject()
+            product = self.bika_setup_catalog(UID=item['product_uid'])[0].getObject()
             products.append(product)
         for product in products:
             stock_items = product.getBackReferences("StockItemProduct")
@@ -300,7 +299,7 @@ class AddKitsSubmitHandler(BrowserView):
 
         # Check there are enough stock items in stock to create the kits
         if kit_template_uid:
-            kit_template = self.bsc(UID=kit_template_uid)[0].getObject()
+            kit_template = self.bika_setup_catalog(UID=kit_template_uid)[0].getObject()
             for product in kit_template.getProductList():
                 items = self.product_stock_items(product['product_uid'])
                 items = self.filter_stock_items_by_storage(items)
