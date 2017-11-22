@@ -8,6 +8,7 @@ from zope.interface import implements
 from baobab.lims.idserver import renameAfterCreation
 from bika.lims.workflow import doActionFor
 from bika.lims import logger
+from plone import api
 
 
 def get_project_multi_items(context, string_elements, portal_type, portal_catalog):
@@ -280,3 +281,67 @@ class Kits(WorksheetImporter):
 
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
+
+class Storage(WorksheetImporter):
+    """
+    Import storage
+    """
+    def Import(self):
+
+        pc = getToolByName(self.context, 'portal_catalog')
+
+        rows = self.get_rows(3)
+        for row in rows:
+            # get the type of storage
+            storage_type = row.get('type')
+            if storage_type not in ['StorageUnit', 'ManagedStorage', 'UnmanagedStorage']:
+                continue
+
+            # get the parent
+            title = row.get('title')
+            parent = self.get_parent_storage(title)
+            if not parent:
+                print "parent not found for %s" % title
+                continue
+
+            storage_obj = _createObjectByType(storage_type, parent, tmpID())
+            storage_obj.edit(
+                title=title,
+            )
+
+            if storage_type == 'ManagedStorage':
+                print title
+                storage_obj.edit(
+                    XAxis=row.get('Rows'),
+                    YAxis=row.get('Columns'),
+                )
+
+            storage_obj.unmarkCreationFlag()
+            renameAfterCreation(storage_obj)
+
+            if storage_type == 'ManagedStorage':
+
+                for p in range(1, row.get('NumberOfPoints')+1):
+                    position = api.content.create(
+                        container=storage_obj,
+                        type="StoragePosition",
+                        id="{id}".format(id=p),  # XXX hardcoded pos title and id
+                        title=title + ".{id}".format(id=p)  #would be better to get the id from the storage object.  ask hocine.
+                    )
+                    position.reindexObject()
+
+    def get_parent_storage(self, title):
+        pc = getToolByName(self.context, 'portal_catalog')
+        title_pieces = title.split('.')
+
+        # if len(title_pieces) <= 1:
+        #     parent = self.context.bika_setup.bika_storageunit
+
+        parent_title = '.'.join(title_pieces[:-1])
+        parent_list = pc(portal_type="StorageUnit", Title=parent_title)
+
+        if parent_list:
+            parent = parent_list[0].getObject()
+
+        return parent
+

@@ -26,15 +26,15 @@
       provides="bika.lims.interfaces.ISetupDataImporter"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
 
-    <!--<adapter
-      name="projects"
-      factory="baobab.lims.setupdata.Projects"
-      provides="bika.lims.interfaces.ISetupDataImporter"
-      for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>-->
-
     <adapter
       name="Projects"
       factory="baobab.lims.setupdata.Projects"
+      provides="bika.lims.interfaces.ISetupDataImporter"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
+
+    <adapter
+      name="Storage"
+      factory="baobab.lims.setupdata.Storage"
       provides="bika.lims.interfaces.ISetupDataImporter"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
 
