@@ -36,16 +36,6 @@ Please see the navigation sidebar to the left to begin.
 .. toctree::
     :hidden:
 
-    changelog
-    FAQs <faq>
-    Getting Started <getting_started>
     installing
     setup
     User Manual <user_manual>
-    troubleshooting
-    development
-    api
-    Roadmap <roadmap>
-    contact
-
-
