@@ -1,187 +1,178 @@
-==========
-Quick Tutorial
-==========
 
-Fabric is best installed via `pip <http://pip-installer.org>`_ (highly
-recommended) or `easy_install
-<http://wiki.python.org/moin/CheeseShopTutorial>`_ (older, but still works
-fine), e.g.::
+Baobab LIMS User manual
+=======================
 
-    $ pip install fabric
-
-You may also opt to use your operating system's package manager; the package is
-typically called ``fabric`` or ``python-fabric``. E.g.::
-
-    $ sudo apt-get install fabric
-
-Advanced users wanting to install a development version may use ``pip`` to grab
-the latest master branch (as well as the dev version of the Paramiko
-dependency)::
-
-    $ pip install -e git+https://github.com/paramiko/paramiko/#egg=paramiko
-    $ pip install -e git+https://github.com/fabric/fabric/#egg=fabric
+This manual will guide you through the process of creating projects and the associated data related to projects. This manual is for use FOLLOWING the setup of your lab (see ‘SETUP’ manual).
 
 .. warning::
 
-    Development installs of Fabric, regardless of whether they involve source
-    checkouts or direct ``pip`` installs, require the development version of
-    Paramiko to be installed beforehand or Fabric's installation may fail.
+    Please make use of the user manual following the setup of your site
 
 
-Dependencies
-============
+Plone Configuration
+--------------------
 
-In order for Fabric's installation to succeed, you will need three primary pieces of software:
+.. image:: _static/user_images/u28.PNG
 
-* the Python programming language;
-* the ``setuptools`` packaging/installation library;
-* and the Python `Paramiko <http://paramiko.org>`_ SSH library. Paramiko's dependencies differ
-  significantly between the 1.x and 2.x releases. See the `Paramiko installation docs
-  <http://www.paramiko.org/installing.html>`_ for more info.
-
-and, if using the :ref:`parallel execution mode <parallel-execution>`:
-
-* the `multiprocessing`_ library.
-
-If you're using Paramiko 1.12 or above, you will also need an additional
-dependency for Paramiko:
-
-* the `ecdsa <https://pypi.python.org/pypi/ecdsa/>`_ library
-
-Please read on for important details on these -- there are a few gotchas.
-
-Python
-------
-
-Fabric requires `Python <http://python.org>`_ version 2.5 - 2.7. Some caveats
-and notes about other Python versions:
-
-* We are not planning on supporting **Python 2.4** given its age and the number
-  of useful tools in Python 2.5 such as context managers and new modules.
-  That said, the actual amount of 2.5-specific functionality is not
-  prohibitively large, and we would link to -- but not support -- a third-party
-  2.4-compatible fork. (No such fork exists at this time, to our knowledge.)
-* Fabric has not yet been tested on **Python 3.x** and is thus likely to be
-  incompatible with that line of development. However, we try to be at least
-  somewhat forward-looking (e.g. using ``print()`` instead of ``print``) and
-  will definitely be porting to 3.x in the future once our dependencies do.
-
-setuptools
-----------
-
-`Setuptools`_ comes with some Python installations by default; if yours doesn't,
-you'll need to grab it. In such situations it's typically packaged as
-``python-setuptools``, ``py25-setuptools`` or similar. Fabric may drop its
-setuptools dependency in the future, or include alternative support for the
-`Distribute`_ project, but for now setuptools is required for installation.
-
-.. _setuptools: http://pypi.python.org/pypi/setuptools
-.. _Distribute: http://pypi.python.org/pypi/distribute
-
-``multiprocessing``
--------------------
-
-An optional dependency, the ``multiprocessing`` library is included in Python's
-standard library in version 2.6 and higher. If you're using Python 2.5 and want
-to make use of Fabric's :ref:`parallel execution features <parallel-execution>`
-you'll need to install it manually; the recommended route, as usual, is via
-``pip``.  Please see the `multiprocessing PyPI page
-<http://pypi.python.org/pypi/multiprocessing/>`_ for details.
+.. image:: _static/user_images/u29.PNG
 
 
-.. warning::
-    Early versions of Python 2.6 (in our testing, 2.6.0 through 2.6.2) ship
-    with a buggy ``multiprocessing`` module that appears to cause Fabric to
-    hang at the end of sessions involving large numbers of concurrent hosts.
-    If you encounter this problem, either use :ref:`env.pool_size / -z
-    <pool-size>` to limit the amount of concurrency, or upgrade to Python
-    >=2.6.3.
-    
-    Python 2.5 is unaffected, as it requires the PyPI version of
-    ``multiprocessing``, which is newer than that shipped with Python <2.6.3.
+Baobab LIMS Configuration
+-------------------------
 
-Development dependencies
-------------------------
+.. image:: _static/user_images/u30.PNG
 
-If you are interested in doing development work on Fabric (or even just running
-the test suite), you may also need to install some or all of the following
-packages:
+.. image:: _static/user_images/u31.PNG
 
-* `git <http://git-scm.com>`_ and `Mercurial`_, in order to obtain some of the
-  other dependencies below;
-* `Nose <https://github.com/nose-devs/nose>`_
-* `Coverage <http://nedbatchelder.com/code/modules/coverage.html>`_
-* `PyLint <http://www.logilab.org/857>`_
-* `Fudge <http://farmdev.com/projects/fudge/index.html>`_
-* `Sphinx <http://sphinx.pocoo.org/>`_
+Add client
+-----------
 
-For an up-to-date list of exact testing/development requirements, including
-version numbers, please see the ``requirements.txt`` file included with the
-source distribution. This file is intended to be used with ``pip``, e.g. ``pip
-install -r requirements.txt``.
+Mouse over ‘quick access’ and selecting the ‘Clients’ tab. All added clients are listed in this section.
 
-.. _Mercurial: http://mercurial.selenic.com/wiki/
+.. image:: _static/user_images/U1.PNG
 
 
-.. _downloads:
+Add a client by selecting the ‘Add’ button. Enter the details of the client and press the ‘save’ button.
+Compulsory fields are indicated by a red square.
 
-Downloads
-=========
-
-To obtain a tar.gz or zip archive of the Fabric source code, you may visit
-`Fabric's PyPI page <http://pypi.python.org/pypi/Fabric>`_, which offers manual
-downloads in addition to being the entry point for ``pip`` and
-``easy-install``.
+.. image:: _static/user_images/u2.PNG
 
 
-.. _source-code-checkouts:
+Client information includes address, bank details, preferences and licenses and can be added by selecting
+the required tab and entering the information.
 
-Source code checkouts
-=====================
-
-The Fabric developers manage the project's source code with the `Git
-<http://git-scm.com>`_ DVCS. To follow Fabric's development via Git instead of
-downloading official releases, you have the following options:
-
-* Clone the canonical repository straight from `the Fabric organization's
-  repository on Github <https://github.com/fabric/fabric>`_,
-  ``git://github.com/fabric/fabric.git``
-* Make your own fork of the Github repository by making a Github account,
-  visiting `fabric/fabric <http://github.com/fabric/fabric>`_ and clicking the
-  "fork" button.
-
-.. note::
-
-    If you've obtained the Fabric source via source control and plan on
-    updating your checkout in the future, we highly suggest using ``python
-    setup.py develop`` instead -- it will use symbolic links instead of file
-    copies, ensuring that imports of the library or use of the command-line
-    tool will always refer to your checkout.
-
-For information on the hows and whys of Fabric development, including which
-branches may be of interest and how you can help out, please see the
-:doc:`development` page.
+.. image:: _static/user_images/u3.PNG
 
 
-.. _pypm:
+Add project
+------------
 
-ActivePython and PyPM
-=====================
 
-Windows users who already have ActiveState's `ActivePython
-<http://www.activestate.com/activepython/downloads>`_ distribution installed
-may find Fabric is best installed with `its package manager, PyPM
-<http://code.activestate.com/pypm/>`_. Below is example output from an
-installation of Fabric via ``pypm``::
+In the clients list, select the client of interest which will automatically take you to the ‘projects’ page. A notification may appear requesting for client contact information to be submitted.
 
-    C:\> pypm install fabric
-    The following packages will be installed into "%APPDATA%\Python" (2.7):
-     paramiko-1.7.8 pycrypto-2.4 fabric-1.3.0
-    Get: [pypm-free.activestate.com] fabric 1.3.0
-    Get: [pypm-free.activestate.com] paramiko 1.7.8
-    Get: [pypm-free.activestate.com] pycrypto 2.4
-    Installing paramiko-1.7.8
-    Installing pycrypto-2.4
-    Installing fabric-1.3.0
-    Fixing script %APPDATA%\Python\Scripts\fab-script.py
-    C:\>
+.. image:: _static/user_images/u4.PNG
+
+Proceed to the ‘Contacts’ tab above the notification and select the ‘add’ button. Enter the details and press the ‘save’ button. Compulsory fields are indicated by a red square.
+
+.. image:: _static/user_images/u5.PNG
+
+
+By adding a client contact details, the login details of the contact can be edited by navigating to the ‘Login details’ tab.
+
+.. image:: _static/user_images/u6.PNG
+
+The login details for the Client contact can be added and the once saved, the client will receive an email indicating the username and password. The client can login to the LIMS site using these details, but will have limited access to modules on the site (as stipulated by the user role). User roles can be defined by the administrator in the ``plone configuration`` under the tab ``Users and Groups``.
+
+.. image:: _static/user_images/u7.PNG
+
+Projects
+---------
+
+The Biobank user can now be directed to the ‘projects’ page for the specific client. Add a project by selecting the ‘Add’ button and enter the details of the project. Compulsory fields are indicated by a red square. The user will be automatically directed to the created project page where tabs for kits, shipments, biospecimens and analysis requests can be selected, and items can be added or viewed.
+
+
+.. image:: _static/user_images/u8.PNG
+
+.. image:: _static/user_images/u9.PNG
+
+Kits
+-----
+
+In the ‘Kits’ tab, select ‘add new kits’.
+
+.. image:: _static/user_images/u10.PNG
+
+
+The page will be generated allowing the user to add kits accordingly. In the ``example`` below, prefix text ‘kit’ is used. There will be 1 kit with 3 already generated, therefore, the next kit will start from the next number in sequence i.e. 4. According to the kit template generated, each kit will contain 2 biospecimens. The stock item to be used will be selected from an unmanaged storage which was generated, and the storage will be selected from a managed storage unit which was previously generated.
+
+.. image:: _static/user_images/u11.PNG
+
+By selecting the kit which has been added, details of the kit can be visualized.
+
+.. image:: _static/user_images/u12.PNG
+
+
+Shipments
+---------
+
+
+Add a shipment by selecting the ‘Add’ button and enter the details of the shipment. Compulsory fields are
+indicated by
+
+.. image:: _static/user_images/u13.PNG
+
+
+
+.. Note:: Compulsory fields are also present in the ‘correspondence’ tab and need to be entered to continue.
+
+.. image:: _static/user_images/u14.PNG
+
+
+
+
+**The process for shipments is as follows;**
+
+#. The Biobank selects 'dispatch' (an email is sent to client to inform them that a shipment has been dispatched)
+#. The client logs in with his/her username and password and selects ``projects < shipments < shipment# < and ' receive'``
+#. Client fills the tubes with samples
+#. Client selects 'collect' and an email is sent back to the biobank. The Biobank then arranges for the courier to now collect shipment
+#. The Biobank checks their shipments and selects 'receive back'. An email will be sent to the client informing the client that the kit has been received back at the Biobank.
+#. The Biobank selects the specific kit and changes the state of the kit by selecting ‘receive kit'
+#. The Biobank unpacks and checks kit contents and selects 'process kit'
+#. The Biobank examines the biospecimens in the kit and adds subject ID, volume and other relevant details 
+#. The Biobank then selects 'receive sample'
+#. The sample is now in storage
+
+.. Note:: barcodes can be scanned in if a scanner is available.
+
+Biospecimens
+------------
+Biospecimens associated with the project can be viewed in this tab and are generated automatically when a kit is created from a template. 
+
+.. image:: _static/user_images/u15.PNG
+
+By selecting the biospecimen, the parameters of the specimen can be established, such as, barcode, volume, sample condition etc.
+
+.. image:: _static/user_images/u16.PNG
+
+
+Performing an analysis request
+------------------------------
+
+
+If your biobank can perform an analysis for a client, ensure that you have selected the analyses service to be provided for the project. To do this, select the ‘edit’ tab in the project and select the service to be performed.
+
+.. image:: _static/user_images/u17.PNG
+
+.. image:: _static/user_images/u18.PNG
+
+
+.. image:: _static/user_images/u20.PNG
+
+
+.. image:: _static/user_images/u21.PNG
+
+Once the results and the analyst have been selected, the analysis can be submitted by selecting ‘submit’.
+
+.. image:: _static/user_images/u22.PNG
+
+The status of the analysis request will change as the result will need to be verified by another analyst with verification permissions.
+
+.. image:: _static/user_images/u23.PNG
+
+.. Note:: The system dashboard will indicate that an analysis is pending and needs to be verified.
+
+.. image:: _static/user_images/u24.PNG
+
+The analyst with verification permission can log in with their username and password and navigate to the analysis request and select ‘Verify’.
+
+.. image:: _static/user_images/u25.PNG
+
+.. image:: _static/user_images/u26.PNG
+
+
+Published results can be emailed to the Client and can also be downloaded by navigating to the Analysis request and selecting the ‘Published results’ tab.
+
+
+.. image:: _static/user_images/u27.PNG
+
