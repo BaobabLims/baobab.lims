@@ -6,10 +6,8 @@ from Products.CMFPlone.utils import safe_unicode, _createObjectByType
 from bika.lims.interfaces import ISetupDataSetList
 from zope.interface import implements
 from baobab.lims.idserver import renameAfterCreation
-from bika.lims.workflow import doActionFor
-from bika.lims import logger
-from plone import api
-
+from zope.interface import alsoProvides
+from baobab.lims.interfaces import ISampleStorageLocation, IStockItemStorage
 
 def get_project_multi_items(context, string_elements, portal_type, portal_catalog):
 
@@ -292,56 +290,99 @@ class Storage(WorksheetImporter):
 
         rows = self.get_rows(3)
         for row in rows:
+
             # get the type of storage
             storage_type = row.get('type')
             if storage_type not in ['StorageUnit', 'ManagedStorage', 'UnmanagedStorage']:
                 continue
 
-            # get the parent
             title = row.get('title')
-            parent = self.get_parent_storage(title)
+            # get the parent
+            hierarchy = row.get('hierarchy')
+            parent = self.get_parent_storage(hierarchy)
             if not parent:
-                print "parent not found for %s" % title
+                print "parent not found for %s" % hierarchy
                 continue
 
-            storage_obj = _createObjectByType(storage_type, parent, tmpID())
+            storage_obj = _createObjectByType(storage_type, parent, row.get('id'))
             storage_obj.edit(
                 title=title,
             )
 
+            if storage_type == 'UnmanagedStorage':
+                alsoProvides(storage_obj, IStockItemStorage)
+
             if storage_type == 'ManagedStorage':
-                print title
                 storage_obj.edit(
                     XAxis=row.get('Rows'),
                     YAxis=row.get('Columns'),
                 )
 
-            storage_obj.unmarkCreationFlag()
-            renameAfterCreation(storage_obj)
-
-            if storage_type == 'ManagedStorage':
-
                 for p in range(1, row.get('NumberOfPoints')+1):
-                    position = api.content.create(
-                        container=storage_obj,
-                        type="StoragePosition",
-                        id="{id}".format(id=p),  # XXX hardcoded pos title and id
-                        title=title + ".{id}".format(id=p)  #would be better to get the id from the storage object.  ask hocine.
+                    position = _createObjectByType('StoragePosition', storage_obj, str(p))
+                    position.edit(
+                        title=hierarchy + ".{id}".format(id=p)  #would be better to get the id from the storage object.  ask hocine.
                     )
+                    alsoProvides(position, ISampleStorageLocation)
                     position.reindexObject()
 
-    def get_parent_storage(self, title):
+            storage_obj.unmarkCreationFlag()
+            storage_obj.reindexObject()
+
+    def get_parent_storage(self, hierarchy):
+
         pc = getToolByName(self.context, 'portal_catalog')
-        title_pieces = title.split('.')
+        hierarchy_pieces = hierarchy.split('.')
 
-        # if len(title_pieces) <= 1:
-        #     parent = self.context.bika_setup.bika_storageunit
+        if len(hierarchy_pieces) <= 1:
+            return self.context.storage
 
-        parent_title = '.'.join(title_pieces[:-1])
-        parent_list = pc(portal_type="StorageUnit", Title=parent_title)
+        parent_id = hierarchy_pieces[-2:-1]
+        parent_hierarchy = '.'.join(hierarchy_pieces[:-1])
+        parent_list = pc(portal_type="StorageUnit", id=parent_id)
 
         if parent_list:
-            parent = parent_list[0].getObject()
+            for parent_item in parent_list:
+                parent_object = parent_item.getObject()
+                if parent_object.getHierarchy() == parent_hierarchy:
+                    return parent_object
 
-        return parent
+
+class StockItems(WorksheetImporter):
+    """ Import stock items
+    """
+    def Import(self):
+        folder = self.context.bika_setup.bika_stockitems
+        rows = self.get_rows(3)
+        bsc = getToolByName(self.context, 'bika_setup_catalog')
+        pc = getToolByName(self.context, 'portal_catalog')
+        #suppliers = [o.getObject() for o in bsc(portal_type="Supplier")]
+        for row in rows:
+            products = bsc(portal_type="Product", title=row.get('Product'))
+            product = products and products[0].getObject() or None
+            description = row.get('description', '')
+
+            st_loc_list = pc(portal_type='UnmanagedStorage', Title=row.get('StorageLocation'))
+            storage_location = st_loc_list and st_loc_list[0].getObject() or None
+            
+            obj = _createObjectByType('StockItem', folder, tmpID())
+            obj.edit(
+                Product=product,
+                StorageLocation = storage_location,
+                description=description,
+                Quantity=self.to_int(row.get('Quantity', 0)),
+                orderId=row.get('InvoiceNr', ''),
+                batchId=row.get('BatchNr', ''),
+                receivedBy=row.get('ReceivedBy'),
+                dateReceived=row.get('DateReceived', ''),
+            )
+
+            #obj.setStorageLocation(storage_location.UID())
+
+            new_quantity = int(product.getQuantity()) + int(row.get('Quantity'))
+            product.setQuantity(new_quantity)
+            product.reindexObject()
+
+            obj.unmarkCreationFlag()
+            renameAfterCreation(obj)
 

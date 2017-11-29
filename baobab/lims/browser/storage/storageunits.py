@@ -167,7 +167,12 @@ class StorageUnitsView(BikaListingView):
         item['Temperature'] = obj.getTemperature()
         item['Type'] = obj.Type()
         item['Department'] = obj.getDepartment()and obj.getDepartmentTitle() or ''
+
+        if item['Type'] == 'Unmanaged storage':
+            title = item['id']
+        else:
+            title = item['Title']
         item['replace']['Title'] = \
-            "<a href='%s'>%s</a>" % (item['url'], item['Title'])
+            "<a href='%s'>%s</a>" % (item['url'], title)
 
         return item
