@@ -5,9 +5,9 @@ from bika.lims.utils import tmpID
 from Products.CMFPlone.utils import safe_unicode, _createObjectByType
 from bika.lims.interfaces import ISetupDataSetList
 from zope.interface import implements
-from bika.lims.idserver import renameAfterCreation
-
-from pkg_resources import *
+from baobab.lims.idserver import renameAfterCreation
+from bika.lims.workflow import doActionFor
+from bika.lims import logger
 
 
 def get_project_multi_items(context, string_elements, portal_type, portal_catalog):
@@ -27,12 +27,43 @@ def get_project_multi_items(context, string_elements, portal_type, portal_catalo
 
     return items
 
+
 class SetupDataSetList(SDL):
 
     implements(ISetupDataSetList)
 
     def __call__(self):
         return SDL.__call__(self, projectname="baobab.lims")
+
+
+class Products(WorksheetImporter):
+    """ Import test products
+    """
+    def Import(self):
+        folder = self.context.bika_setup.bika_products
+        rows = self.get_rows(3)
+        bsc = getToolByName(self.context, 'bika_setup_catalog')
+        suppliers = [o.getObject() for o in bsc(portal_type="Supplier")]
+        for row in rows:
+            title = row.get('Title')
+            description = row.get('description', '')
+            obj = _createObjectByType('Product', folder, tmpID())
+            obj.edit(
+                title=title,
+                description=description,
+                Hazardous=self.to_bool(row.get('Hazardous', '')),
+                Quantity=self.to_int(row.get('Quantity', 0)),
+                Unit=row.get('Unit', ''),
+                Price=str(row.get('Price', '0.00'))
+            )
+
+            for supplier in suppliers:
+                if supplier.Title() == row.get('Suppliers', ''):
+                    obj.setSupplier(supplier)
+                    break
+
+            obj.unmarkCreationFlag()
+            renameAfterCreation(obj)
 
 
 class Kit_Components(WorksheetImporter):
@@ -79,50 +110,16 @@ class Kit_Templates(WorksheetImporter):
     def Import(self):
         folder = self.context.bika_setup.bika_kittemplates
         rows = self.get_rows(3)
-        template_name = ''
         catalog = getToolByName(self.context, 'bika_setup_catalog')
         for row in rows:
             template_name = row.get('templateName')
             kit_component = Kit_Components(self, self.workbook, self.dataset_project, self.dataset_name, template_name, catalog)
             product_list = kit_component.get_product_list()
-            # category = self.get_object(catalog, 'ProductCategory', title=row.get('category'))
             obj = _createObjectByType('KitTemplate', folder, tmpID())
             obj.edit(
                 title=template_name,
-                ProductList=product_list,
-                Quantity=row.get('quantity')
+                ProductList=product_list
             )
-            # obj.setCategory(category)
-
-            obj.unmarkCreationFlag()
-            renameAfterCreation(obj)
-
-
-class Products(WorksheetImporter):
-    """ Import test products
-    """
-    def Import(self):
-        folder = self.context.bika_setup.bika_products
-        rows = self.get_rows(3)
-        bsc = getToolByName(self.context, 'bika_setup_catalog')
-        suppliers = [o.getObject() for o in bsc(portal_type="Supplier")]
-        for row in rows:
-            title = row.get('Title')
-            description = row.get('description', '')
-            obj = _createObjectByType('Product', folder, tmpID())
-            obj.edit(
-                title=title,
-                description=description,
-                Hazardous=self.to_bool(row.get('Hazardous', '')),
-                Quantity=self.to_int(row.get('Quantity', 0)),
-                Unit=row.get('Unit', ''),
-                Price=str(row.get('Price', '0.00'))
-            )
-
-            for supplier in suppliers:
-                if supplier.Title() == row.get('Suppliers', ''):
-                    obj.setSupplier(supplier)
-                    break
 
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
@@ -144,7 +141,6 @@ class Storage_Types(WorksheetImporter):
             )
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
-
 
 class Projects(WorksheetImporter):
     """ Import projects
@@ -176,6 +172,109 @@ class Projects(WorksheetImporter):
                 NumParticipants=self.to_int(row.get('NumParticipants', 0)),
                 SampleType=st_objects,
                 Service=as_objects,
+                DateCreated=row.get('DateCreated', ''),
+            )
+
+            obj.unmarkCreationFlag()
+            renameAfterCreation(obj)
+
+
+class Biospecimens(WorksheetImporter):
+    """ Import biospecimens
+    """
+
+    def Import(self):
+        pc = getToolByName(self.context, 'portal_catalog')
+        wf = getToolByName(self.context, 'portal_workflow')
+
+        rows = self.get_rows(3)
+        for row in rows:
+            # get the project
+            project_list = pc(portal_type="Project", Title=row.get('Project'))
+
+            project = project_list and project_list[0].getObject() or None
+            if not project: continue
+
+            sampletype_list = pc(portal_type="SampleType", Title=row.get('SampleType'))
+            sample_type = sampletype_list and sampletype_list[0].getObject() or None
+            if not sample_type: continue
+
+            linked_sample_list = pc(portal_type="Sample", Title=row.get('LinkedSample', ''))
+            linked_sample = linked_sample_list and linked_sample_list[0].getObject() or None
+
+            barcode = row.get('Barcode')
+            if not barcode:
+                continue
+
+            try:
+                volume = str(row.get('Volume'))
+                float_volume = float(volume)
+                if not float_volume:
+                    continue
+            except:
+                continue
+
+            obj = _createObjectByType('Sample', project, tmpID())
+
+            st_loc_list = pc(portal_type='StoragePosition', Title=row.get('StorageLocation'))
+            storage_location = st_loc_list and st_loc_list[0].getObject() or None
+
+            obj.edit(
+                title=row.get('title'),
+                description=row.get('description'),
+                Project=project,
+                AllowSharing=row.get('AllowSharing'),
+                SampleType=sample_type,
+                StorageLocation=storage_location,
+                SubjectID=row.get('SubjectID'),
+                Barcode=barcode,
+                Volume=volume,
+                Unit=row.get('Unit'),
+                LinkedSample=linked_sample,
+                DateCreated=row.get('DateCreated'),
+            )
+
+            obj.unmarkCreationFlag()
+            renameAfterCreation(obj)
+
+            from baobab.lims.subscribers.sample import ObjectInitializedEventHandler
+            ObjectInitializedEventHandler(obj, None)
+            # doActionFor(obj, "sample_due")
+            # doActionFor(obj, "receive")
+            # doActionFor(storage_location, 'occupy')
+
+
+class Kits(WorksheetImporter):
+    """ Import projects
+    """
+    def Import(self):
+
+        pc = getToolByName(self.context, 'portal_catalog')
+
+        rows = self.get_rows(3)
+        for row in rows:
+            # get the project
+            project_list = pc(portal_type="Project", Title=row.get('Project'))
+            if project_list:
+                project = project_list[0].getObject()
+            else:
+                continue
+
+            #get the kit template if it exists
+            bsc = getToolByName(self.context, 'bika_setup_catalog')
+            kit_template_list = bsc(portal_type="KitTemplate", Title=row.get('KitTemplate'))
+            kit_template = None
+            if kit_template_list:
+                kit_template = kit_template_list[0].getObject()
+
+            obj = _createObjectByType('Kit', project, tmpID())
+            obj.edit(
+                title=row.get('title'),
+                description=row.get('description'),
+                Project=project,
+                KitTemplate=kit_template,
+                #StorageLocation=
+                FormsThere=row.get('FormsThere'),
                 DateCreated=row.get('DateCreated', ''),
             )
 

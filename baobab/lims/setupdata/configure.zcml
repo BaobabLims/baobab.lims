@@ -9,6 +9,12 @@
       provides="bika.lims.interfaces.ISetupDataSetList"/>
 
     <adapter
+      name="Products"
+      factory="baobab.lims.setupdata.Products"
+      provides="bika.lims.interfaces.ISetupDataImporter"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
+
+    <adapter
       name="KitTemplates"
       factory="baobab.lims.setupdata.Kit_Templates"
       provides="bika.lims.interfaces.ISetupDataImporter"
@@ -20,15 +26,27 @@
       provides="bika.lims.interfaces.ISetupDataImporter"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
 
+    <!--<adapter
+      name="projects"
+      factory="baobab.lims.setupdata.Projects"
+      provides="bika.lims.interfaces.ISetupDataImporter"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>-->
+
     <adapter
-      name="test_products"
-      factory="baobab.lims.setupdata.Products"
+      name="Projects"
+      factory="baobab.lims.setupdata.Projects"
       provides="bika.lims.interfaces.ISetupDataImporter"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
 
     <adapter
-      name="projects"
-      factory="baobab.lims.setupdata.Projects"
+      name="Biospecimens"
+      factory="baobab.lims.setupdata.Biospecimens"
+      provides="bika.lims.interfaces.ISetupDataImporter"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
+
+    <adapter
+      name="Kits"
+      factory="baobab.lims.setupdata.Kits"
       provides="bika.lims.interfaces.ISetupDataImporter"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
 

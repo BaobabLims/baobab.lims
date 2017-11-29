@@ -29,9 +29,7 @@ class BiospecimensView(BikaListingView):
             'sort_on': 'sortable_title',
             'sort_order': 'ascending'
         }
-        self.context_actions = {_('Add'):
-                                {'url': 'createObject?type_name=Sample',
-                                'icon': '++resource++bika.lims.images/add.png'}}
+        self.context_actions = {}
         self.title = self.context.translate(_("Biospecimens"))
         self.icon = self.portal_url + \
                     "/++resource++baobab.lims.images/biospecimen_big.png"
@@ -251,6 +249,9 @@ class BiospecimensView(BikaListingView):
         if getSecurityManager().checkPermission(AddPortalContent, self.context):
             self.show_select_row = True
             self.show_select_column = True
+            self.context_actions = {_('Add'):
+                                    {'url': 'createObject?type_name=Sample',
+                                     'icon': '++resource++bika.lims.images/add.png'}}
 
         return BikaListingView.__call__(self)
 

@@ -6,7 +6,19 @@
         i18n:domain="plone"
         purge="True">
 
-<alias from="edit" to="base_edit"/>
+<alias from="edit" to="@@base_edit"/>
+
+<action title="Edit"
+     action_id="edit"
+     category="object"
+     icon_expr=""
+     link_target=""
+     url_expr="string:${object_url}/edit"
+     i18n:attributes="title"
+     i18n:domain="plone"
+     visible="True">
+    <permission value="BIKA: Edit Sample"/>
+ </action>
 
 <action title="Aliquots"
         action_id="aliquots"

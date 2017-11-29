@@ -3,7 +3,7 @@
 	xmlns:metal="http://xml.zope.org/namespaces/metal"
 	xmlns:i18n="http://xml.zope.org/namespaces/i18n"
 	metal:use-macro="here/main_template/macros/master"
-	i18n:domain="bika">
+	i18n:domain="baobab">
 
 <head>
     <style>
@@ -45,6 +45,12 @@
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Description </th>
             <td tal:content="view/description" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+        <tr style="background: #f0f0f2;">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Ethics Form Link </th>
+            <td tal:content="structure view/ethics_form" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
         <tr>

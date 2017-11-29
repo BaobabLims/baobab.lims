@@ -126,10 +126,17 @@ class ProjectView(BrowserView):
         self.id = context.getId()
         self.title = context.Title()
         self.description = context.Description()
+
+        self.ethics_form = "<a href='%s'>%s</a>" % (
+            context.getEthicsFormLink(),
+            context.getEthicsFormLink()
+        )
+
         self.client = "<a href='%s'>%s</a>" % (
             context.aq_parent.absolute_url(),
             context.aq_parent.Title()
         )
+
         self.study_type = context.getStudyType()
         self.participants = context.getNumParticipants()
         self.age_interval = str(context.getAgeLow()) + ' - ' + str(

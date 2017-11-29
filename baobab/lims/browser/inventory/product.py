@@ -34,6 +34,7 @@ class ProductStorageView(BrowserView):
     def __call__(self):
         return self.template()
 
+
 class ProductQuantityByStorage():
     """
     """
@@ -42,11 +43,11 @@ class ProductQuantityByStorage():
         self.request = request
 
     @staticmethod
-    def _add_entry_to_dict(d, key):
+    def _add_entry_to_dict(stock_item, d, key):
         if key in d:
-            d[key] += 1
+            d[key] += stock_item.getQuantity()
         else:
-            d[key] = 1
+            d[key] = stock_item.getQuantity()
 
         return d
 
@@ -59,10 +60,7 @@ class ProductQuantityByStorage():
             if not location: continue
             if location.portal_type == 'UnmanagedStorage':
                 hierarchy = location.getHierarchy()
-                self._add_entry_to_dict(tmp, hierarchy)
-            if location.portal_type == 'ManagedStorage':
-                hierarchy = location.aq_parent.getHierarchy()
-                self._add_entry_to_dict(tmp, hierarchy)
+                self._add_entry_to_dict(si, tmp, hierarchy)
 
         tmp = sorted(tmp.items(), key=lambda x: x[0])
         for e in tmp:

@@ -49,8 +49,9 @@ class BikaCustomGenerator:
 
         portal_groups = portal.portal_groups
 
-        for group_id in groups:
-            portal_groups.removeGroup(group_id)
+        for group_id in portal_groups.listGroupIds():
+            if group_id in groups:
+                portal_groups.removeGroup(group_id)
 
         if 'EMSystems' not in portal_groups.listGroupIds():
             portal_groups.addGroup('EMSystems', title="EMSystems", roles = ['EMS'])
@@ -104,10 +105,10 @@ class BikaCustomGenerator:
         at.setCatalogsByType('Product', ['bika_setup_catalog'])
         at.setCatalogsByType('StockItem', ['bika_setup_catalog', ])
         at.setCatalogsByType('StorageLocation', ['bika_setup_catalog'])
-        at.setCatalogsByType('StorageUnit', ['bika_setup_catalog'])
-        at.setCatalogsByType('ManagedStorage', ['bika_setup_catalog'])
-        at.setCatalogsByType('UnmanagedStorage', ['bika_setup_catalog'])
-        at.setCatalogsByType('StoragePosition', ['bika_setup_catalog'])
+        # at.setCatalogsByType('StorageUnit', ['bika_setup_catalog'])
+        # at.setCatalogsByType('ManagedStorage', ['bika_setup_catalog'])
+        # at.setCatalogsByType('UnmanagedStorage', ['bika_setup_catalog'])
+        # at.setCatalogsByType('StoragePosition', ['bika_setup_catalog'])
 
         addIndex(bsc, 'getProductUID', 'FieldIndex')
 
@@ -144,10 +145,10 @@ class BikaCustomGenerator:
         mp(permissions.AccessContentsInformation, ['Authenticated'], 0)
         mp(permissions.ListFolderContents, ['Authenticated'], 0)
 
-        mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner'], 0)
-        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner'], 0)
+        mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
         mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
-        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner'], 0)
+        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
         mp(permissions.AddPortalContent, ['Manager', 'LabManager'], 0)
         portal.projects.reindexObject()
 

@@ -48,6 +48,7 @@ class SampleSchemaExtender(object):
                          },
                 size=30,
                 showOn=True,
+                render_own_label=True,
                 description=_("Select the project of the sample."),
             )
         ),
@@ -62,7 +63,8 @@ class SampleSchemaExtender(object):
                          'view': 'visible',
                          'header_table': 'visible',
                          'sample_registered': {'view': 'visible', 'edit': 'visible'},
-                         }
+                         },
+                render_own_label=True,
             ),
         ),
         ExtReferenceField(
@@ -108,7 +110,7 @@ class SampleSchemaExtender(object):
                          'expired': {'view': 'visible', 'edit': 'invisible'},
                          'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
-                catalog_name='bika_setup_catalog',
+                catalog_name='portal_catalog',
                 showOn=True,
                 render_own_label=True,
                 base_query={'inactive_state': 'active',
@@ -208,7 +210,8 @@ class SampleSchemaExtender(object):
             read_permission=permissions.View,
             write_permission=permissions.ModifyPortalContent,
             widget=bika_ReferenceWidget(
-                label=_("Biospecimen"),
+                label=_("Parent Biospecimen"),
+                description=_("Create an Aliquot of the biospecimen selected."),
                 visible={'edit': 'visible',
                          'view': 'visible',
                          'header_table': 'visible',
@@ -323,19 +326,19 @@ class Sample(BaseSample):
             doActionFor(box, 'liberate')
 
     def at_post_create_script(self):
-        """Execute once the object is created
+        """Execute once the object is created (CHECK ObjectInitializedEventHandler)
         """
-        if self.aq_parent.Title() == 'Biospecimens':
-            self.container = self.getField('Project').get(self)
-            doActionFor(self, 'sample_due')
-            doActionFor(self, 'receive')
-
-        create_samplepartition(self, {'services': [], 'part_id': self.getId() + "-P"})
-
-        location = self.getStorageLocation()
-        if location:
-            doActionFor(location, 'occupy')
-            self.update_box_status(location)
+        # if self.aq_parent.Title() == 'Biospecimens':
+        #     self.container = self.getField('Project').get(self)
+        #     doActionFor(self, 'sample_due')
+        #     doActionFor(self, 'receive')
+        #
+        # create_samplepartition(self, {'services': [], 'part_id': self.getId() + "-P"})
+        #
+        # location = self.getStorageLocation()
+        # if location:
+        #     doActionFor(location, 'occupy')
+        #     self.update_box_status(location)
 
 from Products.Archetypes import atapi
 from bika.lims.config import PROJECTNAME

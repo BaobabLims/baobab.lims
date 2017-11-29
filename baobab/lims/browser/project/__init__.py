@@ -153,10 +153,13 @@ def create_sample(context, request, values, j, x):
     # Return the newly created sample
     return sample
 
+
 def create_samplepartition(context, data):
     """ Create partition object for sample(context)
     """
+    print data['part_id']
     partition = _createObjectByType('SamplePartition', context, data['part_id'])
     partition.unmarkCreationFlag()
+    partition.reindexObject()
 
     return partition

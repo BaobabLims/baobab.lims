@@ -33,7 +33,6 @@ class AddKitsSubmitHandler(BrowserView):
         self.request = request
         self.form = request.form
         self.uc = getToolByName(self.context, 'uid_catalog')
-        self.bsc = self.bika_setup_catalog
         self.bc = self.bika_catalog
         self.wf = self.portal_workflow
         self.samples_gen = SampleGeneration(self.form, self.context)
@@ -62,7 +61,7 @@ class AddKitsSubmitHandler(BrowserView):
         kit_storages = []
         form_uids = self.form['kit-storage-uids'].split(',')
         for uid in form_uids:
-            brain = self.bsc(UID=uid)[0]
+            brain = self.bika_setup_catalog(UID=uid)[0]
             instance = brain.getObject()
             # last-minute check if this storage is available
             if IUnmanagedStorage.providedBy(instance) \
@@ -101,7 +100,7 @@ class AddKitsSubmitHandler(BrowserView):
         """
         si_storage = []
         for uid in self.form['si-storage-uids'].split(','):
-            brain = self.bsc(UID=uid)
+            brain = self.portal_catalog(UID=uid)
             if not brain:
                 raise ValidationError(u'Bad uid. This should not happen.')
             si_storage.append(brain[0].getObject())
@@ -178,7 +177,7 @@ class AddKitsSubmitHandler(BrowserView):
         template = kit.getKitTemplate()
         products = []
         for item in template.getProductList():
-            product = self.bsc(UID=item['product_uid'])[0].getObject()
+            product = self.bika_setup_catalog(UID=item['product_uid'])[0].getObject()
             products.append(product)
         for product in products:
             stock_items = product.getBackReferences("StockItemProduct")
@@ -211,18 +210,18 @@ class AddKitsSubmitHandler(BrowserView):
         """Create the new kits
         """
         prefix_text = self.form.get('kits-prefix-text', None)
-        leading_zeros = self.form.get('kits-leading-zeros', None)
         seq_start = int(self.form.get('seq-start', None))
         kit_count = int(self.form.get('kit-count', None))
         kit_template_uid = self.form.get('kit_template_uid', None)
         spec_per_kit = int(self.form.get('specimen-count', None))
+        leading_zeros = self.form.get('kits-leading-zeros', [])
         kits = []
         # sample storage
         samples = []
         sample_storage = self.samples_gen.get_biospecimen_storages()
         for x in range(seq_start, seq_start + kit_count):
-            id_template = prefix_text + '-' + str(x).zfill(len(leading_zeros))
-            title_template = prefix_text + ' ' + str(x).zfill(len(leading_zeros))
+            id_template = prefix_text + '-' + str(x).zfill(len(leading_zeros) + 1)
+            title_template = prefix_text + ' ' + str(x).zfill(len(leading_zeros) + 1)
             obj = api.content.create(
                 container=self.context,
                 type='Kit',
@@ -254,9 +253,9 @@ class AddKitsSubmitHandler(BrowserView):
         form = self.request.form
 
         prefix_text = form.get('kits-prefix-text', None)
-        leading_zeros = form.get('kits-leading-zeros', None)
-        if not prefix_text or not leading_zeros:
-            msg = u'Prefix text and Leading zeros are both required.'
+        leading_zeros = form.get('kits-leading-zeros', [])
+        if not prefix_text:
+            msg = u'Prefix text is required.'
             raise ValidationError(msg)
 
         # TODO: check if leading zeros has only zeros
@@ -293,14 +292,14 @@ class AddKitsSubmitHandler(BrowserView):
         # Check that none of the IDs conflict with existing items
         ids = [x.id for x in self.context.objectValues()]
         for x in range(kit_count):
-            id_kit = prefix_text + '-' + str(seq_start+ x).zfill(len(leading_zeros))
+            id_kit = prefix_text + '-' + str(seq_start + x).zfill(len(leading_zeros) + 1)
             if id_kit in ids:
                 raise ValidationError(
                     u'The ID %s exists, cannot be created.' % id_kit)
 
         # Check there are enough stock items in stock to create the kits
         if kit_template_uid:
-            kit_template = self.bsc(UID=kit_template_uid)[0].getObject()
+            kit_template = self.bika_setup_catalog(UID=kit_template_uid)[0].getObject()
             for product in kit_template.getProductList():
                 items = self.product_stock_items(product['product_uid'])
                 items = self.filter_stock_items_by_storage(items)

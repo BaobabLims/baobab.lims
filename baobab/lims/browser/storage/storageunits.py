@@ -21,7 +21,7 @@ class StorageUnitsView(BikaListingView):
         self.request = request
 
     def __call__(self):
-        self.catalog = 'bika_setup_catalog'
+        # self.catalog = 'bika_setup_catalog'
         path = '/'.join(self.context.getPhysicalPath())
         self.contentFilter = {
             'path': {'query': path, 'depth': 1, 'level': 0},

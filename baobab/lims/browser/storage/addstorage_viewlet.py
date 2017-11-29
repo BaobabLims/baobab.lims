@@ -157,10 +157,9 @@ class AddStorageUnits(Storage):
         bsc = getToolByName(self, 'bika_setup_catalog')
         # titles
         prefix_text = form.get('units-prefix-text', None)
-        leading_zeros = form.get('units-leading-zeros', None)
+        leading_zeros = form.get('units-leading-zeros', [])
         # schema
         unit_type = form.get('units_type_uid', None)
-        # temperature = form.get('units_temperature', '')
         temperature = ''
         if unit_type:
             brains = bsc(portal_type='StorageType', UID=unit_type)
@@ -178,8 +177,8 @@ class AddStorageUnits(Storage):
 
         units = []
         for x in self.get_sequence(start, nr_items):
-            id_template = prefix_text + '-' + str(x).zfill(len(leading_zeros))
-            title_template = prefix_text + ' ' + str(x).zfill(len(leading_zeros))
+            id_template = prefix_text + '-' + str(x).zfill(len(leading_zeros) + 1)
+            title_template = prefix_text + ' ' + str(x).zfill(len(leading_zeros) + 1)
             try:
                 instance = api.content.create(
                     container=self.context,
@@ -209,9 +208,9 @@ class AddStorageUnits(Storage):
         form = self.request.form
         # Prefix and Leading zeros
         prefix_text = self.request.form.get('units-prefix-text', None)
-        leading_zeros = self.request.form.get('units-leading-zeros', None)
-        if not prefix_text or not leading_zeros:
-            msg = u'Prefix text and Leading zeros are both required.'
+        leading_zeros = self.request.form.get('units-leading-zeros', [])
+        if not prefix_text:
+            msg = u'Prefix text is required.'
             raise ValidationError(msg)
 
         # TODO: check if leading zeros has only zeros
@@ -231,7 +230,7 @@ class AddStorageUnits(Storage):
         nr_items = int(form['units_nr_items'])
         ids = [x.id for x in self.context.objectValues()]
         for x in self.get_sequence(start, nr_items):
-            id_unit = prefix_text + '-' + str(x).zfill(len(leading_zeros))
+            id_unit = prefix_text + '-' + str(x).zfill(len(leading_zeros) + 1)
             if  id_unit in ids:
                 msg = u'The ID %s already exists.' % id_unit
                 raise ValidationError(msg)
@@ -278,7 +277,7 @@ class AddManagedStorage(Storage):
         form = self.request.form
         # titles
         prefix_text = form.get('managed-prefix-text', None)
-        leading_zeros = form.get('managed-leading-zeros', None)
+        leading_zeros = form.get('managed-leading-zeros', [])
         # schema
         # temperature = form.get('managed-temperature', '')
 
@@ -296,8 +295,8 @@ class AddManagedStorage(Storage):
 
         storages = []
         for x in self.get_sequence(start, nr_items):
-            id_template = prefix_text + '-' + str(x).zfill(len(leading_zeros))
-            title_template = prefix_text + ' ' + str(x).zfill(len(leading_zeros))
+            id_template = prefix_text + '-' + str(x).zfill(len(leading_zeros) + 1)
+            title_template = prefix_text + ' ' + str(x).zfill(len(leading_zeros) + 1)
             storage = api.content.create(
                 container=self.context,
                 type="ManagedStorage",
@@ -343,9 +342,9 @@ class AddManagedStorage(Storage):
         form = self.request.form
         # Prefix and Leading zeros
         prefix_text = self.request.form.get('managed-prefix-text', None)
-        leading_zeros = self.request.form.get('managed-leading-zeros', None)
-        if not prefix_text or not leading_zeros:
-            msg = u'Prefix text and Leading zeros are both required.'
+        leading_zeros = self.request.form.get('managed-leading-zeros', [])
+        if not prefix_text:
+            msg = u'Prefix text is required.'
             raise ValidationError(msg)
 
         # TODO: check if leading zeros has only zeros
@@ -381,7 +380,7 @@ class AddManagedStorage(Storage):
         nr_items = int(form['managed-nr-items'])
         ids = [x.id for x in self.context.objectValues()]
         for x in self.get_sequence(start, nr_items):
-            id_storage = prefix_text + '-' + str(x).zfill(len(leading_zeros))
+            id_storage = prefix_text + '-' + str(x).zfill(len(leading_zeros) + 1)
             if id_storage in ids:
                 msg = u'The ID %s already exists.' % id_storage
                 raise ValidationError(msg)
@@ -415,7 +414,7 @@ class AddUnmanagedStorage(Storage):
         form = self.request.form
         # titles
         prefix_text = form.get('unmanaged-prefix-text', None)
-        leading_zeros = form.get('unmanaged-leading-zeros', None)
+        leading_zeros = form.get('unmanaged-leading-zeros', [])
         # schema
         # temperature = form.get('unmanaged-temperature', '')
 
@@ -428,8 +427,8 @@ class AddUnmanagedStorage(Storage):
 
         storages = []
         for x in self.get_sequence(start, nr_items):
-            id_template = prefix_text + '-' + str(x).zfill(len(leading_zeros))
-            title_template = prefix_text + ' ' + str(x).zfill(len(leading_zeros))
+            id_template = prefix_text + '-' + str(x).zfill(len(leading_zeros) + 1)
+            title_template = prefix_text + ' ' + str(x).zfill(len(leading_zeros) + 1)
             instance = api.content.create(
                 container=self.context,
                 type="UnmanagedStorage",
@@ -466,9 +465,9 @@ class AddUnmanagedStorage(Storage):
         form = self.request.form
         # Prefix and Leading zeros
         prefix_text = self.request.form.get('unmanaged-prefix-text', None)
-        leading_zeros = self.request.form.get('unmanaged-leading-zeros', None)
-        if not prefix_text or not leading_zeros:
-            msg = u'Prefix text and Leading zeros are both required.'
+        leading_zeros = self.request.form.get('unmanaged-leading-zeros', [])
+        if not prefix_text:
+            msg = u'Prefix text is required.'
             raise ValidationError(msg)
 
         # TODO: check if leading zeros has only zeros
@@ -489,7 +488,7 @@ class AddUnmanagedStorage(Storage):
         nr_items = int(form['unmanaged-nr-items'])
         ids = [x.id for x in self.context.objectValues()]
         for x in self.get_sequence(start, nr_items):
-            id_storage = prefix_text + '-' + str(x).zfill(len(leading_zeros))
+            id_storage = prefix_text + '-' + str(x).zfill(len(leading_zeros) + 1)
             if id_storage in ids:
                 msg = u'The ID %s already exists.' % x
                 raise ValidationError(msg)

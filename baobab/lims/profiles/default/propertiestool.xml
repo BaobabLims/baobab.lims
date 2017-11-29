@@ -23,6 +23,7 @@
         <element value="Product"/>
         <element value="StockItem"/>
         <element value="StorageUnit"/>
+        <element value="StoragePosition"/>
   </property>
 </object>
 
