@@ -8,6 +8,7 @@ from zope.interface import implements
 from baobab.lims.idserver import renameAfterCreation
 from zope.interface import alsoProvides
 from baobab.lims.interfaces import ISampleStorageLocation, IStockItemStorage
+from baobab.lims.browser.project import *
 
 def get_project_multi_items(context, string_elements, portal_type, portal_catalog):
 
@@ -261,10 +262,9 @@ class Kits(WorksheetImporter):
 
             #get the kit template if it exists
             bsc = getToolByName(self.context, 'bika_setup_catalog')
-            kit_template_list = bsc(portal_type="KitTemplate", Title=row.get('KitTemplate'))
-            kit_template = None
-            if kit_template_list:
-                kit_template = kit_template_list[0].getObject()
+            kit_template_list = bsc(portal_type="KitTemplate", title=row.get('KitTemplate'))
+            kit_template = kit_template_list and kit_template_list[0].getObject() or None
+
 
             obj = _createObjectByType('Kit', project, tmpID())
             obj.edit(
@@ -273,12 +273,45 @@ class Kits(WorksheetImporter):
                 Project=project,
                 KitTemplate=kit_template,
                 #StorageLocation=
+                #StockItems=stock_items,
                 FormsThere=row.get('FormsThere'),
                 DateCreated=row.get('DateCreated', ''),
             )
 
+            try:
+                if kit_template:
+                    stock_items = self.assign_stock_items(kit_template, row, bsc, pc)
+                    obj.setStockItems(stock_items)
+                    update_quantity_products(obj, bsc)
+            except Exception as e:
+                print '------------error-------------'
+                print str(e)
+                pass
+
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
+
+    def assign_stock_items(self, template, row, bsc, pc):
+        print '-----------------'
+        si_storages = row.get('StockItemsStorage').split(',')
+
+        if si_storages:
+            si_storage_uids = []
+            for storage in si_storages:
+                print storage
+                storage_brains = pc(portal_type='UnmanagedStorage', Title=storage)
+                print storage_brains
+                storage_obj = storage_brains and storage_brains[0].getObject() or None
+                if storage_obj:
+                    si_storage_uids.append(storage_obj.UID())
+            print si_storage_uids
+
+        portal_workflow = getToolByName(self.context, 'portal_workflow')
+
+        stock_items = template_stock_items(template, bsc, pc, portal_workflow, si_storage_uids)
+        return stock_items
+
+
 
 class Storage(WorksheetImporter):
     """
@@ -311,17 +344,21 @@ class Storage(WorksheetImporter):
 
             if storage_type == 'UnmanagedStorage':
                 alsoProvides(storage_obj, IStockItemStorage)
+                storage_obj.edit(
+                    title=hierarchy,
+                )
 
             if storage_type == 'ManagedStorage':
                 storage_obj.edit(
                     XAxis=row.get('Rows'),
                     YAxis=row.get('Columns'),
                 )
+                alsoProvides(storage_obj, ISampleStorageLocation)
 
                 for p in range(1, row.get('NumberOfPoints')+1):
                     position = _createObjectByType('StoragePosition', storage_obj, str(p))
                     position.edit(
-                        title=hierarchy + ".{id}".format(id=p)  #would be better to get the id from the storage object.  ask hocine.
+                        title=hierarchy + ".{id}".format(id=p)
                     )
                     alsoProvides(position, ISampleStorageLocation)
                     position.reindexObject()
@@ -364,6 +401,11 @@ class StockItems(WorksheetImporter):
 
             st_loc_list = pc(portal_type='UnmanagedStorage', Title=row.get('StorageLocation'))
             storage_location = st_loc_list and st_loc_list[0].getObject() or None
+
+            print '-------------'
+            print row.get('StorageLocation')
+            print st_loc_list
+            print storage_location
             
             obj = _createObjectByType('StockItem', folder, tmpID())
             obj.edit(

@@ -163,3 +163,96 @@ def create_samplepartition(context, data):
     partition.reindexObject()
 
     return partition
+
+
+def template_stock_items(template, bsc, pc, workflow, storage_uids):
+    """ Return stock-items of kit template's products
+    """
+    stock_items = []
+    for product in template.getProductList():
+        items = product_stock_items(product['product_uid'], bsc)
+        items = filter_stock_items_by_storage(items, pc, storage_uids)
+        quantity_product = int(product['quantity'])
+        quantity_stock_items = sum([item.getQuantity() for item in items])
+        if quantity_stock_items < quantity_product:
+            msg = u"There is insufficient stock available for the " \
+                u"product '%s'." % product['product']
+            raise ValueError(msg)
+
+        for item in items:
+            if item.getQuantity() <= quantity_product:
+                quantity_product -= item.getQuantity()
+                item.setQuantity(0)
+                workflow.doActionFor(item, 'use')
+            else:
+                item.setQuantity(item.getQuantity() - quantity_product)
+                quantity_product = 0
+
+            stock_items.append(item)
+
+            if quantity_product == 0:
+                break
+
+    return stock_items
+
+
+def product_stock_items(uid, bsc):
+    """ stock items of a product uid
+    """
+    brains = bsc(
+        portal_type='StockItem',
+        getProductUID=uid,
+        review_state='available')
+    items = [b.getObject() for b in brains]
+
+    return items
+
+
+def filter_stock_items_by_storage(items, portal_catalog, storage_uids):
+    """Return stock-items in the selected storage
+    """
+    si_storage = get_si_storages(storage_uids, portal_catalog)
+    stock_items = []
+    for storage in si_storage:
+        if IUnmanagedStorage.providedBy(storage):
+            sis = storage.getBackReferences('ItemStorageLocation')
+            stock_items += [si for si in sis if si in items]
+        elif IManagedStorage.providedBy(storage):
+            sis = storage.only_items_of_portal_type('StockItem')
+            stock_items += [si for si in sis if si in items]
+
+    return stock_items
+
+
+def get_si_storages(storage_uids, portal_catalog):
+    """ return storage which could store stock-items
+    """
+    print '----------------'
+    print portal_catalog
+    si_storage = []
+    for uid in storage_uids:
+        print uid
+        brain = portal_catalog(UID=uid)
+        if not brain:
+            raise ValidationError(u'Bad uid. This should not happen.')
+        si_storage.append(brain[0].getObject())
+
+    return si_storage
+
+
+def update_quantity_products(kit, bika_setup_catalog):
+    """ Update the products quantity after assigning stock-items to kit
+    """
+    template = kit.getKitTemplate()
+    products = []
+    for item in template.getProductList():
+        product = bika_setup_catalog(UID=item['product_uid'])[0].getObject()
+        products.append(product)
+    for product in products:
+        stock_items = product.getBackReferences("StockItemProduct")
+        quantity = sum([item.getQuantity() for item in stock_items])
+        product.setQuantity(quantity)
+        product.reindexObject()
+
+
+

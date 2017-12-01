@@ -15,7 +15,7 @@
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
 
     <adapter
-      name="KitTemplates"
+      name="Kit_Templates"
       factory="baobab.lims.setupdata.Kit_Templates"
       provides="bika.lims.interfaces.ISetupDataImporter"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
