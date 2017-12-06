@@ -286,31 +286,26 @@ class Kits(WorksheetImporter):
             except Exception as e:
                 print '------------error-------------'
                 print str(e)
-                pass
 
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
 
     def assign_stock_items(self, template, row, bsc, pc):
-        print '-----------------'
+
         si_storages = row.get('StockItemsStorage').split(',')
 
         if si_storages:
             si_storage_uids = []
             for storage in si_storages:
-                print storage
                 storage_brains = pc(portal_type='UnmanagedStorage', Title=storage)
-                print storage_brains
                 storage_obj = storage_brains and storage_brains[0].getObject() or None
                 if storage_obj:
                     si_storage_uids.append(storage_obj.UID())
-            print si_storage_uids
 
         portal_workflow = getToolByName(self.context, 'portal_workflow')
 
         stock_items = template_stock_items(template, bsc, pc, portal_workflow, si_storage_uids)
         return stock_items
-
 
 
 class Storage(WorksheetImporter):
@@ -401,11 +396,6 @@ class StockItems(WorksheetImporter):
 
             st_loc_list = pc(portal_type='UnmanagedStorage', Title=row.get('StorageLocation'))
             storage_location = st_loc_list and st_loc_list[0].getObject() or None
-
-            print '-------------'
-            print row.get('StorageLocation')
-            print st_loc_list
-            print storage_location
             
             obj = _createObjectByType('StockItem', folder, tmpID())
             obj.edit(

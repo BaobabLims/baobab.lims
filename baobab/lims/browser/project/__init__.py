@@ -227,8 +227,6 @@ def filter_stock_items_by_storage(items, portal_catalog, storage_uids):
 def get_si_storages(storage_uids, portal_catalog):
     """ return storage which could store stock-items
     """
-    print '----------------'
-    print portal_catalog
     si_storage = []
     for uid in storage_uids:
         print uid

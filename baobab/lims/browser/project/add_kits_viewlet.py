@@ -96,75 +96,6 @@ class AddKitsSubmitHandler(BrowserView):
                                       storage)
         return count
 
-    # def get_si_storages(self):
-    #     """ return storage which could store stock-items
-    #     """
-    #     si_storage = []
-    #     for uid in self.form['si-storage-uids'].split(','):
-    #         brain = self.portal_catalog(UID=uid)
-    #         if not brain:
-    #             raise ValidationError(u'Bad uid. This should not happen.')
-    #         si_storage.append(brain[0].getObject())
-    #
-    #     return si_storage
-    #
-    # def filter_stock_items_by_storage(self, items):
-    #     """Return stock-items in the selected storage
-    #     """
-    #     si_storage = self.get_si_storages()
-    #     stock_items = []
-    #     for storage in si_storage:
-    #         if IUnmanagedStorage.providedBy(storage):
-    #             sis = storage.getBackReferences('ItemStorageLocation')
-    #             stock_items += [si for si in sis if si in items]
-    #         elif IManagedStorage.providedBy(storage):
-    #             sis = storage.only_items_of_portal_type('StockItem')
-    #             stock_items += [si for si in sis if si in items]
-    #
-    #     return stock_items
-    #
-    # def product_stock_items(self, uid):
-    #     """ stock items of a product uid
-    #     """
-    #     brains = self.bika_setup_catalog(
-    #         portal_type='StockItem',
-    #         getProductUID=uid,
-    #         review_state='available')
-    #     items = [b.getObject() for b in brains]
-    #
-    #     return items
-
-    # def template_stock_items(self, template):
-    #     """ Return stock-items of kit template's products
-    #     """
-    #     stock_items = []
-    #     for product in template.getProductList():
-    #         items = self.product_stock_items(product['product_uid'])
-    #         items = self.filter_stock_items_by_storage(items)
-    #         quantity_product = int(product['quantity'])
-    #         quantity_stock_items = sum([item.getQuantity() for item in items])
-    #         if quantity_stock_items < quantity_product:
-    #             msg = u"There is insufficient stock available for the " \
-    #                 u"product '%s'." % product['product']
-    #             self.form_error(msg)
-    #             raise ValidationError(msg)
-    #
-    #         for item in items:
-    #             if item.getQuantity() <= quantity_product:
-    #                 quantity_product -= item.getQuantity()
-    #                 item.setQuantity(0)
-    #                 self.portal_workflow.doActionFor(item, 'use')
-    #             else:
-    #                 item.setQuantity(item.getQuantity() - quantity_product)
-    #                 quantity_product = 0
-    #
-    #             stock_items.append(item)
-    #
-    #             if quantity_product == 0:
-    #                 break
-    #
-    #     return stock_items
-
     def assign_stock_items_to_kit(self, kit):
         """Find required stock-items, remove them from storage and assign them to kit.
         """
@@ -179,20 +110,6 @@ class AddKitsSubmitHandler(BrowserView):
         except ValidationError as validation_error:
             raise ValidationError(str(validation_error))
         kit.setStockItems(stock_items)
-
-    # def update_quantity_products(self, kit):
-    #     """ Update the products quantity after assigning stock-items to kit
-    #     """
-    #     template = kit.getKitTemplate()
-    #     products = []
-    #     for item in template.getProductList():
-    #         product = self.bika_setup_catalog(UID=item['product_uid'])[0].getObject()
-    #         products.append(product)
-    #     for product in products:
-    #         stock_items = product.getBackReferences("StockItemProduct")
-    #         quantity = sum([item.getQuantity() for item in stock_items])
-    #         product.setQuantity(quantity)
-    #         product.reindexObject()
 
     def assign_kit_to_storage(self, kits, storages):
         """ assign position to created kits. Not used anymore!
