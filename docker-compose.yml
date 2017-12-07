@@ -1,5 +1,14 @@
 version: '2'
 services:
+  nginx:
+    restart: always
+    build: ./docker/nginx/
+    image: baobab_nginx
+    container_name: baobab_nginx
+    ports:
+      - "80:80"
+    links:
+      - baobab_lims
   baobab_lims:
     restart: always
     build: ./docker/
