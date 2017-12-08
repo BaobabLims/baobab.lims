@@ -33,7 +33,7 @@ schema = BikaSchema.copy() + Schema((
             description=_("Location where item is kept"),
             size=40,
             visible={'edit': 'visible', 'view': 'visible'},
-            catalog_name='bika_setup_catalog',
+            catalog_name='portal_catalog',
             showOn=True,
             base_query={'inactive_state': 'active',
                         'review_state': 'available',

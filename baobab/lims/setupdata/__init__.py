@@ -1,13 +1,11 @@
 from bika.lims.exportimport.dataimport import SetupDataSetList as SDL
 from bika.lims.exportimport.setupdata import WorksheetImporter
-from Products.CMFCore.utils import getToolByName
-from bika.lims.utils import tmpID
-from Products.CMFPlone.utils import safe_unicode, _createObjectByType
+from Products.CMFPlone.utils import _createObjectByType
 from bika.lims.interfaces import ISetupDataSetList
 from zope.interface import implements
 from baobab.lims.idserver import renameAfterCreation
-from bika.lims.workflow import doActionFor
-from bika.lims import logger
+from baobab.lims.interfaces import ISampleStorageLocation, IStockItemStorage
+from baobab.lims.browser.project import *
 
 
 def get_project_multi_items(context, string_elements, portal_type, portal_catalog):
@@ -125,6 +123,69 @@ class Kit_Templates(WorksheetImporter):
             renameAfterCreation(obj)
 
 
+class Kits(WorksheetImporter):
+    """ Import projects
+    """
+    def Import(self):
+
+        pc = getToolByName(self.context, 'portal_catalog')
+
+        rows = self.get_rows(3)
+        for row in rows:
+            # get the project
+            project_list = pc(portal_type="Project", Title=row.get('Project'))
+            if project_list:
+                project = project_list[0].getObject()
+            else:
+                continue
+
+            # get the kit template if it exists
+            bsc = getToolByName(self.context, 'bika_setup_catalog')
+            kit_template_list = bsc(portal_type="KitTemplate", title=row.get('KitTemplate'))
+            kit_template = kit_template_list and kit_template_list[0].getObject() or None
+
+            stock_items = []
+            try:
+                if kit_template:
+                    stock_items = self.assign_stock_items(kit_template, row, bsc, pc)
+            except ValueError as e:
+                continue
+
+            obj = _createObjectByType('Kit', project, tmpID())
+            obj.edit(
+                title=row.get('title'),
+                description=row.get('description'),
+                Project=project,
+                KitTemplate=kit_template,
+                FormsThere=row.get('FormsThere'),
+                DateCreated=row.get('DateCreated', ''),
+            )
+
+            if kit_template:
+                obj.setStockItems(stock_items)
+                update_quantity_products(obj, bsc)
+
+            obj.unmarkCreationFlag()
+            renameAfterCreation(obj)
+
+    def assign_stock_items(self, template, row, bsc, pc):
+
+        si_storages = row.get('StockItemsStorage').split(',')
+
+        if si_storages:
+            si_storage_uids = []
+            for storage in si_storages:
+                storage_brains = pc(portal_type='UnmanagedStorage', Title=storage)
+                storage_obj = storage_brains and storage_brains[0].getObject() or None
+                if storage_obj:
+                    si_storage_uids.append(storage_obj.UID())
+
+        portal_workflow = getToolByName(self.context, 'portal_workflow')
+
+        stock_items = template_stock_items(template, bsc, pc, portal_workflow, si_storage_uids)
+        return stock_items
+
+
 class Storage_Types(WorksheetImporter):
     """Add some dummy storage types
     """
@@ -141,6 +202,7 @@ class Storage_Types(WorksheetImporter):
             )
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
+
 
 class Projects(WorksheetImporter):
     """ Import projects
@@ -185,7 +247,6 @@ class Biospecimens(WorksheetImporter):
 
     def Import(self):
         pc = getToolByName(self.context, 'portal_catalog')
-        wf = getToolByName(self.context, 'portal_workflow')
 
         rows = self.get_rows(3)
         for row in rows:
@@ -239,44 +300,110 @@ class Biospecimens(WorksheetImporter):
 
             from baobab.lims.subscribers.sample import ObjectInitializedEventHandler
             ObjectInitializedEventHandler(obj, None)
-            # doActionFor(obj, "sample_due")
-            # doActionFor(obj, "receive")
-            # doActionFor(storage_location, 'occupy')
 
 
-class Kits(WorksheetImporter):
-    """ Import projects
+class Storage(WorksheetImporter):
+    """
+    Import storage
     """
     def Import(self):
 
-        pc = getToolByName(self.context, 'portal_catalog')
-
         rows = self.get_rows(3)
         for row in rows:
-            # get the project
-            project_list = pc(portal_type="Project", Title=row.get('Project'))
-            if project_list:
-                project = project_list[0].getObject()
-            else:
+
+            # get the type of storage
+            storage_type = row.get('type')
+            if storage_type not in ['StorageUnit', 'ManagedStorage', 'UnmanagedStorage']:
                 continue
 
-            #get the kit template if it exists
-            bsc = getToolByName(self.context, 'bika_setup_catalog')
-            kit_template_list = bsc(portal_type="KitTemplate", Title=row.get('KitTemplate'))
-            kit_template = None
-            if kit_template_list:
-                kit_template = kit_template_list[0].getObject()
+            title = row.get('title')
+            # get the parent
+            hierarchy = row.get('hierarchy')
+            parent = self.get_parent_storage(hierarchy)
+            if not parent:
+                print "parent not found for %s" % hierarchy
+                continue
 
-            obj = _createObjectByType('Kit', project, tmpID())
-            obj.edit(
-                title=row.get('title'),
-                description=row.get('description'),
-                Project=project,
-                KitTemplate=kit_template,
-                #StorageLocation=
-                FormsThere=row.get('FormsThere'),
-                DateCreated=row.get('DateCreated', ''),
+            storage_obj = _createObjectByType(storage_type, parent, row.get('id'))
+            storage_obj.edit(
+                title=title,
             )
+
+            if storage_type == 'UnmanagedStorage':
+                alsoProvides(storage_obj, IStockItemStorage)
+                storage_obj.edit(
+                    title=hierarchy,
+                )
+
+            if storage_type == 'ManagedStorage':
+                storage_obj.edit(
+                    XAxis=row.get('Rows'),
+                    YAxis=row.get('Columns'),
+                )
+                alsoProvides(storage_obj, ISampleStorageLocation)
+
+                for p in range(1, row.get('NumberOfPoints')+1):
+                    position = _createObjectByType('StoragePosition', storage_obj, str(p))
+                    position.edit(
+                        title=hierarchy + ".{id}".format(id=p)
+                    )
+                    alsoProvides(position, ISampleStorageLocation)
+                    position.reindexObject()
+
+            storage_obj.unmarkCreationFlag()
+            storage_obj.reindexObject()
+
+    def get_parent_storage(self, hierarchy):
+
+        pc = getToolByName(self.context, 'portal_catalog')
+        hierarchy_pieces = hierarchy.split('.')
+
+        if len(hierarchy_pieces) <= 1:
+            return self.context.storage
+
+        parent_id = hierarchy_pieces[len(hierarchy_pieces) - 2]
+        parent_hierarchy = '.'.join(hierarchy_pieces[:-1])
+        parent_list = pc(portal_type="StorageUnit", id=parent_id)
+
+        if parent_list:
+            for parent_item in parent_list:
+                parent_object = parent_item.getObject()
+                if parent_object.getHierarchy() == parent_hierarchy:
+                    return parent_object
+
+
+class StockItems(WorksheetImporter):
+    """ Import stock items
+    """
+    def Import(self):
+        folder = self.context.bika_setup.bika_stockitems
+        rows = self.get_rows(3)
+        bsc = getToolByName(self.context, 'bika_setup_catalog')
+        pc = getToolByName(self.context, 'portal_catalog')
+        for row in rows:
+            products = bsc(portal_type="Product", title=row.get('Product'))
+            product = products and products[0].getObject() or None
+            description = row.get('description', '')
+
+            st_loc_list = pc(portal_type='UnmanagedStorage', Title=row.get('StorageLocation'))
+            storage_location = st_loc_list and st_loc_list[0].getObject() or None
+            
+            obj = _createObjectByType('StockItem', folder, tmpID())
+            obj.edit(
+                Product=product,
+                StorageLocation=storage_location,
+                description=description,
+                Quantity=self.to_int(row.get('Quantity', 0)),
+                orderId=row.get('InvoiceNr', ''),
+                batchId=row.get('BatchNr', ''),
+                receivedBy=row.get('ReceivedBy'),
+                dateReceived=row.get('DateReceived', ''),
+            )
+
+            new_quantity = int(product.getQuantity()) + int(row.get('Quantity'))
+            product.setQuantity(new_quantity)
+            product.reindexObject()
 
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
+

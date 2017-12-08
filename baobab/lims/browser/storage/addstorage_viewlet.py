@@ -433,7 +433,11 @@ class AddUnmanagedStorage(Storage):
                 container=self.context,
                 type="UnmanagedStorage",
                 id=id_template,
-                title=title_template.format(id=x))
+            )
+
+            # change title to hierarchy plus id
+            instance.setTitle(instance.getHierarchy())
+
 
             if instance.id != id_template:
                 self.context.manage_renameObject(

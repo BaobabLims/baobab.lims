@@ -15,7 +15,7 @@
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
 
     <adapter
-      name="KitTemplates"
+      name="Kit_Templates"
       factory="baobab.lims.setupdata.Kit_Templates"
       provides="bika.lims.interfaces.ISetupDataImporter"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
@@ -26,15 +26,15 @@
       provides="bika.lims.interfaces.ISetupDataImporter"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
 
-    <!--<adapter
-      name="projects"
-      factory="baobab.lims.setupdata.Projects"
-      provides="bika.lims.interfaces.ISetupDataImporter"
-      for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>-->
-
     <adapter
       name="Projects"
       factory="baobab.lims.setupdata.Projects"
+      provides="bika.lims.interfaces.ISetupDataImporter"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
+
+    <adapter
+      name="Storage"
+      factory="baobab.lims.setupdata.Storage"
       provides="bika.lims.interfaces.ISetupDataImporter"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
 
@@ -47,6 +47,12 @@
     <adapter
       name="Kits"
       factory="baobab.lims.setupdata.Kits"
+      provides="bika.lims.interfaces.ISetupDataImporter"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
+
+    <adapter
+      name="StockItems"
+      factory="baobab.lims.setupdata.StockItems"
       provides="bika.lims.interfaces.ISetupDataImporter"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
 
