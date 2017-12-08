@@ -1,13 +1,8 @@
 from Products.ATContentTypes.lib import constraintypes
-from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from bika.lims.browser import BrowserView
 from plone import api
 from plone.app.layout.viewlets import ViewletBase
-from zope.schema import ValidationError
-from DateTime import DateTime
-
-#from baobab.lims.browser.project import get_first_sampletype
 from baobab.lims.browser.project import *
 from baobab.lims.browser.project.util import SampleGeneration
 from baobab.lims.interfaces import IUnmanagedStorage, IStoragePosition, IManagedStorage
@@ -107,8 +102,7 @@ class AddKitsSubmitHandler(BrowserView):
         except ValueError as value_error:
             self.form_error(str(value_error))
             raise ValidationError(str(value_error))
-        except ValidationError as validation_error:
-            raise ValidationError(str(validation_error))
+
         kit.setStockItems(stock_items)
 
     def assign_kit_to_storage(self, kits, storages):
@@ -161,7 +155,6 @@ class AddKitsSubmitHandler(BrowserView):
 
             if kit_template_uid:
                 self.assign_stock_items_to_kit(obj)
-                #self.update_quantity_products(obj)
                 update_quantity_products(obj, self.bika_setup_catalog)
             self.context.manage_renameObject(obj.id, id_template.format(id=x))
             kits.append(obj)

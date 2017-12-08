@@ -24,6 +24,7 @@ def get_first_sampletype(context):
     results = bsc.unrestrictedSearchResults({'portal_type': 'SampleType'})
     return portal.unrestrictedTraverse(results[0].getPath()) if len(results) else None
 
+
 def get_storage_objects(context, storage_uids):
     """Take a list of UIDs from the form, and resolve to a list of Storages.
     Accepts ManagedStorage, UnmanagedStorage, or StoragePosition UIDs.
