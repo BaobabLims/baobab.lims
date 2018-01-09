@@ -26,7 +26,9 @@ window.baobab.lims.controllers =  {
     "#order_publish_container":
         ['OrderPublishView'],
     ".portaltype-sample":
-        ['BaobabSampleView']
+        ['BaobabSampleView'],
+    ".portaltype-sampleshipment":
+        ['BaobabSampleShipmentView']
 };
 
 /**

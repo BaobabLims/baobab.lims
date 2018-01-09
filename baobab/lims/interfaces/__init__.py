@@ -129,3 +129,11 @@ class IStorageUnits(Interface):
 class ISharableSample(Interface):
     """
     """
+
+class ISampleShipment(Interface):
+    """
+    """
+
+class ISampleShipments(Interface):
+    """
+    """

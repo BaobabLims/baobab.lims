@@ -2,6 +2,7 @@ projects,Projects
 kits,Kits
 shipments,Shipments
 biospecimens,Biospecimens
+sampleshipments,SampleShipments
 inventoryorders,InventoryOrderFolder
 storage,StorageUnits
 bika_setup,BikaSetup
