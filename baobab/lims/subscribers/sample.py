@@ -19,14 +19,22 @@ def ObjectInitializedEventHandler(instance, event):
 
         create_samplepartition(instance, {'services': [], 'part_id': instance.getId() + "-P"})
 
-        if float(instance.getField('Volume').get(instance)) > 0:
-            doActionFor(instance, 'sample_due')
-            doActionFor(instance, 'receive')
-
         location = instance.getStorageLocation()
-        if location:
-            doActionFor(location, 'occupy')
-            instance.update_box_status(location)
+        if hasattr(instance, 'api_source'):
+            if instance.api_source == "odk":    #special case for field collecdted odk samples
+                doActionFor(instance, 'sample_due')
+                if location:
+                    doActionFor(location, 'reserve')
+                    instance.update_box_status(location)
+            delattr(instance, 'api_source')
+        else:
+            if float(instance.getField('Volume').get(instance)) > 0:
+                doActionFor(instance, 'sample_due')
+                doActionFor(instance, 'receive')
+
+            if location:
+                doActionFor(location, 'occupy')
+                instance.update_box_status(location)
 
 
 def ObjectModifiedEventHandler(instance, event):

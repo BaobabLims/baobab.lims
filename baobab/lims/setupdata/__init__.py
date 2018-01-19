@@ -246,60 +246,66 @@ class Biospecimens(WorksheetImporter):
     """
 
     def Import(self):
-        pc = getToolByName(self.context, 'portal_catalog')
 
         rows = self.get_rows(3)
         for row in rows:
-            # get the project
-            project_list = pc(portal_type="Project", Title=row.get('Project'))
-
-            project = project_list and project_list[0].getObject() or None
-            if not project: continue
-
-            sampletype_list = pc(portal_type="SampleType", Title=row.get('SampleType'))
-            sample_type = sampletype_list and sampletype_list[0].getObject() or None
-            if not sample_type: continue
-
-            linked_sample_list = pc(portal_type="Sample", Title=row.get('LinkedSample', ''))
-            linked_sample = linked_sample_list and linked_sample_list[0].getObject() or None
-
-            barcode = row.get('Barcode')
-            if not barcode:
-                continue
-
             try:
-                volume = str(row.get('Volume'))
-                float_volume = float(volume)
-                if not float_volume:
-                    continue
+                self.create_biospecimen(row)
             except:
                 continue
 
-            obj = _createObjectByType('Sample', project, tmpID())
+    def create_biospecimen(self, row):
+        pc = getToolByName(self.context, 'portal_catalog')
 
-            st_loc_list = pc(portal_type='StoragePosition', Title=row.get('StorageLocation'))
-            storage_location = st_loc_list and st_loc_list[0].getObject() or None
+        # get the project
+        project_list = pc(portal_type="Project", Title=row.get('Project'))
+        project = project_list and project_list[0].getObject() or None
+        if not project: raise
 
-            obj.edit(
-                title=row.get('title'),
-                description=row.get('description'),
-                Project=project,
-                AllowSharing=row.get('AllowSharing'),
-                SampleType=sample_type,
-                StorageLocation=storage_location,
-                SubjectID=row.get('SubjectID'),
-                Barcode=barcode,
-                Volume=volume,
-                Unit=row.get('Unit'),
-                LinkedSample=linked_sample,
-                DateCreated=row.get('DateCreated'),
-            )
+        sampletype_list = pc(portal_type="SampleType", Title=row.get('SampleType'))
+        sample_type = sampletype_list and sampletype_list[0].getObject() or None
+        if not sample_type: raise
 
-            obj.unmarkCreationFlag()
-            renameAfterCreation(obj)
+        linked_sample_list = pc(portal_type="Sample", Title=row.get('LinkedSample', ''))
+        linked_sample = linked_sample_list and linked_sample_list[0].getObject() or None
 
-            from baobab.lims.subscribers.sample import ObjectInitializedEventHandler
-            ObjectInitializedEventHandler(obj, None)
+        barcode = row.get('Barcode')
+        if not barcode:
+            raise
+
+        try:
+            volume = str(row.get('Volume'))
+            float_volume = float(volume)
+            if not float_volume:
+                raise
+        except:
+            raise
+
+        obj = _createObjectByType('Sample', project, tmpID())
+
+        st_loc_list = pc(portal_type='StoragePosition', Title=row.get('StorageLocation'))
+        storage_location = st_loc_list and st_loc_list[0].getObject() or None
+
+        obj.edit(
+            title=row.get('title'),
+            description=row.get('description'),
+            Project=project,
+            AllowSharing=row.get('AllowSharing'),
+            SampleType=sample_type,
+            StorageLocation=storage_location,
+            SubjectID=row.get('SubjectID'),
+            Barcode=barcode,
+            Volume=volume,
+            Unit=row.get('Unit'),
+            LinkedSample=linked_sample,
+            DateCreated=row.get('DateCreated'),
+        )
+
+        obj.unmarkCreationFlag()
+        renameAfterCreation(obj)
+
+        from baobab.lims.subscribers.sample import ObjectInitializedEventHandler
+        ObjectInitializedEventHandler(obj, None)
 
 
 class Storage(WorksheetImporter):
