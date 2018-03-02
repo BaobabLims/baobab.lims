@@ -11,4 +11,6 @@ def add_route(route, endpoint=None, **kw):
     def apiurl(route):
         return '/'.join(s.strip('/') for s in ["", BASE_URL, route])
 
+    # import pdb
+    # pdb.set_trace()
     return add_bika_route(apiurl(route), endpoint, **kw)
