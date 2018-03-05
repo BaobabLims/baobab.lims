@@ -21,40 +21,6 @@ _marker = object()
 DEFAULT_ENDPOINT = "baobab.lims.jsonapi.get"
 
 
-def is_id(id):
-    """Checks if the passed in uid is a valid UID
-
-    :param uid: The uid to check
-    :type uid: string
-    :return: True if the uid is a valid 32 alphanumeric uid or '0'
-    :rtype: bool
-    """
-    #import pdb;pdb.set_trace()
-    if not isinstance(id, basestring):
-        return False
-    if id != "0" and len(id) != 32:
-        return False
-    return True
-
-
-def get_record(id=None):
-    """Get a single record
-    """
-    obj = None
-
-    if id is not None:
-        obj = get_object_by_id(id)
-    else:
-        obj = get_object_by_request()
-    if obj is None:
-        fail(404, "No object found")
-    complete = req.get_complete(default=_marker)
-    if complete is _marker:
-        complete = True
-    items = make_items_for([obj], complete=complete)
-    return u.first(items)
-
-
 def get_object_by_id(id, default=None):
     """Find an object by a given ID
 
