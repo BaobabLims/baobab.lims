@@ -1,5 +1,3 @@
-import string
-
 from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.CMFCore.utils import getToolByName
@@ -437,7 +435,6 @@ class AddUnmanagedStorage(Storage):
 
             # change title to hierarchy plus id
             instance.setTitle(instance.getHierarchy())
-
 
             if instance.id != id_template:
                 self.context.manage_renameObject(

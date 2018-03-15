@@ -1,11 +1,11 @@
-from plone.jsonapi.core import router
-
 from bika.lims import api
 from baobab.lims import logger
-from bika.lims.jsonapi.api import fail, make_items_for, is_creation_allowed, \
-    find_target_container, get_object, search, resource_to_portal_type as bika_resource_to_portal_type, \
-    url_for as bika_url_for, update_items as bika_update_items, validate_object, do_transition_for, get_tool, \
-    get_search_results as bika_get_search_results
+from baobab.lims.jsonapi import config
+
+from bika.lims.jsonapi.api import fail, make_items_for, find_target_container, get_object, search, \
+    resource_to_portal_type as bika_resource_to_portal_type, url_for as bika_url_for, \
+    update_items as bika_update_items, validate_object, do_transition_for, get_tool
+
 from bika.lims.jsonapi.api import create_object as bika_create_object
 from bika.lims.jsonapi import request as req
 from bika.lims.jsonapi import underscore as u
@@ -14,17 +14,14 @@ from baobab.lims.utils.create_sample_type import create_sample_type as create_sm
 
 from bika.lims.workflow import doActionFor
 from bika.lims.jsonapi.interfaces import IDataManager
+
 from AccessControl import Unauthorized
-
-from xml.dom import minidom
-import json
-
-
-
+from zope.dottedname.resolve import resolve
+from zope.interface import alsoProvides
+from plone import api
 
 _marker = object()
 
-#DEFAULT_ENDPOINT = "bika.lims.jsonapi.v2.get"
 DEFAULT_ENDPOINT = "baobab.lims.jsonapi.get"
 
 
@@ -119,7 +116,7 @@ def create_items(portal_type=None, uid=None, endpoint=None, **kw):
         - `parent_uid`  specifies the *uid* of the target folder
         - `parent_path` specifies the *physical path* of the target folder
     """
-
+    # import pdb;pdb.set_trace()
     # disable CSRF
     req.disable_csrf_protection()
 
@@ -151,7 +148,10 @@ def create_items(portal_type=None, uid=None, endpoint=None, **kw):
 
         # create the object and pass in the record data
         obj = create_object(container, portal_type, **record)
-        results.append(obj)
+        if type(obj) is list:
+            results.extend(obj)
+        else:
+            results.append(obj)
 
     if not results:
         fail(400, "No Objects could be created")
@@ -172,18 +172,100 @@ def create_object(container, portal_type, **data):
         logger.warn("Passed in ID '{}' omitted! Bika LIMS "
                     "generates a proper ID for you" .format(id))
 
-    if portal_type == "Sample":
-        obj = create_sample(container, **data)
-        return obj
-    elif portal_type == "SampleType":
-        obj = create_sample_type(container, portal_type, **data)
-        return obj
-    else:
-        try:
-            obj = bika_create_object(container, portal_type, **data)
+    try :
+        if portal_type == "Sample":
+            obj = create_sample(container, **data)
             return obj
-        except:
-            raise
+        elif portal_type == "SampleType":
+            obj = create_sample_type(container, portal_type, **data)
+            return obj
+        elif portal_type == "StorageUnit" or \
+             portal_type == "UnmanagedStorage":
+            obj = create_storage(container, portal_type, **data)
+            return obj
+
+    except Unauthorized:
+        fail(401, "You are not allowed to create this content")
+
+    obj = bika_create_object(container, portal_type, **data)
+
+    return obj
+
+
+def create_storage(container, portal_type, **data):
+
+    def set_inputs_into_schema(
+            instance, temperature, department, unit_type):
+        # Set field values across each object if possible
+        schema = instance.Schema()
+        if temperature and 'Temperature' in schema:
+            instance.Schema()['Temperature'].set(instance, temperature)
+        if department and 'Department' in schema:
+            instance.Schema()['Department'].set(instance, department)
+        if unit_type and 'UnitType' in schema:
+            instance.Schema()['UnitType'].set(instance, unit_type)
+
+    def set_storage_types(instance, storage_types):
+        schema = instance.Schema()
+        if storage_types and 'StorageTypes' in schema:
+            instance.Schema()['StorageTypes'].set(instance, storage_types)
+
+        for storage_type in storage_types:
+            inter = resolve(storage_type)
+            alsoProvides(instance, inter)
+
+    container = get_object(container)
+
+    department_title = data.get("department", "")
+    temperature = data.get("temperature", "")
+    unit_type = data.get("unit_type", "")
+
+    department = None
+    if container.portal_type == "StorageUnit":
+        department = container.getDepartment()
+        temperature = container.getTemperature()
+    else:
+        brains = search(portal_type="Department", title = department_title)
+        if not brains:
+            department = brains[0].getObject()
+    prefix = data.get("prefix", "")
+    leading_zeros = data.get("leading_zeros", "")
+
+    if not prefix or not leading_zeros:
+        fail(400, "Prefix and leading_zeros are required to construct storage unit title and Id.")
+
+    number_items = data.get("number_items", "")
+    try:
+        number_items = number_items and int(number_items) or 1
+    except ValueError:
+        fail(401, "Number items must be integer.")
+
+    seq_start = data.get("seq_start", "")
+    try:
+        seq_start = seq_start and int(seq_start) or 1
+    except ValueError:
+        fail(401, "Id sequence start must be integer.")
+
+    sequence = range(seq_start, seq_start + number_items)
+
+    units = []
+    for x in sequence:
+        id_obj = prefix + '-' + str(x).zfill(len(leading_zeros) + 1)
+        title_obj = prefix + ' ' + str(x).zfill(len(leading_zeros) + 1)
+
+        instance = api.content.create(
+            container=container,
+            type=portal_type,
+            id=id_obj,
+            title=title_obj)
+
+        if instance.portal_type == "StorageUnit":
+            set_inputs_into_schema(instance, temperature, department, unit_type)
+        elif instance.portal_type =="UnmanagedStorage":
+            set_storage_types(instance, ["baobab.lims.interfaces.IStockItemStorage"])
+        units.append(instance)
+
+    return units
 
 
 def create_sample(container, **data):
@@ -393,3 +475,15 @@ def update_sample(content, record):
             content.setSampleType(sample_type)
 
     return content
+
+
+def is_creation_allowed(portal_type):
+    """Checks if it is allowed to create the portal type
+
+    :param portal_type: The portal type requested
+    :type portal_type: string
+    :returns: True if it is allowed to create this object
+    :rtype: bool
+    """
+    allowed_portal_types = config.ALLOWED_PORTAL_TYPES_TO_CREATE
+    return portal_type in allowed_portal_types

@@ -17,10 +17,6 @@ ACTION = "discover"
 # /<resource (portal_type)>/<uid>
 @add_route("/<string:resource>/<string(maxlength=32):uid>",
            "baobab.lims.jsonapi.get", methods=["GET"])
-#
-#/<resource (portal_type)>/<uid>
-# @add_route("/<string:discover>/<string:resource>",
-#            "baobab.lims.jsonapi.get", methods=["GET"])
 def get(context, request, resource=None, uid=None):
     """GET
     """
