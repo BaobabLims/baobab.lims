@@ -180,6 +180,7 @@ def create_object(container, portal_type, **data):
             obj = create_sample_type(container, portal_type, **data)
             return obj
         elif portal_type == "StorageUnit" or \
+             portal_type == "ManagedStorage" or \
              portal_type == "UnmanagedStorage":
             obj = create_storage(container, portal_type, **data)
             return obj
@@ -205,17 +206,18 @@ def create_storage(container, portal_type, **data):
         if unit_type and 'UnitType' in schema:
             instance.Schema()['UnitType'].set(instance, unit_type)
 
-    def set_storage_types(instance, storage_types):
+    def set_storage_types(instance, storage_interfaces):
         schema = instance.Schema()
-        if storage_types and 'StorageTypes' in schema:
-            instance.Schema()['StorageTypes'].set(instance, storage_types)
+        if storage_interfaces and 'StorageTypes' in schema:
+            instance.Schema()['StorageTypes'].set(instance, storage_interfaces)
 
-        for storage_type in storage_types:
-            inter = resolve(storage_type)
+        for storage_interface in storage_interfaces:
+            inter = resolve(storage_interface)
             alsoProvides(instance, inter)
 
     container = get_object(container)
 
+    # variables for storage unit
     department_title = data.get("department", "")
     temperature = data.get("temperature", "")
     unit_type = data.get("unit_type", "")
@@ -228,9 +230,24 @@ def create_storage(container, portal_type, **data):
         brains = search(portal_type="Department", title = department_title)
         if not brains:
             department = brains[0].getObject()
+
+    # variables for managed storage
+    number_positions = data.get("number_positions", "")
+    x_axis = data.get("x_axis", "")
+    y_axis = data.get("y_axis", "")
+    try:
+        x_axis = x_axis and int(x_axis) or ''
+        y_axis = y_axis and int(y_axis) or ''
+        number_positions = number_positions and int(number_positions) or ''
+    except ValueError:
+        fail(401, "Number positions, X axis and Y axis must be integers.")
+
+    if not number_positions or not x_axis or not y_axis:
+        fail(400, "Number positions, X axis and Y axis are required to create storage positions.")
+
+    # common variables
     prefix = data.get("prefix", "")
     leading_zeros = data.get("leading_zeros", "")
-
     if not prefix or not leading_zeros:
         fail(400, "Prefix and leading_zeros are required to construct storage unit title and Id.")
 
@@ -261,12 +278,38 @@ def create_storage(container, portal_type, **data):
 
         if instance.portal_type == "StorageUnit":
             set_inputs_into_schema(instance, temperature, department, unit_type)
-        elif instance.portal_type =="UnmanagedStorage":
+        elif instance.portal_type == "UnmanagedStorage":
             set_storage_types(instance, ["baobab.lims.interfaces.IStockItemStorage"])
+        elif instance.portal_type == "ManagedStorage":
+            instance.setXAxis(x_axis)
+            instance.setYAxis(y_axis)
+            set_storage_types(instance, ["baobab.lims.interfaces.ISampleStorageLocation"])
+            positions = storage_positions(instance, number_positions)
+            for position in positions:
+                set_storage_types(position, ["baobab.lims.interfaces.ISampleStorageLocation"])
+                position.reindexObject()
+
+        instance.reindexObject()
+
         units.append(instance)
 
     return units
 
+
+def storage_positions(instance, number_positions):
+    """ Create storage positions for a managed storage
+    """
+    positions = []
+    for p in range(1, number_positions + 1):
+        position = api.content.create(
+            container=instance,
+            type="StoragePosition",
+            id="{id}".format(id=p),  # XXX hardcoded pos title and id
+            title=instance.getHierarchy() + ".{id}".format(id=p))
+
+        positions.append(position)
+
+    return positions
 
 def create_sample(container, **data):
     """
