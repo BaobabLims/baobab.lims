@@ -4,7 +4,8 @@ from bika.lims import api
 from baobab.lims import logger
 from bika.lims.jsonapi.api import fail, make_items_for, is_creation_allowed, \
     find_target_container, get_object, search, resource_to_portal_type as bika_resource_to_portal_type, \
-    url_for as bika_url_for, update_items as bika_update_items, validate_object, do_transition_for, get_tool
+    url_for as bika_url_for, update_items as bika_update_items, validate_object, do_transition_for, get_tool, \
+    get_search_results as bika_get_search_results
 from bika.lims.jsonapi.api import create_object as bika_create_object
 from bika.lims.jsonapi import request as req
 from bika.lims.jsonapi import underscore as u
@@ -14,6 +15,12 @@ from baobab.lims.utils.create_sample_type import create_sample_type as create_sm
 from bika.lims.workflow import doActionFor
 from bika.lims.jsonapi.interfaces import IDataManager
 from AccessControl import Unauthorized
+
+from xml.dom import minidom
+import json
+
+
+
 
 _marker = object()
 

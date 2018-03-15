@@ -4,8 +4,10 @@ from baobab.lims.jsonapi import api
 from bika.lims.jsonapi import api as bika_api
 from baobab.lims.jsonapi.routes import add_route
 from bika.lims.jsonapi.exceptions import APIError
+from baobab.lims.jsonapi.api_discovery import ApiDiscovery
 
 ACTIONS = "create,update,delete"
+ACTION = "discover"
 
 
 # /<resource (portal_type)>
@@ -16,13 +18,16 @@ ACTIONS = "create,update,delete"
 @add_route("/<string:resource>/<string(maxlength=32):uid>",
            "baobab.lims.jsonapi.get", methods=["GET"])
 #
-# /<resource (portal_type)>/<uid>
-@add_route("/<string:discover>/<string:ressource>",
-           "baobab.lims.jsonapi.get", methods=["GET"])
+#/<resource (portal_type)>/<uid>
+# @add_route("/<string:discover>/<string:resource>",
+#            "baobab.lims.jsonapi.get", methods=["GET"])
 def get(context, request, resource=None, uid=None):
     """GET
     """
     # we have a UID as resource, return the record
+    if resource.lower() == 'discover' or resource.lower() == 'discovery':
+        return discover(uid)
+
     if bika_api.is_uid(resource):
         return bika_api.get_record(resource)
 
@@ -30,6 +35,17 @@ def get(context, request, resource=None, uid=None):
     if portal_type is None:
         raise APIError(404, "Not Found")
     return bika_api.get_batched(portal_type=portal_type, uid=uid, endpoint="baobab.lims.jsonapi.get")
+
+
+def discover(portal_type):
+    """GET
+    """
+
+    api_discovery = ApiDiscovery()
+    discovered = api_discovery.discover_api(portal_type)
+
+    print(discovered)
+    return discovered
 
 # http://werkzeug.pocoo.org/docs/0.11/routing/#builtin-converters
 # http://werkzeug.pocoo.org/docs/0.11/routing/#custom-converters

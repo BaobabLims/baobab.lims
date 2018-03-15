@@ -1,0 +1,228 @@
+{
+    "portal_types": {
+        "client": {
+            "url": ".../@@api/v3/[action]/[uid]",
+            "action": [
+                "create",
+                "update"
+            ],
+            "uid": [
+                "clients_folder_uid",
+                "client_uid"
+            ],
+            "description": "Use clients_folder_uid with action create and client_uid with action update",
+            "fields": [
+                {
+                    "name": "Name",
+                    "required": "true",
+                    "type": "string",
+                    "description": "The name of the client"
+                },
+                {
+                    "name": "ClientID",
+                    "required": "true",
+                    "type": "string",
+                    "description": "The id that uniquely identifies the client"
+                },
+                {
+                    "name": "BulkDiscount",
+                    "required": "false",
+                    "type": "boolean",
+                    "description": "One or zero to indicate if bulk discount applies"
+                },
+                {
+                    "name": "MemberDiscountApplies",
+                    "required": "false",
+                    "type": "boolean",
+                    "description": "One or zero to indicate if member discount applies"
+                },
+                {
+                    "name": "CCEmails",
+                    "required": "false",
+                    "type": "string",
+                    "description": "Default Emails to CC all published ARs for this client"
+                },
+                {
+                    "name": "EmailSubject",
+                    "required": "false",
+                    "type": "string",
+                    "description": "Items to be included in email subject lines"
+                },
+                {
+                    "name": "EmailAddress",
+                    "required": "false",
+                    "type": "string",
+                    "description": "Email address of the company"
+                }
+            ]
+        },
+        "project": {
+            "url": ".../@@api/v3/[action]/[uid]",
+            "action": [
+                "create",
+                "update"
+            ],
+            "uid": [
+                "clients_folder_uid",
+                "client_uid"
+            ],
+            "description": "Use clients_folder_uid with action create and client_uid with action update",
+            "fields": [
+                {
+                    "name": "Name",
+                    "required": "true",
+                    "type": "string",
+                    "description": "The name of the client"
+                },
+                {
+                    "name": "ClientID",
+                    "required": "true",
+                    "type": "string",
+                    "description": "The id that uniquely identifies the client"
+                },
+                {
+                    "name": "BulkDiscount",
+                    "required": "false",
+                    "type": "boolean",
+                    "description": "One or zero to indicate if bulk discount applies"
+                },
+                {
+                    "name": "MemberDiscountApplies",
+                    "required": "false",
+                    "type": "boolean",
+                    "description": "One or zero to indicate if member discount applies"
+                },
+                {
+                    "name": "CCEmails",
+                    "required": "false",
+                    "type": "string",
+                    "description": "Default Emails to CC all published ARs for this client"
+                },
+                {
+                    "name": "EmailSubject",
+                    "required": "false",
+                    "type": "string",
+                    "description": "Items to be included in email subject lines"
+                },
+                {
+                    "name": "EmailAddress",
+                    "required": "false",
+                    "type": "string",
+                    "description": "Email address of the company"
+                }
+            ]
+        },
+        "sampletype": {
+            "url": ".../@@api/v3/[action]/[uid]",
+            "action": [
+                "create",
+                "update"
+            ],
+            "uid": [
+                "sampletypes_folder_uid",
+                "sampletype_uid"
+            ],
+            "description": "Use sampletypes_folder_uid with action create and sampletype_uid with action update",
+            "fields": [
+                {
+                    "name": "RetentionDays",
+                    "required": "true",
+                    "type": "string",
+                    "description": "How long a sample of this type can be retained"
+                },
+                {
+                    "name": "title",
+                    "required": "true",
+                    "type": "string",
+                    "description": "The name of this sample type"
+                },
+                {
+                    "name": "description",
+                    "required": "false",
+                    "type": "string",
+                    "description": "A brief description of this sample type"
+                },
+                {
+                    "name": "Prefix",
+                    "required": "true",
+                    "type": "string",
+                    "description": "A short code that will identify this sample type"
+                },
+                {
+                    "name": "MinimumVolume",
+                    "required": "false",
+                    "type": "float",
+                    "description": "The absolute minimum amount that can be selected for a sample of this type"
+                },
+                {
+                    "name": "Hazardous",
+                    "required": "false",
+                    "type": "boolean",
+                    "description": "One or zero indicating if this sample is dangerous or not"
+                }
+            ]
+        },
+        "sample": {
+            "url": ".../@@api/v3/[action]/[uid]",
+            "action": [
+                "create",
+                "update"
+            ],
+            "uid": [
+                "project_uid",
+                "sample_uid"
+            ],
+            "description": "Use project_uid with action create and sample_uid with action update",
+            "fields": [
+                {
+                    "name": "LinkedSample",
+                    "required": "true",
+                    "type": "ReferenceField",
+                    "description": "The uid of the parent Sample that this sample belongs to"
+                },
+                {
+                    "name": "Project",
+                    "required": "true",
+                    "type": "ReferenceField",
+                    "description": "The uid of the project that this sample will belong to"
+                },
+                {
+                    "name": "SampleType",
+                    "required": "true",
+                    "type": "ReferenceField",
+                    "description": "The uid or the title of the sample type that this sample will belong to such as  Whole Blood or 4dd3a41560934613924b98dcbb5b7e5f"
+                },
+                {
+                    "name": "Barcode",
+                    "required": "true",
+                    "type": "string",
+                    "description": "The barcode that uniquely identifies this sample"
+                },
+                {
+                    "name": "StoragePosition",
+                    "required": "true",
+                    "type": "ReferenceField",
+                    "description": "The uid of the storage position that the sample will be stored in"
+                },
+                {
+                    "name": "Volume",
+                    "required": "true",
+                    "type": "float",
+                    "description": "The collected amount of the sample"
+                },
+                {
+                    "name": "Unit",
+                    "required": "true",
+                    "type": "string",
+                    "description": "The unit in which volume is measured for example ml"
+                },
+                {
+                    "name": "APISource",
+                    "required": "false",
+                    "type": "string",
+                    "description": "Used by some sources to identify themselves for special processing for example Azzizi will specify odk"
+                }
+            ]
+        }
+    }
+}
