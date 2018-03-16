@@ -339,7 +339,7 @@ def create_sample(container, **data):
     if storage_location is None:
         fail(400, "Please provide a StorageLocation")
 
-    linked_sample_list = search(portal_type="Sample", Title=data.get('LinkedSample', ''))
+    linked_sample_list = search(portal_type="Sample", title=data.get('LinkedSample', ''))
     linked_sample = linked_sample_list and linked_sample_list[0].getObject() or None
 
     try:
