@@ -20,10 +20,6 @@ ACTION = "discover"
 def get(context, request, resource=None, uid=None):
     """GET
     """
-    # we have a UID as resource, return the record
-    if resource.lower() == 'discover' or resource.lower() == 'discovery':
-        return discover(uid)
-
     if bika_api.is_uid(resource):
         return bika_api.get_record(resource)
 
@@ -33,14 +29,20 @@ def get(context, request, resource=None, uid=None):
     return bika_api.get_batched(portal_type=portal_type, uid=uid, endpoint="baobab.lims.jsonapi.get")
 
 
-def discover(portal_type):
-    """GET
-    """
+# API discovery
+@add_route("/discover",
+           "baobab.lims.jsonapi.discover", methods=["GET"])
+@add_route("/discover/<string:resource>",
+           "baobab.lims.jsonapi.discover", methods=["GET"])
+def api_discover(context, request, resource=None):
 
     api_discovery = ApiDiscovery()
+    portal_type = ""
+    if resource:
+        portal_type = bika_api.resource_to_portal_type(resource)
+
     discovered = api_discovery.discover_api(portal_type)
 
-    print(discovered)
     return discovered
 
 # http://werkzeug.pocoo.org/docs/0.11/routing/#builtin-converters

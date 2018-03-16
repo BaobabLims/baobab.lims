@@ -17,11 +17,11 @@ data = {'BODY':
         "portal_type": "ManagedStorage", \
         "prefix": "Box", \
         "leading_zeros": "0", \
-        "seq_start": "1", \
-        "number_items": "2", \
+        "seq_start": 3, \
+        "number_items": 1, \
         "parent_path": "storage/Room-1", \
-        "number_positions": "10", \
-        "x_axis": "5", \
+        "number_positions": 10, \
+        "x_axis": 5, \
         "y_axis": 2 \
     }]'
 }

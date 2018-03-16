@@ -1,6 +1,6 @@
 {
     "portal_types": {
-        "client": {
+        "Client": {
             "url": ".../@@api/v3/[action]/[uid]",
             "action": [
                 "create",
@@ -56,7 +56,7 @@
                 }
             ]
         },
-        "project": {
+        "Project": {
             "url": ".../@@api/v3/[action]/[uid]",
             "action": [
                 "create",
@@ -112,7 +112,7 @@
                 }
             ]
         },
-        "sampletype": {
+        "SampleType": {
             "url": ".../@@api/v3/[action]/[uid]",
             "action": [
                 "create",
@@ -162,7 +162,7 @@
                 }
             ]
         },
-        "sample": {
+        "Sample": {
             "url": ".../@@api/v3/[action]/[uid]",
             "action": [
                 "create",
@@ -221,6 +221,171 @@
                     "required": "false",
                     "type": "string",
                     "description": "Used by some sources to identify themselves for special processing for example Azzizi will specify odk"
+                }
+            ]
+        },
+        "StorageUnit":{
+            "url": ".../@@api/v3/[action]",
+            "action": [
+                "create"
+            ],
+            "description": "Create storage unit(s) for eg. Room, Freezer, Shelf, etc.",
+            "fields": [
+                {
+                    "name": "portal_type",
+                    "required": "true",
+                    "type": "string",
+                    "description": "A unique value can be assigned to portal_type and must be 'StorageUnit' ."
+                },
+                {
+                    "name": "department",
+                    "required": "false",
+                    "type": "string",
+                    "description": "The department where the storage unit is located"
+                },
+                {
+                    "name": "temperature",
+                    "required": "false",
+                    "type": "string",
+                    "description": "The temperature of the storage unit."
+                },
+                {
+                    "name": "prefix",
+                    "required": "true",
+                    "type": "string",
+                    "description": "Prefix of the IDs and Titles of the storage units. This will be appended with leading_zeros"
+                },
+                {
+                    "name": "leading_zeros",
+                    "required": "true",
+                    "type": "string",
+                    "description": "leading_zeros are used to construct the ids of the storage units. Eg. 00 for 2 zeros."
+                },
+                {
+                    "name": "seq_start",
+                    "required": "true",
+                    "type": "int",
+                    "description": "Id start number"
+                },
+                {
+                    "name": "number_items",
+                    "required": "true",
+                    "type": "int",
+                    "description": "Number of storage units to create."
+                },
+                {
+                    "name": "parent_path",
+                    "required": "true",
+                    "type": "string",
+                    "description": "parent folder path. Eg. storage/Room-001"
+                }
+            ]
+        },
+        "ManagedStorage":{
+            "url": ".../@@api/v3/[action]",
+            "action": [
+                "create"
+            ],
+            "description": "Create managed storage (Boxes)",
+            "fields": [
+                {
+                    "name": "portal_type",
+                    "required": "true",
+                    "type": "string",
+                    "description": "A unique value can be assigned to portal_type and must be 'ManagedStorage' ."
+                },
+                {
+                    "name": "prefix",
+                    "required": "true",
+                    "type": "string",
+                    "description": "Prefix of the IDs and Titles of the boxes. This will be appended with leading_zeros"
+                },
+                {
+                    "name": "leading_zeros",
+                    "required": "true",
+                    "type": "string",
+                    "description": "leading_zeros are used to construct the IDs of the boxes. Eg. 00 for 2 zeros."
+                },
+                {
+                    "name": "seq_start",
+                    "required": "true",
+                    "type": "int",
+                    "description": "Id start number"
+                },
+                {
+                    "name": "number_items",
+                    "required": "true",
+                    "type": "int",
+                    "description": "Number of boxes to create."
+                },
+                {
+                    "name": "parent_path",
+                    "required": "true",
+                    "type": "string",
+                    "description": "parent folder path. Eg. storage/Room-001"
+                },
+                {
+                    "name": "number_positions",
+                    "required": "true",
+                    "type": "int",
+                    "description": "Number of positions in a box."
+                },
+                {
+                    "name": "x_axis",
+                    "required": "true",
+                    "type": "int",
+                    "description": "Number of columns of the box 2D graphic representation."
+                },
+                {
+                    "name": "y_axis",
+                    "required": "true",
+                    "type": "int",
+                    "description": "Number of rows of the box 2D graphic representation."
+                }
+            ]
+        },
+        "UnmanagedStorage":{
+            "url": ".../@@api/v3/[action]",
+            "action": [
+                "create"
+            ],
+            "description": "Create managed storage (Boxes)",
+            "fields": [
+                {
+                    "name": "portal_type",
+                    "required": "true",
+                    "type": "string",
+                    "description": "A unique value can be assigned to portal_type and must be 'UnmanagedStorage' ."
+                },
+                {
+                    "name": "prefix",
+                    "required": "true",
+                    "type": "string",
+                    "description": "Prefix of the IDs and Titles of the storage. This will be appended with leading_zeros"
+                },
+                {
+                    "name": "leading_zeros",
+                    "required": "true",
+                    "type": "string",
+                    "description": "leading_zeros are used to construct the IDs of the storage. Eg. 00 for 2 zeros."
+                },
+                {
+                    "name": "seq_start",
+                    "required": "true",
+                    "type": "int",
+                    "description": "Id start number"
+                },
+                {
+                    "name": "number_items",
+                    "required": "true",
+                    "type": "int",
+                    "description": "Number of storage to create."
+                },
+                {
+                    "name": "parent_path",
+                    "required": "true",
+                    "type": "string",
+                    "description": "parent folder path. Eg. storage/Room-001"
                 }
             ]
         }

@@ -17,8 +17,8 @@ data = {'BODY':
         "portal_type": "UnmanagedStorage", \
         "prefix": "Rack", \
         "leading_zeros": "0", \
-        "seq_start": "1", \
-        "number_items": "2", \
+        "seq_start": 1, \
+        "number_items": 2, \
         "parent_path": "storage/Room-1" \
     }]'
 }

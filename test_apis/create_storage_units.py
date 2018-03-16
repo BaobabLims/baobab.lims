@@ -18,8 +18,8 @@ data = {'BODY':
         "department": "Biobank", \
         "prefix": "Shelf", \
         "leading_zeros": "00", \
-        "seq_start": "1", \
-        "number_items": "2", \
+        "seq_start": 1, \
+        "number_items": 2, \
         "parent_path": "storage/Room-1" \
     }]'
 }

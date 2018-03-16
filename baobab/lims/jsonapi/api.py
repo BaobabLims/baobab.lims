@@ -194,7 +194,9 @@ def create_object(container, portal_type, **data):
 
 
 def create_storage(container, portal_type, **data):
-
+    """
+        Create a storage unit and (un-)managed storage via API
+    """
     def set_inputs_into_schema(
             instance, temperature, department, unit_type):
         # Set field values across each object if possible
@@ -232,18 +234,19 @@ def create_storage(container, portal_type, **data):
             department = brains[0].getObject()
 
     # variables for managed storage
-    number_positions = data.get("number_positions", "")
-    x_axis = data.get("x_axis", "")
-    y_axis = data.get("y_axis", "")
-    try:
-        x_axis = x_axis and int(x_axis) or ''
-        y_axis = y_axis and int(y_axis) or ''
-        number_positions = number_positions and int(number_positions) or ''
-    except ValueError:
-        fail(401, "Number positions, X axis and Y axis must be integers.")
+    if portal_type == "ManagedStorage":
+        number_positions = data.get("number_positions", "")
+        x_axis = data.get("x_axis", "")
+        y_axis = data.get("y_axis", "")
+        try:
+            x_axis = x_axis and int(x_axis) or ''
+            y_axis = y_axis and int(y_axis) or ''
+            number_positions = number_positions and int(number_positions) or ''
+        except ValueError:
+            fail(401, "Number positions, X axis and Y axis must be integers.")
 
-    if not number_positions or not x_axis or not y_axis:
-        fail(400, "Number positions, X axis and Y axis are required to create storage positions.")
+        if not number_positions or not x_axis or not y_axis:
+            fail(400, "Number positions, X axis and Y axis are required to create storage positions.")
 
     # common variables
     prefix = data.get("prefix", "")
