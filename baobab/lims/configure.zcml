@@ -26,6 +26,8 @@
   <include package=".setupdata"/>
   <include package=".monkey"/>
   <include package=".subscribers"/>
+  <include package=".jsonapi" />
+
 
   <include file="profiles.zcml" />
 
