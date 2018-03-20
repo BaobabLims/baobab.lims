@@ -7,11 +7,28 @@
                 "update"
             ],
             "uid": [
-                "clients_folder_uid",
                 "client_uid"
             ],
-            "description": "Use clients_folder_uid with action create and client_uid with action update",
+            "description": "Use parent_path with action create and only use client_uid with action update",
             "fields": [
+                {
+                    "name": "portal_type",
+                    "required": "true",
+                    "type": "string",
+                    "description": "type of portal for example Client"
+                },
+                {
+                    "name": "parent_path",
+                    "required": "true",
+                    "type": "string",
+                    "description": "the path to the parent for example clients"
+                },
+                {
+                    "name": "Name",
+                    "required": "true",
+                    "type": "string",
+                    "description": "The name of the client"
+                },
                 {
                     "name": "Name",
                     "required": "true",
@@ -62,52 +79,69 @@
                 "create",
                 "update"
             ],
-            "uid": [
-                "clients_folder_uid",
+            "uid":[
                 "client_uid"
             ],
-            "description": "Use clients_folder_uid with action create and client_uid with action update",
+            "description": "Use the field parent_path with action create and client_uid only with action update",
             "fields": [
                 {
-                    "name": "Name",
+                    "name": "portal_type",
                     "required": "true",
+                    "type": "string",
+                    "description": "type of portal for example Project"
+                },
+                {
+                    "name": "parent_path",
+                    "required": "true",
+                    "type": "string",
+                    "description": "the path to the parent for example clients/client-1"
+                },
+                {
+                    "name": "StudyType",
+                    "required": "false",
                     "type": "string",
                     "description": "The name of the client"
                 },
                 {
-                    "name": "ClientID",
+                    "name": "title",
                     "required": "true",
                     "type": "string",
-                    "description": "The id that uniquely identifies the client"
+                    "description": "The name of the project"
                 },
                 {
-                    "name": "BulkDiscount",
-                    "required": "false",
-                    "type": "boolean",
-                    "description": "One or zero to indicate if bulk discount applies"
-                },
-                {
-                    "name": "MemberDiscountApplies",
-                    "required": "false",
-                    "type": "boolean",
-                    "description": "One or zero to indicate if member discount applies"
-                },
-                {
-                    "name": "CCEmails",
-                    "required": "false",
+                    "name": "description",
+                    "required": "true",
                     "type": "string",
-                    "description": "Default Emails to CC all published ARs for this client"
+                    "description": "What the project is all about"
                 },
                 {
-                    "name": "EmailSubject",
+                    "name": "NumParticipants",
                     "required": "false",
-                    "type": "string",
-                    "description": "Items to be included in email subject lines"
+                    "type": "integer",
+                    "description": "How many will participate in this study"
                 },
                 {
-                    "name": "EmailAddress",
+                    "name": "AgeLow",
                     "required": "false",
-                    "type": "string",
+                    "type": "integer",
+                    "description": "The youngest allowed age for a participant"
+                },
+                {
+                    "name": "AgeHigh",
+                    "required": "false",
+                    "type": "integer",
+                    "description": "The oldest allowed age for a participant"
+                },
+                {
+                    "name": "DateCreated",
+                    "required": "false",
+                    "type": "string in date format for example 2017-08-17",
+                    "description": "Email address of the company"
+                },
+                {
+                    "name": "Service",
+                    "required": "false",
+                    "type": "Multi Reference Field",
                     "description": "Email address of the company"
                 }
             ]
@@ -119,11 +153,22 @@
                 "update"
             ],
             "uid": [
-                "sampletypes_folder_uid",
                 "sampletype_uid"
             ],
-            "description": "Use sampletypes_folder_uid with action create and sampletype_uid with action update",
+            "description": "Use parent_path with action create and only use sampletype_uid with action update",
             "fields": [
+                {
+                    "name": "portal_type",
+                    "required": "true",
+                    "type": "string",
+                    "description": "type of portal for example SampleType"
+                },
+                {
+                    "name": "parent_path",
+                    "required": "true",
+                    "type": "string",
+                    "description": "the path to the parent for example bika_sampletypes"
+                },
                 {
                     "name": "RetentionDays",
                     "required": "true",
@@ -169,11 +214,22 @@
                 "update"
             ],
             "uid": [
-                "project_uid",
                 "sample_uid"
             ],
-            "description": "Use project_uid with action create and sample_uid with action update",
+            "description": "Use parent_path with action create and only use sample_uid with action update",
             "fields": [
+                {
+                    "name": "portal_type",
+                    "required": "true",
+                    "type": "string",
+                    "description": "type of portal for example Sample"
+                },
+                {
+                    "name": "parent_path",
+                    "required": "true",
+                    "type": "string",
+                    "description": "the path to the parent for example clients/client-1/project-1 where client-1 and project-1 are ids"
+                },
                 {
                     "name": "LinkedSample",
                     "required": "true",
