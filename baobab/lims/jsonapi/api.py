@@ -179,6 +179,9 @@ def create_object(container, portal_type, **data):
         elif portal_type == "SampleType":
             obj = create_sample_type(container, portal_type, **data)
             return obj
+        elif portal_type == "Project":
+            obj = create_project(container, portal_type, **data)
+            return obj
         elif portal_type == "StorageUnit" or \
              portal_type == "ManagedStorage" or \
              portal_type == "UnmanagedStorage":
@@ -191,6 +194,33 @@ def create_object(container, portal_type, **data):
     obj = bika_create_object(container, portal_type, **data)
 
     return obj
+
+
+def create_project(container, portal_type, **data):
+    """
+        Create a project via API
+    """
+
+    container = get_object(container)
+    title = data.get("title", "")
+    if not title:
+        fail(404, "Title is required.")
+
+    obj = bika_create_object(container, portal_type, **data)
+
+    st_titles = data.get("SampleType", "")
+
+    st_uids = []
+    if st_titles and type(st_titles) is list:
+        for st_title in st_titles:
+            brains = search(portal_type="SampleType", title=st_title)
+            if brains:
+                st_uids.append(brains[0].UID)
+        if st_uids:
+            obj.setSampleType(st_uids)
+
+    return obj
+
 
 
 def create_storage(container, portal_type, **data):
