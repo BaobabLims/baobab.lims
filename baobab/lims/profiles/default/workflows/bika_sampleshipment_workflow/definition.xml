@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<dc-workflow xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+             workflow_id="bika_sampleshipment_workflow"
+             title="Bika Sample shipment Workflow"
+             description=""
+             state_variable="review_state"
+             initial_state="ready_to_ship"
+             manager_bypass="False"
+             i18n:domain="bika">
+
+  <!--<permission>BIKA: Cancel and reinstate</permission>-->
+  <!--<permission>BIKA: Edit Field Results</permission>-->
+  <!--<permission>BIKA: Edit Results</permission>-->
+  <!--<permission>BIKA: Edit Sample</permission>-->
+  <!--<permission>BIKA: Preserve Sample</permission>-->
+  <!--<permission>BIKA: Receive Sample</permission>-->
+  <!--<permission>BIKA: Sample Sample</permission>-->
+  <!--<permission>BIKA: Schedule Sampling</permission>-->
+  <!--<permission>Modify portal content</permission>-->
+  <!--<permission>View</permission>-->
+
+  <!-- This governs whether you are allowed to view some content. -->
+  <permission>View</permission>
+  <!-- This permission allows access to an object, without necessarily viewing the -->
+  <!-- object. For example, a user may want to see the object's title in a list of -->
+  <!-- results, even though the user can't view the contents of that file. -->
+  <permission>Access contents information</permission>
+  <!-- This governs whether you can get a listing of the contents of a folder; it -->
+  <!-- doesn't check whether you have the right to view the objects listed. -->
+  <permission>List folder contents</permission>
+  <!-- This governs whether you are allowed to modify some content. -->
+  <permission>Modify portal content</permission>
+
+  <state state_id="ready_to_ship" title="Sample Shipment Created" i18n:attributes="title">
+    <exit-transition transition_id="ship_to_client" />
+        <!-- View -->
+    <permission-map name="View" acquired="False">
+      <permission-role>Manager</permission-role>
+      <permission-role>LabManager</permission-role>
+      <permission-role>LabClerk</permission-role>
+      <permission-role>Analyst</permission-role>
+      <permission-role>Client</permission-role>
+      <permission-role>Owner</permission-role>
+    </permission-map>
+
+    <!-- Access contents information -->
+    <permission-map name="Access contents information" acquired="False">
+      <permission-role>Manager</permission-role>
+      <permission-role>LabManager</permission-role>
+      <permission-role>LabClerk</permission-role>
+      <permission-role>Analyst</permission-role>
+      <permission-role>Client</permission-role>
+      <permission-role>Owner</permission-role>
+    </permission-map>
+
+    <!-- List folder contents -->
+    <permission-map name="List folder contents" acquired="False">
+      <permission-role>Manager</permission-role>
+      <permission-role>LabManager</permission-role>
+      <permission-role>LabClerk</permission-role>
+      <permission-role>Analyst</permission-role>
+      <permission-role>Client</permission-role>
+      <permission-role>Owner</permission-role>
+    </permission-map>
+
+    <!-- Modify portal content -->
+    <permission-map name="Modify portal content" acquired="False">
+      <permission-role>LabClerk</permission-role>
+      <permission-role>Manager</permission-role>
+      <permission-role>LabManager</permission-role>
+      <permission-role>Owner</permission-role>
+    </permission-map>
+  </state>
+
+  <state state_id="sample_shipped" title="Shipped to Client" i18n:attributes="title">
+    <exit-transition transition_id="receive_sample" />
+        <!-- View -->
+    <permission-map name="View" acquired="False">
+      <permission-role>Manager</permission-role>
+      <permission-role>LabManager</permission-role>
+      <permission-role>LabClerk</permission-role>
+      <permission-role>Analyst</permission-role>
+      <permission-role>Client</permission-role>
+      <permission-role>Owner</permission-role>
+    </permission-map>
+
+    <!-- Access contents information -->
+    <permission-map name="Access contents information" acquired="False">
+      <permission-role>Manager</permission-role>
+      <permission-role>LabManager</permission-role>
+      <permission-role>LabClerk</permission-role>
+      <permission-role>Analyst</permission-role>
+      <permission-role>Client</permission-role>
+      <permission-role>Owner</permission-role>
+    </permission-map>
+
+    <!-- List folder contents -->
+    <permission-map name="List folder contents" acquired="False">
+      <permission-role>Manager</permission-role>
+      <permission-role>LabManager</permission-role>
+      <permission-role>LabClerk</permission-role>
+      <permission-role>Analyst</permission-role>
+      <permission-role>Client</permission-role>
+      <permission-role>Owner</permission-role>
+    </permission-map>
+
+    <!-- Modify portal content -->
+    <permission-map name="Modify portal content" acquired="False">
+      <permission-role>LabClerk</permission-role>
+      <permission-role>Manager</permission-role>
+      <permission-role>LabManager</permission-role>
+      <permission-role>Owner</permission-role>
+    </permission-map>
+  </state>
+
+  <state state_id="sample_shipment_received" title="Shipment Received" i18n:attributes="title">
+    <exit-transition transition_id="" />
+        <!-- View -->
+    <permission-map name="View" acquired="False">
+      <permission-role>Manager</permission-role>
+      <permission-role>LabManager</permission-role>
+      <permission-role>LabClerk</permission-role>
+      <permission-role>Analyst</permission-role>
+      <permission-role>Client</permission-role>
+      <permission-role>Owner</permission-role>
+    </permission-map>
+
+    <!-- Access contents information -->
+    <permission-map name="Access contents information" acquired="False">
+      <permission-role>Manager</permission-role>
+      <permission-role>LabManager</permission-role>
+      <permission-role>LabClerk</permission-role>
+      <permission-role>Analyst</permission-role>
+      <permission-role>Client</permission-role>
+      <permission-role>Owner</permission-role>
+    </permission-map>
+
+    <!-- List folder contents -->
+    <permission-map name="List folder contents" acquired="False">
+      <permission-role>Manager</permission-role>
+      <permission-role>LabManager</permission-role>
+      <permission-role>LabClerk</permission-role>
+      <permission-role>Analyst</permission-role>
+      <permission-role>Client</permission-role>
+      <permission-role>Owner</permission-role>
+    </permission-map>
+
+    <!-- Modify portal content -->
+    <permission-map name="Modify portal content" acquired="False">
+      <permission-role>LabClerk</permission-role>
+      <permission-role>Manager</permission-role>
+      <permission-role>LabManager</permission-role>
+      <permission-role>Owner</permission-role>
+    </permission-map>
+  </state>
+
+  <transition transition_id="ship_to_client" title="Ship to Client" new_state="sample_shipped" trigger="AUTOMATIC" before_script="" after_script="" i18n:attributes="title">
+    <guard>
+      <guard-expression>python:here.guard_auto_preservation_required() == False</guard-expression>
+    </guard>
+  </transition>
+
+  <transition transition_id="receive_sample" title="Client Receive Sample" new_state="sample_shipment_received" trigger="AUTOMATIC" before_script="" after_script="" i18n:attributes="title">
+    <guard>
+      <guard-expression>python:here.guard_auto_preservation_required() == True</guard-expression>
+    </guard>
+  </transition>
+
+</dc-workflow>

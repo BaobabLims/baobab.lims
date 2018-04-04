@@ -42,6 +42,15 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
         )
     ),
 
+    BooleanField(
+        'WillBeReturned',
+        #schemata='Delivery Info',
+        widget = BooleanWidget(
+            label=_("Will be returned"),
+            description=_("Indicates whether the sample will be returned"),
+        ),
+    ),
+
     ReferenceField(
         'Client',
         schemata='Delivery Info',
