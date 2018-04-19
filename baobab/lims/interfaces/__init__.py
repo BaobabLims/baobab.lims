@@ -129,3 +129,11 @@ class IStorageUnits(Interface):
 class ISharableSample(Interface):
     """
     """
+
+class IBatch(Interface):
+    """
+    """
+
+class IBatches(Interface):
+    """
+    """

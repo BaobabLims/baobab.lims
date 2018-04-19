@@ -101,5 +101,10 @@
       <bound-workflow workflow_id="bika_cancellation_workflow"/>
     </type>
 
+    <type type_id="SampleBatches"/>
+    <type type_id="SampleBatch">
+        <bound-workflow workflow_id="bika_one_state_workflow"/>
+        <bound-workflow workflow_id="bika_inactive_workflow"/>
+    </type>
 </bindings>
 </object>

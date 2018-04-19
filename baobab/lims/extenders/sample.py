@@ -13,7 +13,6 @@ from bika.lims.workflow import doActionFor
 
 from baobab.lims import bikaMessageFactory as _
 from baobab.lims.interfaces import ISampleStorageLocation
-from baobab.lims.browser.project import create_samplepartition
 
 import sys
 
@@ -89,6 +88,27 @@ class SampleSchemaExtender(object):
                 showOn=True,
                 render_own_label = True,
                 description=_("Select the kit of the sample if exists."),
+            ),
+        ),
+        ExtReferenceField(
+            'Batch',
+            vocabulary_display_path_bound=sys.maxint,
+            allowed_types=('SampleBatch',),
+            relationship='SampleBatch',
+            referenceClass=HoldingReference,
+            widget=bika_ReferenceWidget(
+                label=_("Batch"),
+                catalog_name='bika_catalog',
+                visible={'view': 'invisible',
+                         'edit': 'invisible',
+                         'header_table': 'invisible',
+                         'sample_registered': {'view': 'invisible', 'edit': 'invisible'},
+                         'sample_due': {'view': 'invisible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'invisible', 'edit': 'invisible'},
+                         },
+                showOn=True,
+                render_own_label=True,
+                description=_("Batch."),
             ),
         ),
         ExtReferenceField(

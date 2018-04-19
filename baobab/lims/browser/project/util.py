@@ -16,7 +16,7 @@ class SampleGeneration:
         self.form = form
         self.project = project
 
-    def create_sample(self, kit, temporary_sample_type):
+    def create_sample(self, kit, sample_type, batch=None):
         """Create sample as biospecimen or aliquot
             """
         # sample = _createObjectByType('Sample', self.project, tmpID())
@@ -24,15 +24,25 @@ class SampleGeneration:
             container=self.project,
             type="Sample",
             id='tempID',
-            SampleType= temporary_sample_type,
+            SampleType= sample_type,
         )
         field = sample.getField('DateCreated')
-        field.set(sample, DateTime())
+        if self.form.get('DateCreated', ''):
+            field.set(sample, self.form.get('DataCreated'))
+        else:
+            field.set(sample, DateTime())
         if kit:
             field_k = sample.getField('Kit')
             field_k.set(sample, kit.UID())
             field_p = sample.getField('Project')
             field_p.set(sample, self.project)
+        if batch:
+            field_b = sample.getField('Batch')
+            field_b.set(sample, batch.UID())
+
+        if self.form.get('ParentBiospecimen', ''):
+            field_s = sample.getField('LinkedSample')
+            field_s.set(sample, self.form.get('ParentBiospecimen_uid'))
 
         return sample
 
