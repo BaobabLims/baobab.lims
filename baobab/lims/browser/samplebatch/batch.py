@@ -71,16 +71,31 @@ class EditView(BrowserView):
         return
 
     def create_samples(self, context, form):
+        """Create samples from form
+        """
         num_samples = int(form.get('Quantity', '1'))
         sample_type = get_first_sampletype(context)
         uc = getToolByName(context, 'uid_catalog')
+
         project_uid = form.get('Project_uid', '')
         project = uc(UID=project_uid)[0].getObject()
+
         samples_gen = SampleGeneration(self.request.form, project)
+
         samples = []
         for i in range(num_samples):
             sample = samples_gen.create_sample(None, sample_type, context)
             samples.append(sample)
+
+        location_uid = form.get('StorageLocation_uid', '')
+        storage = []
+        if location_uid:
+            location = uc(UID=location_uid)[0].getObject()
+            if len(location.get_free_positions()) > 0:
+                storage.append(location)
+
+        if storage:
+            samples_gen.store_samples(samples, storage)
 
         return samples
 
