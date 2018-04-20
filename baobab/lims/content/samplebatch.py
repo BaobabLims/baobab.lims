@@ -106,6 +106,7 @@ NumberBiospecimens = IntegerField('Quantity',
 #     )
 # )
 
+# TODO: THE LOCATION MUST BE A MULTIVALUE. A USE SHOULD BE ABLE TO SELECT MORE THAN ONE LOCATION.
 Location = ReferenceField(
     'StorageLocation',
     #required=True,
