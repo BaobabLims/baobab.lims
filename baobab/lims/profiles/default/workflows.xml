@@ -21,6 +21,12 @@
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>
 
+    <type type_id="Patients" />
+    <type type_id="Patient">
+        <bound-workflow workflow_id="bika_one_state_workflow"/>
+        <bound-workflow workflow_id="bika_inactive_workflow"/>
+    </type>
+
     <type type_id="Shipments"/>
     <type type_id="Shipment">
         <bound-workflow workflow_id="bika_shipments_workflow"/>

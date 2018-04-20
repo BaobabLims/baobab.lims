@@ -16,6 +16,7 @@
         <type portal_type="ManagedStorage"/>
         <type portal_type="UnmanagedStorage"/>
         <type portal_type="StoragePosition"/>
+        <type portal_type="Patient"/>
 
     </factorytypes>
 </object>

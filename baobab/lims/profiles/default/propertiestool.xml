@@ -24,6 +24,7 @@
         <element value="StockItem"/>
         <element value="StorageUnit"/>
         <element value="StoragePosition"/>
+        <element value="Patient"/>
   </property>
 </object>
 
