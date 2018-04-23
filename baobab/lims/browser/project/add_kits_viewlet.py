@@ -138,7 +138,6 @@ class AddKitsSubmitHandler(BrowserView):
         kits = []
         # sample storage
         samples = []
-        sample_storage = self.samples_gen.get_biospecimen_storages()
         for x in range(seq_start, seq_start + kit_count):
             id_template = prefix_text + '-' + str(x).zfill(len(leading_zeros) + 1)
             title_template = prefix_text + ' ' + str(x).zfill(len(leading_zeros) + 1)
@@ -164,7 +163,12 @@ class AddKitsSubmitHandler(BrowserView):
             for i in range(spec_per_kit):
                 sample = self.samples_gen.create_sample(kit, self.sample_type)
                 samples.append(sample)
-        self.samples_gen.store_samples(samples, sample_storage)
+
+        # Store biospecimens
+        field = self.context.bika_setup.getField('StoreKitBiospecimens')
+        if field.getAccessor(self.context.bika_setup)():
+            sample_storage = self.samples_gen.get_biospecimen_storages()
+            self.samples_gen.store_samples(samples, sample_storage)
 
         return kits
 
@@ -234,22 +238,24 @@ class AddKitsSubmitHandler(BrowserView):
                         u"product '%s'." % product['product'])
 
         # Biospecimen storage (where biospecimen items will be stored) is required to be booked
-        biospecimen_storage_uids = form.get('biospecimen-storage-uids', '')
-        if not biospecimen_storage_uids:
-            raise ValidationError(u'You must select the Biospecimen Storage from where the '
-                                  u'specimen items will be stored.')
+        field = self.context.bika_setup.getField('StoreKitBiospecimens')
+        if field.getAccessor(self.context.bika_setup)():
+            biospecimen_storage_uids = form.get('biospecimen-storage-uids', '')
+            if not biospecimen_storage_uids:
+                raise ValidationError(u'You must select the Biospecimen Storage from where the '
+                                      u'specimen items will be stored.')
 
-                        # Check that the storage selected has sufficient positions to contain
-        # the biospecimen to generate.
-        biospecimens_per_kit = int(form.get('specimen-count', None))
-        biospecimen_count = kit_count * biospecimens_per_kit
-        bio_storages = self.samples_gen.get_biospecimen_storages()
-        if all([IManagedStorage.providedBy(storage) for storage in bio_storages]):
-            nr_positions = self.samples_gen.count_storage_positions(bio_storages)
-            if biospecimen_count > nr_positions:
-                raise ValidationError(
-                    u"Not enough kit storage positions available.  Please select "
-                    u"or create additional storage for kits.")
+            # Check that the storage selected has sufficient positions to contain
+            # the biospecimen to generate.
+            biospecimens_per_kit = int(form.get('specimen-count', None))
+            biospecimen_count = kit_count * biospecimens_per_kit
+            bio_storages = self.samples_gen.get_biospecimen_storages()
+            if all([IManagedStorage.providedBy(storage) for storage in bio_storages]):
+                nr_positions = self.samples_gen.count_storage_positions(bio_storages)
+                if biospecimen_count > nr_positions:
+                    raise ValidationError(
+                        u"Not enough kit storage positions available.  Please select "
+                        u"or create additional storage for kits.")
 
     def form_error(self, msg):
         self.context.plone_utils.addPortalMessage(msg, 'error')

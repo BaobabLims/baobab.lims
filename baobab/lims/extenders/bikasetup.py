@@ -63,6 +63,15 @@ class BikaSetupSchemaExtender(object):
                 description=_("Turn this on if you want to work with sample partitions")
             ),
         ),
+        ExtBooleanField(
+            'StoreKitBiospecimens',
+            schemata="Storage",
+            default=True,
+            widget=BooleanWidget(
+                label=_("Store biospecimens when kit creation"),
+                description=_("Turn this off if you want create kits without storing its biospecimens in managed storages")
+            ),
+        ),
     ]
 
     def __init__(self, context):
