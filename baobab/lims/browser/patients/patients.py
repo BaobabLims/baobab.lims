@@ -110,22 +110,22 @@ class PatientsView(BikaListingView):
             items[x]['PatientID'] = obj.getId()
 
 
-            # set up the patient name and the href that links to it
-            name = ""
-            first_name = obj.getFirstName()
-            last_name = obj.getLastName()
-            if first_name and last_name:
-                name = obj.getFirstName() + " " + obj.getLastName()
-            elif first_name:
-                name = first_name
-            elif last_name:
-                name = last_name
-            else:
-                name = obj.getId()
+            # # set up the patient name and the href that links to it
+            # name = ""
+            # first_name = obj.getFirstName()
+            # last_name = obj.getLastName()
+            # if first_name and last_name:
+            #     name = obj.getFirstName() + " " + obj.getLastName()
+            # elif first_name:
+            #     name = first_name
+            # elif last_name:
+            #     name = last_name
+            # else:
+            #     name = obj.getId()
 
             items[x]['replace']['PatientID'] = "<a href='%s'>%s</a>" % \
                                                    (items[x]['url'],
-                                                    name)
+                                                    items[x]['PatientID'])
             project = obj.getSelectedProject()
             if project and hasattr(project, 'title'):
                 items[x]['SelectedProject'] = project.title
