@@ -28,4 +28,12 @@
         layer="bika.lims.interfaces.IBikaLIMS"
     />
 
+    <!-- Workflow action button clicked in Biospecimens folder list -->
+    <browser:page
+      for="baobab.lims.interfaces.IBatches"
+      name="workflow_action"
+      class=".workflow.BatchWorkflowAction"
+      permission="zope.Public"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
 </configure>
