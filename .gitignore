@@ -33,3 +33,4 @@ Thumbs.db
 var
 *ide-plugin.xml
 /tags
+venv

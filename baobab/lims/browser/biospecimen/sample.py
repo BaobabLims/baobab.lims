@@ -74,6 +74,11 @@ class SampleView(BrowserView):
                        kit.absolute_url(),
                        kit.Title()) or None
 
+        patient = context.getField('Patient').get(context)
+        self.patient = patient and "<a href='%s'>%s</a>" % (
+            patient.absolute_url(),
+            patient.getPatientID()) or None
+
         location = context.getField('StorageLocation').get(context)
         self.location = location and "<a href='%s'>%s</a>" % (
                                  location.absolute_url(),
