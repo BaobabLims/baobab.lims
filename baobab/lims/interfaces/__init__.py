@@ -137,3 +137,11 @@ class IBatch(Interface):
 class IBatches(Interface):
     """
     """
+
+class IPatient(Interface):
+    """
+    """
+
+class IPatients(Interface):
+    """
+    """

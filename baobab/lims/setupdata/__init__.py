@@ -400,7 +400,7 @@ class StockItems(WorksheetImporter):
                 StorageLocation=storage_location,
                 description=description,
                 Quantity=self.to_int(row.get('Quantity', 0)),
-                orderId=row.get('InvoiceNr', ''),
+                orderId=row.get('InvoiceNzr', ''),
                 batchId=row.get('BatchNr', ''),
                 receivedBy=row.get('ReceivedBy'),
                 dateReceived=row.get('DateReceived', ''),

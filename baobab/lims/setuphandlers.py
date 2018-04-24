@@ -22,7 +22,8 @@ class BikaCustomGenerator:
                 'biospecimens',
                 'inventoryorders',
                 'samplebatches',
-                'storage',):
+                'storage',
+                'patients'):
             try:
                 obj = portal._getOb(obj_id)
                 obj.unmarkCreationFlag()
@@ -87,6 +88,7 @@ class BikaCustomGenerator:
         at.setCatalogsByType('Shipment', ['bika_catalog'])
         at.setCatalogsByType('Biospecimen', ['bika_catalog'])
         at.setCatalogsByType('SampleBatch', ['bika_catalog'])
+        at.setCatalogsByType('Patient', ['bika_catalog'])
 
         addIndex(bc, 'getParentUID', 'FieldIndex')
         addIndex(bc, 'getProjectUID', 'FieldIndex')
@@ -304,5 +306,6 @@ def setupCustomVarious(context):
                           'samplebatches',
                           'analysisrequests',
                           'pricelists',
-                          'invoices']):
+                          'invoices',
+                          'patients']):
         portal.moveObjectsToTop([item])

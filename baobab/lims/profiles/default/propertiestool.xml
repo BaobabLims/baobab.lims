@@ -25,6 +25,7 @@
         <element value="StorageUnit"/>
         <element value="StoragePosition"/>
         <element value="SampleBatch"/>
+        <element value="Patient"/>
   </property>
 </object>
 
