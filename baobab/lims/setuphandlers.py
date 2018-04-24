@@ -21,6 +21,7 @@ class BikaCustomGenerator:
                 'shipments',
                 'biospecimens',
                 'inventoryorders',
+                'samplebatches',
                 'storage',):
             try:
                 obj = portal._getOb(obj_id)
@@ -85,6 +86,7 @@ class BikaCustomGenerator:
         # at.setCatalogsByType('Project', ['bika_catalog'])
         at.setCatalogsByType('Shipment', ['bika_catalog'])
         at.setCatalogsByType('Biospecimen', ['bika_catalog'])
+        at.setCatalogsByType('SampleBatch', ['bika_catalog'])
 
         addIndex(bc, 'getParentUID', 'FieldIndex')
         addIndex(bc, 'getProjectUID', 'FieldIndex')
@@ -299,6 +301,7 @@ def setupCustomVarious(context):
                           'kits',
                           'shipments',
                           'biospecimens',
+                          'samplebatches',
                           'analysisrequests',
                           'pricelists',
                           'invoices']):

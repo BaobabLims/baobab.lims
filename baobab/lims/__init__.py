@@ -40,6 +40,9 @@ def initialize(context):
     from content.unmanagedstorage import UnmanagedStorage
     from content.storageposition import StoragePosition
 
+    from content.samplebatch import SampleBatch
+    from content.samplebatches import SampleBatches
+
     from controlpanel.bika_kittemplates import KitTemplates
     from controlpanel.bika_biospectypes import BiospecTypes
     from controlpanel.bika_storagetypes import StorageTypes

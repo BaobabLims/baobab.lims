@@ -1,0 +1,31 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    i18n_domain="baobab">
+
+    <browser:page
+        for="baobab.lims.interfaces.IBatch"
+        name="base_edit"
+        class="baobab.lims.browser.samplebatch.batch.EditView"
+        permission="zope2.View"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+        for="baobab.lims.interfaces.IBatches"
+        name="folder_view"
+        class=".batches.BatchesView"
+        permission="zope2.View"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+        for="baobab.lims.interfaces.IBatch"
+        name="biospecimens"
+        class=".batch.BatchBiospecimensView"
+        permission="cmf.ModifyPortalContent"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+</configure>

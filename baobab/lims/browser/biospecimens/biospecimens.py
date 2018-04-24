@@ -15,7 +15,9 @@ from baobab.lims import bikaMessageFactory as _
 
 
 class BiospecimensView(BikaListingView):
-
+    """
+    Class showing list of biospecimens in a table
+    """
     implements(IFolderContentsView, IViewView)
 
     def __init__(self, context, request):
