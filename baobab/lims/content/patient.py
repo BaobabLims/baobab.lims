@@ -1,3 +1,4 @@
+from Products.Archetypes.references import HoldingReference
 from AccessControl import ClassSecurityInfo
 from Products.Archetypes.public import *
 from Products.CMFCore import permissions
@@ -26,20 +27,36 @@ PatientID = StringField(
         )
     )
 
+# SelectedProject = ReferenceField(
+#         'SelectedProject',
+#         allowed_types=('Project'),
+#         relationship='PatientProjects',
+#         widget=bika_ReferenceWidget(
+#             label=_("Select Projects"),
+#             description=_("Select projects for patient"),
+#             size=40,
+#             visible={'edit': 'visible', 'view': 'visible'},
+#             catalog_name='bika_catalog',
+#             showOn=True
+#         )
+#     )
+
 SelectedProject = ReferenceField(
-        'SelectedProject',
-        multiValued=1,
-        allowed_types=('Project'),
-        relationship='PatientProjects',
-        widget=bika_ReferenceWidget(
-            label=_("Select Projects"),
-            description=_("Select projects for patient"),
-            size=40,
-            visible={'edit': 'visible', 'view': 'visible'},
-            catalog_name='bika_catalog',
-            showOn=True
-        )
+    'SelectedProject',
+    # required=True,
+    allowed_types=('Project',),
+    relationship='PatientProjects',
+    referenceClass=HoldingReference,
+    widget=bika_ReferenceWidget(
+        label=_("Select Project"),
+        # catalog_name='bika_catalog',
+        visible={'edit': 'visible', 'view': 'visible'},
+        size=30,
+        showOn=True,
+        render_own_label=True,
+        description=_("Select the project of the sample."),
     )
+)
 
 InfoLink = StringField(
         'InfoLink',
@@ -122,6 +139,9 @@ class Patient(BaseContent):
 
     def Title(self):
         return safe_unicode(self.getField('PatientID').get(self)).encode('utf-8')
+
+    def Description(self):
+        return "Gender %s : Age %s %s" % (self.getSex(), self.getAge(), self.getAgeUnit())
 
     def getSexes(self):
         return ['Male', 'Female', 'Unknown', 'Undifferentiated']
