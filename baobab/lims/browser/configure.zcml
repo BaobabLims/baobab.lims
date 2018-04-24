@@ -6,7 +6,7 @@
     xmlns:i18n="http://namespaces.zope.org/i18n"
     xmlns:zcml="http://namespaces.zope.org/zcml"
     xmlns:plone="http://namespaces.plone.org/plone"
-    i18n_domain="baobab.lims">
+    i18n_domain="baobab">
 
 
     <include package=".client"/>
@@ -26,6 +26,7 @@
     <include package=".inventory"/>
     <include package=".supplier"/>
     <include package=".storage"/>
+    <include package=".samplebatch"/>
     <include package=".patients"/>
 
     <!-- This registration allows additional sticker templates.

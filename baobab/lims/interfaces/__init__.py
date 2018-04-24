@@ -130,6 +130,14 @@ class ISharableSample(Interface):
     """
     """
 
+class IBatch(Interface):
+    """
+    """
+
+class IBatches(Interface):
+    """
+    """
+
 class IPatient(Interface):
     """
     """

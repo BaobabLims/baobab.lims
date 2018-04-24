@@ -42,6 +42,9 @@ def initialize(context):
     from content.patient import Patient
     from content.patients import Patients
 
+    from content.samplebatch import SampleBatch
+    from content.samplebatches import SampleBatches
+
     from controlpanel.bika_kittemplates import KitTemplates
     from controlpanel.bika_biospectypes import BiospecTypes
     from controlpanel.bika_storagetypes import StorageTypes
