@@ -126,9 +126,9 @@
                     pending python:context.portal_workflow.getInfoFor(context, 'review_state') == 'pending';
                     completed python:context.portal_workflow.getInfoFor(context, 'review_state') == 'completed'">
 
-            <div tal:condition="attachments_allowed">
+            <!--<div tal:condition="attachments_allowed">
                 <metal:block use-macro="here/kitattachments/macros/attachments"/>
-            </div>
+            </div>-->
 
             <table class="invoice-header">
                 <tbody>

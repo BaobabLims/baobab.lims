@@ -26,7 +26,7 @@ BatchId = StringField(
 
 Project = ReferenceField(
     'Project',
-    # required=True,
+    required=True,
     allowed_types=('Project',),
     relationship='InvoiceProject',
     referenceClass=HoldingReference,
@@ -68,6 +68,7 @@ ParentBiospecimen = ReferenceField(
 )
 
 NumberBiospecimens = IntegerField('Quantity',
+    required=True,
     widget=IntegerWidget(
         label=_("Number of Biospecimens"),
         description=_("Number of biospecimens in the batch."),

@@ -197,9 +197,11 @@ class AddStorageUnits(Storage):
                 address,
                 unit_type
             )
-            self.context.manage_renameObject(
-                instance.id, id_template)
+
+            # self.context.manage_renameObject(instance.id, id_template)
+
             units.append(instance)
+
         return units
 
     def validate_form_inputs(self):

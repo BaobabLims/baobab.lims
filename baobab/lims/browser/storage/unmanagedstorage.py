@@ -46,7 +46,6 @@ class StoredItemsView(BikaListingView):
         }
         self.context_actions = {}
         self.title = ''
-        self.description = ''
         self.icon = ''
         self.show_sort_column = False
         self.show_select_row = False
@@ -154,7 +153,7 @@ class UnmanagedStorageContent(ProductsView):
             for si in stock_items[:]:
                 if si.portal_type == "StockItem":
                     if obj == si.getProduct():
-                        quantity += 1
+                        quantity += si.getQuantity()
                         stock_items.remove(si)
                 else: continue
             if quantity > 0:

@@ -91,7 +91,7 @@
                                         value=""
                                         base_query='{"portal_type": "Project", "inactive_state": "active"}'
                                         search_query='{}'
-                                        catalog_name="bika_catalog"
+                                        catalog_name="portal_catalog"
                                         ui_item="Title"
                                         autocomplete="false"
                                         tabindex="2"
