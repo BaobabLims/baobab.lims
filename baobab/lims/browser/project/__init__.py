@@ -158,7 +158,6 @@ def create_sample(context, request, values, j, x):
 def create_samplepartition(context, data):
     """ Create partition object for sample(context)
     """
-    print data['part_id']
     partition = _createObjectByType('SamplePartition', context, data['part_id'])
     partition.unmarkCreationFlag()
     partition.reindexObject()
@@ -230,7 +229,6 @@ def get_si_storages(storage_uids, portal_catalog):
     """
     si_storage = []
     for uid in storage_uids:
-        print uid
         brain = portal_catalog(UID=uid)
         if not brain:
             raise ValidationError(u'Bad uid. This should not happen.')

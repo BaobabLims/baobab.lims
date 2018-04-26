@@ -6,7 +6,7 @@ from plone import api
 
 from bika.lims.workflow import doActionFor
 from bika.lims.utils import tmpID
-
+from bika.lims.idserver import renameAfterCreation
 from baobab.lims.interfaces import IManagedStorage
 
 
@@ -19,13 +19,8 @@ class SampleGeneration:
     def create_sample(self, kit, sample_type, batch=None):
         """Create sample as biospecimen or aliquot
             """
-        # sample = _createObjectByType('Sample', self.project, tmpID())
-        sample = api.content.create(
-            container=self.project,
-            type="Sample",
-            id='tempID',
-            SampleType= sample_type,
-        )
+        sample = _createObjectByType('Sample', self.project, tmpID())
+        sample.setSampleType(sample_type)
         field = sample.getField('DateCreated')
         if self.form.get('DateCreated', ''):
             field.set(sample, self.form.get('DataCreated'))
@@ -43,7 +38,8 @@ class SampleGeneration:
         if self.form.get('ParentBiospecimen', ''):
             field_s = sample.getField('LinkedSample')
             field_s.set(sample, self.form.get('ParentBiospecimen_uid'))
-
+        sample.unmarkCreationFlag()
+        renameAfterCreation(sample)
         return sample
 
     def store_samples(self, items, storages):

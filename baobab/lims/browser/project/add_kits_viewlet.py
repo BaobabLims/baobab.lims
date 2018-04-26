@@ -138,6 +138,7 @@ class AddKitsSubmitHandler(BrowserView):
         kits = []
         # sample storage
         samples = []
+        uc = getToolByName(self.context, 'uid_catalog')
         for x in range(seq_start, seq_start + kit_count):
             id_template = prefix_text + '-' + str(x).zfill(len(leading_zeros) + 1)
             title_template = prefix_text + ' ' + str(x).zfill(len(leading_zeros) + 1)
@@ -146,12 +147,11 @@ class AddKitsSubmitHandler(BrowserView):
                 type='Kit',
                 id=id_template,
                 title=title_template,
-                KitTemplate=kit_template_uid,
                 DateCreated=DateTime()
             )
 
             obj.setProject(obj.aq_parent)
-
+            obj.setKitTemplate(kit_template_uid)
             if kit_template_uid:
                 self.assign_stock_items_to_kit(obj)
                 update_quantity_products(obj, self.bika_setup_catalog)
