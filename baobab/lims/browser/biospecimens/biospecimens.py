@@ -12,6 +12,7 @@ from baobab.lims.interfaces import ISharableSample
 
 from baobab.lims.config import VOLUME_UNITS
 from baobab.lims import bikaMessageFactory as _
+import time
 
 
 class BiospecimensView(BikaListingView):
@@ -91,6 +92,10 @@ class BiospecimensView(BikaListingView):
                 'title': _('State'),
                 'index': 'review_state'
             },
+            'DateReceived': {
+                'title': _('DateReceived'),
+                #'index': 'review_state'
+            },
             # 'Location': {
             #     'title': _('Location'),
             #     'toggle': True
@@ -121,6 +126,7 @@ class BiospecimensView(BikaListingView):
                     'Volume',
                     'Unit',
                     'state_title',
+                    'DateReceived',
                     # 'Location'
                 ]
             },
@@ -145,6 +151,7 @@ class BiospecimensView(BikaListingView):
                     'Type',
                     'Barcode',
                     'state_title',
+                    'DateReceived',
                     # 'Location'
                 ]
             },
@@ -171,6 +178,7 @@ class BiospecimensView(BikaListingView):
                     'Volume',
                     'Unit',
                     'state_title',
+                    'DateReceived',
                     # 'Location'
                 ]
             },
@@ -195,6 +203,7 @@ class BiospecimensView(BikaListingView):
                     'Volume',
                     'Unit',
                     'state_title',
+                    'DateReceived',
                     # 'Location'
                 ]
             },
@@ -220,6 +229,7 @@ class BiospecimensView(BikaListingView):
                     'Volume',
                     'Unit',
                     'state_title',
+                    'DateReceived',
                     # 'Location'
                 ]
             },
@@ -240,6 +250,7 @@ class BiospecimensView(BikaListingView):
                     'Barcode',
                     'Volume',
                     'Unit',
+                    'DateReceived',
                     # 'Location'
                 ]
             },
@@ -284,10 +295,12 @@ class BiospecimensView(BikaListingView):
             items[x]['Volume'] = obj.getField('Volume').get(obj)
             items[x]['Unit'] = VOLUME_UNITS[0]['ResultText']
             items[x]['SubjectID'] = obj.getField('SubjectID').get(obj)
+            items[x]['DateReceived'] = str(obj.getField('DateReceived').get(obj))[:16]
             kit = obj.getField('Kit').get(obj)
             project = obj.getField('Project').get(obj)
             items[x]['Kit'] = kit
             items[x]['Project'] = project
+
             if project:
                 items[x]['replace']['Project'] = \
                     '<a href="%s">%s</a>' % (project.absolute_url(),
@@ -315,4 +328,6 @@ class BiospecimensView(BikaListingView):
                     if not items[x]['Unit']:
                         items[x]['choices']['Unit'] = VOLUME_UNITS
             ret.append(item)
+
+
         return ret

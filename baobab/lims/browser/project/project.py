@@ -139,8 +139,13 @@ class ProjectView(BrowserView):
 
         self.study_type = context.getStudyType()
         self.participants = context.getNumParticipants()
-        self.age_interval = str(context.getAgeLow()) + ' - ' + str(
-            context.getAgeHigh())
+        # self.age_interval = str(context.getAgeLow()) + ' - ' + str(
+        #     context.getAgeHigh())
+        self.age_interval = "%s %s - %s %s" % (str(context.getAgeLow()),
+                                               context.getAgeLowUnit(),
+                                               str(context.getAgeHigh()),
+                                               context.getAgeHighUnit(),
+                                               )
 
         biospecimen_types = ProjectBiospecView(context, request,
                                            context.getSampleType())

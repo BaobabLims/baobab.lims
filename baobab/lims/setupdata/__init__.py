@@ -285,6 +285,7 @@ class Biospecimens(WorksheetImporter):
 
         st_loc_list = pc(portal_type='StoragePosition', Title=row.get('StorageLocation'))
         storage_location = st_loc_list and st_loc_list[0].getObject() or None
+        sample_due = row.get('SampleDue')
 
         obj.edit(
             title=row.get('title'),
@@ -304,8 +305,9 @@ class Biospecimens(WorksheetImporter):
         obj.unmarkCreationFlag()
         renameAfterCreation(obj)
 
-        from baobab.lims.subscribers.sample import ObjectInitializedEventHandler
-        ObjectInitializedEventHandler(obj, None)
+        if not sample_due:
+            from baobab.lims.subscribers.sample import ObjectInitializedEventHandler
+            ObjectInitializedEventHandler(obj, None)
 
 
 class Storage(WorksheetImporter):

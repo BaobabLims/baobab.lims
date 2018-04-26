@@ -43,6 +43,21 @@ schema = BikaSchema.copy() + Schema((
         )
     ),
 
+    StringField(
+        'AgeHighUnit',
+        mode="rw",
+        read_permission=permissions.View,
+        write_permission=permissions.ModifyPortalContent,
+        vocabulary='getAgeUnits',
+        widget=SelectionWidget(
+            format='select',
+            label=_("Age High Unit"),
+            description=_("Whether the high age is in years, months, weeks, days etc"),
+            visible={'edit': 'visible', 'view': 'visible'},
+            render_own_label=True,
+        )
+    ),
+
     IntegerField(
         'AgeLow',
         widget=IntegerWidget(
@@ -50,6 +65,21 @@ schema = BikaSchema.copy() + Schema((
             description=_("Minimum age of the participants."),
             size=10,
             visible={'edit': 'visible', 'view': 'visible'},
+        )
+    ),
+
+    StringField(
+        'AgeLowUnit',
+        mode="rw",
+        read_permission=permissions.View,
+        write_permission=permissions.ModifyPortalContent,
+        vocabulary='getAgeUnits',
+        widget=SelectionWidget(
+            format='select',
+            label=_("Age Low Unit"),
+            description=_("Whether the low age is in years, months, weeks, days etc"),
+            visible={'edit': 'visible', 'view': 'visible'},
+            render_own_label=True,
         )
     ),
 
@@ -135,5 +165,8 @@ class Project(BaseFolder):
     def getClientID(self):
         return self.aq_parent.getId() if self.aq_parent.portal_type == 'Client' \
                                       else ''
+
+    def getAgeUnits(self):
+        return ['Years', 'Months', 'Weeks', 'Days', 'Hours', 'Minutes']
 
 registerType(Project, config.PROJECTNAME)
