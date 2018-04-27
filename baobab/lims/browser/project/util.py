@@ -8,6 +8,7 @@ from bika.lims.workflow import doActionFor
 from bika.lims.utils import tmpID
 from bika.lims.idserver import renameAfterCreation
 from baobab.lims.interfaces import IManagedStorage
+from baobab.lims.subscribers.sample import ObjectInitializedEventHandler
 
 
 class SampleGeneration:
@@ -40,6 +41,9 @@ class SampleGeneration:
             field_s.set(sample, self.form.get('ParentBiospecimen_uid'))
         sample.unmarkCreationFlag()
         renameAfterCreation(sample)
+
+        ObjectInitializedEventHandler(sample, None)
+
         return sample
 
     def store_samples(self, items, storages):
