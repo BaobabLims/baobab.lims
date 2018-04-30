@@ -7,6 +7,8 @@ from baobab.lims.idserver import renameAfterCreation
 from baobab.lims.interfaces import ISampleStorageLocation, IStockItemStorage
 from baobab.lims.browser.project import *
 
+from zope.interface import alsoProvides
+
 
 def get_project_multi_items(context, string_elements, portal_type, portal_catalog):
 
@@ -260,11 +262,13 @@ class Biospecimens(WorksheetImporter):
         # get the project
         project_list = pc(portal_type="Project", Title=row.get('Project'))
         project = project_list and project_list[0].getObject() or None
-        if not project: raise
+        if not project:
+            raise
 
         sampletype_list = pc(portal_type="SampleType", Title=row.get('SampleType'))
         sample_type = sampletype_list and sampletype_list[0].getObject() or None
-        if not sample_type: raise
+        if not sample_type:
+            raise
 
         linked_sample_list = pc(portal_type="Sample", Title=row.get('LinkedSample', ''))
         linked_sample = linked_sample_list and linked_sample_list[0].getObject() or None
@@ -285,7 +289,9 @@ class Biospecimens(WorksheetImporter):
 
         st_loc_list = pc(portal_type='StoragePosition', Title=row.get('StorageLocation'))
         storage_location = st_loc_list and st_loc_list[0].getObject() or None
-        sample_due = row.get('SampleDue')
+        sample_state = row.get('SampleState', '')
+
+        setattr(obj, "sample_state", sample_state)
 
         obj.edit(
             title=row.get('title'),
@@ -305,9 +311,8 @@ class Biospecimens(WorksheetImporter):
         obj.unmarkCreationFlag()
         renameAfterCreation(obj)
 
-        if not sample_due:
-            from baobab.lims.subscribers.sample import ObjectInitializedEventHandler
-            ObjectInitializedEventHandler(obj, None)
+        from baobab.lims.subscribers.sample import ObjectInitializedEventHandler
+        ObjectInitializedEventHandler(obj, None)
 
 
 class Storage(WorksheetImporter):
