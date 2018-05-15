@@ -4,9 +4,9 @@
              title="Bika Sample shipment Workflow"
              description=""
              state_variable="review_state"
-             initial_state="ready_to_ship"
+             initial_state="pending"
              manager_bypass="False"
-             i18n:domain="bika">
+             i18n:domain="baobab">
 
   <!--<permission>BIKA: Cancel and reinstate</permission>-->
   <!--<permission>BIKA: Edit Field Results</permission>-->
@@ -31,8 +31,8 @@
   <!-- This governs whether you are allowed to modify some content. -->
   <permission>Modify portal content</permission>
 
-  <state state_id="ready_to_ship" title="Sample Shipment Created" i18n:attributes="title">
-    <exit-transition transition_id="ship_to_client" />
+  <state state_id="pending" title="Sample Shipment Created" i18n:attributes="title">
+    <exit-transition transition_id="ship" />
         <!-- View -->
     <permission-map name="View" acquired="False">
       <permission-role>Manager</permission-role>
@@ -72,8 +72,8 @@
     </permission-map>
   </state>
 
-  <state state_id="sample_shipped" title="Shipped to Client" i18n:attributes="title">
-    <exit-transition transition_id="receive_sample" />
+  <state state_id="shipped" title="Shipped to Client" i18n:attributes="title">
+    <exit-transition transition_id="client_receive" />
         <!-- View -->
     <permission-map name="View" acquired="False">
       <permission-role>Manager</permission-role>
@@ -113,7 +113,7 @@
     </permission-map>
   </state>
 
-  <state state_id="sample_shipment_received" title="Shipment Received" i18n:attributes="title">
+  <state state_id="client_received" title="Shipment Received By Client" i18n:attributes="title">
     <exit-transition transition_id="" />
         <!-- View -->
     <permission-map name="View" acquired="False">
@@ -154,13 +154,13 @@
     </permission-map>
   </state>
 
-  <transition transition_id="ship_to_client" title="Ship to Client" new_state="sample_shipped" trigger="AUTOMATIC" before_script="" after_script="" i18n:attributes="title">
+  <transition transition_id="ship" title="Ship to Client" new_state="shipped" trigger="AUTOMATIC" before_script="" after_script="" i18n:attributes="title">
     <guard>
       <guard-expression>python:here.guard_auto_preservation_required() == False</guard-expression>
     </guard>
   </transition>
 
-  <transition transition_id="receive_sample" title="Client Receive Sample" new_state="sample_shipment_received" trigger="AUTOMATIC" before_script="" after_script="" i18n:attributes="title">
+  <transition transition_id="client_receive" title="Client Receive Sample" new_state="client_received" trigger="AUTOMATIC" before_script="" after_script="" i18n:attributes="title">
     <guard>
       <guard-expression>python:here.guard_auto_preservation_required() == True</guard-expression>
     </guard>

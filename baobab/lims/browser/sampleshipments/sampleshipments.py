@@ -50,22 +50,6 @@ class SampleShipmentsView(BikaListingView):
                 'title': _('Client'),
                 'type': 'choices'
             },
-            # 'CaseControl': {
-            #     'title': _('Type'),
-            #     'input_width': '20'
-            # },
-            # 'Sex': {
-            #     'title': _('Sex'),
-            #     'type': 'choices'
-            # },
-            # 'Age': {
-            #     'title': _('Age'),
-            #     'input_width': '10'
-            # },
-            # 'AgeUnit': {
-            #     'title': _('Age Unit'),
-            #     'type': 'choices'
-            # },
         }
 
         self.review_states = [
@@ -77,15 +61,60 @@ class SampleShipmentsView(BikaListingView):
                     'sort_on': 'sortable_title',
                     'sort_order': 'ascending'
                 },
-                'transitions': [
-                ],
+                'transitions': [{'id': 'deactivate'},
+                                {'id': 'ship'},
+                                {'id': 'client_receive'}],
                 'columns': [
                     'SampleShipmentID',
                     'SamplesList',
                     'Client',
-                    # 'Sex',
-                    # 'Age',
-                    # 'DiseasesList',
+                ]
+            },
+            {
+                'id': 'pending',
+                'title': _('Pending'),
+                'contentFilter': {
+                    'review_state': 'pending',
+                    'sort_on': 'sortable_title',
+                    'sort_order': 'ascending'
+                },
+                'transitions': [{'id': 'deactivate'},
+                                {'id': 'ship'}],
+                'columns': [
+                    'SampleShipmentID',
+                    'SamplesList',
+                    'Client',
+                ]
+            },
+            {
+                'id': 'shipped',
+                'title': _('Shipped'),
+                'contentFilter': {
+                    'review_state': 'shipped',
+                    'sort_on': 'sortable_title',
+                    'sort_order': 'ascending'
+                },
+                'transitions': [{'id': 'deactivate'},
+                                {'id': 'client_receive'}],
+                'columns': [
+                    'SampleShipmentID',
+                    'SamplesList',
+                    'Client',
+                ]
+            },
+            {
+                'id': 'client_received',
+                'title': _('Client_Received'),
+                'contentFilter': {
+                    'review_state': 'client_received',
+                    'sort_on': 'sortable_title',
+                    'sort_order': 'ascending'
+                },
+                'transitions': [{'id': 'deactivate'}],
+                'columns': [
+                    'SampleShipmentID',
+                    'SamplesList',
+                    'Client',
                 ]
             }
         ]

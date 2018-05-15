@@ -13,6 +13,7 @@
 <object name="bika_storage_workflow" meta_type="Workflow"/>
 <object name="bika_storageposition_workflow" meta_type="Workflow"/>
 <object name="bika_sample_workflow" meta_type="Workflow"/>
+<object name="bika_sample_shipment_workflow" meta_type="Workflow"/>
 
 <bindings>
     <type type_id="KitTemplates"/>
@@ -103,7 +104,7 @@
 
     <type type_id="SampleShipments" />
     <type type_id="SampleShipment">
-        <bound-workflow workflow_id="bika_one_state_workflow"/>
+        <bound-workflow workflow_id="bika_sample_shipment_workflow"/>
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>
 
