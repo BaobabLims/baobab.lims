@@ -48,18 +48,14 @@ code = StringField(
     )
 )
 
-remarks = TextField(
-    'Remarks',
-    searchable=True,
-    default_content_type='text/x-web-intelligent',
-    allowable_content_types=('text/plain', ),
-    default_output_type="text/plain",
+remarks = StringField(
+    'FreeText',
     widget=TextAreaWidget(
-        macro="bika_widgets/remarks",
-        label=_('Remarks'),
-        append_only=True,
-        visible={'edit': 'visible', 'view': 'visible'},
-    )
+        label=_("Remarks"),
+        description=_("Disease free text"),
+        cols=30,
+        rows=20,
+    ),
 )
 
 schema = BikaSchema.copy() + Schema((

@@ -39,7 +39,15 @@ class DiseaseOntologiesView(BikaListingView):
 
         self.columns = {
             'Title': {
-                'title': _('Title'),
+                'title': _('Disease Ontology'),
+                'index': 'sortable_title'
+            },
+            'Version': {
+                'title': _('Version'),
+                'index': 'sortable_title'
+            },
+            'Code': {
+                'title': _('Code'),
                 'index': 'sortable_title'
             },
         }
@@ -55,7 +63,9 @@ class DiseaseOntologiesView(BikaListingView):
                 },
                 'transitions': [{'id':'deactivate'},],
                 'columns': [
-                    'Title'
+                    'Title',
+                    'Version',
+                    'Code'
                 ]
             }
         ]
