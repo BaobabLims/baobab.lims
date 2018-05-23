@@ -74,6 +74,11 @@ class SampleView(BrowserView):
                        kit.absolute_url(),
                        kit.Title()) or None
 
+        disease_ontology = context.getField('DiseaseOntology').get(context)
+        self.disease_ontology = disease_ontology and "<a href='%s'>%s</a>" % (
+            disease_ontology.absolute_url(),
+            disease_ontology.Title()) or None
+
         patient = context.getField('Patient').get(context)
         self.patient = patient and "<a href='%s'>%s</a>" % (
             patient.absolute_url(),

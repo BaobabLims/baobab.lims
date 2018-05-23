@@ -51,6 +51,30 @@ class SampleSchemaExtender(object):
                 description=_("Select the project of the sample."),
             )
         ),
+        ExtReferenceField(
+            'DiseaseOntology',
+            allowed_types=('DiseaseOntology',),
+            relationship='SampleOntology',
+            referenceClass=HoldingReference,
+            widget=bika_ReferenceWidget(
+                label=_("Disease Ontology"),
+                catalog_name='bika_catalog',
+                visible={'edit': 'visible',
+                         'view': 'visible',
+                         'header_table': 'visible',
+                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         'sample_due': {'view': 'visible', 'edit': 'visible'},
+                         'sampled': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'visible'},
+                         'expired': {'view': 'visible', 'edit': 'invisible'},
+                         'disposed': {'view': 'visible', 'edit': 'invisible'},
+                         },
+                size=30,
+                showOn=True,
+                render_own_label=True,
+                description=_("Select disease ontology of the sample."),
+            )
+        ),
         ExtBooleanField(
             'AllowSharing',
             default=False,
