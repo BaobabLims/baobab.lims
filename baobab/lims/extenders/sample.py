@@ -332,6 +332,41 @@ class SampleSchemaExtender(object):
                 visible=False,
             ),
         ),
+        ExtStringField(
+            'AnatomicalSiteTerm',
+            searchable=True,
+            widget=StringWidget(
+                label=_("Anatomical site term"),
+                visible={'edit': 'visible',
+                         'view': 'visible',
+                         'header_table': 'visible',
+                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         'sample_due': {'view': 'visible', 'edit': 'visible'},
+                         'sampled': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'visible'},
+                         'expired': {'view': 'visible', 'edit': 'invisible'},
+                         'disposed': {'view': 'visible', 'edit': 'invisible'},
+                         },
+                render_own_label=True,
+            )
+        ),
+        ExtStringField(
+            'AnatomicalSiteDescription',
+            widget=TextAreaWidget(
+                label=_("Anatomical site description"),
+                visible={'edit': 'visible',
+                         'view': 'visible',
+                         'header_table': 'visible',
+                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         'sample_due': {'view': 'visible', 'edit': 'visible'},
+                         'sampled': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'visible'},
+                         'expired': {'view': 'visible', 'edit': 'invisible'},
+                         'disposed': {'view': 'visible', 'edit': 'invisible'},
+                         },
+                render_own_label=True,
+            )
+        ),
     ]
 
     def __init__(self, context):
