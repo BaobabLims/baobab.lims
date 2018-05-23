@@ -31,6 +31,9 @@
     <object name="Patient" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Patients" meta_type="Factory-based Type Information with dynamic views"/>
 
+    <object name="DiseaseOntology" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="DiseaseOntologies" meta_type="Factory-based Type Information with dynamic views"/>
+
     <object name="SampleBatch" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="SampleBatches" meta_type="Factory-based Type Information with dynamic views"/>
 

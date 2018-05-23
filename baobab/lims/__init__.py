@@ -41,6 +41,8 @@ def initialize(context):
     from content.storageposition import StoragePosition
     from content.patient import Patient
     from content.patients import Patients
+    from content.disease_ontology import DiseaseOntology
+    from content.disease_ontologies import DiseaseOntologies
 
     from content.samplebatch import SampleBatch
     from content.samplebatches import SampleBatches

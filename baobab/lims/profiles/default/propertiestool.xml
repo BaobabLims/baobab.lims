@@ -26,6 +26,7 @@
         <element value="StoragePosition"/>
         <element value="SampleBatch"/>
         <element value="Patient"/>
+        <element value="DiseaseOntology"/>
   </property>
 </object>
 

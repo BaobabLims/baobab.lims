@@ -18,6 +18,7 @@
         <type portal_type="StoragePosition"/>
         <type portal_type="SampleBatch"/>
         <type portal_type="Patient"/>
+        <type portal_type="DiseaseOntology"/>
 
     </factorytypes>
 </object>

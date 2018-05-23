@@ -145,3 +145,11 @@ class IPatient(Interface):
 class IPatients(Interface):
     """
     """
+
+class IDiseaseOntology(Interface):
+    """
+    """
+
+class IDiseaseOntologies(Interface):
+    """
+    """

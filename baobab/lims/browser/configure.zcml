@@ -28,6 +28,7 @@
     <include package=".storage"/>
     <include package=".samplebatch"/>
     <include package=".patients"/>
+    <include package=".ontologies"/>
 
     <!-- This registration allows additional sticker templates.
          To enable these, just copy one or more of the *.pt files
