@@ -14,8 +14,11 @@ from bika.lims.workflow import doActionFor
 from baobab.lims import bikaMessageFactory as _
 from baobab.lims.interfaces import ISampleStorageLocation
 from baobab.lims.browser.project import create_samplepartition
+from baobab.lims.utils.email_utils import send_mail
 
 import sys
+import datetime
+from time import strftime
 
 
 class ExtFixedPointField(ExtensionField, FixedPointField):
@@ -324,6 +327,22 @@ class Sample(BaseSample):
             doActionFor(box, 'occupy')
         elif free_pos and state == 'occupied':
             doActionFor(box, 'liberate')
+
+    def workflow_script_receive(self):
+
+        project = self.aq_parent
+        client = project.getClient()
+
+        sender = client.EmailAddress
+        receiver = sender
+
+        subject = 'Sample \"%s\" received at \"%s\".' % (self.Title(), strftime("%Y-%m-%d %H:%M:%S"))
+
+        body = "Automatic email:\n"
+        body += 'The sample \"%s\" has been received at \"%s\".' % (self.Title(), strftime("%Y-%m-%d %H:%M:%S"))
+
+        send_mail(self, sender, receiver, subject, body)
+
 
     def at_post_create_script(self):
         """Execute once the object is created (CHECK ObjectInitializedEventHandler)

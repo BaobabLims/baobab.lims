@@ -35,19 +35,19 @@ def ObjectInitializedEventHandler(instance, event):
                     sample_state = instance.sample_state
 
                 # sample state registered: dont set state.  default is register and location to reserve
-                if sample_state.lower() == "register" or sample_state.lower() == "registered":
+                if sample_state and sample_state.lower() in ("register", "registered"):
                     if location:
                         doActionFor(location, 'reserve')
                         instance.update_box_status(location)
                 #sample state due: set state to due and location to reserve
-                if sample_state.lower() == "due":
+                if sample_state and sample_state.lower() == "due":
                     doActionFor(instance, 'sample_due')
                     if location:
                         doActionFor(location, 'reserve')
                         instance.update_box_status(location)
                 #state is received set sample state to receive and location to occupied
                 #if no valid state in sample_state variable then also set it to received
-                if not sample_state or sample_state.lower() == "receive" or sample_state.lower() == "received" or \
+                if not sample_state or sample_state.lower() in ("receive", "received") or \
                         sample_state.lower() not in ("due", "receive", "received", "register", "registered"):
                     doActionFor(instance, 'sample_due')
                     doActionFor(instance, 'receive')
