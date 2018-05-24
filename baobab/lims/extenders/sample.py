@@ -337,6 +337,8 @@ class SampleSchemaExtender(object):
             searchable=True,
             widget=StringWidget(
                 label=_("Anatomical site term"),
+                description=_('The ICD-O-3 topography code for describing the anatomical source of '
+                              'the sampled material'),
                 visible={'edit': 'visible',
                          'view': 'visible',
                          'header_table': 'visible',
@@ -354,6 +356,7 @@ class SampleSchemaExtender(object):
             'AnatomicalSiteDescription',
             widget=TextAreaWidget(
                 label=_("Anatomical site description"),
+                description=_('The anatomical position of the body where the solid sample was taken from'),
                 visible={'edit': 'visible',
                          'view': 'visible',
                          'header_table': 'visible',

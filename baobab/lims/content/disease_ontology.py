@@ -31,7 +31,7 @@ version = StringField(
     write_permission=permissions.ModifyPortalContent,
     widget=StringWidget(
         label=_("Version"),
-        description=_("Disease ontology version"),
+        description=_("Version of selected ontology for disease e.g. ICD-9, ICD-10, SNOMED-CT"),
         visible={'edit': 'visible', 'view': 'visible'},
     )
 )
@@ -43,7 +43,7 @@ code = StringField(
     write_permission=permissions.ModifyPortalContent,
     widget=StringWidget(
         label=_("Code"),
-        description=_("Disease ontology code"),
+        description=_("Disease code from the selected Disease Ontology Version e.g. C61"),
         visible={'edit': 'visible', 'view': 'visible'},
     )
 )
@@ -52,7 +52,7 @@ remarks = StringField(
     'FreeText',
     widget=TextAreaWidget(
         label=_("Remarks"),
-        description=_("Disease free text"),
+        description=_("Explanation about disease or symptom in case of unknown disease or insufficient information"),
         cols=30,
         rows=20,
     ),
@@ -65,7 +65,10 @@ schema = BikaSchema.copy() + Schema((
 ))
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 schema['title'].widget.label = "Disease Ontology"
+schema['title'].widget.description = "Name of ontology used fro disease. Can be several values e.g. ICD, SNOMED"
 schema['description'].widget.visible = {'view': 'visible', 'edit': 'visible'}
+schema['description'].widget.description = "Description from the selected Disease Ontology Code " \
+                                           "e.g. Malignant neoplasm of prostate"
 
 
 class DiseaseOntology(BaseContent):
