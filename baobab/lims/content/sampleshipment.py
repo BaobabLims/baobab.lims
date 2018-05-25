@@ -51,6 +51,24 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
         ),
     ),
 
+    StringField(
+        'FromEmailAddress',
+        #schemata='Shipping Information',
+        widget=StringWidget(
+            label=_("Sender Email Address"),
+            size=30,
+        )
+    ),
+
+    StringField(
+        'ToEmailAddress',
+        #schemata='Shipping Information',
+        widget=StringWidget(
+            label=_("Receiver Email Address"),
+            size=30,
+        )
+    ),
+
     ReferenceField(
         'Client',
         schemata='Delivery Info',
@@ -211,116 +229,97 @@ class SampleShipment(ATFolder):
         from bika.lims.idserver import renameAfterCreation
         renameAfterCreation(self)
 
-    # def get_samples(self):
-    #     """ List of all biospecimens in LIMS
-    #     """
-    #     items = []
-    #     pc = getToolByName(self, 'portal_catalog')
-    #     brains = pc(portal_type='Sample')
-    #     for brain in brains:
-    #         obj = brain.getObject()
-    #         items.append((obj.UID(), obj.Title()))
-    #
-    #     return DisplayList(items)
-    #
-    # def get_clients(self):
-    #     """
-    #     List all of the clients in the LIMS
-    #     """
-    #
-    #     pc = getToolByName(self, "portal_catalog")
-    #     brains = pc(portal_type="Client")
-    #
-    #     clients = []
-    #     for brain in brains:
-    #         obj = brain.getObject()
-    #         clients.append((obj.UID(), obj.Title()))
-    #     return DisplayList(clients)
-    #
-    # def send_mail(self, sender, receiver, subject="", body=""):
-    #     """Send email from sender to receiver
-    #     """
-    #     mime_msg = MIMEMultipart('related')
-    #     mime_msg['Subject'] = subject
-    #     mime_msg['From'] = sender
-    #     mime_msg['To'] = receiver
-    #     msg_txt = MIMEText(body, 'plain')
-    #     mime_msg.attach(msg_txt)
-    #     try:
-    #         host = getToolByName(self, 'MailHost')
-    #         host.send(mime_msg.as_string(), immediate=True)
-    #     except SMTPServerDisconnected as msg:
-    #         logger.warn("SMTPServerDisconnected: %s." % msg)
-    #     except SMTPRecipientsRefused as msg:
-    #         raise WorkflowException(str(msg))
-    #
-    # def workflow_script_dispatch_shipment(self):
-    #     """executed after shipment state transition "dispatch"
-    #     """
-    #     # free positions kits occupy
-    #     kits = self.getKits()
-    #     w_tool = getToolByName(self, 'portal_workflow')
-    #     for kit in kits:
-    #         kit.setStorageLocation('')
-    #         w_tool.doActionFor(kit, 'ship')
-    #         kit.reindexObject()
-    #
-    #     # Set shipment's date dispatched
-    #     now = DateTime()
-    #     self.setDateDispatched(now)
-    #
-    #     to_contact = self.getToContact()
-    #     from_contact = self.getFromContact()
-    #     client = to_contact.aq_parent
-    #     lab = self.bika_setup.laboratory
-    #     subject = "Kits dispatched from {}".format(lab.getName())
-    #     sender = formataddr((lab.getName(), from_contact.getEmailAddress()))
-    #     receiver = formataddr((encode_header(client.getName()), to_contact.getEmailAddress()))
-    #     body = "Automatic email:\n"
-    #     body += 'The shipment \"%s\" has been sent from the Biobank \"%s\".' % (self.Title(), lab.getName())
-    #     self.send_mail(sender, receiver, subject, body)
-    #
-    # def workflow_script_receive_shipment(self):
-    #     """ Executed after shipment received by the client
-    #     """
-    #     to_contact = self.getToContact()
-    #     from_contact = self.getFromContact()
-    #     client = to_contact.aq_parent
-    #     subject = "Shipment Received"
-    #     sender = formataddr((encode_header(client.getName()), to_contact.getEmailAddress()))
-    #     lab = self.bika_setup.laboratory
-    #     receiver = formataddr((lab.getName(), from_contact.getEmailAddress()))
-    #     body = "Automatic email:\n"
-    #     body += 'The shipment \"%s\" sent to the client \"%s\" has been received.' % (self.Title(), client.getName())
-    #     self.send_mail(sender, receiver, subject, body)
-    #
-    # def workflow_script_collect(self):
-    #     """ Executed after shipment ready for collection from the client
-    #     """
-    #     to_contact = self.getToContact()
-    #     from_contact = self.getFromContact()
-    #     client = to_contact.aq_parent
-    #     subject = "Shipment ready for collection"
-    #     sender = formataddr((encode_header(client.getName()), to_contact.getEmailAddress()))
-    #     lab = self.bika_setup.laboratory
-    #     receiver = formataddr((lab.getName(), from_contact.getEmailAddress()))
-    #     body = "Automatic email:\n"
-    #     body += 'The shipment \"%s\" sent to the client \"%s\" is ready for collection.' % (self.Title(), client.getName())
-    #     self.send_mail(sender, receiver, subject, body)
-    #
-    # def workflow_script_receive_back(self):
-    #     """ Executed after shipment received back by the biobank
-    #     """
-    #     to_contact = self.getToContact()
-    #     from_contact = self.getFromContact()
-    #     client = to_contact.aq_parent
-    #     subject = "Shipment reached the Biobank"
-    #     lab = self.bika_setup.laboratory
-    #     sender = formataddr((lab.getName(), from_contact.getEmailAddress()))
-    #     receiver = formataddr((encode_header(client.getName()), to_contact.getEmailAddress()))
-    #     body = "Automatic email:\n"
-    #     body += 'The shipment \"%s\" sent back is arrived at the Biobank \"%s\".' % (self.Title(), lab.getName())
-    #     self.send_mail(sender, receiver, subject, body)
+    def send_mail(self, sender, receiver, subject="", body=""):
+        """Send email from sender to receiver
+        """
+        mime_msg = MIMEMultipart('related')
+        mime_msg['Subject'] = subject
+        mime_msg['From'] = sender
+        mime_msg['To'] = receiver
+        msg_txt = MIMEText(body, 'plain')
+        mime_msg.attach(msg_txt)
+        try:
+            host = getToolByName(self, 'MailHost')
+            host.send(mime_msg.as_string(), immediate=True)
+        except SMTPServerDisconnected as msg:
+            logger.warn("SMTPServerDisconnected: %s." % msg)
+        except SMTPRecipientsRefused as msg:
+            raise WorkflowException(str(msg))
+
+    # --------------------------------------------------------------------------
+    def getStringified(self, elements):
+        if not elements:
+            return ''
+
+        elements_list = []
+        for element in elements:
+            elements_list.append(element.title)
+
+        elements_string = ', '.join(map(str, elements_list))
+
+        return elements_string
+
+    def free_storage_locations(self):
+        #pc = getToolByName(self.context, 'portal_catalog')
+        wf = getToolByName(self, 'portal_workflow')
+
+        samples = self.getSamplesList()
+
+        for sample in samples:
+            print('---------')
+            storage_location = sample.getStorageLocation()
+            print(storage_location.__dict__)
+            if storage_location:
+                wf.doActionFor(storage_location, 'liberate')
+
+                if self.getWillBeReturned():
+                    wf.doActionFor(storage_location, 'reserve')
+                    sample.update_box_status(storage_location)
+
+                sample.getField('StorageLocation').set(sample, '')
+                sample.reindexObject()
+
+
+    def workflow_script_ship(self):
+        #send the email
+        lab = self.bika_setup.laboratory
+        sender = formataddr((encode_header(lab.getName()), self.getFromEmailAddress()))
+
+        client = self.getClient()
+        receiver = formataddr((encode_header(client.getName()), self.getToEmailAddress()))
+
+        samples_text = self.getStringified(self.getSamplesList())
+
+        subject = "Samples shipped"
+        body = "Automatic email:\n"
+        body += 'The samples \"%s\" has been sent.' % samples_text
+
+        # print('------------')
+        # print(sender)
+        # print(receiver)
+        # print(body)
+
+        self.send_mail(sender, receiver, subject, body)
+
+        self.free_storage_locations()
+
+    def workfllow_script_client_receive(self):
+
+        #send the email
+        lab = self.bika_setup.laboratory
+        receiver = formataddr((encode_header(lab.getName()), self.getFromEmailAddress()))
+
+        client = self.getClient()
+        sender = formataddr((encode_header(client.getName()), self.getToEmailAddress()))
+
+        subject = "Shipped Samples Received"
+        body = "Automatic email:\n"
+        body += 'The samples \"%s\" has been received.' % self.getStringified(self.getSamplesList())
+        self.send_mail(sender, receiver, subject, body)
+
+
+
+
 
 schemata.finalizeATCTSchema(schema, folderish = True, moveDiscussion = False)
 
