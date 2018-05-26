@@ -85,7 +85,7 @@ class BikaCustomGenerator:
         # Add indexes and metadata columns here
         at = getToolByName(portal, 'archetype_tool')
         at.setCatalogsByType('Kit', ['bika_catalog'])
-        # at.setCatalogsByType('Project', ['bika_catalog'])
+        at.setCatalogsByType('Project', ['bika_catalog', 'portal_catalog'])
         at.setCatalogsByType('Shipment', ['bika_catalog'])
         at.setCatalogsByType('Biospecimen', ['bika_catalog'])
         at.setCatalogsByType('SampleBatch', ['bika_catalog'])

@@ -200,6 +200,7 @@ class ProjectBiospecimensView(BiospecimensView):
         BiospecimensView.__init__(self, context, request)
         self.context = context
         self.context_actions = {}
+        self.catalog = "bika_catalog"
 
         # Filter biospecimens by project uid
         self.columns.pop('Project', None)
