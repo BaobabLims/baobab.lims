@@ -4,12 +4,13 @@
             "url": ".../@@api/v3/[action]/[uid]",
             "action": [
                 "create",
-                "update"
+                "update",
+                "get"
             ],
             "uid": [
                 "client_uid"
             ],
-            "description": "Use parent_path with action create and only use client_uid with action update",
+            "description": "Use parent_path with action create and only use client_uid with action update while get is Client and uses no fields",
             "fields": [
                 {
                     "name": "portal_type",
@@ -77,12 +78,13 @@
             "url": ".../@@api/v3/[action]/[uid]",
             "action": [
                 "create",
-                "update"
+                "update",
+                "get"
             ],
             "uid":[
                 "client_uid"
             ],
-            "description": "Use the field parent_path with action create and client_uid only with action update",
+            "description": "Use the field parent_path with action create and client_uid only with action update while get is Project and uses no fields",
             "fields": [
                 {
                     "name": "portal_type",
@@ -150,12 +152,13 @@
             "url": ".../@@api/v3/[action]/[uid]",
             "action": [
                 "create",
-                "update"
+                "update",
+                "get"
             ],
             "uid": [
                 "sampletype_uid"
             ],
-            "description": "Use parent_path with action create and only use sampletype_uid with action update",
+            "description": "Use parent_path with action create and only use sampletype_uid with action update while get is SampleType and uses no fields",
             "fields": [
                 {
                     "name": "portal_type",
@@ -207,16 +210,117 @@
                 }
             ]
         },
+        "DiseaseOntology": {
+            "url": ".../@@api/v3/[action]/[uid]",
+            "action": [
+                "create",
+                "update",
+                "get"
+            ],
+            "uid": [
+                "diseaseontology_uid"
+            ],
+            "description": "Use parent_path with action create and only use diseaseontology_uid with action update while get is DiseaseOntology and uses no fields",
+            "fields": [
+                {
+                    "name": "portal_type",
+                    "required": "true",
+                    "type": "string",
+                    "description": "type of portal for example DiseaseOntology"
+                },
+                {
+                    "name": "parent_path",
+                    "required": "true",
+                    "type": "string",
+                    "description": "the path to the parent for example bika_sampletypes"
+                },
+                {
+                    "name": "Version",
+                    "required": "false",
+                    "type": "string",
+                    "description": "Version of selected ontology for disease"
+                },
+                {
+                    "name": "Code",
+                    "required": "false",
+                    "type": "string",
+                    "description": "Disease code for selected disease ontology"
+                },
+                {
+                    "name": "FreeText",
+                    "required": "false",
+                    "type": "string",
+                    "description": "Explanation about disease or symptom in case of unknown disease or insufficient information"
+                }
+            ]
+        },
+        "Patient": {
+            "url": ".../@@api/v3/[action]/[uid]",
+            "action": [
+                "create",
+                "update",
+                "get"
+            ],
+            "uid": [
+                "diseaseontology_uid"
+            ],
+            "description": "Use parent_path with action create and only use diseaseontology_uid with action update while get is DiseaseOntology and uses no fields",
+            "fields": [
+                {
+                    "name": "portal_type",
+                    "required": "true",
+                    "type": "string",
+                    "description": "type of portal for example DiseaseOntology"
+                },
+                {
+                    "name": "parent_path",
+                    "required": "true",
+                    "type": "string",
+                    "description": "the path to the parent for example bika_sampletypes"
+                },
+                {
+                    "name": "SelectedProject",
+                    "required": "false",
+                    "type": "ReferenceField",
+                    "description": "The uid of the project that this patient will belong to"
+                },
+                {
+                    "name": "InfoLink",
+                    "required": "false",
+                    "type": "string",
+                    "description": "The link to information for this patient"
+                },
+                {
+                    "name": "Sex",
+                    "required": "false",
+                    "type": "string",
+                    "description": "Male or Female or Unknown or Undifferentiated indicating sex of patient"
+                },
+                {
+                    "name": "Age",
+                    "required": "false",
+                    "type": "float",
+                    "description": "The age of the patient"
+                },
+                {
+                    "name": "AgeUnit",
+                    "required": "false",
+                    "type": "string",
+                    "description": "Years or Months or Weeks or Days or Hours or Minutes indicating unit which measures age of the patient"
+                }
+            ]
+        },
         "Sample": {
             "url": ".../@@api/v3/[action]/[uid]",
             "action": [
                 "create",
-                "update"
+                "update",
+                "get"
             ],
             "uid": [
                 "sample_uid"
             ],
-            "description": "Use parent_path with action create and only use sample_uid with action update",
+            "description": "Use parent_path with action create and only use sample_uid with action update while get is Sample and uses no fields",
             "fields": [
                 {
                     "name": "portal_type",
@@ -277,15 +381,27 @@
                     "required": "false",
                     "type": "string",
                     "description": "Used by some sources to identify themselves for special processing for example Azzizi will specify odk"
+                },
+                {
+                    "name": "AnatomicalSiteTerm",
+                    "required": "false",
+                    "type": "string",
+                    "description": "The ICD-O-3 topography code for describing the anatomical source of the sampled material"
+                },
+                {
+                    "name": "AnatomicalSiteDescription",
+                    "required": "false",
+                    "type": "string",
+                    "description": "The anatomical position of the body where the solid sample was taken from"
                 }
             ]
         },
         "StorageUnit":{
             "url": ".../@@api/v3/[action]",
             "action": [
-                "create"
+                "create, get"
             ],
-            "description": "Create storage unit(s) for eg. Room, Freezer, Shelf, etc.",
+            "description": "Create storage unit(s) for eg. Room, Freezer, Shelf, etc while get is StorageUnit and uses no fields",
             "fields": [
                 {
                     "name": "portal_type",
@@ -340,9 +456,9 @@
         "ManagedStorage":{
             "url": ".../@@api/v3/[action]",
             "action": [
-                "create"
+                "create, get"
             ],
-            "description": "Create managed storage (Boxes)",
+            "description": "Create managed storage (Boxes) while get is ManagedStorage and uses no fields",
             "fields": [
                 {
                     "name": "portal_type",
@@ -403,9 +519,9 @@
         "UnmanagedStorage":{
             "url": ".../@@api/v3/[action]",
             "action": [
-                "create"
+                "create, get"
             ],
-            "description": "Create managed storage (Boxes)",
+            "description": "Create managed storage (Boxes) while get is UnmanagedStorage and uses no fields",
             "fields": [
                 {
                     "name": "portal_type",
