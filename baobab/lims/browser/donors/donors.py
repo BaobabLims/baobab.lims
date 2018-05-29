@@ -70,8 +70,7 @@ class DonorsView(BikaListingView):
                     'sort_on': 'sortable_title',
                     'sort_order': 'ascending'
                 },
-                'transitions': [
-                ],
+                'transitions': [{'id': 'deactivate'}],
                 'columns': [
                     'SampleDonorID',
                     'SelectedProject',
