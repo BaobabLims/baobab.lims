@@ -86,6 +86,8 @@ class SampleSchemaExtender(object):
                          'view': 'visible',
                          'header_table': 'visible',
                          'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         'sample_due': {'view': 'visible', 'edit': 'visible'},
+                         'sample_received': {'view': 'visible', 'edit': 'visible'},
                          },
                 render_own_label=True,
             ),
