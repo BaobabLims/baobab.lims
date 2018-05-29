@@ -138,11 +138,11 @@ class IBatches(Interface):
     """
     """
 
-class IPatient(Interface):
+class ISampleDonor(Interface):
     """
     """
 
-class IPatients(Interface):
+class ISampleDonors(Interface):
     """
     """
 

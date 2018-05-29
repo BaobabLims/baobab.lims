@@ -8,7 +8,7 @@ from zope.interface import implements
 from bika.lims.content.bikaschema import BikaSchema
 from baobab.lims import bikaMessageFactory as _
 from baobab.lims import config
-from baobab.lims.interfaces import IPatient
+from baobab.lims.interfaces import ISampleDonor
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from Products.CMFPlone.utils import safe_unicode
 
@@ -110,7 +110,7 @@ schema['description'].widget.visible = {'view': 'invisible', 'edit': 'invisible'
 
 class SampleDonor(BaseContent):
     security = ClassSecurityInfo()
-    implements(IPatient, IConstrainTypes)
+    implements(ISampleDonor, IConstrainTypes)
     displayContentsTab = False
     schema = schema
     _at_rename_after_creation = True
