@@ -91,13 +91,13 @@ class SampleSchemaExtender(object):
             ),
         ),
         ExtReferenceField(
-            'Patient',
+            'Donor',
             required=0,
-            allowed_types=('Patient',),
-            relationship='SampleParticipant',
+            allowed_types=('SampleDonor',),
+            relationship='SampleDonor',
             referenceClass=HoldingReference,
             widget=bika_ReferenceWidget(
-                label=_("Patient"),
+                label=_("Sample Donor"),
                 catalog_name='bika_catalog',
                 visible={'edit': 'visible',
                          'view': 'visible',
@@ -111,7 +111,7 @@ class SampleSchemaExtender(object):
                          },
                 size=30,
                 showOn=True,
-                description=_("Select the sample patient."),
+                description=_("Select the sample donor."),
             )
         ),
         ExtReferenceField(

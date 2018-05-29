@@ -79,10 +79,10 @@ class SampleView(BrowserView):
             disease_ontology.absolute_url(),
             disease_ontology.Title()) or None
 
-        patient = context.getField('Patient').get(context)
-        self.patient = patient and "<a href='%s'>%s</a>" % (
-            patient.absolute_url(),
-            patient.getPatientID()) or None
+        donor = context.getField('Donor').get(context)
+        self.donor = donor and "<a href='%s'>%s</a>" % (
+            donor.absolute_url(),
+            donor.getSampleDonorID()) or None
 
         location = context.getField('StorageLocation').get(context)
         self.location = location and "<a href='%s'>%s</a>" % (
