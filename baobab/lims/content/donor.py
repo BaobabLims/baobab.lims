@@ -13,48 +13,31 @@ from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from Products.CMFPlone.utils import safe_unicode
 
 
-PatientID = StringField(
-        'PatientID',
+SampleDonorID = StringField(
+        'SampleDonorID',
         required=1,
         searchable=True,
         read_permission=permissions.View,
         write_permission=permissions.ModifyPortalContent,
         widget=StringWidget(
-            label=_("Patient ID"),
-            description=_("The unique ID code assigned to the patient."),
-            visible={'edit': 'visible',
-                     'view': 'visible'},
+            label=_("Sample Donor ID"),
+            description=_("The unique ID code assigned to the sample donor."),
+            visible={'edit': 'visible', 'view': 'visible'},
         )
     )
 
-# SelectedProject = ReferenceField(
-#         'SelectedProject',
-#         allowed_types=('Project'),
-#         relationship='PatientProjects',
-#         widget=bika_ReferenceWidget(
-#             label=_("Select Projects"),
-#             description=_("Select projects for patient"),
-#             size=40,
-#             visible={'edit': 'visible', 'view': 'visible'},
-#             catalog_name='bika_catalog',
-#             showOn=True
-#         )
-#     )
-
 SelectedProject = ReferenceField(
     'SelectedProject',
-    # required=True,
     allowed_types=('Project',),
-    relationship='PatientProjects',
+    relationship='SampleDonorProjects',
     referenceClass=HoldingReference,
     widget=bika_ReferenceWidget(
         label=_("Select Project"),
-        # catalog_name='bika_catalog',
         visible={'edit': 'visible', 'view': 'visible'},
         size=30,
         showOn=True,
         render_own_label=True,
-        description=_("Select the project of the sample."),
+        description=_("Select the project of the sample donor."),
     )
 )
 
@@ -66,9 +49,8 @@ InfoLink = StringField(
         write_permission=permissions.ModifyPortalContent,
         widget=StringWidget(
             label=_("Information Link"),
-            description=_("The link to information for this patient."),
-            visible={'edit': 'visible',
-                     'view': 'visible'},
+            description=_("The link to information for this sample donor."),
+            visible={'edit': 'visible', 'view': 'visible'},
         )
     )
 
@@ -80,7 +62,7 @@ Sex = StringField(
         widget=SelectionWidget(
             format='select',
             label=_("Sex"),
-            description=_("Select the sex of the patient"),
+            description=_("Select the sex of the sample donor"),
             visible={'edit': 'visible', 'view': 'visible'},
             render_own_label=True,
         )
@@ -93,7 +75,7 @@ Age = FixedPointField(
         widget=DecimalWidget(
             label=_("Age"),
             size=15,
-            description=_("The age of the patient."),
+            description=_("The age of the sample donor."),
             visible={'edit': 'visible', 'view': 'visible'}
         )
     )
@@ -115,7 +97,7 @@ AgeUnit = StringField(
 
 
 schema = BikaSchema.copy() + Schema((
-    PatientID,
+    SampleDonorID,
     SelectedProject,
     InfoLink,
     Sex,
@@ -126,7 +108,7 @@ schema['title'].widget.visible = {'view': 'invisible', 'edit': 'invisible'}
 schema['description'].widget.visible = {'view': 'invisible', 'edit': 'invisible'}
 
 
-class Patient(BaseContent):
+class SampleDonor(BaseContent):
     security = ClassSecurityInfo()
     implements(IPatient, IConstrainTypes)
     displayContentsTab = False
@@ -149,4 +131,4 @@ class Patient(BaseContent):
     def getAgeUnits(self):
         return ['Years', 'Months', 'Weeks', 'Days', 'Hours', 'Minutes']
 
-registerType(Patient, config.PROJECTNAME)
+registerType(SampleDonor, config.PROJECTNAME)
