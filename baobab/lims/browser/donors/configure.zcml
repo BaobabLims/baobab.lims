@@ -4,9 +4,9 @@
         i18n_domain="baobab.lims">
 
     <browser:page
-        for="baobab.lims.interfaces.IPatients"
+        for="baobab.lims.interfaces.ISampleDonors"
         name="folder_view"
-        class=".patients.PatientsView"
+        class=".donors.DonorsView"
         permission="zope2.View"
         layer="bika.lims.interfaces.IBikaLIMS"
     />

@@ -36,7 +36,6 @@ SelectedProject = ReferenceField(
         visible={'edit': 'visible', 'view': 'visible'},
         size=30,
         showOn=True,
-        render_own_label=True,
         description=_("Select the project of the sample donor."),
     )
 )
@@ -120,7 +119,7 @@ class SampleDonor(BaseContent):
         renameAfterCreation(self)
 
     def Title(self):
-        return safe_unicode(self.getField('PatientID').get(self)).encode('utf-8')
+        return safe_unicode(self.getField('SampleDonorID').get(self)).encode('utf-8')
 
     def Description(self):
         return "Gender %s : Age %s %s" % (self.getSex(), self.getAge(), self.getAgeUnit())

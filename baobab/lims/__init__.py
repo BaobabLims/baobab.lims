@@ -39,8 +39,8 @@ def initialize(context):
     from content.managedstorage import ManagedStorage
     from content.unmanagedstorage import UnmanagedStorage
     from content.storageposition import StoragePosition
-    from content.donor import Patient
-    from content.donors import Patients
+    from content.donor import SampleDonor
+    from content.donors import SampleDonors
     from content.disease_ontology import DiseaseOntology
     from content.disease_ontologies import DiseaseOntologies
 

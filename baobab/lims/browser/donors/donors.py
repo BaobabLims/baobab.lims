@@ -10,7 +10,7 @@ from bika.lims.browser.bika_listing import BikaListingView
 from baobab.lims import bikaMessageFactory as _
 
 
-class PatientsView(BikaListingView):
+class DonorsView(BikaListingView):
     implements(IFolderContentsView, IViewView)
 
     def __init__(self, context, request):
@@ -20,12 +20,12 @@ class PatientsView(BikaListingView):
         self.catalog = 'bika_catalog'
         request.set('disable_plone.rightcolumn', 1)
         self.contentFilter = {
-            'portal_type': 'Patient',
+            'portal_type': 'SampleDonor',
         }
         self.context_actions = {_('Add'):
-                                    {'url': 'createObject?type_name=Patient',
+                                    {'url': 'createObject?type_name=SampleDonor',
                                      'icon': '++resource++bika.lims.images/add.png'}}
-        self.title = self.context.translate(_("Patients"))
+        self.title = self.context.translate(_("Sample Donors"))
         self.icon = self.portal_url + \
                     "/++resource++baobab.lims.images/patient_big.png"
         self.description = ''
@@ -35,12 +35,12 @@ class PatientsView(BikaListingView):
         self.pagesize = 25
         self.allow_edit = True
 
-        if self.context.portal_type == 'Patients':
+        if self.context.portal_type == 'SampleDonors':
             self.request.set('disable_border', 1)
 
         self.columns = {
-            'PatientID': {
-                'title': _('PatientID'),
+            'SampleDonorID': {
+                'title': _('Donor Id'),
                 'input_width': '10'
             },
             'SelectedProject': {
@@ -59,11 +59,6 @@ class PatientsView(BikaListingView):
                 'title': _('Age Unit'),
                 'type': 'choices'
             }
-            # ,
-            # 'DiseasesList': {
-            #     'title': _('Diseases'),
-            #     'type': 'choices'
-            # }
         }
 
         self.review_states = [
@@ -78,12 +73,10 @@ class PatientsView(BikaListingView):
                 'transitions': [
                 ],
                 'columns': [
-                    'PatientID',
+                    'SampleDonorID',
                     'SelectedProject',
-                    # 'CaseControl',
                     'Sex',
                     'Age',
-                    # 'DiseasesList',
                 ]
             }
         ]
@@ -98,8 +91,6 @@ class PatientsView(BikaListingView):
     def folderitems(self, full_objects=False):
 
         items = BikaListingView.folderitems(self)
-        # print len(items)
-        # print '----------'
 
         for x in range(len(items)):
 
@@ -107,11 +98,11 @@ class PatientsView(BikaListingView):
                 continue
             obj = items[x]['obj']
 
-            items[x]['PatientID'] = obj.getId()
+            items[x]['SampleDonorID'] = obj.getId()
 
-            items[x]['replace']['PatientID'] = "<a href='%s'>%s</a>" % \
+            items[x]['replace']['SampleDonorID'] = "<a href='%s'>%s</a>" % \
                                                    (items[x]['url'],
-                                                    items[x]['PatientID'])
+                                                    items[x]['SampleDonorID'])
             project = obj.getSelectedProject()
             if project and hasattr(project, 'title'):
                 items[x]['SelectedProject'] = project.title
