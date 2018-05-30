@@ -3,6 +3,7 @@ from bika.lims.exportimport.setupdata import WorksheetImporter
 from Products.CMFPlone.utils import _createObjectByType
 from bika.lims.interfaces import ISetupDataSetList
 from zope.interface import implements
+from zope.interface import alsoProvides
 from baobab.lims.idserver import renameAfterCreation
 from baobab.lims.interfaces import ISampleStorageLocation, IStockItemStorage
 from baobab.lims.browser.project import *
@@ -203,6 +204,62 @@ class Storage_Types(WorksheetImporter):
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
 
+class DiseaseOntology(WorksheetImporter):
+    """Add some dummy storage types
+    """
+    def Import(self):
+        folder = self.context.disease_ontologies
+        rows = self.get_rows(3)
+        for row in rows:
+            title = row.get('title')
+            description = row.get('description', '')
+            version = row.get('Version')
+            code = row.get('Code')
+            free_text = row.get('FreeText')
+            obj = _createObjectByType('DiseaseOntology', folder, tmpID())
+            obj.edit(
+                title=title,
+                description=description,
+                Version=version,
+                Code=code,
+                FreeText=free_text
+            )
+            obj.unmarkCreationFlag()
+            renameAfterCreation(obj)
+
+
+class Donor(WorksheetImporter):
+    """Add some dummy storage types
+    """
+    def Import(self):
+        folder = self.context.donors
+        rows = self.get_rows(3)
+
+        pc = getToolByName(self.context, 'portal_catalog')
+
+        for row in rows:
+            sample_donor_id = row.get('SampleDonorID')
+            selected_project = row.get('SelectedProject', '')
+            info_link = row.get('InfoLink')
+            sex = row.get('Sex')
+            age = row.get('Age')
+            age_unit = row.get('AgeUnit')
+            obj = _createObjectByType('SampleDonor', folder, tmpID())
+
+            # get the project
+            project_list = pc(portal_type="Project", Title=selected_project)
+            project = project_list and project_list[0].getObject() or None
+
+            obj.edit(
+                SampleDonorID=sample_donor_id,
+                SelectedProject=project,
+                InfoLink=info_link,
+                Age=age,
+                AgeUnit=age_unit
+            )
+            obj.unmarkCreationFlag()
+            renameAfterCreation(obj)
+
 
 class Projects(WorksheetImporter):
     """ Import projects
@@ -256,6 +313,7 @@ class Biospecimens(WorksheetImporter):
 
     def create_biospecimen(self, row):
         pc = getToolByName(self.context, 'portal_catalog')
+        bc = getToolByName(self.context, 'bika_catalog')
 
         # get the project
         project_list = pc(portal_type="Project", Title=row.get('Project'))
@@ -268,6 +326,12 @@ class Biospecimens(WorksheetImporter):
 
         linked_sample_list = pc(portal_type="Sample", Title=row.get('LinkedSample', ''))
         linked_sample = linked_sample_list and linked_sample_list[0].getObject() or None
+
+        sample_donor_list = bc(portal_type="SampleDonor", SampleDonorID=row.get('SampleDonor', ''))
+        sample_donor = sample_donor_list and sample_donor_list[0].getObject() or None
+
+        disease_ontology_list = bc(portal_type="DiseaseOntology", Title=row.get('DiseaseOntology', ''))
+        disease_ontology = disease_ontology_list and disease_ontology_list[0].getObject() or None
 
         barcode = row.get('Barcode')
         if not barcode:
@@ -290,7 +354,9 @@ class Biospecimens(WorksheetImporter):
             title=row.get('title'),
             description=row.get('description'),
             Project=project,
+            DiseaseOntology=disease_ontology,
             AllowSharing=row.get('AllowSharing'),
+            Donor=sample_donor,
             SampleType=sample_type,
             StorageLocation=storage_location,
             SubjectID=row.get('SubjectID'),
@@ -299,6 +365,9 @@ class Biospecimens(WorksheetImporter):
             Unit=row.get('Unit'),
             LinkedSample=linked_sample,
             DateCreated=row.get('DateCreated'),
+            AnatomicalSiteTerm=row.get('AnatomicalSiteTerm'),
+            AnatomicalSiteDescription=row.get('AnatomicalSiteDescription'),
+
         )
 
         obj.unmarkCreationFlag()

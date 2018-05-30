@@ -25,6 +25,17 @@
       factory="baobab.lims.setupdata.Storage_Types"
       provides="bika.lims.interfaces.ISetupDataImporter"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
+    <adapter
+          name="DiseaseOntology"
+          factory="baobab.lims.setupdata.DiseaseOntology"
+          provides="bika.lims.interfaces.ISetupDataImporter"
+          for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
+
+    <adapter
+          name="Donor"
+          factory="baobab.lims.setupdata.Donor"
+          provides="bika.lims.interfaces.ISetupDataImporter"
+          for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
 
     <adapter
       name="Projects"
