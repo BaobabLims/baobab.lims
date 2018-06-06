@@ -103,6 +103,16 @@ class StoragePosition(BaseContent):
         """
         wf = getToolByName(self, 'portal_workflow')
         tids = [t['id'] for t in wf.getTransitionsFor(self.aq_parent)]
+
+        sample = self.getStoredItem()
+        if sample:
+            sample.setStorageLocation('')
+            sample.reindexObject()
+
+            storage_state = wf.getInfoFor(self, 'review_state')
+            if storage_state != 'available':
+                wf.doActionFor(self, 'liberate')
+
         if 'liberate' in tids:
             wf.doActionFor(self.aq_parent, 'liberate')
 
