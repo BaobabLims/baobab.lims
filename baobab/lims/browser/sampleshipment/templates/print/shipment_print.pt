@@ -1,0 +1,105 @@
+
+<tal:print tal:define="data python:view.getKitInfo();
+                       laboratory data/laboratory">
+<div id="header">
+    <div class='barcode-container'>
+        <div class='barcode'
+            data-code='code128'
+            data-showHRI='false'
+            data-barHeight='15'
+            data-addQuietZone='true'
+            tal:attributes="data-id context/id">
+        </div>
+    </div>
+    <div class="lab-logo">
+        <a tal:attributes="href laboratory/url">
+            <img tal:attributes="src laboratory/logo"/>
+        </a>
+    </div>
+    <h1>
+        <a tal:attributes="href python:context.absolute_url()">
+           <span tal:content="context/id"></span>
+        </a>
+
+    </h1>
+</div>
+<div class="subheader">
+    <div class="created-by">
+        <span i18n:translate="" class="ktext">Created on</span>&nbsp;
+        <span tal:content="data/date_created"></span>&nbsp;
+        <span i18n:translate="" class="ktext">by</span>&nbsp;
+        <a tal:attributes="href python:('mailto:%s' % data['createdby']['email'])"
+           tal:content="data/createdby/fullname"></a>
+    </div>
+    <div class="prited-by">
+        <span i18n:translate="" class="ktext">Printed on</span>&nbsp;
+        <span tal:content="data/date_printed"></span>&nbsp;
+        <span i18n:translate="" class="ktext">by</span>&nbsp;
+        <a tal:attributes="href python:('mailto:%s' % data['printedby']['email'])"
+           tal:content="data/printedby/fullname"></a>
+    </div>
+</div>
+
+<div id="textbar">
+    <fieldset></fieldset>
+</div>
+
+<div class="section-shipment">
+    <table class="shipment" style="border-collapse: collapse; width: 100%;">
+        <tbody>
+        <tr>
+            <th i18n:translate="" colspan="2">Shipment Sent By</th>
+        </tr>
+        <tr>
+            <td>Study Name</td>
+            <td tal:content="view/study_name"></td>
+            </tr>
+        <tr>
+            <td>From Contact</td>
+            <td tal:content="view/from_contact"></td>
+        </tr>
+        <tr>
+            <td>To Contact</td>
+            <td tal:content="view/to_contact"></td>
+        </tr>
+        <tr>
+            <td>Address</td>
+            <td tal:content="view/sender_address"></td>
+        </tr>
+
+        <tr>
+            <th i18n:translate="" colspan="2">Kit</th>
+        </tr>
+
+        <tr>
+            <td>Kit Template Name</td>
+            <td tal:content="view/kit_name"></td>
+        </tr>
+        <tr>
+            <td>Number of kits</td>
+            <td tal:content="view/kit_quantity"></td>
+        </tr>
+        <!--?<tr>-->
+            <!--?<td>Date Assembled</td>-->
+            <!--?<td tal:content="view/kit_assembled_date"></td>-->
+        <!--?</tr>-->
+
+        <!--?<tr>-->
+            <!--?<td>Expiration Date</td>-->
+            <!--?<td tal:content="view/kit_expiration_date"></td>-->
+        <!--?</tr>-->
+        <tr>
+            <th i18n:translate="" colspan="2">Courier</th>
+        </tr>
+        <tr>
+            <td>Courier</td>
+            <td tal:content="view/courier_name"></td>
+        </tr>
+        <tr>
+            <td>Date Dispatched</td>
+            <td tal:content="view/date_dispatched"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</tal:print>

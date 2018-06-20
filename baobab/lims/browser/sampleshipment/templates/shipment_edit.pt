@@ -1,0 +1,102 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+            metal:use-macro="here/main_template/macros/master"
+      i18n:domain="bika">
+
+<head>
+    <metal:block fill-slot="javascript_head_slot"
+            tal:define="portal context/@@plone_portal_state/portal;">
+        <!--<script type="text/javascript" src="++resource++baobab.lims.js/baobab.lims.kit.add.js"></script>-->
+        <script type="text/javascript"
+                tal:attributes="src python:portal.absolute_url() + '/bika_widgets/datetimewidget.js'"></script>
+        <script type="text/javascript"
+                tal:attributes="src python:portal.absolute_url() + '/bika_widgets/referencewidget.js'"></script>
+        <link rel="stylesheet" type="text/css" media="all" href=""
+                tal:attributes="href string:${portal/absolute_url}/bika_widgets/referencewidget.css"/>
+    </metal:block>
+
+    <metal:css fill-slot="style_slot">
+    <tal:css>
+      <style type="text/css"
+             media="all">
+          table.listing td {
+              background: #efefef none repeat scroll 0 0;
+              border-right: none;
+              border-top: 1px solid #fff;
+              padding-top: 15px;
+          }
+      </style>
+    </tal:css>
+  </metal:css>
+</head>
+
+<body>
+<metal:title fill-slot="content-title">
+    <h1>Shipment Information</h1>
+</metal:title>
+<div metal:fill-slot="content-core"
+     tal:define="
+        portal context/@@plone_portal_state/portal;
+        plone_view context/@@plone;
+        portal_state context/@@plone_portal_state;">
+
+    <form id="shipment_edit_form" name="shipment_edit_info_form" method="POST">
+        <input type="hidden" name="submitted" value="1"/>
+        <span tal:replace="structure context/@@authenticator/authenticator"/>
+        <metal:rows>
+            <div style="padding-bottom: 10px;">
+                <table summary="Shipment info" class="listing kitassembly add nosort" cellpadding="0" cellspacing="0">
+                    <thead class="kitassmbly_add_by_col">
+                    <tal:field tal:repeat="field python:view.get_fields_with_visibility('visible')">
+                        <tal:def define="
+                             fieldName python:field.getName();
+                             field_macro here/widgets/field/macros/edit;
+                             accessor python:field.getAccessor(context);
+                             widget python:field.widget;
+                             errors python:{};
+                             mode string:edit;">
+
+                            <tr tal:attributes="fieldName fieldName">
+                                <th colspan="1" style="white-space: nowrap;"
+                                    tal:condition="python: fieldName != 'Remarks'">
+                                    <label class="formQuestion">
+                                        <span tal:replace="python:view.context.translate(widget.Label(here))"/>
+                                        <span class="fieldRequired"
+                                              tal:condition="field/required"
+                                              title="Required"
+                                              i18n:attributes="title title_required;">&nbsp;</span>
+                                        <em style="display:block"
+                                            class="discreet"
+                                            tal:define="description python:view.context.translate(widget.Description(here))"
+                                            tal:content="structure description"
+                                            tal:attributes="id string:${fieldName}_help">Help </em>
+                                    </label>
+                                </th>
+                                <tal:columns tal:condition="python: fieldName != 'Remarks'" tal:repeat="arnum python:range(1)">
+                                    <td class="nowrap" tal:attributes="arnum arnum">
+                                        <metal:field
+                                                use-macro="python:context.widget(fieldName, mode='edit')" />
+                                    </td>
+                                </tal:columns>
+                            </tr>
+                        </tal:def>
+                    </tal:field>
+                    </thead>
+                </table>
+            </div>
+        </metal:rows>
+        <span>
+            <div style="text-align:left;padding-bottom:10px;">
+            <input i18n:attributes="value"
+                    class="context button allowMultiSubmit"
+                    type="submit"
+                    name="save_button"
+                    value="Save"/>
+        </div>
+        </span>
+
+    </form>
+    </div>
+</body>
+</html>
