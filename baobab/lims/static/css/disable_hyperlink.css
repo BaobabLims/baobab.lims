@@ -1,0 +1,9 @@
+/*
+This is included for specific content types from portal_css.
+Doing this the Right Way is very, very messy.
+*/
+
+.disable_hyperlink {
+  pointer-events: none;
+  color:#c0c0c0 !important;
+}

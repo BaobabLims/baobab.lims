@@ -25,4 +25,11 @@
       permission="zope.Public"
     />
 
+    <browser:page
+      for="...interfaces.ISampleShipment"
+      name="setsamplesreturn"
+      class=".setsamples.ajaxSetSamplesReturn"
+      permission="zope.Public"
+    />
+
 </configure>

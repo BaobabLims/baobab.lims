@@ -31,24 +31,18 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
         'SamplesList',
         multiValued=1,
         allowed_types=('Sample'),
+        referenceClass=HoldingReference,
         relationship='SampleShipmentSample',
+        mode="rw",
         widget=bika_ReferenceWidget(
             label=_("samples"),
             description=_("Select samples to ship"),
             size=40,
+            base_query={'review_state': 'sample_received', 'cancellation_state': 'active'},
             visible={'edit': 'visible', 'view': 'visible'},
             catalog_name='bika_catalog',
             showOn=True
         )
-    ),
-
-    BooleanField(
-        'WillBeReturned',
-        #schemata='Delivery Info',
-        widget = BooleanWidget(
-            label=_("Will be returned"),
-            description=_("Indicates whether the sample will be returned"),
-        ),
     ),
 
     StringField(
@@ -73,7 +67,6 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
         'Client',
         schemata='Delivery Info',
         required=1,
-        #vocabulary_display_path_bound=sys.maxsize,
         allowed_types=('Client',),
         relationship='ClientSampleShipment',
         widget=bika_ReferenceWidget(
@@ -260,27 +253,23 @@ class SampleShipment(ATFolder):
         return elements_string
 
     def free_storage_locations(self):
-        #pc = getToolByName(self.context, 'portal_catalog')
         wf = getToolByName(self, 'portal_workflow')
-
         samples = self.getSamplesList()
 
         for sample in samples:
-            print('---------')
             storage_location = sample.getStorageLocation()
-            print(storage_location.__dict__)
             if storage_location:
                 wf.doActionFor(storage_location, 'liberate')
 
-                if self.getWillBeReturned():
+                if sample.WillReturnFromShipment:
                     wf.doActionFor(storage_location, 'reserve')
                     sample.update_box_status(storage_location)
 
-                sample.getField('StorageLocation').set(sample, '')
-                sample.reindexObject()
+            wf.doActionFor(sample, 'ship')
+            sample.reindexObject()
 
 
-    def workflow_script_ship(self):
+    def workflow_script_ready_to_ship(self):
         #send the email
         lab = self.bika_setup.laboratory
         sender = formataddr((encode_header(lab.getName()), self.getFromEmailAddress()))
@@ -290,9 +279,9 @@ class SampleShipment(ATFolder):
 
         samples_text = self.getStringified(self.getSamplesList())
 
-        subject = "Samples shipped"
+        subject = "Samples ready to ship"
         body = "Automatic email:\n"
-        body += 'The samples \"%s\" has been sent.' % samples_text
+        body += 'The samples \"%s\" are ready to ship.' % samples_text
 
         # print('------------')
         # print(sender)
@@ -301,26 +290,21 @@ class SampleShipment(ATFolder):
 
         self.send_mail(sender, receiver, subject, body)
 
-        self.free_storage_locations()
-
-    def workfllow_script_client_receive(self):
-
+    def workflow_script_ship(self):
         #send the email
         lab = self.bika_setup.laboratory
-        receiver = formataddr((encode_header(lab.getName()), self.getFromEmailAddress()))
+        sender = formataddr((encode_header(lab.getName()), self.getFromEmailAddress()))
 
         client = self.getClient()
-        sender = formataddr((encode_header(client.getName()), self.getToEmailAddress()))
+        receiver = formataddr((encode_header(client.getName()), self.getToEmailAddress()))
 
-        subject = "Shipped Samples Received"
+        subject = "Samples Shipped"
         body = "Automatic email:\n"
-        body += 'The samples \"%s\" has been received.' % self.getStringified(self.getSamplesList())
+        body += 'The samples \"%s\" has been shipped.' % self.getStringified(self.getSamplesList())
         self.send_mail(sender, receiver, subject, body)
 
-
-
+        self.free_storage_locations()
 
 
 schemata.finalizeATCTSchema(schema, folderish = True, moveDiscussion = False)
-
 registerType(SampleShipment, config.PROJECTNAME)

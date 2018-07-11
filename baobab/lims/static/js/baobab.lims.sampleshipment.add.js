@@ -6,17 +6,54 @@ function BaobabSampleShipmentView() {
         // disable browser auto-complete
         $('input[type=text]').prop('autocomplete', 'off');
 
-        $('#Client_uid').focus(function() {
+        $('#Client_uid').focus(function () {
             var uid = $(this).val();
 
             setClientAddress(uid);
         });
 
+        var return_sample_timer = null
+        $('.will_sample_return').change(function(event){
+            $('#workflow-transition-ready_shipment').addClass('disable_hyperlink')
+            if (return_sample_timer == null){
+                return_sample_timer = setTimeout(clickReturnSample, 3500);
+            }
+            else{
+                window.clearInterval(return_sample_timer);
+                return_sample_timer = null;
+                return_sample_timer = setTimeout(clickReturnSample, 3500);
+            }
+        });
+    }
+
+    function clickReturnSample(){
+        var yes_sample_uids = []
+        var no_sample_uids = []
+        var sample_shipment_uid = $('#sample_shipment_uid').val()
+
+        $('.will_sample_return').each(function(index, item){
+            if (item.value == "yes"){
+                yes_sample_uids.push(item.id)
+            }
+
+            if (item.value == "no"){
+                no_sample_uids.push(item.id)
+            }
+        });
 
 
-    };
+        var path = window.location.href + '/setsamplesreturn';
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: path,
+            data: {'sample_shipment_uid': sample_shipment_uid, 'yes_sample_uids': yes_sample_uids, 'no_sample_uids': no_sample_uids}
+        }).always(function (data) {
+            $('#workflow-transition-ready_shipment').removeClass('disable_hyperlink')
+        })
+    }
 
-    function setClientAddress(uid){
+    function setClientAddress(uid) {
         console.debug("uid is ", uid)
 
         var requestData = {
@@ -32,7 +69,7 @@ function BaobabSampleShipmentView() {
 
                 physical_address = prepareAddress(physical_address)
                 billing_address = prepareAddress(billing_address)
-                if (!billing_address){
+                if (!billing_address) {
                     billing_address = physical_address
                 }
 
@@ -44,7 +81,7 @@ function BaobabSampleShipmentView() {
 
     }
 
-    function prepareAddress(address){
+    function prepareAddress(address) {
         var final_address = "";
 
         street_addess = address['address'];
@@ -73,29 +110,6 @@ function BaobabSampleShipmentView() {
 
     }
 
-/*
-    function getClientAddress(element, filterValue) {
-        //do ajax here
 
-        //this is not the right ajax.  just an example of how it can be done.
-        $('input[type=submit]').on('click', function (event) {
-            var path = window.location.href.split('/base_view')[0] + '/update_boxes';
-            $.ajax({
-                type: 'POST',
-                dataType: 'json',
-                url: path,
-                data: {'locTitle': $('#StorageLocation').val()}
-            }).done(function (data) {
-                console.log(data);
-            })
-        })
 
-        //ajax will return data
-
-        //
-
-        $("#DeliveryAddress").text('test text here.');
-
-    }
-*/
 }

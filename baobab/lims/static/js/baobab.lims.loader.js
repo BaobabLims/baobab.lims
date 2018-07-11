@@ -25,10 +25,10 @@ window.baobab.lims.controllers =  {
         ['OrderEditView'],
     "#order_publish_container":
         ['OrderPublishView'],
+    ".portaltype-sampleshipment":
+        ['BaobabSampleShipmentView'],
     ".portaltype-sample":
         ['BaobabSampleView'],
-    ".portaltype-sampleshipment":
-        ['BaobabSampleShipmentView']
 };
 
 /**
@@ -86,5 +86,6 @@ $(document).ready(function(){
 
     // Initializes baobab.lims
     var length = window.baobab.lims.initialize();
+
 });
 }(jQuery));

@@ -32,6 +32,9 @@
             <span i18n:translate="">Info Project</span>:
         </tal:current_storage>
     </h3><br/>
+
+    <input type="hidden" name="sample_shipment_uid" id="sample_shipment_uid" tal:attributes="value view/sample_shipment_uid">
+
     <table class="storage" style="border-collapse: collapse; width: 100%;">
         <tbody>
         <tr>
@@ -40,7 +43,7 @@
             <td tal:content="view/title" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;width:70%"></td>
         </tr>
-        <tr>
+        <tr tal:condition="view/description">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Description</th>
             <td tal:content="view/description" style="border: 1px solid #cecfd5;
@@ -49,85 +52,85 @@
         <tr>
             <!-- TODO:  Put a table here. -->
         </tr>
-                <tr style="background: #f0f0f2;">
+        <tr tal:condition="view/from_contact" style="background: #f0f0f2;">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">From Contact</th>
             <td tal:content="view/from_contact" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
-        <tr>
+        <tr tal:condition="view/to_contact">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">To Contact</th>
             <td tal:content="view/to_contact" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
-        <tr>
+        <tr tal:condition="view/client">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Client</th>
             <td tal:content="view/client" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
-        <tr style="background: #f0f0f2;">
+        <tr tal:condition="view/delivery_address" style="background: #f0f0f2;">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Delivery Address</th>
             <td tal:content="view/delivery_address" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
-        <tr>
+        <tr tal:condition="view/shipping_date">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Shipping Date</th>
             <td tal:content="view/shipping_date" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
-        <tr>
+        <tr tal:condition="view/date_dispatched">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Date Dispatched</th>
             <td tal:content="view/date_dispatched" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
-        <tr>
+        <tr tal:condition="view/date_delivered">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Date Delivered</th>
             <td tal:content="view/date_delivered" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
-        <tr>
+        <tr tal:condition="view/courier_name">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Courier</th>
             <td tal:content="view/courier_name" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
-        <tr>
+        <tr tal:condition="view/courier_instructions">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Courier Instructions</th>
             <td tal:content="view/courier_instructions" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
-        <tr>
+        <tr tal:condition="view/tracking_url">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Tracking Url</th>
             <td tal:content="view/tracking_url" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
-        <tr>
+        <tr tal:condition="view/shipment_conditions">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Shipment Conditions</th>
             <td tal:content="view/shipment_conditions" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
-        <tr>
+        <tr tal:condition="view/shipping_cost">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Shipping Cost</th>
             <td tal:content="view/shipping_cost" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
-        <tr>
+        <tr tal:condition="view/weight">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Weight</th>
             <td tal:content="view/weight" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
-        <tr>
+        <tr tal:condition="view/volume">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Volume</th>
             <td tal:content="view/volume" style="border: 1px solid #cecfd5;
@@ -135,19 +138,36 @@
         </tr>
         </tbody>
     </table>
-    <!--?<h3 style="margin-top:1em;">-->
-        <!--?<img title="Project biospecimen types"-->
-             <!--?tal:attributes="src string:${view/portal_url}/++resource++baobab.lims.images/biospecimen.png">-->
-        <!--?<span i18n:translate="">Biospecimen Types:</span>-->
-    <!--?</h3>-->
-    <!--?<tal:parts replace="structure view/bio_table"/>-->
 
-    <!--?<h3 style="margin-top:1em;">-->
-        <!--?<img title="Project Lab Analyses "-->
-             <!--?tal:attributes="src string:${view/portal_url}/++resource++baobab.lims.images/analysis.png">-->
-        <!--?<span i18n:translate="">Laboratory Analyses:</span>-->
-    <!--?</h3>-->
-    <!--?<tal:parts replace="structure view/analyses_table"/>-->
+
+     <table class="invoice-items items">
+        <tr>
+          <th style='text-align:left;' i18n:translate=''>Sample</th>
+          <th style='text-align:left;' i18n:translate=''>Location</th>
+          <th style='text-align:left;' i18n:translate=''>Will Return</th>
+        </tr>
+        <tr tal:repeat="sample view/samples">
+
+            <td  style='text-align:left;' tal:content="python:sample.Title()">barcode</td>
+            <td  style='text-align:left;'>
+              <span tal:condition="python:sample.getStorageLocation()"
+                tal:content="python:sample.getStorageLocation().Title()">
+                location
+              </span>
+            </td>
+
+            <td tal:condition="python:view.reviewState=='pending'"  style='text-align:left;'>
+                <select class="will_sample_return" tal:attributes="id python:sample.UID()">
+                    <option value="yes">Yes</option>
+                    <option value="no" selected>No</option>
+                </select>
+            </td>
+            <td tal:condition="python:view.reviewState!='pending'"  style='text-align:left;'>
+                <p tal:condition="python:sample.WillReturnFromShipment == True">Yes</p>
+                <p tal:condition="python:sample.WillReturnFromShipment == False">No</p>
+            </td>
+        </tr>
+      </table>
 
 </metal:content-core>
 

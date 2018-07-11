@@ -67,6 +67,21 @@ class SampleSchemaExtender(object):
                 render_own_label=True,
             ),
         ),
+        ExtBooleanField(
+            'WillReturnFromShipment',
+            default=False,
+            # write_permission = ManageClients,
+            widget=BooleanWidget(
+                label=_("Will Return From Shipment"),
+                description=_("Indicates if sample will return if shipped."),
+                visible={'edit': 'visible',
+                         'view': 'visible',
+                         'header_table': 'visible',
+                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         },
+                render_own_label=True,
+            ),
+        ),
         ExtReferenceField(
             'Kit',
             vocabulary_display_path_bound=sys.maxint,
@@ -339,6 +354,13 @@ class Sample(BaseSample):
         # if location:
         #     doActionFor(location, 'occupy')
         #     self.update_box_status(location)
+
+    def workflow_script_sample_due(self):
+        super(Sample, self).workflow_script_sample_due()
+
+        self.WillReturnFromShipment = False
+        self.reindexObject()
+
 
 from Products.Archetypes import atapi
 from bika.lims.config import PROJECTNAME

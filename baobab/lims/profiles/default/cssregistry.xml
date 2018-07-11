@@ -11,6 +11,15 @@
     insert-before="*"/>
 
 <stylesheet
+    id="++resource++baobab.lims.css/disable_hyperlink.css"
+    expression="python:here.portal_type in [
+    'SampleShipment']"
+    media="screen"
+    rel="stylesheet"
+    rendering="link"
+    insert-before="*"/>
+
+<stylesheet
     id="++resource++baobab.lims.css/hide_sanbi_contentmenu.css"
     expression="python:here.portal_type in [
     'Project',

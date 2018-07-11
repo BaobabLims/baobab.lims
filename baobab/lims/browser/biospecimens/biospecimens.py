@@ -175,6 +175,31 @@ class BiospecimensView(BikaListingView):
                 ]
             },
             {
+                'id': 'sample_shipped',
+                'title': _('Sample Shipped'),
+                'contentFilter': {
+                    'review_state': 'sample_shipped',
+                    'cancellation_state': 'active',
+                    'sort_on': 'created',
+                    'sort_order': 'ascending'
+                },
+                'transitions': [
+                    {'id': 'sample_due'}
+                ],
+                'columns': [
+                    'Title',
+                    'Project',
+                    'Kit',
+                    'Type',
+                    'SubjectID',
+                    'Barcode',
+                    'Volume',
+                    'Unit',
+                    'state_title',
+                    # 'Location'
+                ]
+            },
+            {
                 'id': 'sample_received',
                 'title': _('Received'),
                 'contentFilter': {

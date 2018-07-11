@@ -63,7 +63,7 @@ class SampleShipmentsView(BikaListingView):
                 },
                 'transitions': [{'id': 'deactivate'},
                                 {'id': 'ship'},
-                                {'id': 'client_receive'}],
+                                {'id': 'ready_shipment'}],
                 'columns': [
                     'SampleShipmentID',
                     'SamplesList',
@@ -75,6 +75,22 @@ class SampleShipmentsView(BikaListingView):
                 'title': _('Pending'),
                 'contentFilter': {
                     'review_state': 'pending',
+                    'sort_on': 'sortable_title',
+                    'sort_order': 'ascending'
+                },
+                'transitions': [{'id': 'deactivate'},
+                                {'id': 'ready_to_ship'}],
+                'columns': [
+                    'SampleShipmentID',
+                    'SamplesList',
+                    'Client',
+                ]
+            },
+            {
+                'id': 'ready_to_ship',
+                'title': _('Ready to Ship'),
+                'contentFilter': {
+                    'review_state': 'ready_to_ship',
                     'sort_on': 'sortable_title',
                     'sort_order': 'ascending'
                 },
@@ -91,22 +107,6 @@ class SampleShipmentsView(BikaListingView):
                 'title': _('Shipped'),
                 'contentFilter': {
                     'review_state': 'shipped',
-                    'sort_on': 'sortable_title',
-                    'sort_order': 'ascending'
-                },
-                'transitions': [{'id': 'deactivate'},
-                                {'id': 'client_receive'}],
-                'columns': [
-                    'SampleShipmentID',
-                    'SamplesList',
-                    'Client',
-                ]
-            },
-            {
-                'id': 'client_received',
-                'title': _('Client_Received'),
-                'contentFilter': {
-                    'review_state': 'client_received',
                     'sort_on': 'sortable_title',
                     'sort_order': 'ascending'
                 },

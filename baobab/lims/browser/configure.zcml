@@ -26,6 +26,7 @@
     <include package=".inventory"/>
     <include package=".supplier"/>
     <include package=".storage"/>
+    <include package=".sampleshipment"/>
     <include package=".sampleshipments"/>
 
     <!-- This registration allows additional sticker templates.
