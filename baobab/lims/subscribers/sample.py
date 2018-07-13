@@ -20,40 +20,37 @@ def ObjectInitializedEventHandler(instance, event):
         create_samplepartition(instance, {'services': [], 'part_id': instance.getId() + "-P"})
 
         location = instance.getStorageLocation()
-        if hasattr(instance, 'api_source'):
-            if instance.api_source == "odk":    #special case for field collecdted odk samples
-                doActionFor(instance, 'sample_due')
-                if location:
-                    doActionFor(location, 'reserve')
-                    instance.update_box_status(location)
-            delattr(instance, 'api_source')
-        else:
-            if float(instance.getField('Volume').get(instance)) > 0:
-                #set the state of the sample.  the default state is receive
-                sample_state = None
-                if hasattr(instance, "sample_state"):
-                    sample_state = instance.sample_state
 
-                # sample state registered: dont set state.  default is register and location to reserve
-                if sample_state and sample_state.lower() in ("register", "registered"):
-                    if location:
-                        doActionFor(location, 'reserve')
-                        instance.update_box_status(location)
-                #sample state due: set state to due and location to reserve
-                if sample_state and sample_state.lower() == "due":
-                    doActionFor(instance, 'sample_due')
-                    if location:
-                        doActionFor(location, 'reserve')
-                        instance.update_box_status(location)
-                #state is received set sample state to receive and location to occupied
-                #if no valid state in sample_state variable then also set it to received
-                if not sample_state or sample_state.lower() in ("receive", "received") or \
-                        sample_state.lower() not in ("due", "receive", "received", "register", "registered"):
-                    doActionFor(instance, 'sample_due')
-                    doActionFor(instance, 'receive')
-                    if location:
-                        doActionFor(location, 'occupy')
-                        instance.update_box_status(location)
+        # if hasattr(instance, 'api_source'):
+        #     if instance.api_source == "odk":    #special case for field collecdted odk samples
+        #         doActionFor(instance, 'sample_due')
+
+        try:
+            sample_state = instance.sample_state.lower()
+        except:
+            sample_state = None
+
+        # sample state registered
+        # sample state always starts in registered. do nothing but reserve location.
+        if location:
+            doActionFor(location, 'reserve')
+            instance.update_box_status(location)
+
+        # state due is cpgr requested default.
+        # so set it unless it must remain in registered.  will need it later for receive.
+        if sample_state not in ("register", "registered"):
+            doActionFor(instance, 'sample_due')
+
+        # sate received set it to this if so specified.
+        if sample_state in ("receive", "received"):
+            # if float(instance.getField('Volume').get(instance)) > 0:
+            # does it makes sense to asume that only samples with volumes can be received?
+            # taken out for now.
+            doActionFor(instance, 'receive')
+            if location:
+                doActionFor(location, 'occupy')
+                instance.update_box_status(location)
+
 
 def ObjectModifiedEventHandler(instance, event):
     """ Called if the object is modified
