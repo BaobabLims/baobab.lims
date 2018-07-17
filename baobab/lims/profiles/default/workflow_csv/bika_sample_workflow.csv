@@ -91,7 +91,7 @@ BIKA: Schedule Sampling,N,N,N,N,N,N,N,N,N,N,N,N,N
 Id:,sample_shipped,,,,,,,,,,,,
 Title:,Shipped,,,,,,,,,,,,
 Description:,,,,,,,,,,,,,
-Transitions,"sample_due",,,,,,,,,,,,
+Transitions,"receive",,,,,,,,,,,,
 Permissions,Acquire,Anonymous,Manager,Owner,Reader,Editor,Contributor,Analyst,LabClerk,LabManager,Preserver,Sampler,SamplingCoordinator
 BIKA: Cancel and reinstate,N,N,Y,N,N,N,N,N,Y,Y,N,N,N
 BAOBAB: Due Sample,N,N,Y,N,N,N,N,N,Y,Y,N,N,N
