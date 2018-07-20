@@ -1,8 +1,10 @@
 from zope.interface import alsoProvides
 from Products.Five.utilities.marker import erase
+from Products.CMFCore.utils import getToolByName
 from bika.lims.workflow import doActionFor
 from baobab.lims.interfaces import ISharableSample
 from baobab.lims.browser.project import create_samplepartition
+from plone import api
 
 
 def ObjectInitializedEventHandler(instance, event):
@@ -18,8 +20,21 @@ def ObjectInitializedEventHandler(instance, event):
             instance.getField('Barcode').set(instance, instance.getId())
 
         create_samplepartition(instance, {'services': [], 'part_id': instance.getId() + "-P"})
-
         location = instance.getStorageLocation()
+
+        # #store the user or at least the email of the user that receives this sample
+        # membership = getToolByName(instance, 'portal_membership')
+        # member = membership.getAuthenticatedMember()
+        # print('-----------member------------')
+        # print(type(member))
+        # print(member.__dict__)
+
+        # current = api.user.get_current()
+        # print('-----current----------')
+        # print(current.getProperty('email'))
+        # print(current.getProperty('fullname'))
+
+        # print(current.__dict__)
 
         # if hasattr(instance, 'api_source'):
         #     if instance.api_source == "odk":    #special case for field collecdted odk samples

@@ -70,6 +70,31 @@ class SampleSchemaExtender(object):
                 render_own_label=True,
             ),
         ),
+        ExtDateTimeField(
+            'DateReceived',
+            mode="rw",
+            read_permission=permissions.View,
+            write_permission=permissions.ModifyPortalContent,
+            widget=DateTimeWidget(
+                label=_("Date Received in Baobab"),
+                visible={
+                    'edit': 'visible',
+                    'view': 'visible',
+                    'header_table': 'visible',
+                    'sample_registered': {'view': 'invisible', 'edit': 'invisible'},
+                    'to_be_sampled': {'view': 'invisible', 'edit': 'invisible'},
+                    'scheduled_sampling': {'view': 'visible', 'edit': 'visible'},
+                    'sampled': {'view': 'invisible', 'edit': 'invisible'},
+                    'to_be_preserved': {'view': 'invisible', 'edit': 'invisible'},
+                    'sample_due': {'view': 'visible', 'edit': 'visible'},
+                    'sample_received': {'view': 'visible', 'edit': 'invisible'},
+                    'expired': {'view': 'visible', 'edit': 'invisible'},
+                    'disposed': {'view': 'visible', 'edit': 'invisible'},
+                    'rejected': {'view': 'visible', 'edit': 'invisible'},
+                },
+                render_own_label=True,
+            ),
+        ),
         ExtReferenceField(
             'Kit',
             vocabulary_display_path_bound=sys.maxint,
@@ -330,12 +355,34 @@ class Sample(BaseSample):
 
     def workflow_script_receive(self):
 
+        #set date received
+        if not self.getDateReceived():
+            self.setDateReceived(datetime.datetime.now().strftime('%Y/%m/%d %H:%M'))
+            self.reindexObject()
+
+        # inform the client
         project = self.aq_parent
         client = project.getClient()
 
         sender = client.EmailAddress
         receiver = sender
 
+        self.send_email(sender, receiver)
+
+        # inform the lab contacts
+        project = self.aq_parent
+        print('----project--0--')
+        print(project)
+        lab_contacts = project.getLabContacts()
+        print('---lab contacts-----')
+        print(lab_contacts)
+        for contact in lab_contacts:
+            self.send_email(sender, contact.EmailAddress)
+            print(contact.EmailAddress)
+
+
+    def send_email(self, sender, receiver):
+        print('sending a mail to {} from {}'.format(receiver, sender))
         subject = 'Sample \"%s\" received at \"%s\".' % (self.Title(), strftime("%Y-%m-%d %H:%M:%S"))
 
         body = "Automatic email:\n"

@@ -93,7 +93,7 @@ class BiospecimensView(BikaListingView):
                 'index': 'review_state'
             },
             'DateReceived': {
-                'title': _('DateReceived'),
+                'title': _('Date Received'),
                 #'index': 'review_state'
             },
             # 'Location': {
@@ -286,16 +286,38 @@ class BiospecimensView(BikaListingView):
             ]
         ret = []
         for x, item in enumerate(items):
+            #get the sample type
+
+
             if not items[x].has_key('obj'):
                 continue
             obj = items[x]['obj']
             if not ISample.providedBy(obj):
                 continue
+
             items[x]['Type'] = obj.getSampleType() and obj.getSampleType().Title() or ''
-            items[x]['Volume'] = obj.getField('Volume').get(obj)
+
+            try:
+                print('--start try----')
+                sample_type = obj.getSampleType()
+                if float(obj.getField('Volume').get(obj)) < float(sample_type.getMinimumVolume().split()[0]):
+                    print('minimum volume less')
+                    items[x]['replace']['Volume'] = \
+                        '<span title="less than %s" style="color:red">%s</span>' % (str(sample_type.getMinimumVolume()), obj.getField('Volume').get(obj))
+                else:
+                    print('minimum volume else')
+                    items[x]['Volume'] = obj.getField('Volume').get(obj)
+
+            except Exception as e:
+                print('in the except: %s') % str(e)
+                items[x]['Volume'] = obj.getField('Volume').get(obj)
+
             items[x]['Unit'] = VOLUME_UNITS[0]['ResultText']
             items[x]['SubjectID'] = obj.getField('SubjectID').get(obj)
             items[x]['DateReceived'] = str(obj.getField('DateReceived').get(obj))[:16]
+            # if items[x]['DateReceived']:
+            #     print('Not date received')
+            #     items[x]['DateReceived'] = ''
             kit = obj.getField('Kit').get(obj)
             project = obj.getField('Project').get(obj)
             items[x]['Kit'] = kit
@@ -323,11 +345,10 @@ class BiospecimensView(BikaListingView):
                     items[x]['allow_edit'] = ['Type', 'Barcode']
                     items[x]['choices']['Type'] = biospecimen_types
                 elif items[x]['review_state'] == "sample_due":
-                    items[x]['allow_edit'] = ['SubjectID', 'Volume', 'Unit']
+                    items[x]['allow_edit'] = ['SubjectID', 'Volume', 'Unit',]
 
                     if not items[x]['Unit']:
                         items[x]['choices']['Unit'] = VOLUME_UNITS
             ret.append(item)
-
 
         return ret

@@ -1,13 +1,19 @@
+from AccessControl import ClassSecurityInfo
+
 from Products.Archetypes.public import *
 from Products.CMFCore import permissions
-from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
-from zope.interface import implements
 from Products.CMFPlone.interfaces import IConstrainTypes
+from Products.Archetypes.references import HoldingReference
 
-from bika.lims.browser.widgets import DateTimeWidget
+from zope.interface import implements
+from plone import api as ploneapi
+
 from bika.lims.browser.fields import DateTimeField
+from bika.lims.browser.widgets import DateTimeWidget
+from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from bika.lims.content.bikaschema import BikaSchema
+from bika.lims.content.labcontact import LabContact
 from baobab.lims import bikaMessageFactory as _
 from baobab.lims.interfaces import IProject
 from baobab.lims import config
@@ -30,6 +36,20 @@ schema = BikaSchema.copy() + Schema((
         widget=StringWidget(
             label=_('Link to Ethics Form'),
             visible={'edit': 'visible', 'view': 'visible'},
+        )
+    ),
+
+    ReferenceField(
+        'LabContacts',
+        multiValued=1,
+        allowed_types=('LabContact'),
+        referenceClass=HoldingReference,
+        relationship='ProjectLabContact',
+        mode="rw",
+        widget=bika_ReferenceWidget(
+            label=_("Lab Contacts"),
+            description=_("Lab Contacts"),
+            showOn=True
         )
     ),
 
@@ -165,6 +185,9 @@ class Project(BaseFolder):
     def getClientID(self):
         return self.aq_parent.getId() if self.aq_parent.portal_type == 'Client' \
                                       else ''
+
+    # def getLabContacts(self):
+
 
     def getAgeUnits(self):
         return ['Years', 'Months', 'Weeks', 'Days', 'Hours', 'Minutes']

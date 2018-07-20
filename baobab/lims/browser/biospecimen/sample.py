@@ -80,6 +80,7 @@ class SampleView(BrowserView):
                                  location.Title()) or None
 
         self.sampling_date = context.getSamplingDate()
+        self.date_received = context.getDateReceived()
 
         sharing = context.getField('AllowSharing').get(context)
         self.sharing = sharing and "Yes" or "No"
