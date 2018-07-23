@@ -1,13 +1,19 @@
-.bika-listing-table .state-position_occupied {
+.bika-listing-table .state-occupied {
     background-color: #fff2dd; !important;
     color: #000; !important;
 }
-.bika-listing-table .state-position_reserved {
+.bika-listing-table .state-reserved {
     background-color: #e5f8ff; !important;
     color: #000; !important;
 }
 
 .bika-listing-table .state-to_complete {
     background-color: #e5f8ff; !important;
+    color: #000; !important;
+}
+
+/* Color for sample shipped */
+.bika-listing-table .state-sample_shipped {
+    background-color: #e6ffff; !important;
     color: #000; !important;
 }
