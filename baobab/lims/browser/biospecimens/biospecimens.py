@@ -340,7 +340,7 @@ class BiospecimensView(BikaListingView):
                     if not items[x]['Unit']:
                         items[x]['choices']['Unit'] = VOLUME_UNITS
                 elif items[x]['review_state'] == "sample_shipped":
-                    items[x]['allow_edit'] = ['Volume']
+                    items[x]['allow_edit'] = ['SubjectID', 'Volume']
 
             ret.append(item)
         return ret
