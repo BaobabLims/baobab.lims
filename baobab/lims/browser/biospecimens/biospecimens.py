@@ -298,18 +298,15 @@ class BiospecimensView(BikaListingView):
             items[x]['Type'] = obj.getSampleType() and obj.getSampleType().Title() or ''
 
             try:
-                print('--start try----')
                 sample_type = obj.getSampleType()
-                if float(obj.getField('Volume').get(obj)) < float(sample_type.getMinimumVolume().split()[0]):
-                    print('minimum volume less')
+                if float(obj.getField('Volume').get(obj)) < float(sample_type.getMinimumVolume().split()[0])\
+                        and items[x]['review_state'] == "receive":
                     items[x]['replace']['Volume'] = \
                         '<span title="less than %s" style="color:red">%s</span>' % (str(sample_type.getMinimumVolume()), obj.getField('Volume').get(obj))
                 else:
-                    print('minimum volume else')
                     items[x]['Volume'] = obj.getField('Volume').get(obj)
 
             except Exception as e:
-                print('in the except: %s') % str(e)
                 items[x]['Volume'] = obj.getField('Volume').get(obj)
 
             items[x]['Unit'] = VOLUME_UNITS[0]['ResultText']

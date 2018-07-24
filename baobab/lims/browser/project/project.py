@@ -132,6 +132,11 @@ class ProjectView(BrowserView):
             context.getEthicsFormLink()
         )
 
+        lab_contacts = self.context.getLabContacts()
+        lab_contacts = ', '.join([contact.EmailAddress for contact in lab_contacts])
+        self.lab_contacts = lab_contacts
+
+
         self.client = "<a href='%s'>%s</a>" % (
             context.aq_parent.absolute_url(),
             context.aq_parent.Title()

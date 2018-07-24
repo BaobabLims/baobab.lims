@@ -77,6 +77,7 @@ class SampleSchemaExtender(object):
             write_permission=permissions.ModifyPortalContent,
             widget=DateTimeWidget(
                 label=_("Date Received in Baobab"),
+                show_time=True,
                 visible={
                     'edit': 'visible',
                     'view': 'visible',
