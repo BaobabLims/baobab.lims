@@ -22,24 +22,6 @@ def ObjectInitializedEventHandler(instance, event):
         create_samplepartition(instance, {'services': [], 'part_id': instance.getId() + "-P"})
         location = instance.getStorageLocation()
 
-        # #store the user or at least the email of the user that receives this sample
-        # membership = getToolByName(instance, 'portal_membership')
-        # member = membership.getAuthenticatedMember()
-        # print('-----------member------------')
-        # print(type(member))
-        # print(member.__dict__)
-
-        # current = api.user.get_current()
-        # print('-----current----------')
-        # print(current.getProperty('email'))
-        # print(current.getProperty('fullname'))
-
-        # print(current.__dict__)
-
-        # if hasattr(instance, 'api_source'):
-        #     if instance.api_source == "odk":    #special case for field collecdted odk samples
-        #         doActionFor(instance, 'sample_due')
-
         try:
             sample_state = instance.sample_state.lower()
         except:
