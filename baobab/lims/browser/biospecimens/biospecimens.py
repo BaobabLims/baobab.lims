@@ -191,7 +191,8 @@ class BiospecimensView(BikaListingView):
                     'sort_order': 'reverse'
                 },
                 'transitions': [
-                    {'id': 'cancel'}
+                    {'id': 'cancel'},
+                    {'id': 'dispose'}
                 ],
                 'columns': [
                     'Title',
@@ -300,7 +301,7 @@ class BiospecimensView(BikaListingView):
             try:
                 sample_type = obj.getSampleType()
                 if float(obj.getField('Volume').get(obj)) < float(sample_type.getMinimumVolume().split()[0])\
-                        and items[x]['review_state'] == "receive":
+                        and items[x]['review_state'] == "sample_received":
                     items[x]['replace']['Volume'] = \
                         '<span title="less than %s" style="color:red">%s</span>' % (str(sample_type.getMinimumVolume()), obj.getField('Volume').get(obj))
                 else:
