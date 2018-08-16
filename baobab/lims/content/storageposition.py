@@ -4,8 +4,10 @@ from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import safe_unicode
 from zope.interface import implements
 
-from bika.lims.content.bikaschema import BikaSchema
+from Products.Archetypes.references import HoldingReference
 
+from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
+from bika.lims.content.bikaschema import BikaSchema
 from baobab.lims.browser.storage import getStorageTypes
 from baobab.lims.interfaces import IStoragePosition
 from baobab.lims.config import PROJECTNAME
@@ -16,8 +18,27 @@ Hierarchy = ComputedField(
     expression="here.getHierarchy()"
 )
 
+ReservedSample = ReferenceField(
+    'ReservedSample',
+    multiValued=1,
+    allowed_types=('Sample'),
+    referenceClass=HoldingReference,
+    relationship='ReservedSample',
+    mode="rw",
+    widget=bika_ReferenceWidget(
+        label=_("reserved sample"),
+        description=_("Sample reserved for this location"),
+        size=40,
+        base_query={'review_state': 'sample_received', 'cancellation_state': 'active'},
+        visible={'edit': 'invisible', 'view': 'invisible'},
+        catalog_name='bika_catalog',
+        showOn=True
+    )
+)
+
 schema = BikaSchema.copy() + Schema((
     Hierarchy,
+    ReservedSample,
 ))
 schema['title'].widget.label = _('Address')
 schema['description'].widget.visible = True
