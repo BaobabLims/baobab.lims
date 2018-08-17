@@ -166,7 +166,8 @@ class BiospecimensView(BikaListingView):
                 },
                 'transitions': [
                     {'id': 'receive'},
-                    {'id': 'cancel'}
+                    {'id': 'cancel'},
+                    {'id': 'dispose'}
                 ],
                 'columns': [
                     'Title',

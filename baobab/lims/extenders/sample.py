@@ -212,9 +212,11 @@ class SampleSchemaExtender(object):
         ),
         ExtStringField(
             'Unit',
-            default="ml",
-            widget=StringWidget(
+            # default="ml",
+            # vocabulary=['ml', 'ul', 'g', 'mg'],
+            widget=SelectionWidget(
                 label=_("Unit"),
+                description=_('Select unit for above field'),
                 visible={'edit': 'visible',
                          'view': 'visible',
                          'header_table': 'visible',
@@ -225,7 +227,7 @@ class SampleSchemaExtender(object):
                          'expired': {'view': 'visible', 'edit': 'invisible'},
                          'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
-                render_own_label=True,
+                # render_own_label=True,
             )
         ),
         ExtReferenceField(
