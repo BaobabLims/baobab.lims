@@ -298,20 +298,29 @@ class BiospecimensView(BikaListingView):
                 continue
 
             items[x]['Type'] = obj.getSampleType() and obj.getSampleType().Title() or ''
+            insufficient_volume, volume = self.get_insufficient_volume(obj, items[x]['review_state'])
 
-            try:
-                sample_type = obj.getSampleType()
-                if float(obj.getField('Volume').get(obj)) < float(sample_type.getMinimumVolume().split()[0])\
-                        and items[x]['review_state'] == "sample_received":
-                    items[x]['replace']['Volume'] = \
-                        '<span title="less than %s" style="color:red">%s</span>' % (str(sample_type.getMinimumVolume()), obj.getField('Volume').get(obj))
-                else:
-                    items[x]['Volume'] = obj.getField('Volume').get(obj)
+            if insufficient_volume:
+                items[x]['replace']['Volume'] = volume
+            else:
+                items[x]['Volume'] = volume
 
-            except Exception as e:
-                items[x]['Volume'] = obj.getField('Volume').get(obj)
+            # try:
+            #     sample_type = obj.getSampleType()
+            #     if float(obj.getField('Volume').get(obj)) < float(sample_type.getMinimumVolume().split()[0])\
+            #             and items[x]['review_state'] == "sample_received":
+            #         items[x]['replace']['Volume'] = \
+            #             '<span title="less than %s" style="color:red">%s</span>' % (str(sample_type.getMinimumVolume()), obj.getField('Volume').get(obj))
+            #     else:
+            #         items[x]['Volume'] = obj.getField('Volume').get(obj)
+            #
+            # except Exception as e:
+            #     items[x]['Volume'] = obj.getField('Volume').get(obj)
 
-            items[x]['Unit'] = VOLUME_UNITS[0]['ResultText']
+
+
+            # items[x]['Unit'] = VOLUME_UNITS[0]['ResultText']
+            items[x]['Unit'] = obj.getField('Unit').get(obj)
             items[x]['SubjectID'] = obj.getField('SubjectID').get(obj)
             items[x]['DateReceived'] = str(obj.getField('DateReceived').get(obj))[:16]
             # if items[x]['DateReceived']:
@@ -351,3 +360,61 @@ class BiospecimensView(BikaListingView):
             ret.append(item)
 
         return ret
+
+    def get_insufficient_volume(self, obj, review_state):
+        """
+        This function determines whether or not the sample volume is less than the minimum allowed volume.
+        If it is it returns True plus a highligted version of the sample volume.  Otherwise it returns False
+        along with unhighligted volume
+        :param obj:
+        :param review_state:
+        :return:
+        """
+
+        try:
+            # print('-------')
+            # print(obj)
+
+            sample_type = obj.getSampleType()
+            sample_type_unit = sample_type.getMinimumVolume().split()[1]
+            minimum_volume = sample_type.getMinimumVolume().split()[0]
+            sample_unit = obj.getField('Unit').get(obj)
+            sample_volume = obj.getField('Volume').get(obj)
+
+            # check to see if both units are measuring the same thing
+            if not (set([sample_unit, sample_type_unit]).issubset(['g', 'mg', 'ug', 'g', 'mg', 'ug']) \
+                    or set([sample_unit, sample_type_unit]).issubset(['ml', 'ul', 'ml', 'ul'])):
+                return True, '<span title="Sample and sample type units differ (%s and %s)." style="color:orange">%s</span>' % (sample_unit, sample_type_unit, sample_volume)
+
+            if review_state != "sample_received":
+                return False, sample_volume
+
+            converted_minimum_volume = self.convert_units(minimum_volume, sample_type_unit)
+
+            converted_sample_volume = self.convert_units(sample_volume, sample_unit)
+
+            if converted_sample_volume < converted_minimum_volume:
+                return True, '<span title="less than %s %s" style="color:red">%s</span>' % (str(minimum_volume), sample_type_unit, sample_volume)
+            return False, sample_volume
+
+        except Exception as e:
+            return False, sample_volume
+
+    def convert_units(self, volume, unit):
+        """
+        This function will:
+         take gram, milligram, microgram and convert it to gram
+         take ml, ul and convert it to ml
+        :param volume:
+        :param unit:
+        :return: gram or ml
+        """
+
+        if unit in ('g', 'ml'):
+            return float(volume) / 1.0
+
+        if unit in ('mg', 'ul'):
+            return float(volume) / 1000.0
+
+        if unit in ('ug'):
+            return float(volume) / 1000000.0

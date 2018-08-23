@@ -8,6 +8,7 @@ from bika.lims.fields import *
 from bika.lims.interfaces import ISample
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from bika.lims.browser.widgets import DateTimeWidget
+from bika.lims.browser.widgets import SelectionWidget as BikaSelectionWidget
 from bika.lims.content.sample import Sample as BaseSample
 from bika.lims.workflow import doActionFor
 
@@ -212,11 +213,13 @@ class SampleSchemaExtender(object):
         ),
         ExtStringField(
             'Unit',
-            # default="ml",
-            # vocabulary=['ml', 'ul', 'g', 'mg'],
-            widget=SelectionWidget(
+            default="ml",
+            vocabulary='getUnits',
+            # widget=SelectionWidget(
+            widget=BikaSelectionWidget(
+                format='select',
                 label=_("Unit"),
-                description=_('Select unit for above field'),
+                description=_('The unit for Volume'),
                 visible={'edit': 'visible',
                          'view': 'visible',
                          'header_table': 'visible',
@@ -227,7 +230,8 @@ class SampleSchemaExtender(object):
                          'expired': {'view': 'visible', 'edit': 'invisible'},
                          'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
-                # render_own_label=True,
+                render_own_label=True,
+                showOn=True,
             )
         ),
         ExtReferenceField(
@@ -326,6 +330,9 @@ class Sample(BaseSample):
     """ Inherits from bika.lims.content.sample
     """
     _at_rename_after_creation = True
+
+    def getUnits(self):
+        return ['ml', 'ul', 'g', 'mg']
 
     def _renameAfterCreation(self, check_auto_id=False):
         from baobab.lims.idserver import renameAfterCreation
