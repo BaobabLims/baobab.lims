@@ -3,7 +3,7 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="bika">
 
- <genericsetup:upgradeStep
+  <genericsetup:upgradeStep
         title="Client contact security access to projects"
         description="Change Project content type catalog to portal catalog"
         source="1300"
@@ -12,5 +12,12 @@
         sortkey="1"
         profile="baobab.lims:default"/>
 
-
+  <genericsetup:upgradeStep
+        title="Batch samples, donors and disease ontology"
+        description="New modules added"
+        source="1310"
+        destination="1400"
+        handler="baobab.lims.upgrade.to1400.upgrade"
+        sortkey="2"
+        profile="baobab.lims:default"/>
 </configure>
