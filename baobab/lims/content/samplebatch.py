@@ -127,9 +127,9 @@ Location = ReferenceField(
         },
         colModel=[
             {'columnName': 'UID', 'hidden': True},
-            {'columnName': 'Title', 'width': '50', 'label': _('Title')},
-            {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "50"},
-            {"columnName": "FreePositions", "align": "left", "label": "Free", "width": "20"},
+            {'columnName': 'Title', 'width': '10', 'label': _('Title')},
+            {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "80"},
+            {"columnName": "FreePositions", "align": "left", "label": "Free", "width": "10"},
         ],
     )
 )

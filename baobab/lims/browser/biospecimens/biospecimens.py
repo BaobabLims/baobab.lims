@@ -20,7 +20,7 @@ class BiospecimensView(BikaListingView):
     """
     implements(IFolderContentsView, IViewView)
 
-    def __init__(self, context, request):
+    def __init__(self, context, request, content_type=None):
         BikaListingView.__init__(self, context, request)
         self.context = context
         # self.catalog = 'bika_catalog'
@@ -35,12 +35,16 @@ class BiospecimensView(BikaListingView):
         self.title = self.context.translate(_("Biospecimens"))
         self.icon = self.portal_url + \
                     "/++resource++baobab.lims.images/biospecimen_big.png"
-        self.description = ''
+        self.description = 'ten'
         self.show_sort_column = False
         self.show_select_row = False
         self.show_select_column = False
-        self.pagesize = 25
         self.allow_edit = True
+        self.content_type = content_type
+        if self.content_type == 'batch':
+            self.pagesize = 1000
+        else:
+            self.pagesize = 25
 
         if self.context.portal_type == 'Biospecimens':
             self.request.set('disable_border', 1)
@@ -261,6 +265,7 @@ class BiospecimensView(BikaListingView):
         # Show only ISharable samples for EMS.  Skip others.
         pm = getToolByName(self.context, 'portal_membership')
         roles = pm.getAuthenticatedMember().getRoles()
+
         #print roles
         if 'EMS' in roles:
             self.contentFilter['object_provides'] = ISharableSample.__identifier__
@@ -280,6 +285,7 @@ class BiospecimensView(BikaListingView):
             if not items[x].has_key('obj'):
                 continue
             obj = items[x]['obj']
+
             if not ISample.providedBy(obj):
                 continue
             items[x]['Type'] = obj.getSampleType() and obj.getSampleType().Title() or ''

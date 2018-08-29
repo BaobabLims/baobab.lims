@@ -1,3 +1,5 @@
+from zope.schema import ValidationError
+
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.ATContentTypes.lib import constraintypes
@@ -12,7 +14,7 @@ class BatchBiospecimensView(BiospecimensView):
     """ Biospecimens veiw from kit view.
     """
     def __init__(self, context, request):
-        BiospecimensView.__init__(self, context, request)
+        BiospecimensView.__init__(self, context, request, 'batch')
         self.context = context
         self.context_actions = {}
 
@@ -39,28 +41,39 @@ class BatchBiospecimensView(BiospecimensView):
                     out_items.append(item)
         return out_items
 
+
 class EditView(BrowserView):
+
     template = ViewPageTemplateFile('templates/batch_edit.pt')
 
     def __call__(self):
         request = self.request
         context = self.context
-        form = request.form
+        self.form = request.form
 
         if 'submitted' in request:
             try:
                 self.validate_form_input()
             except ValidationError as e:
                 self.form_error(e.message)
+                return
 
             context.setConstrainTypesMode(constraintypes.DISABLED)
             portal_factory = getToolByName(context, 'portal_factory')
-            context = portal_factory.doCreate(context, context.id)
-            context.processForm()
 
-            self.create_samples(context, form)
+            folder = context.aq_parent
+            batch = None
+            if not folder.hasObject(context.getId()):
+                batch = portal_factory.doCreate(context, context.id)
+            else:
+                batch = context
 
-            obj_url = context.absolute_url_path()
+            old_qty = int(batch.Quantity or 0)
+            new_qty = int(self.form.get('Quantity', 0))
+            batch.processForm()
+            self.create_samples(batch, self.form, new_qty - old_qty)
+
+            obj_url = batch.absolute_url_path()
             request.response.redirect(obj_url)
 
             return
@@ -68,19 +81,24 @@ class EditView(BrowserView):
         return self.template()
 
     def validate_form_input(self):
-        return
+        new_qty = int(self.form.get('Quantity', 0))
+        old_qty = int(self.context.Quantity or 0)
 
-    def create_samples(self, context, form):
+        if new_qty <= 0:
+            raise ValidationError('Quantity of samples cannot be zero or less than zero!')
+        if new_qty < old_qty:
+            raise ValidationError('New number of samples cannot be less than the number of samples already created!')
+
+    def create_samples(self, context, form, num_samples):
         """Create samples from form
         """
-        num_samples = int(form.get('Quantity', '1'))
         sample_type = get_first_sampletype(context)
         uc = getToolByName(context, 'uid_catalog')
 
         project_uid = form.get('Project_uid', '')
         project = uc(UID=project_uid)[0].getObject()
 
-        samples_gen = SampleGeneration(self.request.form, project)
+        samples_gen = SampleGeneration(form, project)
 
         samples = []
         for i in range(num_samples):
@@ -109,3 +127,7 @@ class EditView(BrowserView):
             if v == visibility:
                 fields.append(field)
         return fields
+
+    def form_error(self, msg):
+        self.context.plone_utils.addPortalMessage(msg)
+        self.request.response.redirect(self.context.absolute_url())

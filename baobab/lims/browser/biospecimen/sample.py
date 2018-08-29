@@ -117,6 +117,7 @@ class EditView(BrowserView):
                 sample = _createObjectByType('Sample', folder, tmpID())
             else:
                 sample = context
+
             sample.getField('Project').set(sample, request.form['Project_uid'])
             sample.getField('AllowSharing').set(sample, request.form['AllowSharing'])
             sample.getField('Kit').set(sample, request.form['Kit_uid'])
@@ -130,8 +131,9 @@ class EditView(BrowserView):
             sample.edit(
                 SampleType=request.form['SampleType_uid']
             )
-
+            sample_batch = sample.getField('Batch').get(sample)
             sample.processForm()
+            sample.getField('Batch').set(sample, sample_batch)
 
             obj_url = sample.absolute_url_path()
             request.response.redirect(obj_url)

@@ -30,11 +30,14 @@ class SampleGeneration:
         if kit:
             field_k = sample.getField('Kit')
             field_k.set(sample, kit.UID())
-            field_p = sample.getField('Project')
-            field_p.set(sample, self.project)
+
         if batch:
             field_b = sample.getField('Batch')
             field_b.set(sample, batch.UID())
+
+        # set the project for both kit or batch
+        field_p = sample.getField('Project')
+        field_p.set(sample, self.project)
 
         if self.form.get('ParentBiospecimen', ''):
             field_s = sample.getField('LinkedSample')
