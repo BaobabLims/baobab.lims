@@ -152,6 +152,7 @@ schema = BikaSchema.copy() + Schema((
 schema['title'].required = True
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 schema['title'].widget.size = 100
+schema['title'].widget.label = 'Project ID'
 schema['description'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 
 
