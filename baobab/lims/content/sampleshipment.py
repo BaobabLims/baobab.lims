@@ -259,15 +259,14 @@ class SampleShipment(ATFolder):
         for sample in samples:
             storage_location = sample.getStorageLocation()
             if storage_location:
-                # storage_location.ReservedSample = sample
                 wf.doActionFor(storage_location, 'liberate')
-                # storage_location.reindexObject()
+                storage_location.reindexObject()
 
                 if sample.WillReturnFromShipment:
                     wf.doActionFor(storage_location, 'reserve')
                     sample.update_box_status(storage_location)
 
-                    sample.ReservedLocation = storage_location
+                    sample.getField('ReservedLocation').set(sample, storage_location)
 
             wf.doActionFor(sample, 'ship')
             sample.reindexObject()

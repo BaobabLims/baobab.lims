@@ -8,6 +8,7 @@ from baobab.lims.browser.project import create_samplepartition
 def ObjectInitializedEventHandler(instance, event):
     """called an object is created
     """
+    print('----object initialized--------')
     if instance.portal_type == 'Sample':
 
         if instance.getField('AllowSharing').get(instance):
@@ -20,7 +21,10 @@ def ObjectInitializedEventHandler(instance, event):
         create_samplepartition(instance, {'services': [], 'part_id': instance.getId() + "-P"})
 
         location = instance.getStorageLocation()
+        print('location is -----')
+        print(location)
         if hasattr(instance, 'api_source'):
+            print('-----api source------')
             if instance.api_source == "odk":    #special case for field collecdted odk samples
                 doActionFor(instance, 'sample_due')
                 if location:
@@ -28,11 +32,17 @@ def ObjectInitializedEventHandler(instance, event):
                     instance.update_box_status(location)
             delattr(instance, 'api_source')
         else:
+            print('----not api source-------')
             if float(instance.getField('Volume').get(instance)) > 0:
                 doActionFor(instance, 'sample_due')
                 doActionFor(instance, 'receive')
 
+            print('before check location and after receive')
+            print(location)
+
             if location:
+                print('-------')
+                print('occupy box in subscriber')
                 doActionFor(location, 'occupy')
                 instance.update_box_status(location)
 

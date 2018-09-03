@@ -18,27 +18,8 @@ Hierarchy = ComputedField(
     expression="here.getHierarchy()"
 )
 
-ReservedSample = ReferenceField(
-    'ReservedSample',
-    multiValued=1,
-    allowed_types=('Sample'),
-    referenceClass=HoldingReference,
-    relationship='ReservedSample',
-    mode="rw",
-    widget=bika_ReferenceWidget(
-        label=_("reserved sample"),
-        description=_("Sample reserved for this location"),
-        size=40,
-        base_query={'review_state': 'sample_received', 'cancellation_state': 'active'},
-        visible={'edit': 'invisible', 'view': 'invisible'},
-        catalog_name='bika_catalog',
-        showOn=True
-    )
-)
-
 schema = BikaSchema.copy() + Schema((
     Hierarchy,
-    ReservedSample,
 ))
 schema['title'].widget.label = _('Address')
 schema['description'].widget.visible = True
