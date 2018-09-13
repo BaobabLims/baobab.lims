@@ -153,3 +153,11 @@ class IDiseaseOntology(Interface):
 class IDiseaseOntologies(Interface):
     """
     """
+
+class ISampleShipment(Interface):
+    """
+    """
+
+class ISampleShipments(Interface):
+    """
+    """

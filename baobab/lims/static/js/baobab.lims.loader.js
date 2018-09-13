@@ -25,6 +25,8 @@ window.baobab.lims.controllers =  {
         ['OrderEditView'],
     "#order_publish_container":
         ['OrderPublishView'],
+    ".portaltype-sampleshipment":
+        ['BaobabSampleShipmentView'],
     ".portaltype-sample":
         ['BaobabSampleView']
 };

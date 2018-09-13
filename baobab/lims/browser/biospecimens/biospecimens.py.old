@@ -35,7 +35,7 @@ class BiospecimensView(BikaListingView):
         self.title = self.context.translate(_("Biospecimens"))
         self.icon = self.portal_url + \
                     "/++resource++baobab.lims.images/biospecimen_big.png"
-        self.description = 'ten'
+        self.description = ''
         self.show_sort_column = False
         self.show_select_row = False
         self.show_select_column = False
@@ -166,31 +166,6 @@ class BiospecimensView(BikaListingView):
                 'transitions': [
                     {'id': 'receive'},
                     {'id': 'cancel'}
-                ],
-                'columns': [
-                    'Title',
-                    'Project',
-                    'Kit',
-                    'Type',
-                    'SubjectID',
-                    'Barcode',
-                    'Volume',
-                    'Unit',
-                    'state_title',
-                    # 'Location'
-                ]
-            },
-            {
-                'id': 'sample_shipped',
-                'title': _('Sample Shipped'),
-                'contentFilter': {
-                    'review_state': 'sample_shipped',
-                    'cancellation_state': 'active',
-                    'sort_on': 'created',
-                    'sort_order': 'ascending'
-                },
-                'transitions': [
-                    {'id': 'receive'}
                 ],
                 'columns': [
                     'Title',
@@ -347,8 +322,5 @@ class BiospecimensView(BikaListingView):
 
                     if not items[x]['Unit']:
                         items[x]['choices']['Unit'] = VOLUME_UNITS
-                elif items[x]['review_state'] == "sample_shipped":
-                    items[x]['allow_edit'] = ['SubjectID', 'Volume']
-
             ret.append(item)
         return ret

@@ -92,6 +92,21 @@ class SampleSchemaExtender(object):
                 render_own_label=True,
             ),
         ),
+        ExtBooleanField(
+            'WillReturnFromShipment',
+            default=False,
+            # write_permission = ManageClients,
+            widget=BooleanWidget(
+                label=_("Will Return From Shipment"),
+                description=_("Indicates if sample will return if shipped."),
+                visible={'edit': 'visible',
+                         'view': 'visible',
+                         'header_table': 'visible',
+                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         },
+                render_own_label=True,
+            ),
+        ),
         ExtReferenceField(
             'Donor',
             required=0,
@@ -189,6 +204,20 @@ class SampleSchemaExtender(object):
                 colModel=[{'columnName': 'UID', 'hidden': True},
                           {'columnName': 'Title', 'width': '50', 'label': _('Title')}
                           ],
+            )
+        ),
+        ExtReferenceField(
+            'ReservedLocation',
+            # required=True,
+            allowed_types=('StoragePosition',),
+            relationship='ReservedItemStorageLocation',
+            widget=bika_ReferenceWidget(
+                label=_("Reserved Storage Location"),
+                description=_("Location reserved for this sample"),
+                size=40,
+                visible={'edit': 'invisible',
+                         'view': 'invisible'},
+                catalog_name='portal_catalog',
             )
         ),
         ExtStringField(
@@ -447,6 +476,24 @@ class Sample(BaseSample):
         # if location:
         #     doActionFor(location, 'occupy')
         #     self.update_box_status(location)
+
+    def workflow_script_receive(self):
+        super(Sample, self).workflow_script_receive()
+
+        self.getField('WillReturnFromShipment').set(self, False)
+        location = self.getField('ReservedLocation').get(self)
+        review_state = self.portal_workflow.getInfoFor(location, 'review_state')
+
+        if location is not None:
+            if review_state in ('reserved', 'available'):
+                self.setStorageLocation(location)
+                doActionFor(location, 'occupy')
+                self.update_box_status(location)
+            else:
+                raise ValueError('Location %s is already occupied.' % location.Title())
+
+            self.getField('ReservedLocation').set(self, None)
+            self.reindexObject()
 
 from Products.Archetypes import atapi
 from bika.lims.config import PROJECTNAME

@@ -44,6 +44,9 @@ def initialize(context):
     from content.disease_ontology import DiseaseOntology
     from content.disease_ontologies import DiseaseOntologies
 
+    from content.sampleshipment import SampleShipment
+    from content.sampleshipments import SampleShipments
+
     from content.samplebatch import SampleBatch
     from content.samplebatches import SampleBatches
 

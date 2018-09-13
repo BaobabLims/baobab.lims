@@ -27,6 +27,7 @@
         <element value="SampleBatch"/>
         <element value="SampleDonor"/>
         <element value="DiseaseOntology"/>
+        <element value="SampleShipment"/>
   </property>
 </object>
 

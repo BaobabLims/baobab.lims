@@ -19,6 +19,7 @@
         <type portal_type="SampleBatch"/>
         <type portal_type="SampleDonor"/>
         <type portal_type="DiseaseOntology"/>
+        <type portal_type="SampleShipment"/>
 
     </factorytypes>
 </object>
