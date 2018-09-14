@@ -62,42 +62,8 @@ def upgrade(tool):
         # folder already exists
         pass
 
-    # /donors folder permissions
-    mp = portal.donors.manage_permission
-    mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'Analyst', ], 0)
-    mp(permissions.View, ['Manager', 'LabManager', 'Analyst'], 0)
-    mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Analyst', 'Owner'], 0)
-    mp('Access contents information', ['Manager', 'LabManager', 'Analyst', 'Owner'], 0)
-    portal.supplyorders.reindexObject()
-
-    # Add the DiseaseOntologies /disease_ontologies
-    try:
-        types_tool.constructContent(type_name="DiseaseOntologies",
-                                    container=portal,
-                                    id='disease_ontologies',
-                                    title='Disease Ontology')
-        obj = portal['disease_ontologies']
-        obj.unmarkCreationFlag()
-        obj.reindexObject()
-    except BadRequest:
-        # folder already exists
-        pass
-
     # Set catalogs for SampleShipment
     at.setCatalogsByType('SampleShipment', ['bika_catalog', 'portal_catalog'])
-
-    # # Set catalogs for SampleBatch, SampleDonor and DiseaseOntology
-    # at.setCatalogsByType('SampleBatch', ['bika_catalog', 'portal_catalog'])
-    # at.setCatalogsByType('SampleDonor', ['bika_catalog', 'portal_catalog'])
-    # at.setCatalogsByType('DiseaseOntology', ['bika_catalog', 'portal_catalog'])
-
-    # # Set to None; Batch, Donor and DiseaseOntology to all Sample objects
-    # proxies = pc(portal_type="Sample")
-    # samples = (proxy.getObject() for proxy in proxies)
-    # for sample in samples:
-    #     sample.getField('Batch').set(sample, None)
-    #     sample.getField('Donor').set(sample, None)
-    #     sample.getField('DiseaseOntology').set(sample, None)
 
     # change objects catalog from bsc to pc
     at.setCatalogsByType('ManagedStorage', ['portal_catalog', ])
