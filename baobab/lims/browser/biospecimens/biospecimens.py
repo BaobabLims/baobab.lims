@@ -35,7 +35,7 @@ class BiospecimensView(BikaListingView):
         self.title = self.context.translate(_("Biospecimens"))
         self.icon = self.portal_url + \
                     "/++resource++baobab.lims.images/biospecimen_big.png"
-        self.description = 'ten'
+        self.description = ''
         self.show_sort_column = False
         self.show_select_row = False
         self.show_select_column = False

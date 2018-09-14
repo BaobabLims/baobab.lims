@@ -20,4 +20,13 @@
         handler="baobab.lims.upgrade.to1400.upgrade"
         sortkey="2"
         profile="baobab.lims:default"/>
+
+  <genericsetup:upgradeStep
+        title="Sample shipment added"
+        description="New module added"
+        source="1400"
+        destination="1500"
+        handler="baobab.lims.upgrade.to1500.upgrade"
+        sortkey="2"
+        profile="baobab.lims:default"/>
 </configure>
