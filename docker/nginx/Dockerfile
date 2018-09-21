@@ -1,8 +1,8 @@
 # Set nginx base image
-FROM nginx
+FROM nginx:1.15
 
 # Author / Maintainer
-MAINTAINER Thoba Lose 'thoba@sanbi.ac.za'
+LABEL MAINTAINERS="thoba@sanbi.ac.za"
 
 RUN rm /etc/nginx/nginx.conf
 

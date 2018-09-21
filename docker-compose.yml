@@ -1,9 +1,9 @@
-version: '2'
+version: "2"
 services:
   nginx:
     restart: always
     build: ./docker/nginx/
-    image: baobab_nginx
+    image: quay.io/sanbi-sa/baobab-nginx:1.15
     container_name: baobab_nginx
     ports:
       - "80:80"
@@ -12,7 +12,7 @@ services:
   baobab_lims:
     restart: always
     build: ./docker/
-    image: baobab_lims
+    image: quay.io/sanbi-sa/baobab-lims:1.4.0
     container_name: baobab_lims
     ports:
-     - "8080:8080"
+      - "8080:8080"
