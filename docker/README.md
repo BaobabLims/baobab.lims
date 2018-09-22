@@ -1,8 +1,8 @@
-# Dockerized Baobab.lims
+# Dockerized Baobab LIMS
 
-Baobab.lims on Docker
+Baobab LIMS on Docker
 
-**Build and run Baobab.lims using `docker-compose`:**
+**Build and run Baobab LIMS using `docker-compose`:**
 
 ```sh
 $ pip install docker-compose
@@ -12,8 +12,8 @@ $ cd baobab.lims
 $ docker-compose up --build -d
 ```
 
-**Access Baobab.lims on [localhost:8080](http://localhost:8080):**
+**Access Baobab LIMS on [localhost:8080](http://localhost:8080):**
 
-- `Install Baobab.lims`
-- Check `Baobab.lims` option, then submit the form.
+- Click on `Install a Baobab distribution`.
+- Check `Baobab LIMS` option, then click `Install` the form.
 - Authentication: `admin:adminsecret`
