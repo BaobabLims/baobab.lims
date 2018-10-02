@@ -12,7 +12,7 @@ services:
   baobab_lims:
     restart: always
     build: ./docker/
-    image: quay.io/sanbi-sa/baobab-lims:1.4.0
+    image: quay.io/sanbi-sa/baobab-lims
     container_name: baobab_lims
     ports:
       - "8080:8080"
