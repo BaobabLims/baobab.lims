@@ -1,0 +1,10 @@
+os:
+  - linux
+dist: trusty
+sudo: required
+
+services:
+  - docker
+
+script:
+  - docker-compose up --build -d
