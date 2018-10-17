@@ -176,20 +176,6 @@ class SampleSchemaExtender(object):
             )
         ),
         ExtStringField(
-            'BabyNo',
-            mode="rw",
-            read_permission=permissions.View,
-            write_permission=permissions.ModifyPortalContent,
-            vocabulary='getBabyNumber',
-            widget=SelectionWidget(
-                format='select',
-                label=_("Baby No. (if applicable)"),
-                description=_("Number of the baby if the woman has at least one."),
-                visible={'edit': 'visible', 'view': 'visible'},
-                # render_own_label=True,
-            )
-        ),
-        ExtStringField(
             'Barcode',
             required=0,
             searchable=True,
