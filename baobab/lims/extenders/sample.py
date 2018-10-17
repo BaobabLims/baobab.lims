@@ -351,9 +351,6 @@ class Sample(BaseSample):
             return 0
         return last_ar_number
 
-    def getBabyNumber(self):
-        return ['None (0)', 'One (1)', 'Two (2)', 'Three (3)']
-
     def update_box_status(self, location):
         box = location.aq_parent
         state = self.portal_workflow.getInfoFor(box, 'review_state')
