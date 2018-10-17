@@ -355,7 +355,6 @@ class Biospecimens(WorksheetImporter):
             description=row.get('description'),
             Project=project,
             DiseaseOntology=disease_ontology,
-            AllowSharing=row.get('AllowSharing'),
             Donor=sample_donor,
             SampleType=sample_type,
             StorageLocation=storage_location,

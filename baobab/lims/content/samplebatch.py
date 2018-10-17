@@ -41,6 +41,26 @@ Project = ReferenceField(
     )
 )
 
+Subject_ID = StringField(
+    'SubjectID',
+    searchable=True,
+    widget=StringWidget(
+        label=_("Subject ID"),
+        description=_("Human-subject ID the specimen is taken from."),
+        visible={'edit': 'visible',
+                 'view': 'visible',
+                 'header_table': 'visible',
+                 'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                 'sample_due': {'view': 'visible', 'edit': 'visible'},
+                 'sampled': {'view': 'visible', 'edit': 'invisible'},
+                 'sample_received': {'view': 'visible', 'edit': 'visible'},
+                 'expired': {'view': 'visible', 'edit': 'invisible'},
+                 'disposed': {'view': 'visible', 'edit': 'invisible'},
+                 },
+        render_own_label=True,
+    )
+)
+
 ParentBiospecimen = ReferenceField(
     'ParentBiospecimen',
     vocabulary_display_path_bound=sys.maxsize,
@@ -150,6 +170,7 @@ DateCreation = DateTimeField(
 schema = BikaSchema.copy() + Schema((
     BatchId,
     Project,
+    Subject_ID,
     ParentBiospecimen,
     NumberBiospecimens,
     Location,

@@ -10,10 +10,6 @@ def ObjectInitializedEventHandler(instance, event):
     """
     if instance.portal_type == 'Sample':
 
-        if instance.getField('AllowSharing').get(instance):
-            alsoProvides(instance, ISharableSample)
-            instance.reindexObject()
-
         if not instance.getField('Barcode').get(instance):
             instance.getField('Barcode').set(instance, instance.getId())
 
@@ -41,16 +37,6 @@ def ObjectModifiedEventHandler(instance, event):
     """ Called if the object is modified
     """
     if instance.portal_type == 'Sample':
-
-        if not ISharableSample.providedBy(instance) and \
-                instance.getField('AllowSharing').get(instance):
-            alsoProvides(instance, ISharableSample)
-            instance.reindexObject()
-
-        if ISharableSample.providedBy(instance) and \
-            not instance.getField('AllowSharing').get(instance):
-            erase(instance, ISharableSample)
-            instance.reindexObject()
 
         if not instance.getField('Barcode').get(instance):
             instance.getField('Barcode').set(instance, instance.getId())

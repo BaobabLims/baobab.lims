@@ -51,47 +51,7 @@ class SampleSchemaExtender(object):
                 description=_("Select the project of the sample."),
             )
         ),
-        ExtReferenceField(
-            'DiseaseOntology',
-            allowed_types=('DiseaseOntology',),
-            relationship='SampleOntology',
-            referenceClass=HoldingReference,
-            widget=bika_ReferenceWidget(
-                label=_("Disease Ontology"),
-                catalog_name='bika_catalog',
-                visible={'edit': 'visible',
-                         'view': 'visible',
-                         'header_table': 'visible',
-                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
-                         'sample_due': {'view': 'visible', 'edit': 'visible'},
-                         'sampled': {'view': 'visible', 'edit': 'invisible'},
-                         'sample_received': {'view': 'visible', 'edit': 'visible'},
-                         'expired': {'view': 'visible', 'edit': 'invisible'},
-                         'disposed': {'view': 'visible', 'edit': 'invisible'},
-                         },
-                size=30,
-                showOn=True,
-                render_own_label=True,
-                description=_("Select disease ontology of the sample."),
-            )
-        ),
-        ExtBooleanField(
-            'AllowSharing',
-            default=False,
-            # write_permission = ManageClients,
-            widget=BooleanWidget(
-                label=_("Allow Sharing"),
-                description=_("Check to allow researchers to share sample freely."),
-                visible={'edit': 'visible',
-                         'view': 'visible',
-                         'header_table': 'visible',
-                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
-                         'sample_due': {'view': 'visible', 'edit': 'visible'},
-                         'sample_received': {'view': 'visible', 'edit': 'visible'},
-                         },
-                render_own_label=True,
-            ),
-        ),
+
         ExtBooleanField(
             'WillReturnFromShipment',
             default=False,
@@ -99,37 +59,13 @@ class SampleSchemaExtender(object):
             widget=BooleanWidget(
                 label=_("Will Return From Shipment"),
                 description=_("Indicates if sample will return if shipped."),
-                visible={'edit': 'visible',
-                         'view': 'visible',
-                         'header_table': 'visible',
-                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                visible={'edit': 'invisible',
+                         'view': 'invisible',
+                         'header_table': 'invisible',
+                         'sample_registered': {'view': 'invisible', 'edit': 'invisible'},
                          },
                 render_own_label=True,
             ),
-        ),
-        ExtReferenceField(
-            'Donor',
-            required=0,
-            allowed_types=('SampleDonor',),
-            relationship='SampleDonor',
-            referenceClass=HoldingReference,
-            widget=bika_ReferenceWidget(
-                label=_("Sample Donor"),
-                catalog_name='bika_catalog',
-                visible={'edit': 'visible',
-                         'view': 'visible',
-                         'header_table': 'visible',
-                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
-                         'sample_due': {'view': 'visible', 'edit': 'visible'},
-                         'sampled': {'view': 'visible', 'edit': 'invisible'},
-                         'sample_received': {'view': 'visible', 'edit': 'visible'},
-                         'expired': {'view': 'visible', 'edit': 'invisible'},
-                         'disposed': {'view': 'visible', 'edit': 'invisible'},
-                         },
-                size=30,
-                showOn=True,
-                description=_("Select the sample donor."),
-            )
         ),
         ExtReferenceField(
             'Kit',
@@ -240,6 +176,20 @@ class SampleSchemaExtender(object):
             )
         ),
         ExtStringField(
+            'BabyNo',
+            mode="rw",
+            read_permission=permissions.View,
+            write_permission=permissions.ModifyPortalContent,
+            vocabulary='getBabyNumber',
+            widget=SelectionWidget(
+                format='select',
+                label=_("Baby No. (if applicable)"),
+                description=_("Number of the baby if the woman has at least one."),
+                visible={'edit': 'visible', 'view': 'visible'},
+                # render_own_label=True,
+            )
+        ),
+        ExtStringField(
             'Barcode',
             required=0,
             searchable=True,
@@ -282,7 +232,7 @@ class SampleSchemaExtender(object):
         ),
         ExtStringField(
             'Unit',
-            default="ml",
+            default="ul",
             widget=StringWidget(
                 label=_("Unit"),
                 visible={'edit': 'visible',
@@ -363,44 +313,6 @@ class SampleSchemaExtender(object):
                 visible=False,
             ),
         ),
-        ExtStringField(
-            'AnatomicalSiteTerm',
-            searchable=True,
-            widget=StringWidget(
-                label=_("Anatomical site term"),
-                description=_('The ICD-O-3 topography code for describing the anatomical source of '
-                              'the sampled material'),
-                visible={'edit': 'visible',
-                         'view': 'visible',
-                         'header_table': 'visible',
-                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
-                         'sample_due': {'view': 'visible', 'edit': 'visible'},
-                         'sampled': {'view': 'visible', 'edit': 'invisible'},
-                         'sample_received': {'view': 'visible', 'edit': 'visible'},
-                         'expired': {'view': 'visible', 'edit': 'invisible'},
-                         'disposed': {'view': 'visible', 'edit': 'invisible'},
-                         },
-                render_own_label=True,
-            )
-        ),
-        ExtStringField(
-            'AnatomicalSiteDescription',
-            widget=TextAreaWidget(
-                label=_("Anatomical site description"),
-                description=_('The anatomical position of the body where the solid sample was taken from'),
-                visible={'edit': 'visible',
-                         'view': 'visible',
-                         'header_table': 'visible',
-                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
-                         'sample_due': {'view': 'visible', 'edit': 'visible'},
-                         'sampled': {'view': 'visible', 'edit': 'invisible'},
-                         'sample_received': {'view': 'visible', 'edit': 'visible'},
-                         'expired': {'view': 'visible', 'edit': 'invisible'},
-                         'disposed': {'view': 'visible', 'edit': 'invisible'},
-                         },
-                render_own_label=True,
-            )
-        ),
     ]
 
     def __init__(self, context):
@@ -452,6 +364,9 @@ class Sample(BaseSample):
         except:
             return 0
         return last_ar_number
+
+    def getBabyNumber(self):
+        return ['None (0)', 'One (1)', 'Two (2)', 'Three (3)']
 
     def update_box_status(self, location):
         box = location.aq_parent

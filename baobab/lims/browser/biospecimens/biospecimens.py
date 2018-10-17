@@ -315,7 +315,8 @@ class BiospecimensView(BikaListingView):
                 continue
             items[x]['Type'] = obj.getSampleType() and obj.getSampleType().Title() or ''
             items[x]['Volume'] = obj.getField('Volume').get(obj)
-            items[x]['Unit'] = VOLUME_UNITS[0]['ResultText']
+            # items[x]['Unit'] = VOLUME_UNITS[0]['ResultText']
+            items[x]['Unit'] = obj.getField('Unit').get(obj)
             items[x]['SubjectID'] = obj.getField('SubjectID').get(obj)
             kit = obj.getField('Kit').get(obj)
             project = obj.getField('Project').get(obj)

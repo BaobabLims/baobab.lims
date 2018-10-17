@@ -74,25 +74,12 @@ class SampleView(BrowserView):
                        kit.absolute_url(),
                        kit.Title()) or None
 
-        disease_ontology = context.getField('DiseaseOntology').get(context)
-        self.disease_ontology = disease_ontology and "<a href='%s'>%s</a>" % (
-            disease_ontology.absolute_url(),
-            disease_ontology.Title()) or None
-
-        donor = context.getField('Donor').get(context)
-        self.donor = donor and "<a href='%s'>%s</a>" % (
-            donor.absolute_url(),
-            donor.getSampleDonorID()) or None
-
         location = context.getField('StorageLocation').get(context)
         self.location = location and "<a href='%s'>%s</a>" % (
                                  location.absolute_url(),
                                  location.Title()) or None
 
         self.sampling_date = context.getSamplingDate()
-
-        sharing = context.getField('AllowSharing').get(context)
-        self.sharing = sharing and "Yes" or "No"
 
         self.subjectID = context.getField('SubjectID').get(context)
         self.barcode = context.getField('Barcode').get(context)
@@ -119,7 +106,7 @@ class EditView(BrowserView):
                 sample = context
 
             sample.getField('Project').set(sample, request.form['Project_uid'])
-            sample.getField('AllowSharing').set(sample, request.form['AllowSharing'])
+            # sample.getField('AllowSharing').set(sample, request.form['AllowSharing'])
             sample.getField('Kit').set(sample, request.form['Kit_uid'])
             sample.getField('StorageLocation').set(sample, request.form['StorageLocation_uid'])
             sample.getField('SubjectID').set(sample, request.form['SubjectID'])
