@@ -7,6 +7,7 @@ from Products.CMFCore import permissions
 from bika.lims.fields import *
 from bika.lims.interfaces import ISample
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
+from bika.lims.browser.widgets import SelectionWidget as BikaSelectionWidget
 from bika.lims.browser.widgets import DateTimeWidget
 from bika.lims.content.sample import Sample as BaseSample
 from bika.lims.workflow import doActionFor
@@ -219,8 +220,12 @@ class SampleSchemaExtender(object):
         ExtStringField(
             'Unit',
             default="ul",
-            widget=StringWidget(
+            vocabulary='getUnits',
+            # widget=SelectionWidget(
+            widget=BikaSelectionWidget(
+                format='select',
                 label=_("Unit"),
+                description=_('The unit for Volume'),
                 visible={'edit': 'visible',
                          'view': 'visible',
                          'header_table': 'visible',
@@ -232,8 +237,27 @@ class SampleSchemaExtender(object):
                          'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
                 render_own_label=True,
+                showOn=True,
             )
         ),
+        # ExtStringField(
+        #     'Unit',
+        #     default="ul",
+        #     widget=StringWidget(
+        #         label=_("Unit"),
+        #         visible={'edit': 'visible',
+        #                  'view': 'visible',
+        #                  'header_table': 'visible',
+        #                  'sample_registered': {'view': 'visible', 'edit': 'visible'},
+        #                  'sample_due': {'view': 'visible', 'edit': 'visible'},
+        #                  'sampled': {'view': 'visible', 'edit': 'invisible'},
+        #                  'sample_received': {'view': 'visible', 'edit': 'visible'},
+        #                  'expired': {'view': 'visible', 'edit': 'invisible'},
+        #                  'disposed': {'view': 'visible', 'edit': 'invisible'},
+        #                  },
+        #         render_own_label=True,
+        #     )
+        # ),
         ExtReferenceField(
             'LinkedSample',
             vocabulary_display_path_bound=sys.maxsize,
@@ -340,6 +364,9 @@ class Sample(BaseSample):
             return self.getField('Project').get(self).UID()
         else:
             return self.aq_parent.UID()
+
+    def getUnits(self):
+        return ['ul', 'ml', 'mg', 'g']
 
     def getLastARNumber(self):
         ARs = self.getBackReferences("AnalysisRequestSample")
