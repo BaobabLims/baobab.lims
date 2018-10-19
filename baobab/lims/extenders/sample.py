@@ -157,6 +157,14 @@ class SampleSchemaExtender(object):
                 catalog_name='portal_catalog',
             )
         ),
+        ExtReferenceField(
+            'SampleCondition',
+            allowed_types=('SampleCondition',),
+            relationship='SampleSampleCondition',
+            widget=bika_ReferenceWidget(
+                visible=False,
+            ),
+        ),
         ExtStringField(
             'SubjectID',
             searchable=True,

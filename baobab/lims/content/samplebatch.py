@@ -43,6 +43,7 @@ Project = ReferenceField(
 
 Subject_ID = StringField(
     'SubjectID',
+    required=True,
     searchable=True,
     widget=StringWidget(
         label=_("Subject ID"),
@@ -157,6 +158,7 @@ Location = ReferenceField(
 DateCreation = DateTimeField(
     'DateCreated',
     mode="rw",
+    required=True,
     read_permission=permissions.View,
     write_permission=permissions.ModifyPortalContent,
     widget=DateTimeWidget(

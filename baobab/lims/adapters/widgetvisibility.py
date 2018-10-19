@@ -98,8 +98,9 @@ class SampleFieldWidgetVisibility(object):
             return 'invisible'
 
         if field_name in self.show_fields:
-            field.widget.visible['sample_received'] = {'view': 'visible', 'edit': 'visible'}
-            field.widget.visible['sample_due'] = {'view': 'visible', 'edit': 'visible'}
+            if not isinstance(field.widget.visible, bool):
+                field.widget.visible['sample_received'] = {'view': 'visible', 'edit': 'visible'}
+                field.widget.visible['sample_due'] = {'view': 'visible', 'edit': 'visible'}
 
         return state
 
