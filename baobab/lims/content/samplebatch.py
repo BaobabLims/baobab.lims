@@ -178,6 +178,7 @@ schema = BikaSchema.copy() + Schema((
 ))
 
 schema['title'].widget.visible = {'edit': 'visible', 'view': 'visible'}
+schema['title'].default = 'Temporary title'
 schema['description'].widget.visible = {'edit': 'visible', 'view': 'visible'}
 schema['description'].schemata = 'default'
 
@@ -191,7 +192,8 @@ class SampleBatch(BaseContent):
     _at_rename_after_creation = True
 
     def _renameAfterCreation(self, check_auto_id=False):
-        from bika.lims.idserver import renameAfterCreation
+        from baobab.lims.idserver import renameAfterCreation
         renameAfterCreation(self)
+
 
 registerType(SampleBatch, PROJECTNAME)
