@@ -3,6 +3,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from bika.lims.workflow import doActionFor
 from bika.lims.browser import BrowserView
 from baobab.lims import bikaMessageFactory as _
+from baobab.lims.interfaces import IProject
 
 
 class UpdateBoxes(BrowserView):
@@ -99,13 +100,22 @@ class EditView(BrowserView):
             from Products.CMFPlone.utils import _createObjectByType
             from bika.lims.utils import tmpID
             pc = getToolByName(context, "portal_catalog")
-            folder = pc(portal_type="Project", UID=request.form['Project_uid'])[0].getObject()
+            parent = context.aq_parent
+
+            if IProject.providedBy(parent):
+                folder = parent
+            else:
+                folder = pc(portal_type="Project", UID=request.form['Project_uid'])[0].getObject()
+
             if not folder.hasObject(context.getId()):
                 sample = _createObjectByType('Sample', folder, tmpID())
             else:
                 sample = context
 
-            sample.getField('Project').set(sample, request.form['Project_uid'])
+            if IProject.providedBy(parent):
+                sample.getField('Project').set(sample, parent)
+            else:
+                sample.getField('Project').set(sample, request.form['Project_uid'])
             # sample.getField('AllowSharing').set(sample, request.form['AllowSharing'])
             sample.getField('Kit').set(sample, request.form['Kit_uid'])
             sample.getField('StorageLocation').set(sample, request.form['StorageLocation_uid'])
