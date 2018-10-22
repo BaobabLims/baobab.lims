@@ -96,6 +96,7 @@ class BikaCustomGenerator:
 
         addIndex(bc, 'getParentUID', 'FieldIndex')
         addIndex(bc, 'getProjectUID', 'FieldIndex')
+        addIndex(bc, 'getSubjectID', 'FieldIndex')
 
         # _______________________________#
         #      BIKA_SETUP_CATALOG        #

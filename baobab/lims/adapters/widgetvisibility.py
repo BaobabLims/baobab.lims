@@ -18,6 +18,9 @@ from zope.interface import implements
 
 from bika.lims.interfaces import IATWidgetVisibility
 
+from baobab.lims.interfaces import IProject
+
+
 class ARFieldWidgetVisibility(object):
     """Forces a set of AnalysisRequest fields to be invisible depending on
     some arbitrary condition.
@@ -50,11 +53,16 @@ class ARFieldWidgetVisibility(object):
                     'review_state': ['sample_received'],
                     'getProjectUID': self.context.aq_parent.UID()
                 }
+            elif fieldName == 'Client':
+                parent = self.context.aq_parent
+                if IProject.providedBy(parent):
+                    return 'hidden'
         if fieldName in self.hidden_fields:
             field.required = False
             return 'invisible'
 
         return state
+
 
 class SampleFieldWidgetVisibility(object):
     """Forces a set of Sample fields to be invisible depending on
@@ -86,6 +94,7 @@ class SampleFieldWidgetVisibility(object):
             'SampleType',
             'SampleCondition'
         ]
+
     def __call__(self, context, mode, field, default):
         state = default if default else 'hidden'
         field_name = field.getName()
@@ -97,9 +106,16 @@ class SampleFieldWidgetVisibility(object):
             field.required = False
             return 'invisible'
 
+        if field_name == "Project":
+            parent = self.context.aq_parent
+            if IProject.providedBy(parent):
+                return 'hidden'
+
+
         if field_name in self.show_fields:
-            field.widget.visible['sample_received'] = {'view': 'visible', 'edit': 'visible'}
-            field.widget.visible['sample_due'] = {'view': 'visible', 'edit': 'visible'}
+            if isinstance(field.widget.visible, dict):
+                field.widget.visible['sample_received'] = {'view': 'visible', 'edit': 'visible'}
+                field.widget.visible['sample_due'] = {'view': 'visible', 'edit': 'visible'}
 
         return state
 

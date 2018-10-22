@@ -1,5 +1,4 @@
-from zope.component import getUtility
-from bika.lims.numbergenerator import INumberGenerator
+from Products.CMFCore.utils import getToolByName
 
 from bika.lims.idserver import generateUniqueId as generate
 
@@ -16,6 +15,22 @@ def generateUniqueId(context):
             return barcode_value
         else:
             return generate(context)
+
+    elif context.portal_type == "SampleBatch":
+        subject_id = context.getSubjectID()
+        date_created = context.getDateCreated().strftime('%g%m%d')
+        bc = getToolByName(context, 'bika_catalog')
+        brains = bc(portal_type="SampleBatch", getSubjectID=subject_id)
+        suffix = '1'
+        prefix = subject_id + '-' + date_created
+        suffixes = [int(brain.id.split('-')[-1]) for brain in brains if brain.id.startswith(prefix)]
+        if suffixes:
+            suffix = str(max(suffixes) + 1)
+
+        id = prefix + '-' + suffix
+        context.title = prefix + '-' + suffix
+
+        return id
 
     # Analysis Request IDs
     elif context.portal_type == "AnalysisRequest":
