@@ -4,6 +4,7 @@ from archetypes.schemaextender.interfaces import ISchemaModifier
 from zope.component import adapts
 from Products.CMFCore import permissions
 
+from bika.lims.browser.fields import DateTimeField
 from bika.lims.fields import *
 from bika.lims.interfaces import ISample
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
@@ -333,7 +334,7 @@ class SampleSchemaExtender(object):
             widget=ComputedWidget(
                 visible=False,
             ),
-        ),
+        )
     ]
 
     def __init__(self, context):
@@ -358,6 +359,7 @@ class SampleSchemaModifier(object):
         self.context = context
 
     def fiddle(self, schema):
+        schema['SamplingDate'].widget.description = "Define when the samples are collected."
         return schema
 
 
