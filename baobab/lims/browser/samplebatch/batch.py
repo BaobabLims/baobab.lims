@@ -8,6 +8,7 @@ from bika.lims.browser import BrowserView
 from baobab.lims.browser.project.util import SampleGeneration
 from baobab.lims.browser.project import get_first_sampletype
 from baobab.lims.browser.biospecimens.biospecimens import BiospecimensView
+from baobab.lims import bikaMessageFactory as _
 
 
 class BatchBiospecimensView(BiospecimensView):
@@ -41,6 +42,43 @@ class BatchBiospecimensView(BiospecimensView):
                     out_items.append(item)
         return out_items
 
+class BatchView(BrowserView):
+    """The view of a single sample
+    """
+    template = ViewPageTemplateFile("templates/batch_view.pt")
+    title = _("Biospecimen Batch View")
+
+    def __call__(self):
+        context = self.context
+        self.absolute_url = context.absolute_url()
+
+        # __Disable the add new menu item__ #
+        context.setLocallyAllowedTypes(())
+
+        # __Collect general data__ #
+        self.id = context.getId()
+        self.title = context.Title()
+        self.icon = self.portal_url + "/++resource++baobab.lims.images/" \
+                                    + "biospecimen_big.png"
+
+        self.batchID = context.getBatchId()
+
+        self.subjectID = context.getField('SubjectID').get(context)
+        self.project = "<a href='%s'>%s</a>" % (
+            context.aq_parent.absolute_url(),
+            context.aq_parent.Title()
+        )
+
+        self.numberOfBiospecimen = context.getQuantity()
+        location = context.getField('StorageLocation').get(context)
+        self.location = location and "<a href='%s'>%s</a>" % (
+                                 location.absolute_url(),
+                                 location.Title()) or None
+
+        self.creation_date = context.getDateCreated().strftime("%Y/%m/%d %H:%M")
+        self.contrifugation_date = context.getCfgDateTime().strftime("%Y/%m/%d %H:%M")
+
+        return self.template()
 
 class EditView(BrowserView):
 
