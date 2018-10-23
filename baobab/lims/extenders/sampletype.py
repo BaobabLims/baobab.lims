@@ -4,9 +4,10 @@ from zope.component import adapts
 from Products.Archetypes.references import HoldingReference
 from Products.Archetypes.public import *
 
-from bika.lims.fields import ExtReferenceField
+from bika.lims.fields import ExtReferenceField, ExtBooleanField
 from bika.lims.interfaces import ISampleType
 from bika.lims.browser.widgets.referencewidget import ReferenceWidget as bika_ReferenceWidget
+from bika.lims.browser.widgets import SelectionWidget as BikaSelectionWidget
 
 from baobab.lims import bikaMessageFactory as _
 from baobab.lims.browser.widgets import ProjectAnalysesWidget
@@ -72,6 +73,14 @@ class SampleTypeSchemaExtender(object):
                               "type can be collected.  If no sample points are "
                               "selected, then all sample points are available."),
             ),
+        ),
+        ExtBooleanField(
+            'HasBabyNumber',
+            default=False,
+            widget=BooleanWidget(
+                label=_("Has Baby Number"),
+                description=_('Sample Type that has Baby No.'),
+            )
         ),
     ]
 
