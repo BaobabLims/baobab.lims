@@ -11,6 +11,7 @@ from bika.lims.browser.widgets.referencewidget import ReferenceWidget as bika_Re
 from baobab.lims import bikaMessageFactory as _
 from baobab.lims.browser.widgets import ProjectAnalysesWidget
 
+
 class SampleTypeSchemaExtender(object):
     adapts(ISampleType)
     implements(IOrderableSchemaExtender)
@@ -23,8 +24,8 @@ class SampleTypeSchemaExtender(object):
             allowed_types=('AnalysisService',),
             relationship='SampleTypeAnalysisService',
             widget=ProjectAnalysesWidget(
-               label=_("Sample Analyses"),
-               description=_("The analyses included in this sample type, grouped per category"),
+                label=_("Sample Analyses"),
+                description=_("The analyses included in this sample type, grouped per category"),
             )
         ),
         ExtReferenceField(
@@ -68,8 +69,8 @@ class SampleTypeSchemaExtender(object):
                 label=_("Sample Points"),
                 visible=False,
                 description=_("The list of sample points from which this sample "
-                             "type can be collected.  If no sample points are "
-                             "selected, then all sample points are available."),
+                              "type can be collected.  If no sample points are "
+                              "selected, then all sample points are available."),
             ),
         ),
     ]
