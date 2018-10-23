@@ -28,7 +28,11 @@ window.baobab.lims.controllers =  {
     ".portaltype-sampleshipment":
         ['BaobabSampleShipmentView'],
     ".portaltype-sample":
-        ['BaobabSampleView']
+        ['BaobabSampleView'],
+    ".portaltype-biospecimens":
+        ['BaobabBiospecimensView'],
+    ".portaltype-samplebatch":
+        ['BaobabBiospecimensView']
 };
 
 /**
