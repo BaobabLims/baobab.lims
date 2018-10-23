@@ -43,7 +43,7 @@ class BatchesView(BikaListingView):
                 'toggle': True,
             },
             'ContrifugationDate': {
-                'title': _('Contrifugation Date'),
+                'title': _('Centrifugation/Formalin Start Time'),
                 'toggle': True,
             }
         }
