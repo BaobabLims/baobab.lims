@@ -19,3 +19,11 @@ div.err-vol{
 #archetypes-fieldname-Kits select{
     width: 150px;
 }
+
+.FrozenTime {
+  width: 200px;
+}
+
+.FrozenTime input {
+  width: 200px;
+}
