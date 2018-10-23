@@ -251,6 +251,22 @@ class SampleSchemaExtender(object):
                 showOn=True,
             )
         ),
+        ExtStringField(
+            'BabyNumber',
+            default="",
+            vocabulary='getBabyNumber',
+            # widget=SelectionWidget(
+            widget=BikaSelectionWidget(
+                format='select',
+                label=_("Baby No. (if applicable)"),
+                description=_('Number of the baby if woman has atleast one.'),
+                visible={'edit': 'visible',
+                         'view': 'visible',
+                         },
+                render_own_label=True,
+                showOn=True,
+            )
+        ),
         # ExtStringField(
         #     'Unit',
         #     default="ul",
@@ -430,6 +446,9 @@ class Sample(BaseSample):
 
             self.getField('ReservedLocation').set(self, None)
             self.reindexObject()
+
+    def getBabyNumber(self):
+        return ['1', '2', '3']
 
 from Products.Archetypes import atapi
 from bika.lims.config import PROJECTNAME
