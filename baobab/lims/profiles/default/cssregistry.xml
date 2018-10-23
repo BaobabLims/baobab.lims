@@ -22,7 +22,8 @@
 <stylesheet
     id="++resource++baobab.lims.css/enlarge_frozen_time.css"
     expression="python:here.portal_type in [
-    'Biospecimens']"
+    'Biospecimens',
+    'SampleBatch']"
     media="screen"
     rel="stylesheet"
     rendering="link"
