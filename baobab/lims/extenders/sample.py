@@ -401,7 +401,7 @@ class Sample(BaseSample):
             return self.aq_parent.UID()
 
     def getUnits(self):
-        return ['ul', 'ml', 'mg', 'g']
+        return ['ul', 'ml', 'mg', 'g', 'other']
 
     def getLastARNumber(self):
         ARs = self.getBackReferences("AnalysisRequestSample")

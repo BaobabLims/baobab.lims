@@ -180,6 +180,7 @@ class Biospecimen(ATFolder):
                  for c in bsc(portal_type='StorageUnit',
                               inactive_state='active')]
         items.sort(lambda x, y: cmp(x[1], y[1]))
+
         return DisplayList(items)
 
 schemata.finalizeATCTSchema(schema, folderish = True, moveDiscussion = False)
