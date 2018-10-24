@@ -64,6 +64,7 @@ class SampleGeneration:
                     for i, position in enumerate(free_positions):
                         items[i].setStorageLocation(position)
                         wf.doActionFor(position, 'reserve')
+                        items.remove(items[i])
 
     def get_biospecimen_storages(self):
         """Take a list of UIDs from the form, and resolve to a list of Storages.

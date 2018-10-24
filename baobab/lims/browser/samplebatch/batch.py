@@ -71,10 +71,12 @@ class BatchView(BrowserView):
         )
 
         self.numberOfBiospecimen = context.getQuantity()
-        location = context.getField('StorageLocation').get(context)
-        self.location = location and "<a href='%s'>%s</a>" % (
+        locations = context.getField('StorageLocation').get(context)
+        location_paths = [location and "<a href='%s'>%s</a>" % (
                                  location.absolute_url(),
-                                 location.Title()) or None
+                                 location.getHierarchy()) or None for location in locations]
+
+        self.location = ','.join(location_paths)
 
         self.creation_date = context.getDateCreated().strftime("%Y/%m/%d %H:%M")
         self.contrifugation_date = context.getCfgDateTime().strftime("%Y/%m/%d %H:%M")
