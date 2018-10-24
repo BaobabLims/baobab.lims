@@ -20,6 +20,16 @@
     insert-before="*"/>
 
 <stylesheet
+    id="++resource++baobab.lims.css/enlarge_frozen_time.css"
+    expression="python:here.portal_type in [
+    'Biospecimens',
+    'SampleBatch']"
+    media="screen"
+    rel="stylesheet"
+    rendering="link"
+    insert-before="*"/>
+
+<stylesheet
     id="++resource++baobab.lims.css/hide_sanbi_contentmenu.css"
     expression="python:here.portal_type in [
     'Project',

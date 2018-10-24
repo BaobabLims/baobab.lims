@@ -22,7 +22,9 @@ function BaobabSampleView() {
             }).done(function (data) {
                 console.log(data);
             })
+
         })
+
 
     };
 

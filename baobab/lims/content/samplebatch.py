@@ -173,6 +173,20 @@ DateCreation = DateTimeField(
     )
 )
 
+CfgDateTime = DateTimeField(
+    'CfgDateTime',
+    mode="rw",
+    required=True,
+    read_permission=permissions.View,
+    write_permission=permissions.ModifyPortalContent,
+    widget=DateTimeWidget(
+        label=_("Centrifugation/Formalin Start Time"),
+        description=_("If applicable, define when centrifugation of the sample starts OR when is the sample put in formalin."),
+        show_time=True,
+        visible={'edit': 'visible', 'view': 'visible'}
+    )
+)
+
 schema = BikaSchema.copy() + Schema((
     BatchId,
     Project,
@@ -180,7 +194,8 @@ schema = BikaSchema.copy() + Schema((
     ParentBiospecimen,
     NumberBiospecimens,
     Location,
-    DateCreation
+    DateCreation,
+    CfgDateTime
 ))
 
 schema['title'].widget.visible = {'edit': 'visible', 'view': 'visible'}

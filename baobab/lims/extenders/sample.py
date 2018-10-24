@@ -4,6 +4,7 @@ from archetypes.schemaextender.interfaces import ISchemaModifier
 from zope.component import adapts
 from Products.CMFCore import permissions
 
+from bika.lims.browser.fields import DateTimeField
 from bika.lims.fields import *
 from bika.lims.interfaces import ISample
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
@@ -334,6 +335,28 @@ class SampleSchemaExtender(object):
                 visible=False,
             ),
         ),
+        ExtDateTimeField(
+            'FrozenTime',
+            mode="rw",
+            read_permission=permissions.View,
+            write_permission=permissions.ModifyPortalContent,
+            widget=DateTimeWidget(
+                label=_("Frozen Time"),
+                description=_("Define when this aliquot was frozen."),
+                show_time=True,
+                visible={'edit': 'visible',
+                         'view': 'visible',
+                         'header_table': 'invisible',
+                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         'sample_due': {'view': 'visible', 'edit': 'visible'},
+                         'sampled': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'visible'},
+                         'expired': {'view': 'visible', 'edit': 'invisible'},
+                         'disposed': {'view': 'visible', 'edit': 'invisible'},
+                         },
+                render_own_label=True,
+            ),
+        ),
     ]
 
     def __init__(self, context):
@@ -358,6 +381,7 @@ class SampleSchemaModifier(object):
         self.context = context
 
     def fiddle(self, schema):
+        schema['SamplingDate'].widget.description = "Define when the samples are collected."
         return schema
 
 
@@ -377,7 +401,7 @@ class Sample(BaseSample):
             return self.aq_parent.UID()
 
     def getUnits(self):
-        return ['ul', 'ml', 'mg', 'g']
+        return ['ul', 'ml', 'mg', 'g', 'other']
 
     def getLastARNumber(self):
         ARs = self.getBackReferences("AnalysisRequestSample")

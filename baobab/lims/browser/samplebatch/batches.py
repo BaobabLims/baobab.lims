@@ -25,6 +25,7 @@ class BatchesView(BikaListingView):
         self.title = self.context.translate(_("Biospecimen Batches"))
         self.icon = self.portal_url + \
                     "/++resource++baobab.lims.images/biospectype_big.png"
+        #self.contrifugation_date = context.getCfgDateTime().strftime("%Y/%m/%d %H:%M")
         self.description = ''
         self.show_sort_column = False
         self.show_select_row = False
@@ -40,6 +41,10 @@ class BatchesView(BikaListingView):
             'BatchId': {
                 'title': _('Batch ID'),
                 'toggle': True,
+            },
+            'ContrifugationDate': {
+                'title': _('Centrifugation/Formalin Start Time'),
+                'toggle': True,
             }
         }
 
@@ -51,7 +56,8 @@ class BatchesView(BikaListingView):
                 'transitions': [],
                 'columns': [
                     'Title',
-                    'BatchId'
+                    'BatchId',
+                    'ContrifugationDate'
                 ]
              },
 
@@ -64,7 +70,8 @@ class BatchesView(BikaListingView):
                 },
                 'columns': [
                     'Title',
-                    'BatchId'
+                    'BatchId',
+                    'ContrifugationDate'
                 ]
             },
         ]
@@ -92,5 +99,6 @@ class BatchesView(BikaListingView):
             item['BatchId'] = obj.getBatchId()
             item['replace']['Title'] = \
                 "<a href='%s'>%s</a>" % (item['url'], item['Title'])
+            item['ContrifugationDate'] = obj.getCfgDateTime().strftime("%Y/%m/%d %H:%M")
             ret.append(item)
         return ret
