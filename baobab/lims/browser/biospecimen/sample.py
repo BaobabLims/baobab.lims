@@ -85,6 +85,9 @@ class SampleView(BrowserView):
         self.subjectID = context.getField('SubjectID').get(context)
         self.barcode = context.getField('Barcode').get(context)
         self.volume = context.getField('Volume').get(context) + " " + context.getField('Unit').get(context)
+        self.babyNumber = context.getField('BabyNumber').get(context)
+        if self.babyNumber == '0':
+            self.babyNumber = None
 
         return self.template()
 

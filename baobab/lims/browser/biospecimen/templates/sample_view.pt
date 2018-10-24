@@ -85,6 +85,12 @@
             <td tal:content="view/volume" style="padding-bottom: .5em;border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
+        <tr tal:condition="view/babyNumber">
+            <th i18n:translate="" style="padding-bottom: .2em;border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Baby No. </th>
+            <td tal:content="view/babyNumber" style="padding-bottom: .5em;border: 1px solid #cecfd5;
+                                                       padding: 10px 15px;"></td>
+        </tr>
         </tbody>
     </table>
 
