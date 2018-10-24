@@ -253,7 +253,7 @@ class SampleSchemaExtender(object):
         ),
         ExtStringField(
             'BabyNumber',
-            default="",
+            default="0",
             vocabulary='getBabyNumber',
             # widget=SelectionWidget(
             widget=BikaSelectionWidget(
@@ -448,7 +448,7 @@ class Sample(BaseSample):
             self.reindexObject()
 
     def getBabyNumber(self):
-        return ['1', '2', '3']
+        return ['0','1', '2', '3']
 
 from Products.Archetypes import atapi
 from bika.lims.config import PROJECTNAME
