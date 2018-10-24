@@ -129,31 +129,35 @@ NumberBiospecimens = IntegerField('Quantity',
 # )
 
 # TODO: THE LOCATION MUST BE A MULTIVALUE. A USE SHOULD BE ABLE TO SELECT MORE THAN ONE LOCATION.
+
 Location = ReferenceField(
-    'StorageLocation',
-    #required=True,
-    allowed_types=('ManagedStorage',),
-    relationship='ItemStorageLocation',
-    widget=bika_ReferenceWidget(
-        label=_("Storage Location"),
-        description=_("Location where biospecimens will be kept."),
-        size=40,
-        visible={'edit': 'visible', 'view': 'visible'},
-        catalog_name='portal_catalog',
-        showOn=True,
-        base_query={
-            'inactive_state': 'active',
-            'review_state': 'available',
-            'object_provides': ISampleStorageLocation.__identifier__
-        },
-        colModel=[
-            {'columnName': 'UID', 'hidden': True},
-            {'columnName': 'Title', 'width': '10', 'label': _('Title')},
-            {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "80"},
-            {"columnName": "FreePositions", "align": "left", "label": "Free", "width": "10"},
-        ],
+        'StorageLocation',
+        multiValued=1,
+        allowed_types=('ManagedStorage'),
+        referenceClass=HoldingReference,
+        relationship='SampleShipmentSample',
+        mode="rw",
+        widget=bika_ReferenceWidget(
+            label=_("Storage Location"),
+            description=_("Location where biospecimens will be kept."),
+            size=40,
+            base_query={
+                'inactive_state': 'active',
+                'review_state': 'available',
+                'object_provides': ISampleStorageLocation.__identifier__
+            },
+            visible={'edit': 'visible', 'view': 'visible'},
+            catalog_name='portal_catalog',
+            showOn=True,
+            colModel=[
+                {'columnName': 'UID', 'hidden': True},
+                {'columnName': 'Title', 'width': '10', 'label': _('Title')},
+                {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "80"},
+                {"columnName": "FreePositions", "align": "left", "label": "Free", "width": "10"},
+            ],
+
+        )
     )
-)
 
 DateCreation = DateTimeField(
     'DateCreated',
