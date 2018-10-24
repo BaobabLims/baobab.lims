@@ -82,6 +82,9 @@ class SampleView(BrowserView):
 
         self.sampling_date = context.getSamplingDate()
 
+        # self.frozen_time = context.getFrozenTime()
+        self.frozen_time = context.getField('FrozenTime').get(context)
+
         self.subjectID = context.getField('SubjectID').get(context)
         self.barcode = context.getField('Barcode').get(context)
         self.volume = context.getField('Volume').get(context) + " " + context.getField('Unit').get(context)
