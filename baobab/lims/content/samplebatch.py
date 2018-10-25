@@ -7,6 +7,7 @@ from Products.CMFCore import permissions
 from bika.lims.content.bikaschema import BikaSchema
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from bika.lims.browser.widgets import DateTimeWidget
+from bika.lims.browser.widgets import SelectionWidget as BikaSelectionWidget
 
 from baobab.lims.config import PROJECTNAME
 from baobab.lims.interfaces import IBatch
@@ -23,6 +24,7 @@ BatchId = StringField(
         visible={'view': 'visible', 'edit': 'visible'}
     )
 )
+
 
 Project = ReferenceField(
     'Project',
@@ -169,6 +171,20 @@ DateCreation = DateTimeField(
     )
 )
 
+SerumColour = StringField(
+    'SerumColour',
+    read_permission=permissions.View,
+    write_permission=permissions.ModifyPortalContent,
+    vocabulary='getSerumColours',
+    widget=BikaSelectionWidget(
+        format='select',
+        label=_("Colour of Plasma or Serurm (If not normal)"),
+        description=_("If Plasma or Serum is not golden in colour and semi transparent, indicate the colour"),
+        visible={'edit': 'visible', 'view': 'visible'},
+        # render_own_label=True,
+    )
+)
+
 schema = BikaSchema.copy() + Schema((
     BatchId,
     Project,
@@ -176,7 +192,8 @@ schema = BikaSchema.copy() + Schema((
     ParentBiospecimen,
     NumberBiospecimens,
     Location,
-    DateCreation
+    DateCreation,
+    SerumColour,
 ))
 
 schema['title'].widget.visible = {'edit': 'visible', 'view': 'visible'}
@@ -197,5 +214,7 @@ class SampleBatch(BaseContent):
         from baobab.lims.idserver import renameAfterCreation
         renameAfterCreation(self)
 
+    def getSerumColours(self):
+        return ['', 'pink or red (haemolised)', 'opaque or white (lipaemic)']
 
 registerType(SampleBatch, PROJECTNAME)

@@ -40,6 +40,9 @@ class BatchesView(BikaListingView):
             'BatchId': {
                 'title': _('Batch ID'),
                 'toggle': True,
+            },
+            'SerumColour': {
+                'title': _('Colour'),
             }
         }
 
@@ -51,7 +54,8 @@ class BatchesView(BikaListingView):
                 'transitions': [],
                 'columns': [
                     'Title',
-                    'BatchId'
+                    'BatchId',
+                    'SerumColour'
                 ]
              },
 
@@ -64,7 +68,8 @@ class BatchesView(BikaListingView):
                 },
                 'columns': [
                     'Title',
-                    'BatchId'
+                    'BatchId',
+                    'SerumColour'
                 ]
             },
         ]
@@ -92,5 +97,9 @@ class BatchesView(BikaListingView):
             item['BatchId'] = obj.getBatchId()
             item['replace']['Title'] = \
                 "<a href='%s'>%s</a>" % (item['url'], item['Title'])
+            item['SerumColour'] = obj.getField('SerumColour').get(obj)
+            # item['SerumColour'] = obj.getSerumColour()
+            # print('-------------')
+            # print(obj.__dict__)
             ret.append(item)
         return ret
