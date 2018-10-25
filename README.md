@@ -1,6 +1,6 @@
 # Baobab LIMS
 
-An open source LIMS for human Biobanks.
+Baobab LIMS is an open-source laboratory information management system (LIMS) software that will ensure that researchers can track the lifecycle of a biospecimen in the laboratory from receipt to storage and reuse. This software ensures that sufficient metadata is captured.
 
 _Baobab_ is a common name given to nine tree species in different countries in the world, mostly in Africa.
 
@@ -8,29 +8,37 @@ Baobab LIMS written in Plone, a python framework known for its robustness, and i
 
 ## Try it out
 
+### Using PWD
+
 Click the _Try in PWD_ button below to get 4 hours to try Baobab LIMS in the cloud.
 
-- _[DockerHub](https://hub.docker.com/) account needed._
+**[DockerHub](https://hub.docker.com/) account needed.**
 
 **Use `admin:adminsecret` for `username:password`.**
 
 [![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](http://play-with-docker.com?stack=https://raw.githubusercontent.com/BaobabLims/baobab.lims/master/stack.yml)
 
-## Installation
-
 ### Using our [`docker`](https://docs.docker.com/install/) container:
 
-[![Docker Repository on Quay](https://quay.io/repository/sanbi-sa/baobab-lims/status "Docker Repository on Quay")](https://quay.io/repository/sanbi-sa/baobab-lims)
+[![Docker Repository on Quay](https://quay.io/repository/baobab-lims/baobab-lims/status "Docker Repository on Quay")](https://quay.io/repository/baobab-lims/baobab-lims)
+
+Kindly install docker using instructions from [here](https://www.docker.com/community-edition) and run the following command:
 
 ```sh
-docker run -d -p 8080:8080 quay.io/sanbi-sa/baobab-lims
+docker run -p 8080:8080 quay.io/baobab-lims/baobab-lims
 ```
+
+**Access Baobab LIMS on [localhost:8080](http://localhost:8080):**
+
+- Click on `Install a Baobab distribution`.
+- Check `Baobab LIMS` option, then click `Install` the form.
+- Authentication: `admin:adminsecret`
 
 ### Using [`docker-compose`](https://docs.docker.com/install/):
 
 - Baobab LIMS `docker-compose` [installation](https://github.com/BaobabLims/baobab.lims/blob/master/docker/README.md)
 
-### Standalone:
+## Standalone installation:
 
 - Baobab LIMS Standalone [installation](https://github.com/hocinebendou/baobab.lims/wiki/Installation)
 
