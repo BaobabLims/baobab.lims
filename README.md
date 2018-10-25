@@ -46,6 +46,7 @@ docker run -p 8080:8080 quay.io/baobab-lims/baobab-lims
 
 - [User Manual](https://b3abiobank.sanbi.ac.za/demo/manual.pdf)
 - [Github Wiki](https://github.com/hocinebendou/baobab.lims/wiki)
+- [Online Documentation](https://baobab-lims.readthedocs.io/en/latest/)
 
 ## Feedback and Support
 
