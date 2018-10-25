@@ -27,6 +27,15 @@
         source="1400"
         destination="1500"
         handler="baobab.lims.upgrade.to1500.upgrade"
-        sortkey="2"
+        sortkey="3"
+        profile="baobab.lims:default"/>
+
+    <genericsetup:upgradeStep
+        title="Precise Ugrade Script"
+        description="Added precise changes"
+        source="1500"
+        destination="1510"
+        handler="baobab.lims.upgrade.to1510.upgrade"
+        sortkey="4"
         profile="baobab.lims:default"/>
 </configure>
