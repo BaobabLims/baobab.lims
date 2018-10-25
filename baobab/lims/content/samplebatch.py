@@ -14,17 +14,49 @@ from baobab.lims.interfaces import IBatch
 from baobab.lims import bikaMessageFactory as _
 from baobab.lims.interfaces import ISampleStorageLocation
 
+from zope.component import queryUtility
+from Products.Archetypes.interfaces.vocabulary import IVocabulary
+from plone.registry.interfaces import IRegistry
+from Products.Archetypes.utils import DisplayList
+
 import sys
 
-BatchId = StringField(
-    'BatchId',
-    widget=StringWidget(
-        label=_('BatchId'),
-        description=_('Specify a batchId in order to differentiate this batch from others.'),
-        visible={'view': 'visible', 'edit': 'visible'}
+class BatchTypeVocabulary(object):
+    implements(IVocabulary)
+
+    def getDisplayList(self, context):
+
+        registry = queryUtility(IRegistry)
+        batch_types = []
+        if registry is not None:
+
+            for batch_type in registry.get('baobab.lims.samplebatch.batch_types', ()):
+                batch_types.append([batch_type, batch_type])
+
+        return DisplayList(batch_types)
+
+# BatchId = StringField(
+#     'BatchId',
+#     widget=StringWidget(
+#         label=_('BatchId'),
+#         description=_('Specify a batchId in order to differentiate this batch from others.'),
+#         visible={'view': 'visible', 'edit': 'visible'}
+#     )
+# )
+
+BatchType = StringField(
+    'BatchType',
+    read_permission=permissions.View,
+    write_permission=permissions.ModifyPortalContent,
+    vocabulary=BatchTypeVocabulary(),
+    widget=BikaSelectionWidget(
+        format='select',
+        label=_("Batch Type"),
+        description=_("Select a batch type in order to differentiate this batch from others."),
+        visible={'edit': 'visible', 'view': 'visible'},
+        # render_own_label=True,
     )
 )
-
 
 Project = ReferenceField(
     'Project',
@@ -98,37 +130,6 @@ NumberBiospecimens = IntegerField('Quantity',
         visible={'view': 'visible', 'edit': 'visible'}
     )
 )
-
-# SampleType = ReferenceField(
-#     'SampleType',
-#     # required=1,
-#     vocabulary_display_path_bound=sys.maxsize,
-#     allowed_types=('SampleType',),
-#     relationship='SampleSampleType',
-#     referenceClass=HoldingReference,
-#     mode="rw",
-#     read_permission=permissions.View,
-#     write_permission=permissions.ModifyPortalContent,
-#     widget=ReferenceWidget(
-#         label=_("Sample Type"),
-#         visible={'edit': 'visible', 'view': 'visible'},
-#         catalog_name='bika_setup_catalog',
-#         base_query={'inactive_state': 'active'},
-#         showOn=True,
-#     )
-# )
-#
-# Volume = FixedPointField(
-#     'Volume',
-#     # required=1,
-#     default="0.00",
-#     widget=DecimalWidget(
-#         label=_("Volume"),
-#         size=15,
-#         description=_("Volume of Biospecimens in the batch."),
-#         visible={'edit': 'visible', 'view': 'visible'},
-#     )
-# )
 
 # TODO: THE LOCATION MUST BE A MULTIVALUE. A USE SHOULD BE ABLE TO SELECT MORE THAN ONE LOCATION.
 
@@ -204,7 +205,7 @@ CfgDateTime = DateTimeField(
 )
 
 schema = BikaSchema.copy() + Schema((
-    BatchId,
+    BatchType,
     Project,
     Subject_ID,
     ParentBiospecimen,

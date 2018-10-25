@@ -62,7 +62,8 @@ class BatchView(BrowserView):
         self.icon = self.portal_url + "/++resource++baobab.lims.images/" \
                                     + "biospecimen_big.png"
 
-        self.batchID = context.getBatchId()
+        # self.batchID = context.getBatchId()
+        self.batchType = context.getField('BatchType').get(context)
 
         self.subjectID = context.getField('SubjectID').get(context)
         self.project = "<a href='%s'>%s</a>" % (

@@ -28,4 +28,28 @@
             <element>g</element>
         </value>
     </record>
+    <record name="baobab.lims.samplebatch.batch_types">
+        <field type="plone.registry.field.Tuple">
+            <title i18n:translate="">Batch Types</title>
+            <value_type type="plone.registry.field.TextLine" />
+        </field>
+        <value>
+            <element></element>
+            <element>Whole Blood</element>
+            <element>Whatman Card</element>
+            <element>Plasma</element>
+            <element>Serum</element>
+            <element>Buffy Coat</element>
+            <element>Plasma and Buffy Coat</element>
+            <element>Urine</element>
+            <element>Urine Sediment</element>
+            <element>ESwab</element>
+            <element>Dacron Swab</element>
+            <element>Heel Swab</element>
+            <element>Placental Tissue</element>
+            <element>Formalin Sample</element>
+            <element>Umbilical Cord Tissue</element>
+            <element>Neonatal Stool</element>
+        </value>
+    </record>
 </registry>
