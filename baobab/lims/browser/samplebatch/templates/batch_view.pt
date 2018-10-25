@@ -37,8 +37,8 @@
         </tr>
         <tr style="background: #f0f0f2;">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
-                                         padding: 10px 15px;text-align: left;">Parent Biospecimen </th>
-            <td tal:content="structure view/parent_aliquot" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">BatchId</th>
+            <td tal:content="structure view/batchID" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
         <tr>
@@ -49,63 +49,40 @@
         </tr>
         <tr style="background: #f0f0f2;">
             <th i18n:translate="" style="padding-bottom: .2em;border: 1px solid #cecfd5;
-                                         padding: 10px 15px;text-align: left;">Kit </th>
-            <td tal:content="structure view/kit" style="padding-bottom: .5em;border: 1px solid #cecfd5;
-                                               padding: 10px 15px;"></td>
-        </tr>
-        <tr>
-            <th i18n:translate="" style="padding-bottom: .2em;border: 1px solid #cecfd5;
-                                         padding: 10px 15px;text-align: left;">Storage Location </th>
-            <td tal:content="structure view/location" style="padding-bottom: .5em;border: 1px solid #cecfd5;
-                                                       padding: 10px 15px;"></td>
-        </tr>
-        <tr style="background: #f0f0f2;">
-            <th i18n:translate="" style="padding-bottom: .2em;border: 1px solid #cecfd5;
-                                         padding: 10px 15px;text-align: left;">Sampling Date </th>
-            <td tal:content="view/sampling_date" style="padding-bottom: .5em;border: 1px solid #cecfd5;
-                                               padding: 10px 15px;"></td>
-        </tr>
-
-        <tr style="background: #f0f0f2;">
-            <th i18n:translate="" style="padding-bottom: .2em;border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Subject ID </th>
-            <td tal:content="view/subjectID" style="padding-bottom: .5em;border: 1px solid #cecfd5;
+            <td tal:content="structure view/subjectID" style="padding-bottom: .5em;border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+        <tr style="background: #f0f0f2;">
+            <th i18n:translate="" style="padding-bottom: .2em;border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Number of Biospecimens </th>
+            <td tal:content="view/numberOfBiospecimen" style="padding-bottom: .5em;border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr style="background: #f0f0f2;">
+            <th i18n:translate="" style="padding-bottom: .2em;border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Storage Location</th>
+            <td tal:content="structure view/location" style="padding-bottom: .5em;border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
 
         <tr>
             <th i18n:translate="" style="padding-bottom: .2em;border: 1px solid #cecfd5;
-                                         padding: 10px 15px;text-align: left;">Barcode </th>
-            <td tal:content="view/barcode" style="padding-bottom: .5em;border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Date Created </th>
+            <td tal:content="view/creation_date" style="padding-bottom: .5em;border: 1px solid #cecfd5;
                                                        padding: 10px 15px;"></td>
         </tr>
         <tr style="background: #f0f0f2;">
             <th i18n:translate="" style="padding-bottom: .2em;border: 1px solid #cecfd5;
-                                         padding: 10px 15px;text-align: left;">Volume </th>
-            <td tal:content="view/volume" style="padding-bottom: .5em;border: 1px solid #cecfd5;
-                                               padding: 10px 15px;"></td>
-        </tr>
-        <tr tal:condition="view/babyNumber">
-            <th i18n:translate="" style="padding-bottom: .2em;border: 1px solid #cecfd5;
-                                         padding: 10px 15px;text-align: left;">Baby No. </th>
-            <td tal:content="view/babyNumber" style="padding-bottom: .5em;border: 1px solid #cecfd5;
-                                                       padding: 10px 15px;"></td>
-        <tr style="background: #f0f0f2;">
-            <th i18n:translate="" style="padding-bottom: .2em;border: 1px solid #cecfd5;
-                                         padding: 10px 15px;text-align: left;">Frozen Time </th>
-            <td tal:content="view/frozen_time" style="padding-bottom: .5em;border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Centrifugation/Formalin Start Time </th>
+            <td tal:content="view/contrifugation_date" style="padding-bottom: .5em;border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
         </tbody>
     </table>
 
-    <tal:remarks define="
-        field python:context.Schema()['Remarks'];
-        errors python:{};">
-        <p style="margin-top:2em;"/>
-         <metal:widget use-macro="python:context.widget('Remarks', mode='edit')" />
-    </tal:remarks>
-</metal:content-core>
+ </metal:content-core>
 
 </body>
 </html>

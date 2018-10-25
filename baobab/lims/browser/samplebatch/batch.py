@@ -4,10 +4,12 @@ from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.ATContentTypes.lib import constraintypes
 
+from baobab.lims.interfaces import IManagedStorage
 from bika.lims.browser import BrowserView
 from baobab.lims.browser.project.util import SampleGeneration
 from baobab.lims.browser.project import get_first_sampletype
 from baobab.lims.browser.biospecimens.biospecimens import BiospecimensView
+from baobab.lims import bikaMessageFactory as _
 
 
 class BatchBiospecimensView(BiospecimensView):
@@ -41,6 +43,45 @@ class BatchBiospecimensView(BiospecimensView):
                     out_items.append(item)
         return out_items
 
+class BatchView(BrowserView):
+    """The view of a single sample
+    """
+    template = ViewPageTemplateFile("templates/batch_view.pt")
+    title = _("Biospecimen Batch View")
+
+    def __call__(self):
+        context = self.context
+        self.absolute_url = context.absolute_url()
+
+        # __Disable the add new menu item__ #
+        context.setLocallyAllowedTypes(())
+
+        # __Collect general data__ #
+        self.id = context.getId()
+        self.title = context.Title()
+        self.icon = self.portal_url + "/++resource++baobab.lims.images/" \
+                                    + "biospecimen_big.png"
+
+        self.batchID = context.getBatchId()
+
+        self.subjectID = context.getField('SubjectID').get(context)
+        self.project = "<a href='%s'>%s</a>" % (
+            context.aq_parent.absolute_url(),
+            context.aq_parent.Title()
+        )
+
+        self.numberOfBiospecimen = context.getQuantity()
+        locations = context.getField('StorageLocation').get(context)
+        location_paths = [location and "<a href='%s'>%s</a>" % (
+                                 location.absolute_url(),
+                                 location.getHierarchy()) or None for location in locations]
+
+        self.location = ','.join(location_paths)
+
+        self.creation_date = context.getDateCreated().strftime("%Y/%m/%d %H:%M")
+        self.contrifugation_date = context.getCfgDateTime().strftime("%Y/%m/%d %H:%M")
+
+        return self.template()
 
 class EditView(BrowserView):
 
@@ -89,6 +130,22 @@ class EditView(BrowserView):
         if new_qty < old_qty:
             raise ValidationError('New number of samples cannot be less than the number of samples already created!')
 
+    def get_biospecimen_storages(self):
+        """Take a list of UIDs from the form, and resolve to a list of Storages.
+        Accepts ManagedStorage, UnmanagedStorage, or StoragePosition UIDs.
+        """
+        uc = getToolByName(self.context, 'uid_catalog')
+        bio_storages = []
+        form_uids = self.form['StorageLocation_uid'].split(',')
+        for uid in form_uids:
+            brain = uc(UID=uid)[0]
+            instance = brain.getObject()
+            if IManagedStorage.providedBy(instance) \
+                    or len(instance.get_free_positions()) > 0:
+                bio_storages.append(instance)
+
+        return bio_storages
+
     def create_samples(self, context, form, num_samples):
         """Create samples from form
         """
@@ -105,15 +162,18 @@ class EditView(BrowserView):
             sample = samples_gen.create_sample(None, sample_type, context)
             samples.append(sample)
 
-        location_uid = form.get('StorageLocation_uid', '')
-        storage = []
-        if location_uid:
-            location = uc(UID=location_uid)[0].getObject()
-            if len(location.get_free_positions()) > 0:
-                storage.append(location)
+        # location_uid = form.get('StorageLocation_uid', '')
+        #
+        # storage = []
+        # if location_uid:
+        #     location = uc(UID=location_uid)[0].getObject()
+        #     if len(location.get_free_positions()) > 0:
+        #         storage.append(location)
 
-        if storage:
-            samples_gen.store_samples(samples, storage)
+        storages = self.get_biospecimen_storages()
+
+        if storages:
+            samples_gen.store_samples(samples, storages)
 
         return samples
 

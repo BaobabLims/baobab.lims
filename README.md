@@ -1,4 +1,4 @@
-# Baobab LIMS
+# Baobab LIMS:
 
 An open source LIMS for human Biobanks.
 

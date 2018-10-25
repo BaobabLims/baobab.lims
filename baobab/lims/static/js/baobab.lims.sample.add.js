@@ -18,6 +18,11 @@ function BaobabSampleView() {
             sampleTypeSelected(uid);
         });
 
+        if ($('#Unit').val() == "other"){
+            $('<div/>').addClass( 'unit_measure_div' )
+                .html( $('<input type="textbox" name="customUnit" id="customUnit" />').addClass( 'blurrable firstToFocus customUnit' ) )
+                .insertAfter( $("#Unit") );
+        }
         $('input[type=submit]').on('click', function (event) {
             var path = window.location.href.split('/base_view')[0] + '/update_boxes';
             $.ajax({
@@ -28,7 +33,18 @@ function BaobabSampleView() {
             }).done(function (data) {
                 console.log(data);
             })
-        })
+        });
+
+        $('#Unit').change(function(e) {
+            if ($(this).val() == "other"){
+                e.preventDefault();
+                $('<div/>').addClass( 'unit_measure_div' )
+                .html( $('<input type="textbox" name="customUnit" id="customUnit" />').addClass( 'blurrable firstToFocus customUnit' ) )
+                .insertAfter( this );
+            }else{
+                $('div.unit_measure_div').remove();
+            }
+        });
 
     };
 
