@@ -4,7 +4,8 @@ from bika.lims.workflow import doActionFor
 from bika.lims.browser import BrowserView
 from baobab.lims import bikaMessageFactory as _
 from baobab.lims.interfaces import IProject
-
+from plone.registry.interfaces import IRegistry
+from zope.component import queryUtility
 
 class UpdateBoxes(BrowserView):
     """
@@ -55,6 +56,8 @@ class SampleView(BrowserView):
         # __Disable the add new menu item__ #
         context.setLocallyAllowedTypes(())
 
+        #import pdb; pdb.set_trace()
+
         # __Collect general data__ #
         self.id = context.getId()
         self.title = context.Title()
@@ -88,6 +91,9 @@ class SampleView(BrowserView):
         self.subjectID = context.getField('SubjectID').get(context)
         self.barcode = context.getField('Barcode').get(context)
         self.volume = context.getField('Volume').get(context) + " " + context.getField('Unit').get(context)
+        self.babyNumber = context.getField('BabyNumber').get(context)
+        if self.babyNumber == '0':
+            self.babyNumber = None
 
         return self.template()
 
@@ -119,12 +125,16 @@ class EditView(BrowserView):
                 sample.getField('Project').set(sample, parent)
             else:
                 sample.getField('Project').set(sample, request.form['Project_uid'])
+
             # sample.getField('AllowSharing').set(sample, request.form['AllowSharing'])
             sample.getField('Kit').set(sample, request.form['Kit_uid'])
             sample.getField('StorageLocation').set(sample, request.form['StorageLocation_uid'])
             sample.getField('SubjectID').set(sample, request.form['SubjectID'])
             sample.getField('Barcode').set(sample, request.form['Barcode'])
             sample.getField('Volume').set(sample, request.form['Volume'])
+            if request.form.has_key('customUnit'):
+                request.form['Unit'] = request.form['customUnit']
+
             sample.getField('Unit').set(sample, request.form['Unit'])
             sample.getField('LinkedSample').set(sample, request.form['LinkedSample_uid'])
 
@@ -133,6 +143,17 @@ class EditView(BrowserView):
             )
             sample_batch = sample.getField('Batch').get(sample)
             sample.processForm()
+
+            units = []
+            registry = queryUtility(IRegistry)
+            if registry is not None:
+                for unit in registry.get('baobab.lims.biospecimen.units', ()):
+                    units.append(unit)
+                units.append(unicode(request.form['Unit']))
+            unit_tuple = tuple(units)
+
+            registry.records.get('baobab.lims.biospecimen.units')._set_value(unit_tuple)
+
             sample.getField('Batch').set(sample, sample_batch)
 
             obj_url = sample.absolute_url_path()

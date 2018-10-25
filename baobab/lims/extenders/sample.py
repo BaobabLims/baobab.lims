@@ -4,6 +4,7 @@ from archetypes.schemaextender.interfaces import ISchemaModifier
 from zope.component import adapts
 from Products.CMFCore import permissions
 
+# from bika.lims.browser.fields import DateTimeField
 from bika.lims.fields import *
 from bika.lims.interfaces import ISample
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
@@ -14,12 +15,29 @@ from bika.lims.workflow import doActionFor
 
 from baobab.lims import bikaMessageFactory as _
 from baobab.lims.interfaces import ISampleStorageLocation
-
+from zope.component import queryUtility
+from Products.Archetypes.interfaces.vocabulary import IVocabulary
+from plone.registry.interfaces import IRegistry
+from Products.Archetypes.utils import DisplayList
 import sys
 
 
 class ExtFixedPointField(ExtensionField, FixedPointField):
     "Field extender"
+
+class UnitsVocabulary(object):
+    implements(IVocabulary)
+
+    def getDisplayList(self, context):
+
+        registry = queryUtility(IRegistry)
+        units = []
+        if registry is not None:
+
+            for unit in registry.get('baobab.lims.biospecimen.units', ()):
+                units.append([unit, unit])
+
+        return DisplayList(units)
 
 
 class SampleSchemaExtender(object):
@@ -231,7 +249,7 @@ class SampleSchemaExtender(object):
         ExtStringField(
             'Unit',
             default="ul",
-            vocabulary='getUnits',
+            vocabulary=UnitsVocabulary(),
             # widget=SelectionWidget(
             widget=BikaSelectionWidget(
                 format='select',
@@ -246,6 +264,22 @@ class SampleSchemaExtender(object):
                          'sample_received': {'view': 'visible', 'edit': 'visible'},
                          'expired': {'view': 'visible', 'edit': 'invisible'},
                          'disposed': {'view': 'visible', 'edit': 'invisible'},
+                         },
+                render_own_label=True,
+                showOn=True,
+            )
+        ),
+        ExtStringField(
+            'BabyNumber',
+            default="0",
+            vocabulary='getBabyNumber',
+            # widget=SelectionWidget(
+            widget=BikaSelectionWidget(
+                format='select',
+                label=_("Baby No. (if applicable)"),
+                description=_('Number of the baby if woman has atleast one.'),
+                visible={'edit': 'visible',
+                         'view': 'visible',
                          },
                 render_own_label=True,
                 showOn=True,
@@ -380,6 +414,7 @@ class SampleSchemaModifier(object):
         self.context = context
 
     def fiddle(self, schema):
+        schema['SamplingDate'].widget.description = "Define when the samples are collected."
         return schema
 
 
@@ -399,7 +434,7 @@ class Sample(BaseSample):
             return self.aq_parent.UID()
 
     def getUnits(self):
-        return ['ul', 'ml', 'mg', 'g']
+        return ['ul', 'ml', 'mg', 'g', 'other']
 
     def getLastARNumber(self):
         ARs = self.getBackReferences("AnalysisRequestSample")
@@ -452,6 +487,9 @@ class Sample(BaseSample):
 
             self.getField('ReservedLocation').set(self, None)
             self.reindexObject()
+
+    def getBabyNumber(self):
+        return ['0','1', '2', '3']
 
 from Products.Archetypes import atapi
 from bika.lims.config import PROJECTNAME

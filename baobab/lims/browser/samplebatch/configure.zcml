@@ -13,6 +13,14 @@
     />
 
     <browser:page
+        for="baobab.lims.interfaces.IBatch"
+        name="base_view"
+        class="baobab.lims.browser.samplebatch.batch.BatchView"
+        permission="zope2.View"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
         for="baobab.lims.interfaces.IBatches"
         name="folder_view"
         class=".batches.BatchesView"

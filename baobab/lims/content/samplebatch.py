@@ -131,31 +131,35 @@ NumberBiospecimens = IntegerField('Quantity',
 # )
 
 # TODO: THE LOCATION MUST BE A MULTIVALUE. A USE SHOULD BE ABLE TO SELECT MORE THAN ONE LOCATION.
+
 Location = ReferenceField(
-    'StorageLocation',
-    #required=True,
-    allowed_types=('ManagedStorage',),
-    relationship='ItemStorageLocation',
-    widget=bika_ReferenceWidget(
-        label=_("Storage Location"),
-        description=_("Location where biospecimens will be kept."),
-        size=40,
-        visible={'edit': 'visible', 'view': 'visible'},
-        catalog_name='portal_catalog',
-        showOn=True,
-        base_query={
-            'inactive_state': 'active',
-            'review_state': 'available',
-            'object_provides': ISampleStorageLocation.__identifier__
-        },
-        colModel=[
-            {'columnName': 'UID', 'hidden': True},
-            {'columnName': 'Title', 'width': '10', 'label': _('Title')},
-            {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "80"},
-            {"columnName": "FreePositions", "align": "left", "label": "Free", "width": "10"},
-        ],
+        'StorageLocation',
+        multiValued=1,
+        allowed_types=('ManagedStorage'),
+        referenceClass=HoldingReference,
+        relationship='SampleShipmentSample',
+        mode="rw",
+        widget=bika_ReferenceWidget(
+            label=_("Storage Location"),
+            description=_("Location where biospecimens will be kept."),
+            size=40,
+            base_query={
+                'inactive_state': 'active',
+                'review_state': 'available',
+                'object_provides': ISampleStorageLocation.__identifier__
+            },
+            visible={'edit': 'visible', 'view': 'visible'},
+            catalog_name='portal_catalog',
+            showOn=True,
+            colModel=[
+                {'columnName': 'UID', 'hidden': True},
+                {'columnName': 'Title', 'width': '10', 'label': _('Title')},
+                {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "80"},
+                {"columnName": "FreePositions", "align": "left", "label": "Free", "width": "10"},
+            ],
+
+        )
     )
-)
 
 DateCreation = DateTimeField(
     'DateCreated',
@@ -185,6 +189,20 @@ SerumColour = StringField(
     )
 )
 
+CfgDateTime = DateTimeField(
+    'CfgDateTime',
+    mode="rw",
+    required=True,
+    read_permission=permissions.View,
+    write_permission=permissions.ModifyPortalContent,
+    widget=DateTimeWidget(
+        label=_("Centrifugation/Formalin Start Time"),
+        description=_("If applicable, define when centrifugation of the sample starts OR when is the sample put in formalin."),
+        show_time=True,
+        visible={'edit': 'visible', 'view': 'visible'}
+    )
+)
+
 schema = BikaSchema.copy() + Schema((
     BatchId,
     Project,
@@ -194,6 +212,7 @@ schema = BikaSchema.copy() + Schema((
     Location,
     DateCreation,
     SerumColour,
+    CfgDateTime
 ))
 
 schema['title'].widget.visible = {'edit': 'visible', 'view': 'visible'}
