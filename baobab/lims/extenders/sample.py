@@ -4,8 +4,7 @@ from archetypes.schemaextender.interfaces import ISchemaModifier
 from zope.component import adapts
 from Products.CMFCore import permissions
 
-from bika.lims import api
-from bika.lims.browser.fields import DateTimeField
+# from bika.lims.browser.fields import DateTimeField
 from bika.lims.fields import *
 from bika.lims.interfaces import ISample
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
@@ -17,9 +16,7 @@ from bika.lims.workflow import doActionFor
 from baobab.lims import bikaMessageFactory as _
 from baobab.lims.interfaces import ISampleStorageLocation
 from zope.component import queryUtility
-from five import grok
 from Products.Archetypes.interfaces.vocabulary import IVocabulary
-from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from plone.registry.interfaces import IRegistry
 from Products.Archetypes.utils import DisplayList
 import sys
@@ -32,12 +29,10 @@ class UnitsVocabulary(object):
     implements(IVocabulary)
 
     def getDisplayList(self, context):
-        #portal = api.portal.get()
 
         registry = queryUtility(IRegistry)
         units = []
         if registry is not None:
-            #import pdb; pdb.set_trace()
 
             for unit in registry.get('baobab.lims.biospecimen.units', ()):
                 units.append([unit, unit])
@@ -274,6 +269,40 @@ class SampleSchemaExtender(object):
                 showOn=True,
             )
         ),
+        ExtStringField(
+            'BabyNumber',
+            default="0",
+            vocabulary='getBabyNumber',
+            # widget=SelectionWidget(
+            widget=BikaSelectionWidget(
+                format='select',
+                label=_("Baby No. (if applicable)"),
+                description=_('Number of the baby if woman has atleast one.'),
+                visible={'edit': 'visible',
+                         'view': 'visible',
+                         },
+                render_own_label=True,
+                showOn=True,
+            )
+        ),
+        # ExtStringField(
+        #     'Unit',
+        #     default="ul",
+        #     widget=StringWidget(
+        #         label=_("Unit"),
+        #         visible={'edit': 'visible',
+        #                  'view': 'visible',
+        #                  'header_table': 'visible',
+        #                  'sample_registered': {'view': 'visible', 'edit': 'visible'},
+        #                  'sample_due': {'view': 'visible', 'edit': 'visible'},
+        #                  'sampled': {'view': 'visible', 'edit': 'invisible'},
+        #                  'sample_received': {'view': 'visible', 'edit': 'visible'},
+        #                  'expired': {'view': 'visible', 'edit': 'invisible'},
+        #                  'disposed': {'view': 'visible', 'edit': 'invisible'},
+        #                  },
+        #         render_own_label=True,
+        #     )
+        # ),
         ExtReferenceField(
             'LinkedSample',
             vocabulary_display_path_bound=sys.maxsize,
@@ -458,6 +487,9 @@ class Sample(BaseSample):
 
             self.getField('ReservedLocation').set(self, None)
             self.reindexObject()
+
+    def getBabyNumber(self):
+        return ['0','1', '2', '3']
 
 from Products.Archetypes import atapi
 from bika.lims.config import PROJECTNAME

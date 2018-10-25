@@ -97,14 +97,14 @@ class BiospecimensView(BikaListingView):
                 'title': _('State'),
                 'index': 'review_state'
             },
-            # 'Location': {
-            #     'title': _('Location'),
-            #     'toggle': True
-            # },
-           'FrozenTime': {
-                               'title': _('Frozen Time'),
-                               # 'index': 'review_state'
-                           },
+            'FrozenTime': {
+                'title': _('Frozen Time'),
+                # 'index': 'review_state'
+            },
+            'StorageLocation': {
+                'title': _('Storage'),
+                'toggle': True
+            },
         }
 
         self.review_states = [
@@ -131,7 +131,7 @@ class BiospecimensView(BikaListingView):
                     'Volume',
                     'Unit',
                     'state_title',
-                    # 'Location',
+                    'StorageLocation',
                     'FrozenTime',
                 ]
             },
@@ -156,7 +156,7 @@ class BiospecimensView(BikaListingView):
                     'Type',
                     'Barcode',
                     'state_title',
-                    # 'Location',
+                    'StorageLocation',
                     'FrozenTime',
                 ]
             },
@@ -183,7 +183,7 @@ class BiospecimensView(BikaListingView):
                     'Volume',
                     'Unit',
                     'state_title',
-                    # 'Location',
+                    'StorageLocation',
                     'FrozenTime',
                 ]
             },
@@ -209,7 +209,7 @@ class BiospecimensView(BikaListingView):
                     'Volume',
                     'Unit',
                     'state_title',
-                    # 'Location',
+                    'StorageLocation',
                     'FrozenTime',
                 ]
             },
@@ -234,7 +234,7 @@ class BiospecimensView(BikaListingView):
                     'Volume',
                     'Unit',
                     'state_title',
-                    # 'Location',
+                    'StorageLocation',
                     'FrozenTime',
                 ]
             },
@@ -260,7 +260,7 @@ class BiospecimensView(BikaListingView):
                     'Volume',
                     'Unit',
                     'state_title',
-                    # 'Location',
+                    'StorageLocation',
                     'FrozenTime',
                 ]
             },
@@ -281,7 +281,7 @@ class BiospecimensView(BikaListingView):
                     'Barcode',
                     'Volume',
                     'Unit',
-                    # 'Location',
+                    'StorageLocation',
                     'FrozenTime',
                 ]
             },
@@ -333,6 +333,9 @@ class BiospecimensView(BikaListingView):
             project = obj.getField('Project').get(obj)
             items[x]['Kit'] = kit
             items[x]['Project'] = project
+            storage_location = obj.getField('StorageLocation').get(obj)
+            if storage_location:
+                items[x]['StorageLocation'] = storage_location.Title()
             if project:
                 items[x]['replace']['Project'] = \
                     '<a href="%s">%s</a>' % (project.absolute_url(),

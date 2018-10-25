@@ -38,9 +38,20 @@ class BatchesView(BikaListingView):
                 'title': _('Title'),
                 'index': 'sortable_title'
             },
-            'BatchId': {
-                'title': _('Batch ID'),
+            'Project': {
+                'title': _('Project'),
+                'index': 'sortable_title'
+            },
+            'ParentBiospecimen': {
+                'title': _('Parent ID'),
+                # 'index': 'sortable_title'
+            },
+            'BatchType': {
+                'title': _('Batch Type'),
                 'toggle': True,
+            },
+            'SerumColour': {
+                'title': _('Colour'),
             },
             'ContrifugationDate': {
                 'title': _('Centrifugation/Formalin Start Time'),
@@ -56,8 +67,12 @@ class BatchesView(BikaListingView):
                 'transitions': [],
                 'columns': [
                     'Title',
-                    'BatchId',
-                    'ContrifugationDate'
+                    'Project',
+                    'ParentBiospecimen',
+                    'BatchType',
+                    'ContrifugationDate',
+                    'SerumColour',
+
                 ]
              },
 
@@ -70,8 +85,11 @@ class BatchesView(BikaListingView):
                 },
                 'columns': [
                     'Title',
-                    'BatchId',
-                    'ContrifugationDate'
+                    'Project',
+                    'ParentBiospecimen',
+                    'BatchType',
+                    'ContrifugationDate',
+                    'SerumColour',
                 ]
             },
         ]
@@ -96,9 +114,18 @@ class BatchesView(BikaListingView):
             if not items[x].has_key('obj'):
                 continue
             obj = item['obj']
-            item['BatchId'] = obj.getBatchId()
+            # item['BatchType'] = obj.getBatchType()
+            item['BatchType'] = obj.getField('BatchType').get(obj)
             item['replace']['Title'] = \
                 "<a href='%s'>%s</a>" % (item['url'], item['Title'])
-            item['ContrifugationDate'] = obj.getCfgDateTime().strftime("%Y/%m/%d %H:%M")
+            try:
+                parent_title = obj.getParentBiospecimen().Title()
+            except Exception as e:
+                parent_title = ''
+            item['ParentBiospecimen'] = parent_title
+            item['Project'] = obj.getField('Project').get(obj).Title()
+            item['SerumColour'] = obj.getField('SerumColour').get(obj)
+            # item['ContrifugationDate'] = obj.CfgDateTime().strftime("%Y/%m/%d %H:%M")
+            item['ContrifugationDate'] = obj.getField('CfgDateTime').get(obj)
             ret.append(item)
         return ret

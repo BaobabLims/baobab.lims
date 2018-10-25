@@ -37,8 +37,8 @@
         </tr>
         <tr style="background: #f0f0f2;">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
-                                         padding: 10px 15px;text-align: left;">BatchId</th>
-            <td tal:content="structure view/batchID" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Batch Type</th>
+            <td tal:content="structure view/batchType" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
         <tr>

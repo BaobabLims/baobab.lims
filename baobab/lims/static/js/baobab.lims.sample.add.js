@@ -12,6 +12,12 @@ function BaobabSampleView() {
             filterKitByProject(element, "getParentUID", uid);
         });
 
+        $('#SampleType_uid').focus(function() {
+            $('tr[fieldname=BabyNumber]').hide();
+            var uid = $(this).val();
+            sampleTypeSelected(uid);
+        });
+
         if ($('#Unit').val() == "other"){
             $('<div/>').addClass( 'unit_measure_div' )
                 .html( $('<input type="textbox" name="customUnit" id="customUnit" />').addClass( 'blurrable firstToFocus customUnit' ) )
@@ -61,5 +67,26 @@ function BaobabSampleView() {
         options.force_all = "false";
         $(element).combogrid(options);
         $(element).attr("search_query", "{}");
+    }
+
+    function sampleTypeSelected(uid) {
+        // Hides or Displays the BabyNumber field depending on boolean value of
+        // HasBabyNumber on the SampleType
+        request_data = {
+          catalog_name: 'portal_catalog',
+          portal_type: 'SampleType',
+          UID: uid,
+          inactive_state: 'active'
+        };
+        window.bika.lims.jsonapi_read(request_data, function(data) {
+            var sampleType;
+            if (data.success && data.total_objects === 1) {
+              sampleType = data.objects[0];
+              var sampletype_hasBabyNumber = sampleType['HasBabyNumber']
+              if (sampletype_hasBabyNumber){
+                     $('tr[fieldname=BabyNumber]').show();
+                  }
+              }
+            });
     }
 }
