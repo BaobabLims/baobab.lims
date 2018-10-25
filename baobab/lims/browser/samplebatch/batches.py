@@ -38,8 +38,8 @@ class BatchesView(BikaListingView):
                 'title': _('Title'),
                 'index': 'sortable_title'
             },
-            'BatchId': {
-                'title': _('Batch ID'),
+            'BatchType': {
+                'title': _('Batch Type'),
                 'toggle': True,
             },
             'SerumColour': {
@@ -59,7 +59,7 @@ class BatchesView(BikaListingView):
                 'transitions': [],
                 'columns': [
                     'Title',
-                    'BatchId',
+                    'BatchType',
                     'SerumColour',
                     'ContrifugationDate',
                 ]
@@ -74,7 +74,7 @@ class BatchesView(BikaListingView):
                 },
                 'columns': [
                     'Title',
-                    'BatchId',
+                    'BatchType',
                     'SerumColour',
                     'ContrifugationDate',
                 ]
@@ -101,7 +101,8 @@ class BatchesView(BikaListingView):
             if not items[x].has_key('obj'):
                 continue
             obj = item['obj']
-            item['BatchId'] = obj.getBatchId()
+            # item['BatchType'] = obj.getBatchType()
+            item['BatchType'] = obj.getField('BatchType').get(obj)
             item['replace']['Title'] = \
                 "<a href='%s'>%s</a>" % (item['url'], item['Title'])
             item['SerumColour'] = obj.getField('SerumColour').get(obj)
