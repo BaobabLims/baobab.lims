@@ -156,10 +156,12 @@ class EditView(BrowserView):
         project = uc(UID=project_uid)[0].getObject()
 
         samples_gen = SampleGeneration(form, project)
+        subject_id = form['SubjectID']
 
         samples = []
         for i in range(num_samples):
             sample = samples_gen.create_sample(None, sample_type, context)
+            sample.getField('SubjectID').set(sample, subject_id)
             samples.append(sample)
 
         # location_uid = form.get('StorageLocation_uid', '')
