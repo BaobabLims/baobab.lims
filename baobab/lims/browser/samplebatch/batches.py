@@ -38,6 +38,14 @@ class BatchesView(BikaListingView):
                 'title': _('Title'),
                 'index': 'sortable_title'
             },
+            'Project': {
+                'title': _('Project'),
+                'index': 'sortable_title'
+            },
+            'ParentBiospecimen': {
+                'title': _('Parent ID'),
+                # 'index': 'sortable_title'
+            },
             'BatchType': {
                 'title': _('Batch Type'),
                 'toggle': True,
@@ -59,9 +67,12 @@ class BatchesView(BikaListingView):
                 'transitions': [],
                 'columns': [
                     'Title',
+                    'Project',
+                    'ParentBiospecimen',
                     'BatchType',
-                    'SerumColour',
                     'ContrifugationDate',
+                    'SerumColour',
+
                 ]
              },
 
@@ -74,9 +85,11 @@ class BatchesView(BikaListingView):
                 },
                 'columns': [
                     'Title',
+                    'Project',
+                    'ParentBiospecimen',
                     'BatchType',
-                    'SerumColour',
                     'ContrifugationDate',
+                    'SerumColour',
                 ]
             },
         ]
@@ -105,6 +118,12 @@ class BatchesView(BikaListingView):
             item['BatchType'] = obj.getField('BatchType').get(obj)
             item['replace']['Title'] = \
                 "<a href='%s'>%s</a>" % (item['url'], item['Title'])
+            try:
+                parent_title = obj.getParentBiospecimen().Title()
+            except Exception as e:
+                parent_title = ''
+            item['ParentBiospecimen'] = parent_title
+            item['Project'] = obj.getField('Project').get(obj).Title()
             item['SerumColour'] = obj.getField('SerumColour').get(obj)
             # item['ContrifugationDate'] = obj.CfgDateTime().strftime("%Y/%m/%d %H:%M")
             item['ContrifugationDate'] = obj.getField('CfgDateTime').get(obj)
