@@ -78,10 +78,6 @@ class BiospecimensView(BikaListingView):
                 'input_width': '10',
                 'toggle': True
             },
-            'Kit': {
-                'title': _('Kit'),
-                'index': 'sortable_title'
-            },
             'Barcode': {
                 'title': _('Barcode'),
                 'allow_edit': True,
@@ -133,7 +129,6 @@ class BiospecimensView(BikaListingView):
                 'columns': [
                     'Title',
                     'Project',
-                    'Kit',
                     'Type',
                     'SubjectID',
                     'Barcode',
@@ -163,7 +158,6 @@ class BiospecimensView(BikaListingView):
                 'columns': [
                     'Title',
                     'Project',
-                    'Kit',
                     'Type',
                     'Barcode',
                     'StorageLocation',
@@ -189,7 +183,6 @@ class BiospecimensView(BikaListingView):
                 'columns': [
                     'Title',
                     'Project',
-                    'Kit',
                     'Type',
                     'SubjectID',
                     'Barcode',
@@ -217,7 +210,6 @@ class BiospecimensView(BikaListingView):
                 'columns': [
                     'Title',
                     'Project',
-                    'Kit',
                     'Type',
                     'SubjectID',
                     'Barcode',
@@ -244,7 +236,6 @@ class BiospecimensView(BikaListingView):
                 'columns': [
                     'Title',
                     'Project',
-                    'Kit',
                     'Type',
                     'SubjectID',
                     'Barcode',
@@ -272,7 +263,6 @@ class BiospecimensView(BikaListingView):
                 'columns': [
                     'Title',
                     'Project',
-                    'Kit',
                     'Type',
                     'SubjectID',
                     'Barcode',
@@ -296,7 +286,6 @@ class BiospecimensView(BikaListingView):
                 'columns': [
                     'Title',
                     'Project',
-                    'Kit',
                     'Type',
                     'SubjectID',
                     'Barcode',
@@ -352,9 +341,7 @@ class BiospecimensView(BikaListingView):
             items[x]['Volume'] = obj.getField('Volume').get(obj)
             items[x]['Unit'] = obj.getField('Unit').get(obj)
             items[x]['SubjectID'] = obj.getField('SubjectID').get(obj)
-            kit = obj.getField('Kit').get(obj)
             project = obj.getField('Project').get(obj)
-            items[x]['Kit'] = kit
             items[x]['Project'] = project
             storage_location = obj.getField('StorageLocation').get(obj)
             if storage_location:
@@ -363,27 +350,25 @@ class BiospecimensView(BikaListingView):
                 items[x]['replace']['Project'] = \
                     '<a href="%s">%s</a>' % (project.absolute_url(),
                                              project.Title())
-            if kit:
-                items[x]['replace']['Kit'] = \
-                    '<a href="%s">%s</a>' % (kit.absolute_url(), kit.Title())
-
 
             items[x]['Barcode'] = obj.getField('Barcode').get(obj)
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                            (items[x]['url'], items[x]['Title'])
             frozen_time = obj.getField('FrozenTime').get(obj)
             if frozen_time:
-                items[x]['FrozenTime'] = frozen_time.strftime("%Y%m%d %H:%M")
+                items[x]['FrozenTime'] = frozen_time.strftime("%Y/%m/%d %H:%M")
                 # items[x]['FrozenTime'] = frozen_time.strftime("%Y%m%d %H:%M:%S")
 
             batch = obj.getField('Batch').get(obj)
 
             try:
-                items[x]['CFGTime'] = batch.getField('CfgDateTime').get(batch)
+                items[x]['CFGTime'] = batch.getField('CfgDateTime').get(batch).strftime("%Y/%m/%d %H:%M")
             except:
                 items[x]['CFGTime'] = ''
-
-            items[x]['SamplingTime'] = obj.getField('SamplingDate').get(obj)
+            try:
+                items[x]['SamplingTime'] = obj.getField('SamplingDate').get(obj).strftime("%Y/%m/%d %H:%M")
+            except:
+                items[x]['SamplingTime'] = ''
 
             if self.allow_edit and isActive(self.context) and \
                     getSecurityManager().checkPermission(ModifyPortalContent, obj):
