@@ -81,6 +81,12 @@ class BiospecimenWorkflowAction(WorkflowAction):
                 obj = selected_biospecimens.get(uid, None)
                 obj.getField('Barcode').set(obj, form['Barcode'][0][uid])
                 obj.getField('SampleType').set(obj, form['Type'][0][uid])
+                obj.getField('FrozenTime').set(obj, form['FrozenTime'][0][uid])
+                min_volume = obj.getSampleType().getMinimumVolume()
+                volume_unit = min_volume.split(' ')
+                if min_volume and len(volume_unit) == 2:
+                    obj.getField('Volume').set(obj, volume_unit[0])
+                    obj.getField('Unit').set(obj, volume_unit[1])
                 obj.setId(form['Barcode'][0][uid])
                 obj.edit(SampleID=obj.getId())
                 obj.reindexObject()
