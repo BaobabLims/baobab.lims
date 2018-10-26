@@ -14,12 +14,12 @@ function BaobabBiospecimensView() {
             var barcode_change_timer = null
             if (barcode_change_timer == null){
                 uid = $(this).attr('uid')
-                barcode_change_timer = setTimeout(function(){updateFrozenTime(uid)}, 3500);
+                barcode_change_timer = setTimeout(function(){updateFrozenTime(uid)}, 500);
             }
             else{
                 window.clearInterval(barcode_change_timer);
                 barcode_change_timer = null;
-                barcode_change_timer = setTimeout(function(){updateFrozenTime(uid)}, 3500);
+                barcode_change_timer = setTimeout(function(){updateFrozenTime(uid)}, 500);
             }
         });
     }
