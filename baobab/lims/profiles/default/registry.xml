@@ -34,7 +34,7 @@
             <value_type type="plone.registry.field.TextLine" />
         </field>
         <value>
-            <element></element>
+            <element> </element>
             <element>Whole Blood</element>
             <element>Whatman Card</element>
             <element>Plasma</element>
