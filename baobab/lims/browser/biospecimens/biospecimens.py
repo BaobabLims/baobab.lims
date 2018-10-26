@@ -326,7 +326,6 @@ class BiospecimensView(BikaListingView):
                 continue
             items[x]['Type'] = obj.getSampleType() and obj.getSampleType().Title() or ''
             items[x]['Volume'] = obj.getField('Volume').get(obj)
-            # items[x]['Unit'] = VOLUME_UNITS[0]['ResultText']
             items[x]['Unit'] = obj.getField('Unit').get(obj)
             items[x]['SubjectID'] = obj.getField('SubjectID').get(obj)
             kit = obj.getField('Kit').get(obj)
@@ -344,14 +343,15 @@ class BiospecimensView(BikaListingView):
                 items[x]['replace']['Kit'] = \
                     '<a href="%s">%s</a>' % (kit.absolute_url(), kit.Title())
 
-                # TODO: IF STATUS IS RECEIVED EXECUTE THIS
-                # items[x]['replace']['Type'] = \
-                #     '<a href="%s">%s</a>' % (obj.getSampleType().absolute_url(),
-                #                              obj.getSampleType().Title())
+
             items[x]['Barcode'] = obj.getField('Barcode').get(obj)
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                            (items[x]['url'], items[x]['Title'])
-            # TODO: SPECIFY OBJ STATES WHERE USER CAN EDIT BARCODE
+            frozen_time = obj.getField('FrozenTime').get(obj)
+            if frozen_time:
+                items[x]['FrozenTime'] = frozen_time.strftime("%Y%m%d %H:%M")
+                # items[x]['FrozenTime'] = frozen_time.strftime("%Y%m%d %H:%M:%S")
+
             if self.allow_edit and isActive(self.context) and \
                     getSecurityManager().checkPermission(ModifyPortalContent, obj):
                 if items[x]['review_state'] == "sample_registered":
