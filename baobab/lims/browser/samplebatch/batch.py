@@ -137,7 +137,9 @@ class EditView(BrowserView):
         """
         uc = getToolByName(self.context, 'uid_catalog')
         bio_storages = []
-        form_uids = self.form['StorageLocation_uid'].split(',')
+        # form_uids = self.form['StorageLocation_uid'].split(',')
+        form_uids = self.form['StorageLocation_uid'].split(',') if self.form['StorageLocation_uid'] else []
+
         for uid in form_uids:
             brain = uc(UID=uid)[0]
             instance = brain.getObject()
@@ -150,6 +152,11 @@ class EditView(BrowserView):
     def create_samples(self, context, form, num_samples):
         """Create samples from form
         """
+        # import pdb; pdb.set_trace()
+        # parent_sample_uid = form['ParentBiospecimen_uid']
+        # parent_samples =
+
+
         sample_type = get_first_sampletype(context)
         uc = getToolByName(context, 'uid_catalog')
 
@@ -158,11 +165,18 @@ class EditView(BrowserView):
 
         samples_gen = SampleGeneration(form, project)
         subject_id = form['SubjectID']
+        try:
+            parent_sample_uid = form.get('ParentBiospecimen_uid')
+            parent_sample = uc(UID=parent_sample_uid)[0].getObject()
+            parent_sampling_date = parent_sample.getField('SamplingDate').get(parent_sample)
+        except:
+            parent_sampling_date = None
 
         samples = []
         for i in range(num_samples):
             sample = samples_gen.create_sample(None, sample_type, context)
             sample.getField('SubjectID').set(sample, subject_id)
+            sample.getField('SamplingDate').set(sample, parent_sampling_date)
             samples.append(sample)
 
         # location_uid = form.get('StorageLocation_uid', '')

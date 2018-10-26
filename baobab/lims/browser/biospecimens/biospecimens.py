@@ -105,6 +105,15 @@ class BiospecimensView(BikaListingView):
                 'title': _('Storage'),
                 'toggle': True
             },
+            'CFGTime': {
+                'title': _('Centrifuge Time'),
+                'toggle': True
+            },
+
+            'SamplingTime': {
+                'title': _('Sampling Time'),
+                'toggle': True
+            },
         }
 
         self.review_states = [
@@ -130,9 +139,11 @@ class BiospecimensView(BikaListingView):
                     'Barcode',
                     'Volume',
                     'Unit',
-                    'state_title',
                     'StorageLocation',
+                    'CFGTime',
                     'FrozenTime',
+                    'SamplingTime',
+                    'state_title',
                 ]
             },
 
@@ -155,9 +166,11 @@ class BiospecimensView(BikaListingView):
                     'Kit',
                     'Type',
                     'Barcode',
-                    'state_title',
                     'StorageLocation',
+                    'CFGTime',
                     'FrozenTime',
+                    'SamplingTime',
+                    'state_title',
                 ]
             },
             {
@@ -182,9 +195,11 @@ class BiospecimensView(BikaListingView):
                     'Barcode',
                     'Volume',
                     'Unit',
-                    'state_title',
                     'StorageLocation',
+                    'CFGTime',
                     'FrozenTime',
+                    'SamplingTime',
+                    'state_title',
                 ]
             },
             {
@@ -208,9 +223,11 @@ class BiospecimensView(BikaListingView):
                     'Barcode',
                     'Volume',
                     'Unit',
-                    'state_title',
                     'StorageLocation',
+                    'CFGTime',
                     'FrozenTime',
+                    'SamplingTime',
+                    'state_title',
                 ]
             },
             {
@@ -233,9 +250,11 @@ class BiospecimensView(BikaListingView):
                     'Barcode',
                     'Volume',
                     'Unit',
-                    'state_title',
                     'StorageLocation',
+                    'CFGTime',
                     'FrozenTime',
+                    'SamplingTime',
+                    'state_title',
                 ]
             },
 
@@ -259,9 +278,11 @@ class BiospecimensView(BikaListingView):
                     'Barcode',
                     'Volume',
                     'Unit',
-                    'state_title',
                     'StorageLocation',
+                    'CFGTime',
                     'FrozenTime',
+                    'SamplingTime',
+                    'state_title',
                 ]
             },
 
@@ -282,7 +303,10 @@ class BiospecimensView(BikaListingView):
                     'Volume',
                     'Unit',
                     'StorageLocation',
+                    'CFGTime',
                     'FrozenTime',
+                    'SamplingTime',
+                    'state_title',
                 ]
             },
         ]
@@ -351,6 +375,15 @@ class BiospecimensView(BikaListingView):
             if frozen_time:
                 items[x]['FrozenTime'] = frozen_time.strftime("%Y%m%d %H:%M")
                 # items[x]['FrozenTime'] = frozen_time.strftime("%Y%m%d %H:%M:%S")
+
+            batch = obj.getField('Batch').get(obj)
+
+            try:
+                items[x]['CFGTime'] = batch.getField('CfgDateTime').get(batch)
+            except:
+                items[x]['CFGTime'] = ''
+
+            items[x]['SamplingTime'] = obj.getField('SamplingDate').get(obj)
 
             if self.allow_edit and isActive(self.context) and \
                     getSecurityManager().checkPermission(ModifyPortalContent, obj):
