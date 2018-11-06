@@ -80,7 +80,10 @@ class BatchView(BrowserView):
         self.location = ','.join(location_paths)
 
         self.creation_date = context.getDateCreated().strftime("%Y/%m/%d %H:%M")
-        self.contrifugation_date = context.getCfgDateTime().strftime("%Y/%m/%d %H:%M")
+        try:
+            self.contrifugation_date = context.getCfgDateTime().strftime("%Y/%m/%d %H:%M")
+        except:
+            self.contrifugation_date = ''
 
         return self.template()
 
