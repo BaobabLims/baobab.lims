@@ -53,10 +53,11 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
         widget=bika_ReferenceWidget(
             label=_("Kit"),
             catalog_name='bika_catalog',
-            visible={'view': 'invisible', 'edit': 'visible'}
+            visible={'view': 'invisible', 'edit': 'invisible'}
         )),
 
     StringField('SubjectID',
+        required=1,
         searchable=True,
         widget=StringWidget(
             label=_("Subject ID"),

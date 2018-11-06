@@ -183,8 +183,8 @@ SerumColour = StringField(
     vocabulary='getSerumColours',
     widget=BikaSelectionWidget(
         format='select',
-        label=_("Colour of Plasma or Serurm (If not normal)"),
-        description=_("If Plasma or Serum is not golden in colour and semi transparent, indicate the colour"),
+        label=_("Colour of Plasma or Serum (If not normal)"),
+        description=_("Indicate the colour of plasma or serum if it is not golden (semi-transparent)"),
         visible={'edit': 'visible', 'view': 'visible'},
         # render_own_label=True,
     )
@@ -193,12 +193,12 @@ SerumColour = StringField(
 CfgDateTime = DateTimeField(
     'CfgDateTime',
     mode="rw",
-    required=True,
+    # required=True,
     read_permission=permissions.View,
     write_permission=permissions.ModifyPortalContent,
     widget=DateTimeWidget(
-        label=_("Centrifugation/Formalin Start Time"),
-        description=_("If applicable, define when centrifugation of the sample starts OR when is the sample put in formalin."),
+        label=_("Centrifuge/Formalin Start Time"),
+        description=_("If applicable, indicate when sample centrifugation starts OR when the sample is put in formalin."),
         show_time=True,
         visible={'edit': 'visible', 'view': 'visible'}
     )

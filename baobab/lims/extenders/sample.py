@@ -277,7 +277,7 @@ class SampleSchemaExtender(object):
             widget=BikaSelectionWidget(
                 format='select',
                 label=_("Baby No. (if applicable)"),
-                description=_('Number of the baby if woman has atleast one.'),
+                description=_('Indicate baby number if the sample is collected from a baby.'),
                 visible={'edit': 'visible',
                          'view': 'visible',
                          },
