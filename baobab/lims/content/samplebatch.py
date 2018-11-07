@@ -116,8 +116,8 @@ ParentBiospecimen = ReferenceField(
             'review_state': 'sample_received'
         },
         colModel=[{'columnName': 'UID', 'hidden': True},
-                  {'columnName': 'Title', 'width': '50', 'label': _('Title')},
-                  {"columnName": "LocationTitle", "align": "left", "label": "Location", "width": "50"}
+                  {'columnName': 'Title', 'width': '30', 'label': _('Title')},
+                  {"columnName": "LocationTitle", "align": "left", "label": "Location", "width": "70"}
                   ],
     )
 )
@@ -143,7 +143,7 @@ Location = ReferenceField(
         widget=bika_ReferenceWidget(
             label=_("Storage Location"),
             description=_("Location where biospecimens will be kept."),
-            size=40,
+            size=60,
             base_query={
                 'inactive_state': 'active',
                 'review_state': 'available',
@@ -154,8 +154,8 @@ Location = ReferenceField(
             showOn=True,
             colModel=[
                 {'columnName': 'UID', 'hidden': True},
-                {'columnName': 'Title', 'width': '10', 'label': _('Title')},
-                {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "80"},
+                {'columnName': 'Title', 'width': '20', 'label': _('Title')},
+                {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "70"},
                 {"columnName": "FreePositions", "align": "left", "label": "Free", "width": "10"},
             ],
 
