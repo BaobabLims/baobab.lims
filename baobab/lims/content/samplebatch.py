@@ -143,7 +143,7 @@ Location = ReferenceField(
         widget=bika_ReferenceWidget(
             label=_("Storage Location"),
             description=_("Location where biospecimens will be kept."),
-            size=40,
+            size=60,
             base_query={
                 'inactive_state': 'active',
                 'review_state': 'available',
@@ -154,8 +154,8 @@ Location = ReferenceField(
             showOn=True,
             colModel=[
                 {'columnName': 'UID', 'hidden': True},
-                {'columnName': 'Title', 'width': '10', 'label': _('Title')},
-                {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "80"},
+                {'columnName': 'Title', 'width': '20', 'label': _('Title')},
+                {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "70"},
                 {"columnName": "FreePositions", "align": "left", "label": "Free", "width": "10"},
             ],
 
@@ -183,8 +183,8 @@ SerumColour = StringField(
     vocabulary='getSerumColours',
     widget=BikaSelectionWidget(
         format='select',
-        label=_("Colour of Plasma or Serum)"),
-        description=_("Indicate the colour of plasma or serum if it is not golden (semi transparent)."),
+        label=_("Colour of Plasma or Serum (If not normal)"),
+        description=_("Indicate the colour of plasma or serum if it is not golden (semi-transparent)"),
         visible={'edit': 'visible', 'view': 'visible'},
         # render_own_label=True,
     )
@@ -197,8 +197,8 @@ CfgDateTime = DateTimeField(
     read_permission=permissions.View,
     write_permission=permissions.ModifyPortalContent,
     widget=DateTimeWidget(
-        label=_("Centrifugation/Formalin Start Time"),
-        description=_("If applicable, indicate when centrifugation of the sample starts OR when is the sample put in formalin."),
+        label=_("Centrifuge/Formalin Start Time"),
+        description=_("If applicable, indicate when sample centrifugation starts OR when the sample is put in formalin."),
         show_time=True,
         visible={'edit': 'visible', 'view': 'visible'}
     )
@@ -249,3 +249,4 @@ def ObjectModifiedEventHandler(instance, event):
         renameAfterEdit(instance)
 
 registerType(SampleBatch, PROJECTNAME)
+
