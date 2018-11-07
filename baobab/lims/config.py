@@ -21,7 +21,9 @@ DIMENSION_OPTIONS = DisplayList((
 
 VOLUME_UNITS = [
     {'ResultValue': '1', 'ResultText': 'ml'},
-    {'ResultValue': '2', 'ResultText': 'kg'}
+    {'ResultValue': '2', 'ResultText': 'ul'},
+    {'ResultValue': '1', 'ResultText': 'g'},
+    {'ResultValue': '2', 'ResultText': 'mg'},
 ]
 
 PRICELIST_TYPES = DisplayList((

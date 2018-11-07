@@ -89,30 +89,30 @@ class SampleSchemaExtender(object):
                 render_own_label=True,
             ),
         ),
-        ExtReferenceField(
-            'Kit',
-            vocabulary_display_path_bound=sys.maxint,
-            allowed_types=('Kit',),
-            relationship='SampleKit',
-            referenceClass=HoldingReference,
-            widget=bika_ReferenceWidget(
-                label=_("Kit"),
-                catalog_name='bika_catalog',
-                visible={'view': 'visible',
-                         'edit': 'visible',
-                         'header_table': 'visible',
-                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
-                         'sample_due': {'view': 'visible', 'edit': 'visible'},
-                         'sampled': {'view': 'visible', 'edit': 'invisible'},
-                         'sample_received': {'view': 'visible', 'edit': 'visible'},
-                         'expired': {'view': 'visible', 'edit': 'visible'},
-                         'disposed': {'view': 'visible', 'edit': 'invisible'},
-                         },
-                showOn=True,
-                render_own_label = True,
-                description=_("Select the kit of the sample if exists."),
-            ),
-        ),
+        # ExtReferenceField(
+        #     'Kit',
+        #     vocabulary_display_path_bound=sys.maxint,
+        #     allowed_types=('Kit',),
+        #     relationship='SampleKit',
+        #     referenceClass=HoldingReference,
+        #     widget=bika_ReferenceWidget(
+        #         label=_("Kit"),
+        #         catalog_name='bika_catalog',
+        #         visible={'view': 'visible',
+        #                  'edit': 'visible',
+        #                  'header_table': 'visible',
+        #                  'sample_registered': {'view': 'visible', 'edit': 'visible'},
+        #                  'sample_due': {'view': 'visible', 'edit': 'visible'},
+        #                  'sampled': {'view': 'visible', 'edit': 'invisible'},
+        #                  'sample_received': {'view': 'visible', 'edit': 'visible'},
+        #                  'expired': {'view': 'visible', 'edit': 'visible'},
+        #                  'disposed': {'view': 'visible', 'edit': 'invisible'},
+        #                  },
+        #         showOn=True,
+        #         render_own_label = True,
+        #         description=_("Select the kit of the sample if exists."),
+        #     ),
+        # ),
         ExtReferenceField(
             'Batch',
             vocabulary_display_path_bound=sys.maxint,
@@ -142,7 +142,7 @@ class SampleSchemaExtender(object):
             widget=bika_ReferenceWidget(
                 label=_("Storage Location"),
                 description=_("Location where item is kept"),
-                size=40,
+                size=50,
                 visible={'edit': 'visible',
                          'view': 'visible',
                          'header_table': 'visible',
@@ -160,7 +160,7 @@ class SampleSchemaExtender(object):
                             'review_state': 'available',
                             'object_provides': ISampleStorageLocation.__identifier__},
                 colModel=[{'columnName': 'UID', 'hidden': True},
-                          {'columnName': 'Title', 'width': '50', 'label': _('Title')}
+                          {'columnName': 'Title', "align": "left", 'width': '100', 'label': _('Title')}
                           ],
             )
         ),
@@ -188,6 +188,7 @@ class SampleSchemaExtender(object):
         ),
         ExtStringField(
             'SubjectID',
+            required=1,
             searchable=True,
             widget=StringWidget(
                 label=_("Subject ID"),
@@ -249,7 +250,8 @@ class SampleSchemaExtender(object):
         ExtStringField(
             'Unit',
             default="ul",
-            vocabulary=UnitsVocabulary(),
+            # vocabulary=UnitsVocabulary(),
+            vocabulary='getUnits',
             # widget=SelectionWidget(
             widget=BikaSelectionWidget(
                 format='select',
@@ -277,7 +279,7 @@ class SampleSchemaExtender(object):
             widget=BikaSelectionWidget(
                 format='select',
                 label=_("Baby No. (if applicable)"),
-                description=_('Number of the baby if woman has atleast one.'),
+                description=_('Indicate baby number if the sample is taken from a baby.'),
                 visible={'edit': 'visible',
                          'view': 'visible',
                          },
@@ -398,9 +400,9 @@ class SampleSchemaExtender(object):
     def getOrder(self, schematas):
         sch = schematas['default']
         sch.remove('Project')
-        sch.remove('Kit')
+        # sch.remove('Kit')
         sch.insert(sch.index('SampleType'), 'Project')
-        sch.insert(sch.index('SampleType'), 'Kit')
+        # sch.insert(sch.index('SampleType'), 'Kit')
         return schematas
 
     def getFields(self):
@@ -433,8 +435,11 @@ class Sample(BaseSample):
         else:
             return self.aq_parent.UID()
 
+    # def getUnits(self):
+    #     return ['ul', 'ml', 'mg', 'g', 'other']
+
     def getUnits(self):
-        return ['ul', 'ml', 'mg', 'g', 'other']
+        return ['ul', 'ml', 'mg', 'g']
 
     def getLastARNumber(self):
         ARs = self.getBackReferences("AnalysisRequestSample")

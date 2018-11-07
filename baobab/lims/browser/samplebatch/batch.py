@@ -80,7 +80,10 @@ class BatchView(BrowserView):
         self.location = ','.join(location_paths)
 
         self.creation_date = context.getDateCreated().strftime("%Y/%m/%d %H:%M")
-        self.contrifugation_date = context.getCfgDateTime().strftime("%Y/%m/%d %H:%M")
+        try:
+            self.contrifugation_date = context.getCfgDateTime().strftime("%Y/%m/%d %H:%M")
+        except:
+            self.contrifugation_date = ''
 
         return self.template()
 
@@ -112,6 +115,7 @@ class EditView(BrowserView):
 
             old_qty = int(batch.Quantity or 0)
             new_qty = int(self.form.get('Quantity', 0))
+
             batch.processForm()
             self.create_samples(batch, self.form, new_qty - old_qty)
 

@@ -52,19 +52,44 @@ class SampleGeneration:
     def store_samples(self, items, storages):
         """ store items inside selected storages
         """
+
         wf = getToolByName(self.project, 'portal_workflow')
+        free_positions = []
+
         for storage in storages:
             if IManagedStorage.providedBy(storage):
-                free_positions = storage.get_free_positions()
-                if len(items) <= len(free_positions):
-                    for i, item in enumerate(items):
-                        item.setStorageLocation(free_positions[i])
-                        wf.doActionFor(free_positions[i], 'reserve')
-                else:
-                    for i, position in enumerate(free_positions):
-                        items[i].setStorageLocation(position)
-                        wf.doActionFor(position, 'reserve')
-                        items.remove(items[i])
+                free_positions_in_storage = storage.get_free_positions()
+
+                for position in free_positions_in_storage:
+                    free_positions.append(position)
+
+        for free_position in free_positions:
+            if len(items) > 0:
+                item = items.pop(0)
+                item.setStorageLocation(free_position)
+                wf.doActionFor(free_position, 'reserve')
+            else:
+                break
+
+        # for storage in storages:
+        #     print('------------')
+        #     print(storage)
+        #     if IManagedStorage.providedBy(storage):
+        #         free_positions = storage.get_free_positions()
+        #         if len(items) <= len(free_positions):
+        #             print('---less than storage----')
+        #             for i, item in enumerate(items):
+        #                 print('store less')
+        #                 item.setStorageLocation(free_positions[i])
+        #                 wf.doActionFor(free_positions[i], 'reserve')
+        #                 items.remove(item)
+        #         else:
+        #             print('---more than storage----')
+        #             for i, position in enumerate(free_positions):
+        #                 print('store more for item number %s' %str(i))
+        #                 items[i].setStorageLocation(position)
+        #                 wf.doActionFor(position, 'reserve')
+        #                 items.remove(items[i])
 
     def get_biospecimen_storages(self):
         """Take a list of UIDs from the form, and resolve to a list of Storages.

@@ -102,7 +102,7 @@ class BiospecimensView(BikaListingView):
                 'toggle': True
             },
             'CFGTime': {
-                'title': _('Centrifuge Time'),
+                'title': _('Centrifuge/Formalin Start Time'),
                 'toggle': True
             },
 
@@ -342,6 +342,8 @@ class BiospecimensView(BikaListingView):
             items[x]['Unit'] = obj.getField('Unit').get(obj)
             items[x]['SubjectID'] = obj.getField('SubjectID').get(obj)
             project = obj.getField('Project').get(obj)
+            if not project:
+               project = obj.aq_parent
             items[x]['Project'] = project
             storage_location = obj.getField('StorageLocation').get(obj)
             if storage_location:

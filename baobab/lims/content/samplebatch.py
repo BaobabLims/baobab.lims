@@ -116,8 +116,8 @@ ParentBiospecimen = ReferenceField(
             'review_state': 'sample_received'
         },
         colModel=[{'columnName': 'UID', 'hidden': True},
-                  {'columnName': 'Title', 'width': '50', 'label': _('Title')},
-                  {"columnName": "LocationTitle", "align": "left", "label": "Location", "width": "50"}
+                  {'columnName': 'Title', 'width': '30', 'label': _('Title')},
+                  {"columnName": "LocationTitle", "align": "left", "label": "Location", "width": "70"}
                   ],
     )
 )
@@ -183,8 +183,8 @@ SerumColour = StringField(
     vocabulary='getSerumColours',
     widget=BikaSelectionWidget(
         format='select',
-        label=_("Colour of Plasma or Serurm (If not normal)"),
-        description=_("If Plasma or Serum is not golden in colour and semi transparent, indicate the colour"),
+        label=_("Colour of Plasma or Serum)"),
+        description=_("Indicate the colour of plasma or serum if it is not golden (semi transparent)."),
         visible={'edit': 'visible', 'view': 'visible'},
         # render_own_label=True,
     )
@@ -193,12 +193,12 @@ SerumColour = StringField(
 CfgDateTime = DateTimeField(
     'CfgDateTime',
     mode="rw",
-    required=True,
+    # required=True,
     read_permission=permissions.View,
     write_permission=permissions.ModifyPortalContent,
     widget=DateTimeWidget(
         label=_("Centrifugation/Formalin Start Time"),
-        description=_("If applicable, define when centrifugation of the sample starts OR when is the sample put in formalin."),
+        description=_("If applicable, indicate when centrifugation of the sample starts OR when is the sample put in formalin."),
         show_time=True,
         visible={'edit': 'visible', 'view': 'visible'}
     )
@@ -236,5 +236,16 @@ class SampleBatch(BaseContent):
 
     def getSerumColours(self):
         return ['', 'pink or red (haemolised)', 'opaque or white (lipaemic)']
+
+def ObjectModifiedEventHandler(instance, event):
+    """ Called if the object is modified.
+        Note from QC 2018-11-05:  As far as I can see this change happens after the object is modified.
+        I tested by altering the Serum Colour and by the time it does a data dump here the object
+        already has the new colour.
+    """
+
+    if instance.portal_type == 'SampleBatch':
+        from baobab.lims.idserver import renameAfterEdit
+        renameAfterEdit(instance)
 
 registerType(SampleBatch, PROJECTNAME)

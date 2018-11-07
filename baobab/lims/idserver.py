@@ -45,3 +45,11 @@ def renameAfterCreation(obj):
     new_id = generateUniqueId(obj)
     obj.aq_inner.aq_parent.manage_renameObject(obj.id, new_id)
     return new_id
+
+def renameAfterEdit(obj):
+    # Can't rename without a subtransaction commit when using portal_factory
+    transaction.savepoint(optimistic=True)
+    # The id returned should be normalized already
+    new_id = generateUniqueId(obj)
+    obj.aq_inner.aq_parent.manage_renameObject(obj.id, new_id)
+    return new_id
