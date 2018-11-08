@@ -6,7 +6,7 @@ _Baobab_ is a common name given to nine tree species in different countries in t
 
 Baobab LIMS written in Plone, a python framework known for its robustness, and inherits some modules from Bika LIMS.
 
-## Try it out
+## Up and Running
 
 ### Using PWD
 
@@ -14,7 +14,7 @@ Click the _Try in PWD_ button below to get 4 hours to try Baobab LIMS in the clo
 
 **[DockerHub](https://hub.docker.com/) account needed.**
 
-**Use `admin:adminsecret` for `username:password`.**
+**Authentication: `admin:adminsecret`**
 
 [![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](http://play-with-docker.com?stack=https://raw.githubusercontent.com/BaobabLims/baobab.lims/master/stack.yml)
 
@@ -28,15 +28,21 @@ Kindly install docker using instructions from [here](https://www.docker.com/comm
 docker run -p 8080:8080 quay.io/baobab-lims/baobab-lims
 ```
 
-**Access Baobab LIMS on [localhost:8080](http://localhost:8080):**
-
-- Click on `Install a Baobab distribution`.
-- Check `Baobab LIMS` option, then click `Install` the form.
-- Authentication: `admin:adminsecret`
-
 ### Using [`docker-compose`](https://docs.docker.com/install/):
 
-- Baobab LIMS `docker-compose` [installation](https://github.com/BaobabLims/baobab.lims/blob/master/docker/README.md)
+```sh
+$ pip install docker-compose
+...
+$ git clone https://github.com/BaobabLims/baobab.lims.git
+$ cd baobab.lims
+$ docker-compose up -d
+```
+
+**Access Baobab LIMS on [localhost:8080](http://localhost:8080):**
+
+- Click on **`Install a Baobab distribution`**.
+- Check **`Baobab LIMS`** option, then click **`Install`** the form.
+- Authentication: **`admin:adminsecret`**
 
 ## Standalone installation:
 
