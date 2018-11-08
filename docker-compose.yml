@@ -2,7 +2,6 @@ version: "2"
 services:
   nginx:
     restart: always
-    build: ./docker/nginx/
     image: quay.io/sanbi-sa/baobab-nginx:1.15
     container_name: baobab_nginx
     ports:
