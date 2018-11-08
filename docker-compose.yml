@@ -10,6 +10,7 @@ services:
       - baobab_lims
   baobab_lims:
     restart: always
+    build: ./docker/
     image: quay.io/baobab-lims/baobab-lims
     container_name: baobab_lims
     ports:
