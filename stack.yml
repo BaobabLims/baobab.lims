@@ -2,6 +2,6 @@ version: "3.0"
 
 services:
   baobab_lims:
-    image: quay.io/sanbi-sa/baobab-lims
+    image: quay.io/baobab-lims/baobab-lims
     ports:
       - 8080:8080
