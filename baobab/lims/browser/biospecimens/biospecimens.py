@@ -378,12 +378,14 @@ class BiospecimensView(BikaListingView):
                     items[x]['allow_edit'] = ['Type', 'Barcode', 'FrozenTime']
                     items[x]['choices']['Type'] = biospecimen_types
                 elif items[x]['review_state'] == "sample_due":
-                    items[x]['allow_edit'] = ['SubjectID', 'Volume', 'Unit']
+                    # items[x]['allow_edit'] = ['SubjectID', 'Volume', 'Unit']
+                    items[x]['allow_edit'] = ['Volume', 'Unit']
 
                     if not items[x]['Unit']:
                         items[x]['choices']['Unit'] = VOLUME_UNITS
                 elif items[x]['review_state'] == "sample_shipped":
-                    items[x]['allow_edit'] = ['SubjectID', 'Volume']
+                    # items[x]['allow_edit'] = ['SubjectID', 'Volume']
+                    items[x]['allow_edit'] = ['Volume']
 
             ret.append(item)
         return ret
