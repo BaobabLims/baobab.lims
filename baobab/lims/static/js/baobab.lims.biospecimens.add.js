@@ -6,6 +6,18 @@ function BaobabBiospecimensView() {
         // disable browser auto-complete
         $('input[type=text]').prop('autocomplete', 'off');
 
+        // SampleBatch Add/Edit page: hide or show the colour of Plasma/Serum based on selected batch type
+        $('tr[fieldname=SerumColour]').hide();
+        $('#BatchType').change(function() {
+            var batchTypeSelected = $("#BatchType :selected").text().toLowerCase();
+            var regex = new RegExp('(plasma|serum)');
+            if (regex.test(batchTypeSelected)) {
+               $('tr[fieldname=SerumColour]').show();
+            } else {
+               $('tr[fieldname=SerumColour]').hide();
+           }
+        });
+
         $($('select[selector^="Type_"]')).change(function () {
             cascadeSelectSampleType($(this))
         });

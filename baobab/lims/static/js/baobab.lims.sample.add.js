@@ -12,8 +12,10 @@ function BaobabSampleView() {
             filterKitByProject(element, "getParentUID", uid);
         });
 
+        $('tr[fieldname=Kit]').hide();
+        $('tr[fieldname=BabyNumber]').hide();
+
         $('#SampleType_uid').focus(function() {
-            $('tr[fieldname=BabyNumber]').hide();
             var uid = $(this).val();
             sampleTypeSelected(uid);
         });
@@ -84,9 +86,11 @@ function BaobabSampleView() {
               sampleType = data.objects[0];
               var sampletype_hasBabyNumber = sampleType['HasBabyNumber']
               if (sampletype_hasBabyNumber){
-                     $('tr[fieldname=BabyNumber]').show();
-                  }
+                $('tr[fieldname=BabyNumber]').show();
+              } else {
+                $('tr[fieldname=BabyNumber]').hide();
               }
-            });
+            }
+        });
     }
 }
