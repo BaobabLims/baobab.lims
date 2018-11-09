@@ -80,6 +80,9 @@ class BatchView(BrowserView):
         self.location = ','.join(location_paths)
 
         self.creation_date = context.getDateCreated().strftime("%Y/%m/%d %H:%M")
+
+        self.serumColour = context.getField('SerumColour').get(context)
+
         try:
             self.contrifugation_date = context.getCfgDateTime().strftime("%Y/%m/%d %H:%M")
         except:

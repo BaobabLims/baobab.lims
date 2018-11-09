@@ -53,6 +53,7 @@ BatchType = StringField(
         format='select',
         label=_("Batch Type"),
         description=_("Select a batch type in order to differentiate this batch from others."),
+        size=40,
         visible={'edit': 'visible', 'view': 'visible'},
         # render_own_label=True,
     )
@@ -183,8 +184,9 @@ SerumColour = StringField(
     vocabulary='getSerumColours',
     widget=BikaSelectionWidget(
         format='select',
-        label=_("Colour of Plasma or Serum (If not normal)"),
-        description=_("Indicate the colour of plasma or serum if it is not golden (semi-transparent)"),
+        label=_("Colour of Plasma or Serum"),
+        description=_("Indicate the colour of plasma or serum"),
+        size=40,
         visible={'edit': 'visible', 'view': 'visible'},
         # render_own_label=True,
     )
@@ -235,7 +237,7 @@ class SampleBatch(BaseContent):
         renameAfterCreation(self)
 
     def getSerumColours(self):
-        return ['', 'pink or red (haemolised)', 'opaque or white (lipaemic)']
+        return ['', 'golden and semi-transparent (normal)', 'pink or red (haemolised)', 'opaque or white (lipaemic)']
 
 def ObjectModifiedEventHandler(instance, event):
     """ Called if the object is modified.
