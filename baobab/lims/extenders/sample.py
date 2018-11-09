@@ -251,7 +251,8 @@ class SampleSchemaExtender(object):
         ),
         ExtStringField(
             'Unit',
-            default="ul",
+            required=1,
+            default="",
             # vocabulary=UnitsVocabulary(),
             vocabulary='getUnits',
             # widget=SelectionWidget(
@@ -441,7 +442,7 @@ class Sample(BaseSample):
     #     return ['ul', 'ml', 'mg', 'g', 'other']
 
     def getUnits(self):
-        return ['ul', 'ml', 'mg', 'g']
+        return ['', 'ul', 'ml', 'mg', 'g', 'mm']
 
     def getLastARNumber(self):
         ARs = self.getBackReferences("AnalysisRequestSample")
