@@ -1,4 +1,4 @@
-FROM plone:4.3
+FROM plone:4.3.11
 
 LABEL MAINTAINERS="thoba@sanbi.ac.za and hocine@sanbi.ac.za"
 
@@ -18,4 +18,4 @@ RUN git clone https://github.com/BaobabLims/baobab.lims.git \
     && git clone https://github.com/BaobabLims/graphite.theme.git
 
 COPY buildout.cfg /plone/instance/buildout.cfg
-RUN sudo -u plone buildout -n
+RUN sudo -u plone bin/buildout -n
