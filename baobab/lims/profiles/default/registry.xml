@@ -26,7 +26,8 @@
             <element>ml</element>
             <element>mg</element>
             <element>g</element>
-        </value>
+            <element>mm</element>
+       </value>
     </record>
     <record name="baobab.lims.samplebatch.batch_types">
         <field type="plone.registry.field.Tuple">

@@ -24,6 +24,7 @@ VOLUME_UNITS = [
     {'ResultValue': '2', 'ResultText': 'ul'},
     {'ResultValue': '1', 'ResultText': 'g'},
     {'ResultValue': '2', 'ResultText': 'mg'},
+    {'ResultValue': '1', 'ResultText': 'mm'},
 ]
 
 PRICELIST_TYPES = DisplayList((
