@@ -13,7 +13,8 @@ function BaobabSampleView() {
         });
 
         $('tr[fieldname=Kit]').hide();
-        $('tr[fieldname=BabyNumber]').hide();
+        // $('tr[fieldname=BabyNumber]').hide();
+        sampleTypeSelected($('#SampleType_uid').val());
 
         $('#SampleType_uid').focus(function() {
             var uid = $(this).val();
@@ -89,6 +90,7 @@ function BaobabSampleView() {
                 $('tr[fieldname=BabyNumber]').show();
               } else {
                 $('tr[fieldname=BabyNumber]').hide();
+                $('#BabyNumber option:first-child').attr("selected", "selected");
               }
             }
         });

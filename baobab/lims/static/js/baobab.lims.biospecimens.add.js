@@ -7,15 +7,11 @@ function BaobabBiospecimensView() {
         $('input[type=text]').prop('autocomplete', 'off');
 
         // SampleBatch Add/Edit page: hide or show the colour of Plasma/Serum based on selected batch type
-        $('tr[fieldname=SerumColour]').hide();
+        // $('tr[fieldname=SerumColour]').hide();
+        updateSerumColour();
+
         $('#BatchType').change(function() {
-            var batchTypeSelected = $("#BatchType :selected").text().toLowerCase();
-            var regex = new RegExp('(plasma|serum)');
-            if (regex.test(batchTypeSelected)) {
-               $('tr[fieldname=SerumColour]').show();
-            } else {
-               $('tr[fieldname=SerumColour]').hide();
-           }
+            updateSerumColour();
         });
 
         $($('select[selector^="Type_"]')).change(function () {
@@ -34,6 +30,17 @@ function BaobabBiospecimensView() {
                 barcode_change_timer = setTimeout(function(){updateFrozenTime(uid)}, 500);
             }
         });
+    }
+
+    function updateSerumColour() {
+        var batchTypeSelected = $("#BatchType :selected").text().toLowerCase();
+        var regex = new RegExp('(plasma|serum)');
+        if (regex.test(batchTypeSelected)) {
+            $('tr[fieldname=SerumColour]').show();
+        } else {
+            $('tr[fieldname=SerumColour]').hide();
+            $('#SerumColour option:first-child').attr("selected", "selected");
+        }
     }
 
     function updateFrozenTime(uid){
@@ -56,10 +63,12 @@ function BaobabBiospecimensView() {
                 current_date_and_time = current_date + ' ' + current_time
 
                 $('input[selector^="FrozenTime_"]').each(function( frozen_index, frozen_element ) {
-                    if (index == frozen_index){
-                        console.debug(frozen_element)
-                        $(frozen_element).val(current_date_and_time)
-                    }
+                    $(frozen_element).val(current_date_and_time)
+
+                    //if (index == frozen_index){
+                    //    console.debug(frozen_element)
+                    //    $(frozen_element).val(current_date_and_time)
+                    //}
                 });
 
             }
