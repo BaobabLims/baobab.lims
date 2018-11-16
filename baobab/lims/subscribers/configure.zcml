@@ -16,4 +16,16 @@
         handler=".sample.ObjectModifiedEventHandler"
     />
 
+    <subscriber
+        for="baobab.lims.interfaces.IBatch
+             Products.Archetypes.interfaces.IObjectInitializedEvent"
+        handler=".batch.ObjectInitializedEventHandler"
+    />
+
+    <subscriber
+        for="baobab.lims.interfaces.IBatch
+             Products.Archetypes.interfaces.IObjectEditedEvent"
+        handler=".batch.ObjectModifiedEventHandler"
+    />
+
 </configure>

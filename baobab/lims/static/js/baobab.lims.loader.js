@@ -32,7 +32,7 @@ window.baobab.lims.controllers =  {
     ".portaltype-biospecimens":
         ['BaobabBiospecimensView'],
     ".portaltype-samplebatch":
-        ['BaobabBiospecimensView']
+        ['BaobabBiospecimensView', 'BaobabSampleBatchEditView']
 };
 
 /**

@@ -100,6 +100,17 @@
           inline="False"
           insert-after="*"/>
 
+  <javascript authenticated="True"
+          id="++resource++baobab.lims.js/baobab.lims.samplebatch.add.js"
+          cacheable="True"
+          compression="safe"
+          conditionalcomment=""
+          cookable="True"
+          enabled="on"
+          expression=""
+          inline="False"
+          insert-after="*"/>
+
   <!-- Add javascripts ALWAYS BEFORE this one -->
   <javascript authenticated="True"
               id="++resource++baobab.lims.js/baobab.lims.loader.js"

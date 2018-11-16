@@ -32,4 +32,11 @@
       permission="zope.Public"
     />
 
+    <browser:page
+      for="...interfaces.IBatch"
+      name="retrieve_date_created"
+      class=".get_date_created.GetDateCreated"
+      permission="zope.Public"
+    />
+
 </configure>
