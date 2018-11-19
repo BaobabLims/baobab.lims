@@ -1,8 +1,9 @@
-from zope.interface import alsoProvides
-from Products.Five.utilities.marker import erase
+# from zope.interface import alsoProvides
+# from Products.Five.utilities.marker import erase
 from bika.lims.workflow import doActionFor
-from baobab.lims.interfaces import ISharableSample
+# from baobab.lims.interfaces import ISharableSample
 from baobab.lims.browser.project import create_samplepartition
+from utils import getLocalServerTime
 
 
 def ObjectInitializedEventHandler(instance, event):
@@ -32,6 +33,8 @@ def ObjectInitializedEventHandler(instance, event):
                 doActionFor(location, 'occupy')
                 instance.update_box_status(location)
 
+        updateLocalServerTime(instance)
+
 
 def ObjectModifiedEventHandler(instance, event):
     """ Called if the object is modified
@@ -44,3 +47,14 @@ def ObjectModifiedEventHandler(instance, event):
         if instance.getField('Barcode').get(instance) != instance.getId():
             instance.setId(instance.getField('Barcode').get(instance))
 
+        updateLocalServerTime(instance)
+
+def updateLocalServerTime(instance):
+
+    sampling_date = instance.getField('SamplingDate').get(instance)
+    frozen_time = instance.getField('FrozenTime').get(instance)
+
+    new_sampling_date = getLocalServerTime(sampling_date)
+    new_frozen_time = getLocalServerTime(frozen_time)
+    instance.getField('SamplingDate').set(instance, new_sampling_date)
+    instance.getField('FrozenTime').set(instance, new_frozen_time)
