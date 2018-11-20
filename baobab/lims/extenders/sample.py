@@ -52,11 +52,12 @@ class SampleSchemaExtender(object):
             relationship='SampleProject',
             mode="rw",
             read_permission=permissions.View,
+            write_permission=permissions.ModifyPortalContent,
             widget=bika_ReferenceWidget(
                 label=_("Project"),
                 description=_("Select the project of the sample."),
                 render_own_label=True,
-                size=30,
+                size=50,
                 # catalog_name='bika_catalog',
                 # visible=False,
                 visible={
@@ -71,6 +72,10 @@ class SampleSchemaExtender(object):
                     'disposed': {'view': 'visible', 'edit': 'invisible'},
                 },
                 base_query={'inactive_state': 'active'},
+                colModel=[{"columnName": "UID", "hidden": True},
+                          {"columnName": "Title", "align": "left", "width": "60", "label": "Title"},
+                          {"columnName": "Description", "align": "left", "label": "Description", "width": "40"}
+                          ],
                 showOn=True,
             )
         ),
@@ -146,8 +151,8 @@ class SampleSchemaExtender(object):
                 catalog_name='bika_setup_catalog',
                 base_query={'inactive_state': 'active'},
                 colModel=[{'columnName': 'UID', 'hidden': True},
-                          {'columnName': 'Title', "align": "left", 'width': '50', 'label': _('Title')},
-                          {"columnName": "Description", "align": "left", "label": "Description", "width": "50"}
+                          {'columnName': 'Title', "align": "left", 'width': '60', 'label': _('Title')},
+                          {"columnName": "Description", "align": "left", "label": "Description", "width": "40"}
                           ],
                 showOn=True,
             ),
@@ -272,7 +277,7 @@ class SampleSchemaExtender(object):
             widget=DecimalWidget(
                 label=_("Volume"),
                 size=15,
-                description=_("The volume of the biospecimen taken from the subject."),
+                description=_("The volume of the biospecimen taken from the subject. For placenta parent biospecimen, enter Placenta Weight here."),
                 visible={'edit': 'visible',
                          'view': 'visible',
                          'header_table': 'visible',

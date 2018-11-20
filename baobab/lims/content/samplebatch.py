@@ -30,7 +30,7 @@ class BatchTypeVocabulary(object):
         batch_types = []
         if registry is not None:
 
-            for batch_type in registry.get('baobab.lims.samplebatch.batch_types', ()):
+            for batch_type in sorted(registry.get('baobab.lims.samplebatch.batch_types', ())):
                 batch_types.append([batch_type, batch_type])
 
         return DisplayList(batch_types)
@@ -53,7 +53,7 @@ BatchType = StringField(
         format='select',
         label=_("Batch Type"),
         description=_("Select a batch type in order to differentiate this batch from others."),
-        size=40,
+        size=50,
         visible={'edit': 'visible', 'view': 'visible'},
         # render_own_label=True,
     )
@@ -69,10 +69,14 @@ Project = ReferenceField(
         label=_("Project"),
         # catalog_name='bika_catalog',
         visible={'edit': 'visible', 'view': 'visible'},
-        size=30,
+        size=50,
         showOn=True,
         render_own_label=True,
-        description=_("Select the project of the sample."),
+        description=_("Select the project of the sample batch."),
+        colModel=[{"columnName": "UID", "hidden": True},
+                  {"columnName": "Title", "align": "left", "width": "60", "label": "Title"},
+                  {"columnName": "Description", "align": "left", "label": "Description", "width": "40"}
+                  ],
     )
 )
 
@@ -237,7 +241,7 @@ class SampleBatch(BaseContent):
         renameAfterCreation(self)
 
     def getSerumColours(self):
-        return ['', 'golden and semi-transparent (normal)', 'pink or red (haemolised)', 'opaque or white (lipaemic)']
+        return ['', 'golden (semi-transparent)', 'pink or red (haemolised)', 'opaque or white (lipaemic)']
 
 def ObjectModifiedEventHandler(instance, event):
     """ Called if the object is modified.
