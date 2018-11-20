@@ -6,12 +6,24 @@ function BaobabBiospecimensView() {
         // disable browser auto-complete
         $('input[type=text]').prop('autocomplete', 'off');
 
+        // SampleBatch Add/Edit page: hide the temporary batch title
+        hideBatchTitle();
+
         // SampleBatch Add/Edit page: hide or show the colour of Plasma/Serum based on selected batch type
-        // $('tr[fieldname=SerumColour]').hide();
-        updateSerumColour();
+        var batchType = $("#BatchType :selected").text();
+        if (batchType) {
+            batchType = batchType.toLowerCase();
+            updateSerumColour(batchType);
+            updateCentrifugeFormalinTime(batchType);
+        }
+
+        // For Sample batch --> Biospecimens list page: update the list of Sample Type to exclude "collection-" types
+        updateTypeList();
 
         $('#BatchType').change(function() {
-            updateSerumColour();
+            var thisBatchType = $("#BatchType :selected").text().toLowerCase();
+            updateSerumColour(thisBatchType);
+            updateCentrifugeFormalinTime(thisBatchType);
         });
 
         $($('select[selector^="Type_"]')).change(function () {
@@ -32,14 +44,40 @@ function BaobabBiospecimensView() {
         });
     }
 
-    function updateSerumColour() {
-        var batchTypeSelected = $("#BatchType :selected").text().toLowerCase();
+    function updateTypeList() {
+         $('select[selector^="Type_"]').each(function( index, element ) {
+            $('option').filter(function() {
+                return /^(Collection)/.test(this.text);
+            }).remove();
+         });
+    }
+
+    function hideBatchTitle() {
+        var title = $('#title').attr('value');
+        $('tr[fieldname=title]').show();
+        if (title) {
+            if (title.toString() == 'Temporary title') {
+                $('tr[fieldname=title]').hide();
+            }
+        }
+    }
+
+    function updateSerumColour(batchTypeSelected) {
         var regex = new RegExp('(plasma|serum)');
         if (regex.test(batchTypeSelected)) {
             $('tr[fieldname=SerumColour]').show();
         } else {
             $('tr[fieldname=SerumColour]').hide();
             $('#SerumColour option:first-child').attr("selected", "selected");
+        }
+    }
+
+    function updateCentrifugeFormalinTime(batchTypeSelected) {
+        var regex = new RegExp('(plasma|serum|buffy|sediment|dacron|formalin)');
+        if (regex.test(batchTypeSelected)) {
+            $('tr[fieldname=CfgDateTime]').show();
+        } else {
+            $('tr[fieldname=CfgDateTime]').hide();
         }
     }
 
