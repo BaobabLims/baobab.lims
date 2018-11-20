@@ -79,7 +79,7 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
         widget=DecimalWidget(
             label=_("Volume"),
             size=15,
-            description=_("The The volume of the biospecimen taken from the subject."),
+            description=_("The volume of the biospecimen taken from the subject."),
             visible={'edit': 'visible', 'view': 'visible'}
         )),
 
