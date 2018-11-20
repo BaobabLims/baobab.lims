@@ -78,6 +78,13 @@ class SampleView(BrowserView):
                        kit.absolute_url(),
                        kit.Title()) or None
 
+        sample_batch = context.getField('Batch').get(context)
+        self.sample_batch = sample_batch and "<a href='%s'>%s</a>" % (
+                                 sample_batch.absolute_url(),
+                                 sample_batch.Title()) or None
+
+        self.sample_type = context.getSampleType() and context.getSampleType().Title() or ''
+
         location = context.getField('StorageLocation').get(context)
         self.location = location and "<a href='%s'>%s</a>" % (
                                  location.absolute_url(),
