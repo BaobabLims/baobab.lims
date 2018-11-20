@@ -124,6 +124,25 @@ function BaobabSampleView() {
                 $('tr[fieldname=BabyNumber]').hide();
                 $('#BabyNumber option:first-child').attr("selected", "selected");
               }
+
+              var theSampleType = $('#SampleType').attr("val_check").toLowerCase();
+              var regex = new RegExp('(collection|heel|card)+((?!delayed|clotted).)*$');
+              if (uid && regex.test(theSampleType)) {
+                $('tr[fieldname=FrozenTime]').hide();
+              } else {
+                $('tr[fieldname=FrozenTime]').show();
+              }
+
+              var parentBiospecimenUid = $('#LinkedSample_uid').attr('value')
+              // var sampleTypeUid = $('#SampleType_uid').attr('value')
+              if (uid && !parentBiospecimenUid) {
+                var rgx = new RegExp('(collection|heel)');
+                if (!rgx.test(theSampleType)) {
+                    $("#SampleType").each( function() {
+                      alert("If you are creating a parent biospecimen, please search and choose a 'Collection' sample type or 'Heal Prick'.");
+                    });
+                }
+              }
             }
         });
     }
