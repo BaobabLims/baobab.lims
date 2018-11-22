@@ -34,7 +34,7 @@
             <title i18n:translate="">Batch Types</title>
             <value_type type="plone.registry.field.TextLine" />
         </field>
-        <value key="resources">
+        <value>
             <element> </element>
             <element>Whole Blood</element>
             <element>Blood Spot Card</element>
