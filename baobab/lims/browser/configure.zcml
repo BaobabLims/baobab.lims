@@ -31,7 +31,7 @@
     <include package=".ontologies"/>
     <include package=".sampleshipments"/>
     <include package=".sampleshipment"/>
-
+    <include package=".boxmovements"/>
     <!-- This registration allows additional sticker templates.
          To enable these, just copy one or more of the *.pt files
          from bika.lims/bika/lims/browser/templates/stickers

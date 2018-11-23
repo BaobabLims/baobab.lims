@@ -161,3 +161,12 @@ class ISampleShipment(Interface):
 class ISampleShipments(Interface):
     """
     """
+
+
+class IBoxMovement(Interface):
+    """
+    """
+
+class IBoxMovements(Interface):
+    """
+    """

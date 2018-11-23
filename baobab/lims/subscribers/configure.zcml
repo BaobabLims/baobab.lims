@@ -28,4 +28,16 @@
         handler=".batch.ObjectModifiedEventHandler"
     />
 
+     <subscriber
+        for="baobab.lims.interfaces.IBoxMovement
+             Products.Archetypes.interfaces.IObjectInitializedEvent"
+        handler=".boxmovement.ObjectInitializedEventHandler"
+    />
+
+    <subscriber
+        for="baobab.lims.interfaces.IBoxMovement
+             Products.Archetypes.interfaces.IObjectEditedEvent"
+        handler=".boxmovement.ObjectModifiedEventHandler"
+    />
+
 </configure>
