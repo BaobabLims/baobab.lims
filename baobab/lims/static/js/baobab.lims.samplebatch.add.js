@@ -12,7 +12,8 @@ function BaobabSampleBatchEditView() {
         var requestData = {
             catalog_name: "bika_catalog",
             portal_type: "SampleBatch",
-            Title: $('#title').val()
+            // Title: $('#title').val()
+            Title: $('#breadcrumbs-current').val()
         };
         window.bika.lims.jsonapi_read(requestData, function (data) {
             if (data.success && data.total_objects > 0) {

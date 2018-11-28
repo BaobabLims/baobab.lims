@@ -3,10 +3,10 @@ import time
 
 def getLocalServerTime(datetime_object):
     split_time = str(datetime_object).split('GMT')
-    print(split_time)
+    # print(split_time)
 
     new_time = split_time[0] + ' ' + getTimeZoneOffset()
-    print(new_time)
+    # print(new_time)
 
     return new_time
 
@@ -22,5 +22,5 @@ def getTimeZoneOffset():
     else:
         time_gmt = 'GMT+0'
 
-    print(time_gmt)
+    # print(time_gmt)
     return time_gmt
