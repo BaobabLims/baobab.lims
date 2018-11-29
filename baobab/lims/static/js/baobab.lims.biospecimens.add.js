@@ -101,12 +101,11 @@ function BaobabBiospecimensView() {
                 current_date_and_time = current_date + ' ' + current_time
 
                 $('input[selector^="FrozenTime_"]').each(function( frozen_index, frozen_element ) {
-                    $(frozen_element).val(current_date_and_time)
-
-                    //if (index == frozen_index){
-                    //    console.debug(frozen_element)
-                    //    $(frozen_element).val(current_date_and_time)
-                    //}
+                    //$(frozen_element).val(current_date_and_time)
+                    if (index == frozen_index){
+                        console.debug(frozen_element)
+                        $(frozen_element).val(current_date_and_time)
+                    }
                 });
 
             }
