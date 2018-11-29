@@ -131,14 +131,3 @@ class BoxMovementsView(BikaListingView):
                 items[x]['NewLocation'] = newLocation.Title()
 
         return items
-
-    # def getStringified(self, elements):
-    #     if not elements:
-    #         return ''
-    #
-    #     elements_list = []
-    #     for element in elements:
-    #         elements_list.append(element.title)
-    #
-    #     elements_string = ', '.join(map(str, elements_list))
-    #     return elements_string

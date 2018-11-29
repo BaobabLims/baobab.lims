@@ -33,6 +33,11 @@ Hierarchy = ComputedField(
     expression="here.getHierarchy()"
 )
 
+getOccupied = ComputedField(
+    'getOccupied',
+    expression="here.getOccupied()"
+)
+
 # ____Shelves representation____ #
 XAxis = IntegerField(
     'XAxis',
@@ -56,6 +61,7 @@ schema = BikaFolderSchema.copy() + Schema((
     Containers,
     FreePositions,
     Hierarchy,
+    getOccupied,
     XAxis,
     YAxis,
 ))
@@ -100,6 +106,11 @@ class ManagedStorage(ATFolder):
         wf = getToolByName(self, 'portal_workflow')
         return True if wf.getInfoFor(self, 'review_state') == 'available' \
             else False
+
+    def getOccupied(self):
+        if len(self.get_positions()) == len(self.get_free_positions()):
+            return True
+        return False
 
     def get_positions(self):
         pc = getToolByName(self, 'portal_catalog')

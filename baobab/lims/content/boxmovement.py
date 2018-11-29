@@ -1,13 +1,16 @@
 from AccessControl import ClassSecurityInfo
-from Products.Archetypes.public import *
+
+from bika.lims.browser.widgets import ReferenceWidget as BikaReferenceWidget, SelectionWidget
+from bika.lims.browser.fields import ProxyField
+from Products.Archetypes.public import ReferenceField, Schema, BaseContent, registerType, StringField, DisplayList, ReferenceWidget as OldRefWidget
 from Products.Archetypes.references import HoldingReference
 from Products.CMFCore import permissions
 from Products.CMFPlone.interfaces import IConstrainTypes
+from Products.CMFCore.utils import getToolByName
 from plone.indexer import indexer
 from zope.interface import implements
 
 from bika.lims.browser.widgets import DateTimeWidget
-from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from bika.lims.content.bikaschema import BikaSchema
 from bika.lims.browser.fields import DateTimeField
 from baobab.lims import bikaMessageFactory as _
@@ -20,14 +23,14 @@ StorageLocation = ReferenceField(
     'StorageLocation',
     allowed_types=('ManagedStorage'),
     relationship='ItemStorageLocation',
-    widget=bika_ReferenceWidget(
+    widget=BikaReferenceWidget(
         label=_("Storage Location"),
         description=_("Location where item is kept"),
         size=40,
         visible={'edit': 'visible', 'view': 'visible'},
-        catalog_name='portal_catalog',
+        catalog_name='bika_catalog',
         showOn=True,
-        base_query={'inactive_state': 'active'},
+        base_query={'inactive_state': 'active', 'getOccupied': False},
         colModel=[
             {'columnName': 'UID', 'hidden': True},
             {'columnName': 'Title', 'width': '20', 'label': _('Title')},
@@ -56,7 +59,7 @@ LabContact = ReferenceField(
     relationship='BoxMovementLabContact',
     mode="rw",
     read_permission=permissions.View,
-    widget=bika_ReferenceWidget(
+    widget=BikaReferenceWidget(
         label=_("Lab Contact"),
         description=_("Laboratory contact moving the box."),
         size=30,
@@ -73,23 +76,25 @@ LabContact = ReferenceField(
 NewLocation = ReferenceField(
     'NewLocation',
     allowed_types=('ManagedStorage'),
-    relationship='NewItemStorageLocation',
-    widget=bika_ReferenceWidget(
-        label=_("New Location"),
-        description=_("The New Location where item is to be kept"),
+    relationship='NewLocationItemStorageLocation',
+    widget = BikaReferenceWidget(
+        label=('New Location'),
+        description=_('The New Location where item is to be kept.'),
         size=40,
         visible={'edit': 'visible', 'view': 'visible'},
-        catalog_name='portal_catalog',
+        catalog_name='bika_catalog',
         showOn=True,
-        base_query={'inactive_state': 'active', 'review_state': 'available'},
+        base_query={'inactive_state': 'active', 'getOccupied': True},
         colModel=[
-            {'columnName': 'UID', 'hidden': True},
-            {'columnName': 'Title', 'width': '20', 'label': _('Title')},
-            {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "70"},
-            {"columnName": "FreePositions", "align": "left", "label": "Free", "width": "10"},
-        ],
-    )
+             {'columnName': 'UID', 'hidden': True},
+             {'columnName': 'Title', 'width': '20', 'label': _('Title')},
+             {"columnName": "Hierarchy", "align": "left", "label": "Hierarchy", "width": "70"},
+             {"columnName": "FreePositions", "align": "left", "label": "Free", "width": "10"},
+        ]
+    ),
 )
+
+
 schema = BikaSchema.copy() + Schema((
     StorageLocation,
     DateCreated,

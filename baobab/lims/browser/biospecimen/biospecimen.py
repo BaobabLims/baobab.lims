@@ -35,7 +35,7 @@ class AjaxBoxPositions:
             msg = 'No free storage position. Please select another container.'
             return json.dumps({'error': self.context.translate(_(msg))})
 
-        return json.dumps({'uid': brains[0].UID, 'address': brains[0].title})
+        return json.dumps({'uid': brains[0].UID, 'address': brains[0].UID})
 
 
 class BiospecimenMultimageView(MultimagesView):

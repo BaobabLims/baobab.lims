@@ -38,4 +38,13 @@
         handler="baobab.lims.upgrade.to1510.upgrade"
         sortkey="4"
         profile="baobab.lims:default"/>
+
+    <genericsetup:upgradeStep
+        title="Precise Ugrade Index Script"
+        description="Added precise upgrade changes"
+        source="1510"
+        destination="1520"
+        handler="baobab.lims.upgrade.to1520.upgrade"
+        sortkey="5"
+        profile="baobab.lims:default"/>
 </configure>

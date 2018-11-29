@@ -1,7 +1,6 @@
 # import time
 # from utils import getLocalServerTime
 from Products.CMFCore.utils import getToolByName
-import pdb
 
 def ObjectInitializedEventHandler(instance, event):
     """called an object is created
@@ -16,8 +15,7 @@ def ObjectModifiedEventHandler(instance, event):
         boxMove(instance)
 
 def boxMove(instance):
-    #pdb.set_trace()
-    wf = getToolByName(instance, 'portal_workflow')
+    wf = getToolByName(instance.getStorageLocation(), 'portal_workflow')
 
     oldlocation = instance.getStorageLocation()
     newlocation = instance.getNewLocation()
@@ -25,16 +23,13 @@ def boxMove(instance):
     box_samples = oldlocation.only_items_of_portal_type('Sample')
     free_positions = newlocation.get_free_positions()
 
-
     if len(box_samples) <= len(free_positions):
         for i, sample in enumerate(box_samples):
-            sample.setStorageLocation(free_positions[i])
-            wf.doActionFor(free_positions[i], 'occupy')
-            wf.doActionFor(box_samples[i], 'available')
-    else:
-        for i, position in enumerate(free_positions):
-            box_samples[i].setStorageLocation(position)
-            wf.doActionFor(position, 'occupy')
-            wf.doActionFor(box_samples[i], 'available')
+            newloc = free_positions[int(sample.getStorageLocation().id)]
+            liberateBox(box_samples[i].getStorageLocation())
+            sample.setStorageLocation(newloc)
+            wf.doActionFor(free_positions[int(sample.getStorageLocation().id) - 1], 'occupy')
 
-        box_samples = box_samples[len(free_positions):]
+def liberateBox(instance):
+    wf = getToolByName(instance, 'portal_workflow')
+    wf.doActionFor(instance, 'liberate')
