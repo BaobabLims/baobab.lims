@@ -6,21 +6,21 @@ function BaobabSampleBatchEditView() {
         // disable browser auto-complete
         $('input[type=text]').prop('autocomplete', 'off');
 
-        // console.log('=============')
-        // console.log($('#title').val())
+        console.log('=============')
+        console.log($('#title').val())
 
         var requestData = {
             catalog_name: "bika_catalog",
             portal_type: "SampleBatch",
-            // Title: $('#title').val()
-            Title: $('#breadcrumbs-current').val()
+            Title: $('#title').val()
+            // Title: $('#breadcrumbs-current').val()
         };
         window.bika.lims.jsonapi_read(requestData, function (data) {
             if (data.success && data.total_objects > 0) {
 
-                // console.log(data.objects[0])
+                console.log(data.objects[0])
 
-                var creation_date = data.objects[0]['creation_date']
+                var creation_date = data.objects[0]['DateCreated']
                 if (creation_date){
                     var final_creation_date = getDatePickerDateAndTime(creation_date)
                     $('#DateCreated').val(final_creation_date)
@@ -55,8 +55,11 @@ function BaobabSampleBatchEditView() {
     function getGMTFormatDate(plone_date_string){
 
         var pieces = plone_date_string.split(/[-/ :]/)
+        console.log(pieces)
 
-        return [pieces[0], pieces[1], pieces[2]].join('-') + ' ' + [pieces[3], pieces[4]].join(':')
+        final_date = [pieces[0], pieces[1], pieces[2]].join('-') + ' ' + [pieces[3], pieces[4]].join(':')
+        console.log(final_date)
+        return final_date
     }
 
 }
