@@ -17,21 +17,21 @@ def ObjectModifiedEventHandler(instance, event):
 def boxMove(instance):
     wf = getToolByName(instance.getStorageLocation(), 'portal_workflow')
 
-    oldlocation = instance.getStorageLocation()
-    newlocation = instance.getNewLocation()
+    old_loc = instance.getStorageLocation()
+    new_loc = instance.getNewLocation()
 
-    box_samples = oldlocation.only_items_of_portal_type('Sample')
-    free_positions = newlocation.get_free_positions()
+    box_samples = old_loc.only_items_of_portal_type('Sample')
+    free_positions = new_loc.get_free_positions()
 
     if len(box_samples) <= len(free_positions):
         for i, sample in enumerate(box_samples):
-            newloc = free_positions[int(sample.getStorageLocation().id)]
+            loc_id = int(sample.getStorageLocation().id) - 1
             liberateBox(box_samples[i])
-            sample.setStorageLocation(newloc)
-            wf.doActionFor(free_positions[int(sample.getStorageLocation().id) - 1], 'occupy')
+            sample.setStorageLocation(free_positions[loc_id])
+            wf.doActionFor(free_positions[loc_id], 'occupy')
 
-    oldlocation.reindexObject()
-    newlocation.reindexObject()
+    old_loc.reindexObject()
+    new_loc.reindexObject()
 
 def liberateBox(instance):
     wf = getToolByName(instance.getStorageLocation(), 'portal_workflow')
