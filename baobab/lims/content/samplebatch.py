@@ -154,7 +154,7 @@ Location = ReferenceField(
                 'review_state': 'available',
                 'object_provides': ISampleStorageLocation.__identifier__,
             },
-            visible={'edit': 'visible', 'view': 'invisible'},
+            visible={'edit': 'visible', 'view': 'visible'},
             catalog_name='portal_catalog',
             showOn=True,
             colModel=[
