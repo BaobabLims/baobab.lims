@@ -5,7 +5,7 @@ from bika.lims.idserver import generateUniqueId as generate
 import transaction
 
 
-def generateUniqueId(context):
+def generateUniqueId(context, edit=False):
     """Id generation specific to Baoabab lims (overriding Bika lims)
     """
     if context.portal_type == "Sample":
@@ -17,8 +17,23 @@ def generateUniqueId(context):
             return generate(context)
 
     elif context.portal_type == "SampleBatch":
+
         subject_id = context.getSubjectID()
         date_created = context.getDateCreated().strftime('%g%m%d')
+
+        #check to see if it is the date or subject that changed and if it was a edit and if so exit
+        # print('=====================')
+        # print('Just before the edit.')
+        if edit:
+            # print('Just in edit')
+            title = context.Title()
+            title_pieces = title.split('-')
+            new_subject_id, new_date = title_pieces[0], title_pieces[1]
+            if new_subject_id == subject_id and new_date == date_created:
+                # print('No changes to date or subject.')
+                return None
+
+
         bc = getToolByName(context, 'bika_catalog')
         brains = bc(portal_type="SampleBatch", getSubjectID=subject_id)
         suffix = '1'
@@ -50,6 +65,7 @@ def renameAfterEdit(obj):
     # Can't rename without a subtransaction commit when using portal_factory
     transaction.savepoint(optimistic=True)
     # The id returned should be normalized already
-    new_id = generateUniqueId(obj)
-    obj.aq_inner.aq_parent.manage_renameObject(obj.id, new_id)
+    new_id = generateUniqueId(obj, True)
+    if new_id:
+        obj.aq_inner.aq_parent.manage_renameObject(obj.id, new_id)
     return new_id

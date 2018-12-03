@@ -484,7 +484,7 @@ class Sample(BaseSample):
     #     return ['ul', 'ml', 'mg', 'g', 'other']
 
     def getUnits(self):
-        return ['', 'ul', 'ml', 'mg', 'g', 'mm']
+        return ['', 'ul', 'ml', 'mg', 'g', 'mm', 'each']
 
     def getLastARNumber(self):
         ARs = self.getBackReferences("AnalysisRequestSample")

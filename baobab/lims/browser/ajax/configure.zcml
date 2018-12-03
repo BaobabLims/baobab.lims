@@ -32,4 +32,13 @@
       permission="zope.Public"
     />
 
+    <browser:page
+      for="bika.lims.interfaces.ISample"
+      name="get_sample_dates"
+      class=".getsampledates.GetSampleDates"
+      permission="zope.Public"
+    />
+
+
+
 </configure>

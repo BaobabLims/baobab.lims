@@ -27,6 +27,7 @@
             <element>mg</element>
             <element>g</element>
             <element>mm</element>
+            <element>each</element>
        </value>
     </record>
     <record name="baobab.lims.samplebatch.batch_types">
