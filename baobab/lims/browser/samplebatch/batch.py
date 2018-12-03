@@ -132,6 +132,14 @@ class EditView(BrowserView):
         return self.template()
 
     def validate_form_input(self):
+        subject_id = self.form.get('SubjectID')
+        if not subject_id:
+            raise ValidationError(['Subject ID cannot be empty!'])
+
+        date_created = self.form.get('DateCreated')
+        if not date_created:
+            raise ValidationError(['Date Created cannot be empty!'])
+
         new_qty = int(self.form.get('Quantity', 0))
         old_qty = int(self.context.Quantity or 0)
 
