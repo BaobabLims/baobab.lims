@@ -26,10 +26,14 @@ def boxMove(instance):
     if len(box_samples) <= len(free_positions):
         for i, sample in enumerate(box_samples):
             newloc = free_positions[int(sample.getStorageLocation().id)]
-            liberateBox(box_samples[i].getStorageLocation())
+            liberateBox(box_samples[i])
             sample.setStorageLocation(newloc)
             wf.doActionFor(free_positions[int(sample.getStorageLocation().id) - 1], 'occupy')
 
+    oldlocation.reindexObject()
+    newlocation.reindexObject()
+
 def liberateBox(instance):
-    wf = getToolByName(instance, 'portal_workflow')
-    wf.doActionFor(instance, 'liberate')
+    wf = getToolByName(instance.getStorageLocation(), 'portal_workflow')
+    wf.doActionFor(instance.getStorageLocation(), 'liberate')
+    instance.setStorageLocation(None)
