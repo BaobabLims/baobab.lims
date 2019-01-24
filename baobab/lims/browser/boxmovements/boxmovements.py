@@ -1,4 +1,6 @@
 from Products.CMFCore.utils import getToolByName
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+
 from plone.app.content.browser.interfaces import IFolderContentsView
 from plone.app.layout.globals.interfaces import IViewView
 from zope.interface.declarations import implements
@@ -6,6 +8,7 @@ from AccessControl import getSecurityManager
 from Products.CMFCore.permissions import AddPortalContent, ModifyPortalContent
 
 from bika.lims.browser.bika_listing import BikaListingView
+from bika.lims.browser import BrowserView
 
 from baobab.lims import bikaMessageFactory as _
 
@@ -131,3 +134,28 @@ class BoxMovementsView(BikaListingView):
                 items[x]['NewLocation'] = newLocation.Title()
 
         return items
+
+class BoxMovementView(BrowserView):
+    """
+    """
+    template = ViewPageTemplateFile("templates/boxmovement_view.pt")
+    title = _("Box Movement")
+
+    def __call__(self):
+        context = self.context
+        portal = self.portal
+        self.absolute_url = context.absolute_url()
+        setup = portal.bika_setup
+
+        # __Disable the add new menu item__ #
+        context.setLocallyAllowedTypes(())
+
+        # __Collect general data__ #
+        self.id = context.getId()
+        self.title = context.Title()
+        self.date_created = context.getDateCreated()
+        self.from_storage = context.getStorageLocation().title
+        self.lab_contact = context.getLabContact().title
+        self.new_location = context.getNewLocation().title
+
+        return self.template()
