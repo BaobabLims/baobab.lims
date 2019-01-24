@@ -1,6 +1,6 @@
 from AccessControl import ClassSecurityInfo
 
-from bika.lims.browser.widgets import ReferenceWidget as BikaReferenceWidget, SelectionWidget
+from bika.lims.browser.widgets import ReferenceWidget as BikaReferenceWidget, SelectionWidget, DateTimeWidget
 from bika.lims.browser.fields import ProxyField
 from Products.Archetypes.public import ReferenceField, Schema, BaseContent, registerType, StringField, DisplayList, ReferenceWidget as OldRefWidget
 from Products.Archetypes.references import HoldingReference
@@ -9,14 +9,16 @@ from Products.CMFPlone.interfaces import IConstrainTypes
 from Products.CMFCore.utils import getToolByName
 from plone.indexer import indexer
 from zope.interface import implements
+from Products.Archetypes.atapi import *
 
 from bika.lims.browser.widgets import DateTimeWidget
 from bika.lims.content.bikaschema import BikaSchema
 from bika.lims.browser.fields import DateTimeField
 from baobab.lims import bikaMessageFactory as _
 from baobab.lims import config
-from baobab.lims.interfaces import IBoxMovement, IKitStorage
 
+from baobab.lims.interfaces import IBoxMovement, IKitStorage
+from DateTime import DateTime
 
 
 StorageLocation = ReferenceField(
@@ -46,6 +48,7 @@ DateCreated = DateTimeField(
     read_permission=permissions.View,
     write_permission=permissions.ModifyPortalContent,
     widget=DateTimeWidget(
+        show_time=True,
         label=_("Date Created"),
         visible={'edit': 'visible', 'view': 'visible'},
     ),

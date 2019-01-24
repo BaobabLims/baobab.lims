@@ -1,5 +1,5 @@
 # import time
-# from utils import getLocalServerTime
+from utils import getLocalServerTime
 from Products.CMFCore.utils import getToolByName
 
 def ObjectInitializedEventHandler(instance, event):
@@ -7,13 +7,15 @@ def ObjectInitializedEventHandler(instance, event):
     """
     if instance.portal_type == 'BoxMovement':
         boxMove(instance)
+        updateLocalServerTime(instance)
 
 def ObjectModifiedEventHandler(instance, event):
     """ Called if the object is modified
     """
     if instance.portal_type == 'BoxMovement':
         boxMove(instance)
-
+        updateLocalServerTime(instance)
+    
 def boxMove(instance):
     wf = getToolByName(instance.getStorageLocation(), 'portal_workflow')
 
@@ -37,3 +39,6 @@ def liberateBox(instance):
     wf = getToolByName(instance.getStorageLocation(), 'portal_workflow')
     wf.doActionFor(instance.getStorageLocation(), 'liberate')
     instance.setStorageLocation(None)
+
+def updateLocalServerTime(instance):
+    instance.getField('DateCreated').set(instance, getLocalServerTime(instance.getField('DateCreated').get(instance)))
