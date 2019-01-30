@@ -417,10 +417,13 @@ class Storage(WorksheetImporter):
                 )
                 alsoProvides(storage_obj, ISampleStorageLocation)
 
-                for p in range(1, row.get('NumberOfPoints')+1):
+                nr_positions = row.get('NumberOfPoints')
+                for p in range(1, nr_positions+1):
+                    title = hierarchy + ".{id}".format(id=str(p).zfill(len(str(nr_positions))))
                     position = _createObjectByType('StoragePosition', storage_obj, str(p))
                     position.edit(
-                        title=hierarchy + ".{id}".format(id=p)
+                        # title=hierarchy + ".{id}".format(id=p)
+                        title=title
                     )
                     alsoProvides(position, ISampleStorageLocation)
                     position.reindexObject()

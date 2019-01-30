@@ -311,11 +311,13 @@ class AddManagedStorage(Storage):
             storage.reindexObject()
             # Create storage positions
             for p in range(1, nr_positions + 1):
+                title = storage.getHierarchy() + ".{id}".format(id=str(p).zfill(len(str(nr_positions))))
                 pos = api.content.create(
                     container=storage,
                     type="StoragePosition",
                     id="{id}".format(id=p),  # XXX hardcoded pos title and id
-                    title=storage.getHierarchy() + ".{id}".format(id=p))
+                    # title=storage.getHierarchy() + ".{id}".format(id=p))
+                    title=title)
                 # storage types are set on each pos inside the storage too.
                 self.set_storage_types(pos, storage_types)
                 pos.reindexObject()
