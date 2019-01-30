@@ -93,18 +93,25 @@
                 function createGraphic(data) {
                     tableStats(data);
                     var width = 900;
-                    var height = 700;
+                    // var height = 700;
                     var padding = 3;
                     var marginTop = 30;
+                    var height = marginTop + (data['y'] * 80)
+                    if (height < 700){
+                        height = 700
+                    }
                     var marginLeft = 30;
                     var marginRight = 200;
                     var widthPos = width - marginRight - marginLeft;
                     var heightPos = height - marginTop;
                     var rowCol = data["x"] + data["y"];
-                    var letters = ["A", "B", "C", "D", "E", "F", "G", "H",
-                        "I", "J", "K", "L", "M", "N", "O", "P",
-                        "Q", "R", "S", "T", "U", "V", "W", "X",
-                        "Y", "Z"];
+                    // var letters = ["A", "B", "C", "D", "E", "F", "G", "H",
+                    //     "I", "J", "K", "L", "M", "N", "O", "P",
+                    //     "Q", "R", "S", "T", "U", "V", "W", "X",
+                    //     "Y", "Z"];
+
+                    var letters = recursive_letters(data["y"])
+
                     // Create SVG element
                     var wrapper = d3.select("body")
                             .append("div")
@@ -319,6 +326,44 @@
                             })
                             .style("font-family", "sans-serif")
                             .style("font-weight", "bold");
+                }
+
+                function recursive_letters(num_items){
+                    var basic_list = ["A", "B", "C", "D", "E", "F", "G", "H",
+                        "I", "J", "K", "L", "M", "N", "O", "P",
+                        "Q", "R", "S", "T", "U", "V", "W", "X",
+                        "Y", "Z"];
+
+
+                    var return_list = []
+
+                    if (num_items < 26){
+                        return basic_list;
+                    }
+
+                    if (num_items <= 676){
+                        second_list = basic_list;
+                        for (b=0; b < basic_list.length; b++){
+                            for (i=0; i < second_list.length; i++){
+                                return_list.push(basic_list[b] + second_list[i]);
+                            }
+                        }
+                        console.debug(return_list)
+                        return return_list;
+                    }
+
+                    if (num_items > 676){
+                        var a = Math.ceil( num_items / 26 )
+                        var items_list = recursive_letters(a)
+                        for (b=0; b < basic_list.length; b++){
+                            for (i=0; i < items_list.length; i++){
+                                return_list.push(basic_list[b] + items_list[i]);
+                            }
+                        }
+                        console.debug(return_list)
+                        return return_list;
+                    }
+
                 }
             });
         })(jQuery);
