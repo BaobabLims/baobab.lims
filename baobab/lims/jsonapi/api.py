@@ -382,7 +382,7 @@ def create_sample(container, **data):
 
     # TODO We should handle the same values as in the DataManager for this field
     #      (UID, path, objects, dictionaries ...)
-    storage_location_results = search(portal_type='StoragePosition', Title=storage_location)
+    storage_location_results = search(portal_type='StoragePosition', Title=storage_location, review_state='available')
     if not storage_location_results:
         storage_location_results = search(portal_type='StoragePosition', uid=storage_location)
 
