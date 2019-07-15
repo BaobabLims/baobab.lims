@@ -1,80 +1,44 @@
 import xlsxwriter
+import datetime
+import os
+
+from Products.CMFCore.utils import getToolByName
+
 
 class ExcelWriter(object):
 
-    def __init__(self):
-        self.file_path = 'excel_export_2.xlsx'
-        self.line_number = 0
-        self.column_number = 0
+    _DOWNLOADS_DIR = 'static/downloads/'
 
-    def write_output(self, output):
+    def __init__(self, context):
+        self.context = context
 
-        workbook = xlsxwriter.Workbook(self.file_path)
-        bold = workbook.add_format({'bold': True})
-        self.column_number = 0
-        self.line_number = 0
+    def create_workbook(self):
+        filename = str(datetime.datetime.now().date()) + '_' + \
+            str(datetime.datetime.now().time()).replace(':', '.')
 
-        # The first for is for each portal type.  Sample, Client, project etc ...
-        # print('----output data-----')
-        # print(output)
-        for key, output_data in output.iteritems():
-            work_sheet = workbook.add_worksheet(key)
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        self.download_dir = os.path.join(base_dir, self._DOWNLOADS_DIR)
 
-            # Second For for example is each sample in samples etc etc ...
-            headings = output_data[0]
-            data = output_data[1]
+        membership = getToolByName(self.context, 'portal_membership')
+        if membership.isAnonymousUser():
+            member = 'anonymous'
+        else:
+            member = membership.getAuthenticatedMember().getUserName()
+            # .getProperty('username')
+        # print member
 
-            self.write_headings(work_sheet, headings, bold)
-            self.write_data(work_sheet, data, headings)
+        self.workbook = xlsxwriter.Workbook(
+            self.download_dir + member + "_{}.xlsx".format(filename), {'constant_memory': True})
 
-        workbook.close()
+        self.bold = self.workbook.add_format({'bold': True})
 
-    def write_headings(self, work_sheet, headings, bold):
+    def write_output(self, worksheet_data):
+        for sheet_name, sheet_data in worksheet_data.iteritems():
+            work_sheet = self.workbook.add_worksheet(sheet_name)
+            for i, row in enumerate(sheet_data):
+                if i == 0:
+                    work_sheet.write_row(i, 0, row, self.bold)
+                else:
+                    work_sheet.write_row(i, 0, row)
 
-        for heading in headings:
-            work_sheet.write(self.line_number, self.column_number, heading, bold)
-            self.column_number += 1
-
-        self.line_number += 1
-        self.column_number = 0
-
-    def write_data(self, work_sheet, data, headings):
-        # print('+=========')
-
-        for datum in data:
-            self.line_number += 1
-            self.column_number = 0
-            for heading in headings:
-                # print('Printed data: %s: %s' %(heading, datum[heading]))
-                work_sheet.write(self.line_number, self.column_number, str(datum[heading]))
-                self.column_number += 1
-
-        self.line_number = 0
-        self.column_number = 0
-
-
-
-
-
-
-
-
-# #
-# workbook = xlsxwriter.Workbook('xlsx_demo_1.xlsx')
-# worksheet = workbook.add_worksheet()
-#
-# worksheet.set_column('A:A', 20)
-# bold = workbook.add_format({'bold': True})
-#
-# worksheet.write('A1', 'Hello')
-# worksheet.write('A2', 'World', bold)
-#
-# worksheet.write(2, 0, 123)
-# worksheet.write(3, 0, 123.456)
-#
-# workbook.close()
-
-
-
-
-
+        self.workbook.close()

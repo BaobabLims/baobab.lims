@@ -1,21 +1,42 @@
+import collections
+
+import os
+import json
+
+from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone.app.layout.globals.interfaces import IViewView
-from Products.Archetypes.public import DisplayList
 from zope.interface import implements
-from zope.component import getAdapters
-from pkg_resources import *
-from bika.lims import bikaMessageFactory as _
-from bika.lims.exportimport.load_setup_data import LoadSetupData
+
 from bika.lims.exportimport.dataimport import ImportView as IV
-from bika.lims.utils import t
-from bika.lims.interfaces import ISetupDataSetList
-from baobab.lims.setupdata import instruments
-import xlsxwriter
-from Products.CMFCore.utils import getToolByName
 from exporters import *
 from excelwriter import ExcelWriter
 
-import plone
+from bika.lims.browser import BrowserView
+
+
+class RemoveExports(BrowserView):
+    _DOWNLOADS_DIR = 'static/downloads/'
+
+    def __init__(self, context, request):
+
+        super(RemoveExports, self).__init__(context, request)
+        self.context = context
+        self.request = request
+
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        self.download_dir = os.path.join(base_dir, self._DOWNLOADS_DIR)
+
+    def __call__(self):
+        uc = getToolByName(self.context, 'portal_catalog')
+
+        filename = self.download_dir + self.request.form['id']
+        if os.path.exists(filename):
+            os.remove(filename)
+
+        return json.dumps({
+            'row_id': self.request.form['id']
+        })
 
 
 class ExportView(IV):
@@ -23,6 +44,7 @@ class ExportView(IV):
     """
     implements(IViewView)
     template = ViewPageTemplateFile("templates/export.pt")
+    _DOWNLOADS_DIR = 'static/downloads/'
 
     def __init__(self, context, request):
         IV.__init__(self, context, request)
@@ -31,82 +53,48 @@ class ExportView(IV):
 
     def __call__(self):
         if 'submitted' in self.request:
-
-            # Good example of lab data is found in baobab/lims/browser/__init__.py
             lab = self.context.bika_setup.laboratory
-            # print('======This is the lab===========')
-            # print(lab.__dict__)
+            self.excel_writer = ExcelWriter(self.context)
+            self.excel_writer.create_workbook()
 
+            base_dir = os.path.dirname(
+                os.path.dirname(os.path.abspath(__file__)))
+            self.download_dir = os.path.join(base_dir, self._DOWNLOADS_DIR)
 
-            # try:
-            export_data = self.export_data()
-
-            excel_writer = ExcelWriter()
-            excel_writer.write_output(export_data)
+            self.export_data()
 
             self.download_file = True
-            self.context.plone_utils.addPortalMessage('Export successfully completed.')
-
-            # except Exception as e:
-            #     self.submit_button = True
-            #     self.context.plone_utils.addPortalMessage(str(e), 'error')
+            self.files = self.get_filenames()
+            self.context.plone_utils.addPortalMessage(
+                'Export successfully completed.')
         else:
             self.submit_button = True
-
         return self.template()
 
+    def get_filenames(self):
+        from os import listdir
+        from os.path import isfile, join, getmtime
+
+        files = [f for f in listdir(self.download_dir) if isfile(
+            join(self.download_dir, f))]
+
+        files.sort(key=lambda x: getmtime(
+            join(self.download_dir, x)), reverse=True)
+        return files
+
     def export_data(self):
+        export_dict = collections.OrderedDict()
 
-        export_data = {}
+        exporter = ProjectsExporter(self.context)
+        export_dict['Projects'] = exporter.export()
 
-        # # get the lab
-        # lab_data_exporter = LabDataExporter(self.context)
-        # lab_data_headings, lab_data = lab_data_exporter.export()
-        # export_data['LabData'] = (lab_data_headings, lab_data)
-        #
-        # # get the lab contacts
-        # lab_contacts_exporter = LabContactsExporter(self.context)
-        # lab_contacts_headings, lab_contacts_data = lab_contacts_exporter.export()
-        # export_data['LabContacs'] = (lab_contacts_headings, lab_contacts_data)
-        #
-        # # get the analysis categories
-        # analysis_categories_exporter = AnalysisCategoriesExporter(self.context)
-        # analysis_categories_headings, analysis_categories_data = analysis_categories_exporter.export()
-        # export_data['Analysis Categories'] = (analysis_categories_headings, analysis_categories_data)
-        #
-        # # get the services specifications
-        # analysis_services_exporter = AnalysisServicesExporter(self.context)
-        # analysis_services_headings, analysis_specifications_data = analysis_services_exporter.export()
-        # export_data['Analysis Services'] = (analysis_services_headings, analysis_specifications_data)
-        #
-        # # get the sample types
-        # sample_type_exporter = SampleTypesExporter(self.context)
-        # sample_type_headings, sample_type_data = sample_type_exporter.export()
-        # export_data['SampleTypes'] = (sample_type_headings, sample_type_data)
-        #
-        # # get the clients
-        # client_exporter = ClientsExporter(self.context)
-        # client_headings, client_data = client_exporter.export()
-        # export_data['Clients'] = (client_headings, client_data)
-        #
-        # # get the projects
-        # project_exporter = ProjectsExporter(self.context)
-        # project_headings, project_data = project_exporter.export()
-        # export_data['Projects'] = (project_headings, project_data)
+        exporter = SamplesExporter(self.context)
+        export_dict['Parent Samples'] = exporter.export()
 
-        # get the batch samples
-        batch_sample_exporter = SampleBatchesExporter(self.context)
-        batch_sample_headings, batch_sample_data = batch_sample_exporter.export()
-        export_data['Batch Samples'] = (batch_sample_headings, batch_sample_data)
+        exporter = SamplesAliquotExporter(self.context)
+        export_dict['Aliquot'] = exporter.export()
 
-        # # get the samples
-        # sample_exporter = SamplesExporter(self.context)
-        # sample_headings, sample_data = sample_exporter.export()
-        # export_data['Biospecimens'] = (sample_headings, sample_data)
+        exporter = SampleShipmentExporter(self.context)
+        export_dict['Sample Shipment'] = exporter.export()
 
-        return export_data
-
-
-
-
-
+        self.excel_writer.write_output(export_dict)
