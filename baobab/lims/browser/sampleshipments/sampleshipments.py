@@ -164,7 +164,7 @@ class SampleShipmentsView(BikaListingView):
 
         elements_list = []
         for element in elements:
-            elements_list.append(element.title)
+            elements_list.append(element.Title())
 
         elements_string = ', '.join(map(str, elements_list))
 

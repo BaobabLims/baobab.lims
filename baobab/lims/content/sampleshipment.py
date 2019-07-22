@@ -246,7 +246,7 @@ class SampleShipment(ATFolder):
 
         elements_list = []
         for element in elements:
-            elements_list.append(element.title)
+            elements_list.append(element.Title())
 
         elements_string = ', '.join(map(str, elements_list))
 
@@ -301,9 +301,10 @@ class SampleShipment(ATFolder):
         client = self.getClient()
         receiver = formataddr((encode_header(client.getName()), self.getToEmailAddress()))
 
-        subject = "Samples Shipped"
+        subject = "Samples Shipped: %s" % self.Title()
         body = "Automatic email:\n"
         body += 'The samples \"%s\" has been shipped.' % self.getStringified(self.getSamplesList())
+        body += 'This is an automatic email that indicates that sample shipment %s has been shipped.\n\n' % self.Title()
         self.send_mail(sender, receiver, subject, body)
 
         self.free_storage_locations()
