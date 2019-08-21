@@ -8,6 +8,7 @@
     <include file="browser/overrides.zcml" />
     <include file="monkey/overrides.zcml" />
     <include file="setupdata/overrides.zcml" />
+    <include file="reports/overrides.zcml" />
 
     <browser:resource
         file="skins/baobab_lims/logo.png"
