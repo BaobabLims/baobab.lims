@@ -1,9 +1,12 @@
+from DateTime import DateTime
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from bika.lims.workflow import doActionFor
 from bika.lims.browser import BrowserView
 from baobab.lims import bikaMessageFactory as _
 
+from baobab.lims.utils.audit_logger import AuditLogger
+from baobab.lims.utils.local_server_time import getLocalServerTime
 
 class UpdateBoxes(BrowserView):
     """
@@ -109,14 +112,21 @@ class EditView(BrowserView):
         context = self.context
 
         if 'submitted' in request:
+
+            audit_logger = AuditLogger(self.context, 'Sample')
+
             from Products.CMFPlone.utils import _createObjectByType
             from bika.lims.utils import tmpID
             pc = getToolByName(context, "portal_catalog")
             folder = pc(portal_type="Project", UID=request.form['Project_uid'])[0].getObject()
+
+            new_sample = False
             if not folder.hasObject(context.getId()):
                 sample = _createObjectByType('Sample', folder, tmpID())
+                new_sample = True
             else:
                 sample = context
+                self.perform_sample_audit(sample, request)
 
             sample.getField('Project').set(sample, request.form['Project_uid'])
             sample.getField('AllowSharing').set(sample, request.form['AllowSharing'])
@@ -136,10 +146,60 @@ class EditView(BrowserView):
             sample.getField('Batch').set(sample, sample_batch)
 
             obj_url = sample.absolute_url_path()
+
+            if new_sample:
+                audit_logger.perform_simple_audit(sample, 'New')
             request.response.redirect(obj_url)
+
             return
 
         return self.template()
+
+    def perform_sample_audit(self, sample, request):
+        audit_logger = AuditLogger(self.context, 'Sample')
+        bc = getToolByName(self.context, 'bika_catalog')
+        pc = getToolByName(self.context, "portal_catalog")
+
+        # sample_audit = {}
+
+        audit_logger.perform_reference_audit(sample, 'Kit', sample.getField('Kit').get(sample),
+                                             bc, request.form['Kit_uid'])
+        audit_logger.perform_reference_audit(sample, 'StorageLocation', sample.getField('StorageLocation').get(sample),
+                                             pc, request.form['StorageLocation_uid'])
+
+        sampling_date = request.form['SamplingDate']
+        if sampling_date:
+            sampling_date = DateTime(getLocalServerTime(sampling_date))
+        else:
+            sampling_date = None
+        if sample.getField('SamplingDate').get(sample) != sampling_date:
+            audit_logger.perform_simple_audit(sample, 'SamplingDate', sample.getField('SamplingDate').get(sample),
+                                              sampling_date)
+
+        if sample.getField('SubjectID').get(sample) != request.form['SubjectID']:
+            audit_logger.perform_simple_audit(sample, 'SubjectID', sample.getField('SubjectID').get(sample),
+                                              request.form['SubjectID'])
+        if sample.getField('Volume').get(sample) != request.form['Volume']:
+            audit_logger.perform_simple_audit(sample, 'Volume', sample.getField('Volume').get(sample), request.form['Volume'])
+
+        if sample.getField('Barcode').get(sample) != request.form['Barcode']:
+            audit_logger.perform_simple_audit(sample, 'Barcode', sample.getField('Barcode').get(sample),
+                                              request.form['Barcode'])
+
+        if sample.getField('Unit').get(sample) != request.form['Unit']:
+            audit_logger.perform_simple_audit(sample, 'Unit', sample.getField('Unit').get(sample), request.form['Unit'])
+
+        audit_logger.perform_reference_audit(sample, 'LinkedSample', sample.getField('LinkedSample').get(sample),
+                                             pc, request.form['LinkedSample_uid'])
+
+        if not sample.getField('DateCreated').get(sample):
+            audit_logger.perform_simple_audit(sample, 'DateCreated', sample.getField('DateCreated').get(sample), str(DateTime()))
+
+        audit_logger.perform_reference_audit(sample, 'SampleType', sample.getField('SampleType').get(sample),
+                                             pc, request.form['SampleType_uid'])
+
+
+
 
     def get_fields_with_visibility(self, visibility, mode=None):
         mode = mode if mode else 'edit'

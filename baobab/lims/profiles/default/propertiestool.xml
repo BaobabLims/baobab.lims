@@ -28,6 +28,7 @@
         <element value="SampleDonor"/>
         <element value="DiseaseOntology"/>
         <element value="SampleShipment"/>
+        <element value="AuditLog"/>
   </property>
 </object>
 

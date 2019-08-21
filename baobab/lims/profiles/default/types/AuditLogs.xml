@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<object name="AuditLogs"
+        meta_type="Factory-based Type Information with dynamic views"
+        xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+        i18n:domain="plone"
+        purge="True">
+ <property name="title" i18n:translate="">AuditLogs</property>
+ <property name="description"></property>
+ <property name="content_icon">++resource++baobab.lims.images/patient.png</property>
+ <property name="content_meta_type">AuditLogs</property>
+ <property name="product">baobab.lims</property>
+ <property name="factory">addAuditLogs</property>
+ <property name="add_view_expr"></property>
+ <property name="link_target"></property>
+ <property name="global_allow">False</property>
+ <property name="filter_content_types">True</property>
+ <property name="allowed_content_types">
+  <element value="AuditLog"/>
+ </property>
+ <property name="allow_discussion">False</property>
+ <property name="default_view_fallback">False</property>
+
+ <alias from="(Default)" to="folder_view"/>
+ <alias from="view" to="folder_view"/>
+ <alias from="edit" to="base_edit"/>
+
+</object>

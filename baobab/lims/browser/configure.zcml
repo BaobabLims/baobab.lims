@@ -31,6 +31,7 @@
     <include package=".ontologies"/>
     <include package=".sampleshipments"/>
     <include package=".sampleshipment"/>
+    <include package=".auditlogs"/>
 
     <!-- This registration allows additional sticker templates.
          To enable these, just copy one or more of the *.pt files

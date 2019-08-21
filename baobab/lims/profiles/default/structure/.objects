@@ -9,3 +9,4 @@ bika_setup,BikaSetup
 donors,SampleDonors
 disease_ontologies,DiseaseOntologies
 sampleshipments,SampleShipments
+auditlogs,AuditLogs

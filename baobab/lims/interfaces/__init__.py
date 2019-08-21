@@ -161,3 +161,11 @@ class ISampleShipment(Interface):
 class ISampleShipments(Interface):
     """
     """
+
+class IAuditLog(Interface):
+    """
+    """
+
+class IAuditLogs(Interface):
+    """
+    """

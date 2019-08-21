@@ -55,6 +55,8 @@ def initialize(context):
     from controlpanel.bika_storagetypes import StorageTypes
     from controlpanel.bika_products import Products
     from controlpanel.bika_stockitems import StockItems
+    from content.auditlog import AuditLog
+    from content.auditlogs import AuditLogs
 
     content_types, constructors, ftis = process_types(
         listTypes(PROJECTNAME),
