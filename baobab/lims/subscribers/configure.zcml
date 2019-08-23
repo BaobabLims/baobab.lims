@@ -16,4 +16,10 @@
         handler=".sample.ObjectModifiedEventHandler"
     />
 
+    <subscriber
+        for="baobab.lims.interfaces.IProject
+        Products.Archetypes.interfaces.IObjectInitializedEvent"
+        handler=".project.ObjectInitializedEventHandler"
+    />
+
 </configure>

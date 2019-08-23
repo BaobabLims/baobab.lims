@@ -8,6 +8,9 @@ from baobab.lims.idserver import renameAfterCreation
 from baobab.lims.interfaces import ISampleStorageLocation, IStockItemStorage
 from baobab.lims.browser.project import *
 
+from baobab.lims.utils.audit_logger import AuditLogger
+from baobab.lims.utils.local_server_time import getLocalServerTime
+
 
 def get_project_multi_items(context, string_elements, portal_type, portal_catalog):
 
@@ -269,6 +272,8 @@ class Projects(WorksheetImporter):
     def Import(self):
 
         pc = getToolByName(self.context, 'portal_catalog')
+        audit_logger = AuditLogger(self.context)
+        count = 0
 
         rows = self.get_rows(3)
         for row in rows:
@@ -298,7 +303,8 @@ class Projects(WorksheetImporter):
 
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
-
+            count += 1
+        audit_logger.perform_simple_audit(None, '%s %s' % ('Project', str(count)))
 
 class Biospecimens(WorksheetImporter):
     """ Import biospecimens

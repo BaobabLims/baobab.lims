@@ -7,7 +7,15 @@
     <browser:page
       for="baobab.lims.interfaces.IProject"
       name="base_view"
-      class="baobab.lims.browser.project.ProjectView"
+      class=".project.ProjectView"
+      permission="cmf.ModifyPortalContent"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="baobab.lims.interfaces.IProject"
+      name="base_edit"
+      class=".project.ProjectEdit"
       permission="cmf.ModifyPortalContent"
       layer="bika.lims.interfaces.IBikaLIMS"
     />

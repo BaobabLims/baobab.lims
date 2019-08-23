@@ -29,4 +29,41 @@
         handler="baobab.lims.upgrade.to1500.upgrade"
         sortkey="2"
         profile="baobab.lims:default"/>
+
+    <genericsetup:upgradeStep
+        title="Sample shipment edit javascript"
+        description="Reload javascript for sample shipment edit"
+        source="1500"
+        destination="1510"
+        handler="baobab.lims.upgrade.to1510.upgrade"
+        sortkey="8"
+        profile="baobab.lims:default"/>
+
+    <genericsetup:upgradeStep
+        title="Sample shipment edit javascript"
+        description="Reload javascript for sample shipment edit"
+        source="1510"
+        destination="1520"
+        handler="baobab.lims.upgrade.to1520.upgrade"
+        sortkey="8"
+        profile="baobab.lims:default"/>
+
+    <genericsetup:upgradeStep
+        title="Sample shipment edit javascript"
+        description="Reload javascript for sample shipment edit"
+        source="1520"
+        destination="1530"
+        handler="baobab.lims.upgrade.to1530.upgrade"
+        sortkey="8"
+        profile="baobab.lims:default"/>
+
+    <genericsetup:upgradeStep
+        title="Actions XML"
+        description="Reload javascript for sample shipment edit"
+        source="1530"
+        destination="1531"
+        handler="baobab.lims.upgrade.to1531.upgrade"
+        sortkey="8"
+        profile="baobab.lims:default"/>
+
 </configure>

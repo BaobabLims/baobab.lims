@@ -9,6 +9,9 @@ from baobab.lims.browser.project.util import SampleGeneration
 from baobab.lims.browser.project import get_first_sampletype
 from baobab.lims.browser.biospecimens.biospecimens import BiospecimensView
 
+from baobab.lims.utils.audit_logger import AuditLogger
+from baobab.lims.utils.local_server_time import getLocalServerTime
+
 
 class BatchBiospecimensView(BiospecimensView):
     """ Biospecimens veiw from kit view.
@@ -52,6 +55,7 @@ class EditView(BrowserView):
         self.form = request.form
 
         if 'submitted' in request:
+            audit_logger = AuditLogger(self.context, 'batch')
             try:
                 self.validate_form_input()
             except ValidationError as e:
@@ -63,10 +67,14 @@ class EditView(BrowserView):
 
             folder = context.aq_parent
             batch = None
+            is_new = False
             if not folder.hasObject(context.getId()):
+                is_new = True
                 batch = portal_factory.doCreate(context, context.id)
             else:
+                is_new = False
                 batch = context
+                self.perform_batch_audit(batch, request)
 
             old_qty = int(batch.Quantity or 0)
             new_qty = int(self.form.get('Quantity', 0))
@@ -74,11 +82,37 @@ class EditView(BrowserView):
             self.create_samples(batch, self.form, new_qty - old_qty)
 
             obj_url = batch.absolute_url_path()
+
+            if is_new:
+                audit_logger.perform_simple_audit(batch, 'New')
             request.response.redirect(obj_url)
 
             return
 
         return self.template()
+
+    def perform_batch_audit(self, batch, request):
+        audit_logger = AuditLogger(self.context, 'batch')
+        pc = getToolByName(self.context, "portal_catalog")
+
+        if batch.getField('Title').get(batch) != request.form['Title']:
+            audit_logger.perform_simple_audit(batch, 'Title', batch.getField('Title').get(batch),
+                                              request.form['Title'])
+
+        if batch.getField('BatchID').get(batch) != request.form['BatchID']:
+            audit_logger.perform_simple_audit(batch, 'BatchID', batch.getField('BatchID').get(batch),
+                                              request.form['BatchID'])
+
+        if batch.getField('Description').get(batch) != request.form['Description']:
+            audit_logger.perform_simple_audit(batch, 'Description', batch.getField('Description').get(batch),
+                                              request.form['Description'])
+
+        if batch.getField('Quantity').get(batch) != request.form['Quantity']:
+            audit_logger.perform_simple_audit(batch, 'Quantity', batch.getField('Quantity').get(batch),
+                                              request.form['Quantity'])
+
+        if not batch.getField('DateCreated').get(batch):
+            audit_logger.perform_simple_audit(batch, 'DateCreated', batch.getField('DateCreated').get(batch), str(DateTime()))
 
     def validate_form_input(self):
         new_qty = int(self.form.get('Quantity', 0))
