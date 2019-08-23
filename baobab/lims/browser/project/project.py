@@ -1,4 +1,7 @@
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from Products.ATContentTypes.lib import constraintypes
+
+from Products.CMFCore.utils import getToolByName
 
 from bika.lims.browser import BrowserView
 from bika.lims.browser.client import ClientAnalysisRequestsView
@@ -10,6 +13,9 @@ from baobab.lims.browser.biospecimens.biospecimens import BiospecimensView
 from baobab.lims.browser.kits.folder_view import KitsView
 from baobab.lims.browser.shipments.folder_view import ShipmentsView
 from baobab.lims import bikaMessageFactory as _
+
+from baobab.lims.utils.audit_logger import AuditLogger
+from baobab.lims.utils.local_server_time import getLocalServerTime
 
 
 class ProjectAnalysisServicesView(AnalysisServicesView):
@@ -151,6 +157,128 @@ class ProjectView(BrowserView):
 
         self.analyses_table = view.contents_table()
         return self.template()
+
+class ProjectEdit(BrowserView):
+    template = ViewPageTemplateFile('templates/project_edit.pt')
+
+    def __call__(self):
+        print('SSSSSSS')
+        portal = self.portal
+        request = self.request
+        context = self.context
+        setup = portal.bika_setup
+
+        if 'submitted' in request:
+            print('ojjjjjj')
+            # pdb.set_trace()
+            audit_logger = AuditLogger(self.context, 'Project')
+            context.setConstrainTypesMode(constraintypes.DISABLED)
+            # This following line does the same as precedent which one is the
+            #  best?
+
+            # context.aq_parent.setConstrainTypesMode(constraintypes.DISABLED)
+            portal_factory = getToolByName(context, 'portal_factory')
+            context = portal_factory.doCreate(context, context.id)
+            is_new = False
+
+            if context.getId() == '':
+                print('okkkkkkkkkkkkkkkkkkkkk')
+                is_new = True
+            else : 
+                print( "context.id" )
+                print( context.id )
+                is_new = False
+                self.perform_project_audit(context, request)
+
+
+            # print('--------------')
+            # print(context.getField('Service').get(context))
+
+            context.processForm()
+
+            obj_url = context.absolute_url_path()
+            # request.response.redirect(obj_url)
+
+            if is_new:
+                print('#################')
+                audit_logger.perform_simple_audit(context, 'New')
+            request.response.redirect(obj_url)
+
+            return
+
+
+        return self.template()
+
+    def perform_project_audit(self, project, request):
+        audit_logger = AuditLogger(self.context, 'Project')
+        pc = getToolByName(self.context, "portal_catalog")
+
+        if project.getField('StudyType').get(project) != request.form['StudyType']:
+            audit_logger.perform_simple_audit(project, 'StudyType', project.getField('StudyType').get(project),
+                                              request.form['StudyType'])
+
+        if project.getField('EthicsFormLink').get(project) != request.form['EthicsFormLink']:
+            audit_logger.perform_simple_audit(project, 'EthicsFormLink', project.getField('EthicsFormLink').get(project),
+                                              request.form['EthicsFormLink'])
+
+        # audit age high
+        current_age_high = project.getField('AgeHigh').get(project)
+        if not current_age_high:
+            current_age_high = ''
+        else:
+            current_age_high = str(project.getField('AgeHigh').get(project))
+
+        if current_age_high != request.form['AgeHigh']:
+            request.form['AgeHigh']
+            audit_logger.perform_simple_audit(project, 'AgeHigh', current_age_high,
+                                              request.form['AgeHigh'])
+
+        # audit age low
+        current_age_low = project.getField('AgeLow').get(project)
+        if not current_age_low:
+            current_age_low = ''
+        else:
+            current_age_low = str(current_age_low)
+
+        if current_age_low != request.form['AgeLow']:
+            request.form['AgeLow']
+            audit_logger.perform_simple_audit(project, 'AgeLow', current_age_low,
+                                              request.form['AgeLow'])
+
+        # audit number of participants
+        num_participants = project.getField('NumParticipants').get(project)
+        if not num_participants:
+            num_participants = ''
+        else:
+            num_participants = str(num_participants)
+
+        if num_participants != request.form['NumParticipants']:
+            request.form['NumParticipants']
+            audit_logger.perform_simple_audit(project, 'NumParticipants', num_participants,
+                                              request.form['NumParticipants'])
+
+        audit_logger.perform_multi_reference_list_to_list_audit(project, 'SampleType', project.getField('SampleType').get(project),
+                                             pc, request.form['SampleType'])
+
+        # perform auditing on analysis services
+        analysis_service_uids = []
+        if 'uids' in request.form:
+            analysis_service_uids = request.form['uids']
+        audit_logger.perform_multi_reference_list_to_list_audit(project, 'Service',
+                                                   project.getField('Service').get(project),
+                                                   pc, analysis_service_uids)
+        
+
+    def get_fields_with_visibility(self, visibility, mode=None):
+        mode = mode if mode else 'edit'
+        schema = self.context.Schema()
+        fields = []
+        for field in schema.fields():
+            isVisible = field.widget.isVisible
+            v = isVisible(self.context, mode, default='invisible', field=field)
+            if v == visibility:
+                fields.append(field)
+        return fields
 
 
 class ProjectKitsView(KitsView):

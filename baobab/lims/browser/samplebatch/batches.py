@@ -7,6 +7,9 @@ from Products.CMFCore.permissions import AddPortalContent, ModifyPortalContent
 from bika.lims.browser.bika_listing import BikaListingView
 from baobab.lims import bikaMessageFactory as _
 
+from baobab.lims.utils.audit_logger import AuditLogger
+from baobab.lims.utils.local_server_time import getLocalServerTime
+
 
 class BatchesView(BikaListingView):
     implements(IFolderContentsView, IViewView)

@@ -17,6 +17,9 @@ from bika.lims.browser.multifile import MultifileView
 from bika.lims.utils import to_utf8
 from baobab.lims import bikaMessageFactory as _
 
+from baobab.lims.utils.audit_logger import AuditLogger
+from baobab.lims.utils.local_server_time import getLocalServerTime
+
 
 class ShipmentView(BikaListingView):
     template = ViewPageTemplateFile('templates/shipment_view.pt')
@@ -63,7 +66,7 @@ class ShipmentKitsView(BikaListingView):
         }
         self.context_actions = {}
         self.title = ''
-        self.description = ''
+        self.shipmentconditions = ''
         self.icon = ''
         self.show_sort_column = False
         self.show_select_row = False
@@ -120,17 +123,34 @@ class EditView(BrowserView):
         setup = portal.bika_setup
 
         if 'submitted' in request:
+            audit_logger = AuditLogger(self.context, 'Shipment')
+
+            try:
+                self.validate_form_input()
+            except ValidationError as e:
+                self.form_error(e.message)
+                return
             # pdb.set_trace()
             context.setConstrainTypesMode(constraintypes.DISABLED)
-            # This following line does the same as precedent which one is the
-            #  best?
-
-            # context.aq_parent.setConstrainTypesMode(constraintypes.DISABLED)
             portal_factory = getToolByName(context, 'portal_factory')
-            context = portal_factory.doCreate(context, context.id)
+            
+            folder = context.aq_parent
+            shipment = None
+            is_new = False
+            if not folder.hasObject(context.getId()):
+                is_new = True
+                shipment = portal_factory.doCreate(context, context.id)
+            else:
+                is_new = False
+                shipment = context
+                self.perform_shipment_audit(shipment, request)
+            
             context.processForm()
 
-            obj_url = context.absolute_url_path()
+            obj_url = shipment.absolute_url_path()
+
+            if is_new:
+                audit_logger.perform_simple_audit(shipment, 'New')
             request.response.redirect(obj_url)
             return
 
@@ -147,6 +167,26 @@ class EditView(BrowserView):
                 fields.append(field)
         return fields
 
+    def perform_shipment_audit(self, shipment, request):
+        audit_logger = AuditLogger(self.context, 'shipment')
+        pc = getToolByName(self.context, "portal_catalog")
+
+        if shipment.getField('DeliveryAddress').get(shipment) != request.form['DeliveryAddress']:
+            audit_logger.perform_simple_audit(shipment, 'DeliveryAddress', shipment.getField('DeliveryAddress').get(shipment),
+                                              request.form['DeliveryAddress'])
+
+        if shipment.getField('BillingaDDress').get(shipment) != request.form['BillingaDDress']:
+            audit_logger.perform_simple_audit(shipment, 'BillingaDDress', shipment.getField('BillingaDDress').get(shipment),
+                                              request.form['BillingaDDress'])
+
+        if shipment.getField('Shipmentconditions').get(shipment) != request.form['Shipmentconditions']:
+            audit_logger.perform_simple_audit(shipment, 'Shipmentconditions', shipment.getField('Shipmentconditions').get(shipment),
+                                              request.form['Shipmentconditions'])
+
+        if shipment.getField('ShippingDate').get(shipment) != request.form['ShippingDate']:
+            audit_logger.perform_simple_audit(shipment, 'ShippingDate', shipment.getField('ShippingDate').get(shipment),
+                                              request.form['ShippingDate'])
+
 class ShipmentMultifileView(MultifileView):
     implements(IFolderContentsView, IViewView)
 
@@ -154,7 +194,7 @@ class ShipmentMultifileView(MultifileView):
         super(ShipmentMultifileView, self).__init__(context, request)
         self.show_workflow_action_buttons = False
         self.title = self.context.translate(_("Shipment Files"))
-        self.description = "Different interesting documents and files to be attached to the shipment"
+        self.shipmentconditions = "Different interesting documents and files to be attached to the shipment"
 
 class PrintView(ShipmentView):
     template = ViewPageTemplateFile('templates/print.pt')
@@ -183,7 +223,7 @@ class PrintView(ShipmentView):
         kits = context.getKits()
         kit_template = kits[0].getKitTemplate()
         self.kit_name = kit_template.Title()
-        self.kit_quantity = len(kits)
+        self.kit_shippingdate = len(kits)
 
         self.date_dispatched = self.ulocalized_time(context.getDateDispatched())
         self.courier_name = context.getCourier()

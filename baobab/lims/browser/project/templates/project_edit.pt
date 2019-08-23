@@ -1,0 +1,96 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+            metal:use-macro="here/main_template/macros/master"
+      i18n:domain="bika">
+
+<head>
+    <metal:block fill-slot="javascript_head_slot"
+            tal:define="portal context/@@plone_portal_state/portal;">
+        <script type="text/javascript"
+                tal:attributes="src python:portal.absolute_url() + '/bika_widgets/datetimewidget.js'"></script>
+        <script type="text/javascript"
+                tal:attributes="src python:portal.absolute_url() + '/bika_widgets/referencewidget.js'"></script>
+        <link rel="stylesheet" type="text/css" media="all" href=""
+                tal:attributes="href string:${portal/absolute_url}/bika_widgets/referencewidget.css"/>
+    </metal:block>
+</head>
+
+<body>
+<metal:title fill-slot="content-title">
+    <h2>
+        <img tal:attributes="src string:${view/portal_url}/++resource++baobab.lims.images/project_big.png"/>
+        Project
+    </h2>
+</metal:title>
+<div metal:fill-slot="content-core"
+     tal:define="
+        portal context/@@plone_portal_state/portal;
+        plone_view context/@@plone;
+        portal_state context/@@plone_portal_state;">
+
+    <form id="project_edit_form" name="project_edit_info_form" method="POST">
+        <input type="hidden" name="submitted" value="1"/>
+        <span tal:replace="structure context/@@authenticator/authenticator"/>
+        <metal:rows>
+            <div style="padding-bottom: 10px;">
+                <table summary="Project info" class="listing add nosort" cellpadding="0" cellspacing="0" style="width: 100%">
+                    <thead>
+                    <tal:field tal:repeat="field python:view.get_fields_with_visibility('visible')">
+                        <tal:def define="
+                             fieldName python:field.getName();
+                             field_macro here/widgets/field/macros/edit;
+                             accessor python:field.getAccessor(context);
+                             widget python:field.widget;
+                             errors python:{};
+                             mode string:edit;">
+
+                            <tr tal:attributes="fieldName fieldName">
+                                <tal:columns tal:condition="python: fieldName != 'Remarks'" tal:repeat="arnum python:range(1)">
+                                    <td class="nowrap" tal:attributes="arnum arnum">
+                                        <div class="field">
+                                            <tal:ifLabel tal:condition="widget/render_own_label | nothing">
+                                                <label class="formQuestion"
+                                                       tal:attributes="for python:fieldName">
+                                                    <span tal:replace="python:widget.Label(here)"
+                                                          i18n:translate="" />
+                                                    <span class="required"
+                                                          tal:condition="field/required"
+                                                          title="Required"
+                                                          i18n:attributes="title title_required;">&nbsp;</span>
+                                                    <span class="formHelp"
+                                                         tal:define="description python:widget.Description(here)"
+                                                         tal:content="structure description"
+                                                         tal:attributes="id string:${fieldName}_help"
+                                                         i18n:translate="">
+                                                      Help
+                                                    </span>
+                                                </label>
+                                            </tal:ifLabel>
+                                            <metal:field
+                                                    use-macro="python:context.widget(fieldName, mode='edit')" />
+                                        </div>
+
+                                    </td>
+                                </tal:columns>
+                            </tr>
+                        </tal:def>
+                    </tal:field>
+                    </thead>
+                </table>
+            </div>
+        </metal:rows>
+        <span>
+            <div style="text-align:left;padding-bottom:10px;">
+            <input i18n:attributes="value"
+                    class="context button allowMultiSubmit"
+                    type="submit"
+                    name="save_button"
+                    value="Save"/>
+        </div>
+        </span>
+
+    </form>
+    </div>
+</body>
+</html>

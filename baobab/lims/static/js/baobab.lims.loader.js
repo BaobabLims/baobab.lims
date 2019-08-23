@@ -12,7 +12,10 @@ var _s = window.jarn.i18n.MessageFactory("baobab.lims");
  * following the order of the dictionary.
  */
 window.baobab.lims.controllers =  {
-    
+    ".portaltype-samplebatch":
+        ['BaobabBiospecimensView', 'BaobabSampleBatchEditView'],
+    ".portaltype-biospecimens":
+        ['BaobabBiospecimensView'],
     ".template-ar_add #analysisrequest_edit_form":
         ['CustomAnalysisRequestAddView'],
     "#kit-printview-wrapper":
@@ -27,6 +30,8 @@ window.baobab.lims.controllers =  {
         ['OrderPublishView'],
     ".portaltype-sampleshipment":
         ['BaobabSampleShipmentView'],
+    "#baobab_sample_shipment_edit":
+        ['BaobabSampleShipmentEditView'],
     ".portaltype-sample":
         ['BaobabSampleView']
 };
