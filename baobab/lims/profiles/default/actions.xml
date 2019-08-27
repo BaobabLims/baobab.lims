@@ -7,6 +7,59 @@
 
     <object name="portal_tabs" meta_type="CMF Action Category" purge="True">
 		<property name="title"/>
+
+		<object name="reports" meta_type="CMF Action" i18n:domain="plone">
+			<property name="title" i18n:translate="">Acquisition</property>
+			<property name="description" i18n:translate=""/>
+			<property name="url_expr">string:$portal_url/reports</property>
+			<property name="link_target"/>
+			<property name="icon_expr"/>
+			<property name="available_expr"/>
+			<property name="permissions">
+				<element value="List portal members"/>
+			</property>
+			<property name="visible">True</property>
+		</object>
+
+		<object name="reports" meta_type="CMF Action" i18n:domain="plone">
+			<property name="title" i18n:translate="">Sample</property>
+			<property name="description" i18n:translate=""/>
+			<property name="url_expr">string:$portal_url/reports</property>
+			<property name="link_target"/>
+			<property name="icon_expr"/>
+			<property name="available_expr"/>
+			<property name="permissions">
+				<element value="List portal members"/>
+			</property>
+			<property name="visible">True</property>
+		</object>
+
+		<object name="reports" meta_type="CMF Action" i18n:domain="plone">
+			<property name="title" i18n:translate="">Process</property>
+			<property name="description" i18n:translate=""/>
+			<property name="url_expr">string:$portal_url/reports</property>
+			<property name="link_target"/>
+			<property name="icon_expr"/>
+			<property name="available_expr"/>
+			<property name="permissions">
+				<element value="List portal members"/>
+			</property>
+			<property name="visible">True</property>
+		</object>
+
+		<object name="reports" meta_type="CMF Action" i18n:domain="plone">
+			<property name="title" i18n:translate="">Storage</property>
+			<property name="description" i18n:translate=""/>
+			<property name="url_expr">string:$portal_url/reports</property>
+			<property name="link_target"/>
+			<property name="icon_expr"/>
+			<property name="available_expr"/>
+			<property name="permissions">
+				<element value="List portal members"/>
+			</property>
+			<property name="visible">True</property>
+		</object>
+
         <object name="reports" meta_type="CMF Action" i18n:domain="plone">
 			<property name="title" i18n:translate="">Report</property>
 			<property name="description" i18n:translate=""/>

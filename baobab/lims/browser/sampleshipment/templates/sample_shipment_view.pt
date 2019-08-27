@@ -31,7 +31,8 @@
                 tal:attributes="src string:${view/portal_url}/++resource++baobab.lims.images/project.png">
             <span i18n:translate="">Info Project</span>:
         </tal:current_storage>
-    </h3><br/>
+    </h3>
+    <br/>
 
     <input type="hidden" name="sample_shipment_uid" id="sample_shipment_uid" tal:attributes="value view/sample_shipment_uid">
 
