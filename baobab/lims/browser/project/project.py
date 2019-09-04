@@ -162,15 +162,12 @@ class ProjectEdit(BrowserView):
     template = ViewPageTemplateFile('templates/project_edit.pt')
 
     def __call__(self):
-        print('SSSSSSS')
         portal = self.portal
         request = self.request
         context = self.context
         setup = portal.bika_setup
 
         if 'submitted' in request:
-            print('ojjjjjj')
-            # pdb.set_trace()
             audit_logger = AuditLogger(self.context, 'Project')
             context.setConstrainTypesMode(constraintypes.DISABLED)
             # This following line does the same as precedent which one is the
@@ -182,11 +179,8 @@ class ProjectEdit(BrowserView):
             is_new = False
 
             if context.getId() == '':
-                print('okkkkkkkkkkkkkkkkkkkkk')
                 is_new = True
             else : 
-                print( "context.id" )
-                print( context.id )
                 is_new = False
                 self.perform_project_audit(context, request)
 
@@ -200,7 +194,6 @@ class ProjectEdit(BrowserView):
             # request.response.redirect(obj_url)
 
             if is_new:
-                print('#################')
                 audit_logger.perform_simple_audit(context, 'New')
             request.response.redirect(obj_url)
 

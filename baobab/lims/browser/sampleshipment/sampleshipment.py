@@ -183,10 +183,6 @@ class SampleShipmentEdit(BrowserView):
             audit_logger.perform_simple_audit(sample_shipment, 'ShippingCost', object_shipping_cost,
                                               form_shipping_cost)
 
-        if sample_shipment.getField('ShippingCost').get(sample_shipment) != request.form['ShippingCost']:
-            audit_logger.perform_simple_audit(sample_shipment, 'ShippingCost', sample_shipment.getField('ShippingCost').get(sample_shipment),
-                                              request.form['ShippingCost'])
-
         # The weight audit
         form_weight = request.form['Weight']
         if not form_weight:

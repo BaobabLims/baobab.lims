@@ -120,6 +120,7 @@ class SamplesExporter(object):
         samples = []
         pc = getToolByName(self.context, 'portal_catalog')
         brains = pc(portal_type="Sample")
+
         if brains:
             samples.append(['Title', 'Project_Visit_Type', 'Sample_Type','Storage_Location', 'Sampling_Time',
                             'Subject_ID', 'Barcode_Kit_ID', 'Volume', 'Unit', 'Sample_State',
@@ -127,95 +128,94 @@ class SamplesExporter(object):
                             'Sample_ID', 'UID', 'Parent_UID', 'URL_path'])
         for brain in brains:
             sample = brain.getObject()
-            if not sample.getField('LinkedSample').get(sample):
-                row = []
-                row.append(sample.Title())
-                # project = sample.getField('Project').get(sample)
-                project = sample.aq_parent
-                row.append(project.Title())
-                row.append(sample.getSampleType().Title())
-                storage = sample.getField('StorageLocation').get(sample)
-                if storage:
-                    row.append(storage.getHierarchy())
-                else:
-                    row.append('')
-                row.append(sample.getSamplingDate().strftime("%Y-%m-%d %H:%M") if sample.getSamplingDate() else '')
-                row.append(sample.getField('SubjectID').get(sample))
-                row.append(sample.getField('Barcode').get(sample))
-                row.append(sample.getField('Volume').get(sample))
-                row.append(sample.getField('Unit').get(sample))
 
-                row.append(sample.getSampleState())
-                row.append(sample.getField('DateCreated').get(sample).strftime("%Y-%m-%d %H:%M") if sample.getField('DateCreated').get(sample) else '')
-                row.append(sample.getField('SampleID').get(sample))
+            row = []
+            row.append(sample.Title())
+            project = sample.aq_parent
+            row.append(project.Title())
+            row.append(sample.getSampleType().Title())
+            storage = sample.getField('StorageLocation').get(sample)
+            if storage:
+                row.append(storage.getHierarchy())
+            else:
+                row.append('')
+            row.append(sample.getSamplingDate().strftime("%Y-%m-%d %H:%M") if sample.getSamplingDate() else '')
+            row.append(sample.getField('SubjectID').get(sample))
+            row.append(sample.getField('Barcode').get(sample))
+            row.append(sample.getField('Volume').get(sample))
+            row.append(sample.getField('Unit').get(sample))
 
-                row.append(sample.getId() if sample.getId() else '')
-                row.append(sample.UID())
-                row.append(sample.aq_parent.UID() if sample.aq_parent.UID() else '')
-                row.append(brain.getPath() if brain.getPath() else '')
+            row.append(sample.getSampleState())
+            row.append(sample.getField('DateCreated').get(sample).strftime("%Y-%m-%d %H:%M") if sample.getField('DateCreated').get(sample) else '')
+            row.append(sample.getField('SampleID').get(sample))
 
-                samples.append(row)
+            row.append(sample.getId() if sample.getId() else '')
+            row.append(sample.UID())
+            row.append(sample.aq_parent.UID() if sample.aq_parent.UID() else '')
+            row.append(brain.getPath() if brain.getPath() else '')
+
+            samples.append(row)
         return samples
 
-class SamplesAliquotExporter(object):
-    """ This class packages all the samples info into a list of dictionaries and then returns it.
-        Returns all the samples except Aliquots (Samples with Parent Samples/LinkedSample)
-    """
-    def __init__(self, context):
-        self.context = context
-
-    def export(self):
-        aliquots = []
-        pc = getToolByName(self.context, 'portal_catalog')
-        brains = pc(portal_type="Sample")
-        if brains:
-            aliquots.append(['Title', 'Sample_Type', 'Subject_ID', 'Barcode', 'Volume',
-                             'Unit', 'Storage', 'Sample_State', 'Sampling_Time',
-                             'Parent_Biospecimen_Kit_ID', 'Batch_ID', 'Date_Created', 'SampleID_field',
-                             'Aliquot_ID', 'UID', 'Parent_ID', 'URL_path'])
-        for brain in brains:
-            sample = brain.getObject()
-            parent_sample = sample.getField('LinkedSample').get(sample)
-            if parent_sample:
-
-                batch = sample.getField('Batch').get(sample) and sample.getField('Batch').get(sample).Title() or ''
-                row = []
-                row.append(sample.Title())
-                row.append(sample.getSampleType().Title())
-                row.append(sample.getField('SubjectID').get(sample))
-                row.append(sample.getField('Barcode').get(sample))
-                row.append(sample.getField('Volume').get(sample))
-                row.append(sample.getField('Unit').get(sample))
-
-                storage = sample.getField('StorageLocation').get(sample)
-                if storage:
-                    row.append(storage.getHierarchy())
-                else:
-                    row.append('')                
-                row.append(sample.getSampleState())
-                row.append(sample.getField('SamplingDate').get(sample).strftime("%Y-%m-%d %H:%M") if sample.getField('SamplingDate').get(sample) else '')
-                row.append(parent_sample.getField('Barcode').get(parent_sample))
-                row.append(batch)
-
-                row.append(sample.getField('DateCreated').get(sample).strftime("%Y-%m-%d %H:%M") if sample.getField('DateCreated').get(sample) else '')
-                row.append(sample.getField('SampleID').get(sample))
-
-                # # last_modified_user = sample.getField('ChangeUserName').get(sample)
-                # last_modified_user = 'last modify user here'
-                # last_modified_date = ''
-                # # if sample.getField('ChangeDateTime').get(sample):
-                # #     last_modified_date = sample.getField('ChangeDateTime').get(sample).strftime("%Y-%m-%d %H:%M")
-                # row.append(last_modified_user)
-                # row.append(last_modified_date)
-
-                row.append(sample.getId() if sample.getId() else '')
-                row.append(sample.UID())
-                row.append(sample.aq_parent.UID() if sample.aq_parent.UID() else '')
-                row.append(brain.getPath() if brain.getPath() else '')
-
-                aliquots.append(row)
-        return aliquots
-
+# class SamplesAliquotExporter(object):
+#     """ This class packages all the samples info into a list of dictionaries and then returns it.
+#         Returns all the samples except Aliquots (Samples with Parent Samples/LinkedSample)
+#     """
+#     def __init__(self, context):
+#         self.context = context
+#
+#     def export(self):
+#         aliquots = []
+#         pc = getToolByName(self.context, 'portal_catalog')
+#         brains = pc(portal_type="Sample")
+#         if brains:
+#             aliquots.append(['Title', 'Sample_Type', 'Subject_ID', 'Barcode', 'Volume',
+#                              'Unit', 'Storage', 'Sample_State', 'Sampling_Time',
+#                              'Parent_Biospecimen_Kit_ID', 'Batch_ID', 'Date_Created', 'SampleID_field',
+#                              'Aliquot_ID', 'UID', 'Parent_ID', 'URL_path'])
+#         for brain in brains:
+#             sample = brain.getObject()
+#             parent_sample = sample.getField('LinkedSample').get(sample)
+#             if parent_sample:
+#
+#                 batch = sample.getField('Batch').get(sample) and sample.getField('Batch').get(sample).Title() or ''
+#                 row = []
+#                 row.append(sample.Title())
+#                 row.append(sample.getSampleType().Title())
+#                 row.append(sample.getField('SubjectID').get(sample))
+#                 row.append(sample.getField('Barcode').get(sample))
+#                 row.append(sample.getField('Volume').get(sample))
+#                 row.append(sample.getField('Unit').get(sample))
+#
+#                 storage = sample.getField('StorageLocation').get(sample)
+#                 if storage:
+#                     row.append(storage.getHierarchy())
+#                 else:
+#                     row.append('')
+#                 row.append(sample.getSampleState())
+#                 row.append(sample.getField('SamplingDate').get(sample).strftime("%Y-%m-%d %H:%M") if sample.getField('SamplingDate').get(sample) else '')
+#                 row.append(parent_sample.getField('Barcode').get(parent_sample))
+#                 row.append(batch)
+#
+#                 row.append(sample.getField('DateCreated').get(sample).strftime("%Y-%m-%d %H:%M") if sample.getField('DateCreated').get(sample) else '')
+#                 row.append(sample.getField('SampleID').get(sample))
+#
+#                 # # last_modified_user = sample.getField('ChangeUserName').get(sample)
+#                 # last_modified_user = 'last modify user here'
+#                 # last_modified_date = ''
+#                 # # if sample.getField('ChangeDateTime').get(sample):
+#                 # #     last_modified_date = sample.getField('ChangeDateTime').get(sample).strftime("%Y-%m-%d %H:%M")
+#                 # row.append(last_modified_user)
+#                 # row.append(last_modified_date)
+#
+#                 row.append(sample.getId() if sample.getId() else '')
+#                 row.append(sample.UID())
+#                 row.append(sample.aq_parent.UID() if sample.aq_parent.UID() else '')
+#                 row.append(brain.getPath() if brain.getPath() else '')
+#
+#                 aliquots.append(row)
+#         return aliquots
+#
 
 class SampleShipmentExporter(object):
     """ This class packages all the samples info into a list of dictionaries and then returns it.
