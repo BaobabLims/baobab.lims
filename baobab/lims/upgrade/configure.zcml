@@ -66,4 +66,14 @@
         sortkey="8"
         profile="baobab.lims:default"/>
 
+  <genericsetup:upgradeStep
+        title="Audit logs display"
+        description="Upgrade to see the audit logs folder second time"
+        source="1531"
+        destination="1600"
+        handler="baobab.lims.upgrade.to1600.upgrade"
+        sortkey="8"
+        profile="baobab.lims:default"/>
+
+
 </configure>

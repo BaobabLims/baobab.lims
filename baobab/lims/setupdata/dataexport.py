@@ -88,11 +88,11 @@ class ExportView(IV):
         exporter = ProjectsExporter(self.context)
         export_dict['Projects'] = exporter.export()
 
-        exporter = SamplesExporter(self.context)
-        export_dict['Parent Samples'] = exporter.export()
+        # exporter = SamplesExporter(self.context)
+        # export_dict['Parent Samples'] = exporter.export()
 
-        exporter = SamplesAliquotExporter(self.context)
-        export_dict['Aliquot'] = exporter.export()
+        exporter = SamplesExporter(self.context)
+        export_dict['Samples'] = exporter.export()
 
         exporter = SampleShipmentExporter(self.context)
         export_dict['Sample Shipment'] = exporter.export()
