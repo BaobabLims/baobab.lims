@@ -14,7 +14,7 @@ class AuditLogs(ATFolder):
     implements(IAuditLogs)
     displayContentsTab = False
     schema = schema
-    security = ClassSecurityInfo()
+    # security = ClassSecurityInfo()
 
 
 schemata.finalizeATCTSchema(schema, folderish=True, moveDiscussion=False)
