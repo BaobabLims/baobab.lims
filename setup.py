@@ -30,6 +30,9 @@ setup(name='baobab.lims',
           'z3c.relationfield',
           'collective.wtf',
           'plone.formwidget.datetime',
+          'plone.app.jquery = 1.11.2',
+          'plone.app.jquerytools = 1.7.0',
+          'collective.js.bootstrap = 3.3.5',
       ],
       extras_require={
           'test': [

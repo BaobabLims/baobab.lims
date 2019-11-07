@@ -58,3 +58,6 @@ def ObjectModifiedEventHandler(instance, event):
         if instance.getField('Barcode').get(instance) != instance.getId():
             instance.setId(instance.getField('Barcode').get(instance))
 
+        print('=========Inside the object modified')
+        print(instance.__dict__)
+

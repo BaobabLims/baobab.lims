@@ -29,7 +29,7 @@
         plone_view context/@@plone;
         portal_state context/@@plone_portal_state;">
 
-    <form id="project_edit_form" name="project_edit_info_form" method="POST">
+    <form id="project_edit_form" name="project_edit_info_form" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="submitted" value="1"/>
         <span tal:replace="structure context/@@authenticator/authenticator"/>
         <metal:rows>
@@ -76,8 +76,14 @@
                             </tr>
                         </tal:def>
                     </tal:field>
+
                     </thead>
                 </table>
+
+                <div>
+                    <label for="fileUpload">Male</label>
+                    <input type="file" name="fileUpload" id="fileUpload"> <span tal:content="python:view.get_project_upload_file()"></span>
+                </div>
             </div>
         </metal:rows>
         <span>

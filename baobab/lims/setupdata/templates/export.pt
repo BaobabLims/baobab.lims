@@ -32,6 +32,8 @@
     </form>
 
     <div tal:condition="exists:view/download_file" tal:attributes="id string:export-display-table">
+        <span>For absolute rediculousness</span>
+
          <table class="bika-listing-table" summary="Content listing" style="margin-bottom:0px;" form_id="list">
             <tbody tal:define="files view/get_filenames">
             <span tal:repeat="file files">

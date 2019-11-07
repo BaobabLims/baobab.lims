@@ -1,3 +1,9 @@
+import os
+# import cgi, cgitb, jinja2
+# import urllib.request
+
+import datetime
+
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.ATContentTypes.lib import constraintypes
 
@@ -119,6 +125,7 @@ class ProjectView(BrowserView):
     title = _("Project Registration")
 
     def __call__(self):
+        upload_directory = '/static/uploads'
         context = self.context
         request = self.request
         portal = self.portal
@@ -147,6 +154,9 @@ class ProjectView(BrowserView):
         self.participants = context.getNumParticipants()
         self.age_interval = str(context.getAgeLow()) + ' - ' + str(
             context.getAgeHigh())
+
+        # self.project_upload_file = context.portal_url() + upload_directory + '/' + context.getProjectUploadFile()
+        self.project_upload_file = context.getProjectUploadFile()
 
         biospecimen_types = ProjectBiospecView(context, request,
                                            context.getSampleType())
@@ -180,27 +190,67 @@ class ProjectEdit(BrowserView):
 
             if context.getId() == '':
                 is_new = True
-            else : 
+            else:
                 is_new = False
                 self.perform_project_audit(context, request)
 
-
-            # print('--------------')
-            # print(context.getField('Service').get(context))
-
+            file_name = self.get_the_file()
             context.processForm()
-
             obj_url = context.absolute_url_path()
-            # request.response.redirect(obj_url)
 
             if is_new:
                 audit_logger.perform_simple_audit(context, 'New')
+
+            context.getField('ProjectUploadFile').set(context, file_name)
+            context.reindexObject()
+
             request.response.redirect(obj_url)
 
             return
 
-
         return self.template()
+
+    def get_project_upload_file(self):
+
+        context = self.context
+        return context.getProjectUploadFile()
+        # project_upload_name = context.getField('ProjectUploadFile').get(context)
+        # return project_upload_name
+
+    def get_the_file(self):
+        _UPLOADS = 'static/uploads/'
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        base_dir = self.get_directory_name(base_dir)
+        uploads_directory = os.path.join(base_dir, _UPLOADS)
+
+        if 'fileUpload' in self.request.form:
+            form_file = self.request.form['fileUpload']
+
+            if form_file.filename != '':
+                current_date = str(datetime.datetime.now().date()) + '_' + \
+                           str(datetime.datetime.now().time()).replace(':', '.')
+
+                file_name = "%s_%s" % (current_date, form_file.filename)
+                uploaded_file_path = os.path.join(uploads_directory, os.path.basename(file_name))
+
+                file_content = form_file.read()
+                self.get_directory_name(base_dir)
+
+                with open(uploaded_file_path, "w") as file_write:
+                    file_write.write(file_content)
+
+                return file_name
+
+    def get_directory_name(self, directory):
+        browser = directory[-8:]
+
+        if browser == '/browser':
+            s = directory.rfind('/browser')
+            directory = directory[:s]
+
+        return directory
+
+
 
     def perform_project_audit(self, project, request):
         audit_logger = AuditLogger(self.context, 'Project')

@@ -30,4 +30,10 @@
       layer="bika.lims.interfaces.IBikaLIMS"
       />
 
+  <browser:resourceDirectory
+      name="baobab.lims.uploads"
+      directory="uploads"
+      layer="bika.lims.interfaces.IBikaLIMS"
+      />
+
 </configure>

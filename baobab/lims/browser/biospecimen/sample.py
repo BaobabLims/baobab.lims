@@ -128,6 +128,9 @@ class EditView(BrowserView):
                 sample = context
                 self.perform_sample_audit(sample, request)
 
+            print('--------1st sample')
+            print(sample.__dict__)
+
             sample.getField('Project').set(sample, request.form['Project_uid'])
             sample.getField('AllowSharing').set(sample, request.form['AllowSharing'])
             sample.getField('Kit').set(sample, request.form['Kit_uid'])
@@ -150,6 +153,9 @@ class EditView(BrowserView):
             if new_sample:
                 audit_logger.perform_simple_audit(sample, 'New')
             request.response.redirect(obj_url)
+
+            print('---------2nd sample')
+            print(sample.__dict__)
 
             return
 

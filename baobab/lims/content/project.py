@@ -88,6 +88,15 @@ schema = BikaSchema.copy() + Schema((
         )
     ),
 
+    StringField(
+        'ProjectUploadFile',
+        searchable=True,
+        widget=StringWidget(
+            label=_('File uploaded to project'),
+            visible={'edit': 'invisible', 'view': 'invisible'},
+        )
+    ),
+
     DateTimeField(
         'DateCreated',
         mode="rw",
