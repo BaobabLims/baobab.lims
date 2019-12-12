@@ -1,0 +1,77 @@
+quinton@quintonSANBI:~/tutorials/deployment/first_tutorial$ ls /etc/nginx/
+conf.d          koi-utf     nginx.conf         scgi_params      snippets
+fastcgi.conf    koi-win     nginx.conf.backup  sites-available  uwsgi_params
+fastcgi_params  mime.types  proxy_params       sites-enabled    win-utf
+quinton@quintonSANBI:~/tutorials/deployment/first_tutorial$ ls
+myapp.py  nginx.conf  __pycache__  venv  wsgi.py
+quinton@quintonSANBI:~/tutorials/deployment/first_tutorial$ sudo cp nginx.conf /etc/nginx/
+[sudo] password for quinton: 
+quinton@quintonSANBI:~/tutorials/deployment/first_tutorial$ ss -tulpn
+Netid  State      Recv-Q Send-Q    Local Address:Port                   Peer Address:Port              
+udp    UNCONN     0      0                     *:631                               *:*                  
+udp    UNCONN     0      0              *%wlp2s0:43347                             *:*                  
+udp    UNCONN     0      0                     *:5353                              *:*                  
+udp    UNCONN     0      0                     *:54989                             *:*                  
+udp    UNCONN     0      0           *%enp0s31f6:57079                             *:*                  
+udp    UNCONN     0      0             127.0.1.1:53                                *:*                  
+udp    UNCONN     0      0                     *:68                                *:*                  
+udp    UNCONN     0      0                     *:68                                *:*                  
+udp    UNCONN     0      0                    :::52179                            :::*                  
+udp    UNCONN     0      0                    :::45296                            :::*                   users:(("skypeforlinux",pid=4836,fd=91))
+udp    UNCONN     0      0                    :::5353                             :::*                  
+tcp    LISTEN     0      128           127.0.0.1:40971                             *:*                  
+tcp    LISTEN     0      128                   *:80                                *:*                  
+tcp    LISTEN     0      5             127.0.1.1:53                                *:*                  
+tcp    LISTEN     0      5             127.0.0.1:631                               *:*                  
+tcp    LISTEN     0      128           127.0.0.1:5432                              *:*                  
+tcp    LISTEN     0      128                   *:5500                              *:*                   users:(("gunicorn",pid=32235,fd=5),("gunicorn",pid=32232,fd=5))
+tcp    LISTEN     0      128           127.0.0.1:27017                             *:*                  
+tcp    LISTEN     0      80            127.0.0.1:3306                              *:*                  
+tcp    LISTEN     0      5                   ::1:631                              :::*                  
+quinton@quintonSANBI:~/tutorials/deployment/first_tutorial$ sudo cat /etc/nginx/nginx.conf
+worker_processes 1;
+
+events { worker_connections 1024; }
+
+http {
+
+    sendfile on;
+
+    # List of application servers
+    upstream app_servers {
+        server 0.0.0.0:5500;
+    }
+
+    # Configuration for the servers
+    server {
+        server_name _;
+        listen 80;
+
+        location / {
+            proxy_pass http://app_servers;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+    }
+}
+quinton@quintonSANBI:~/tutorials/deployment/first_tutorial$ sudo systemctl restart nginx
+quinton@quintonSANBI:~/tutorials/deployment/first_tutorial$ sudo systemctl status nginx
+● nginx.service - A high performance web server and a reverse proxy server
+   Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+   Active: active (running) since Tue 2019-09-17 11:48:18 SAST; 7s ago
+  Process: 432 ExecStop=/sbin/start-stop-daemon --quiet --stop --retry QUIT/5 --pidfile /run/nginx.pid (
+  Process: 450 ExecStart=/usr/sbin/nginx -g daemon on; master_process on; (code=exited, status=0/SUCCESS
+  Process: 438 ExecStartPre=/usr/sbin/nginx -t -q -g daemon on; master_process on; (code=exited, status=
+ Main PID: 468 (nginx)
+    Tasks: 2
+   Memory: 2.7M
+      CPU: 30ms
+   CGroup: /system.slice/nginx.service
+           ├─468 nginx: master process /usr/sbin/nginx -g daemon on; master_process on
+           └─469 nginx: worker process                           
+
+Sep 17 11:48:18 quintonSANBI systemd[1]: Starting A high performance web server and a reverse proxy serv
+Sep 17 11:48:18 quintonSANBI systemd[1]: Started A high performance web server and a reverse proxy serve
+lines 1-16/16 (END)
+

@@ -1,0 +1,100 @@
+(venv) quinton@quintonSANBI:~/tutorials/deployment/first_tutorial$ python myapp.py 
+ * Serving Flask app "myapp" (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+127.0.0.1 - - [17/Sep/2019 11:35:11] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [17/Sep/2019 11:35:11] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [17/Sep/2019 11:35:24] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [17/Sep/2019 11:35:26] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [17/Sep/2019 11:35:26] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [17/Sep/2019 11:35:43] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [17/Sep/2019 11:36:08] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [17/Sep/2019 11:36:08] "GET /favicon.ico HTTP/1.1" 404 -
+^C(venv) quinton@quintonSANBI:~/tutorials/deployment/first_tutorial$ python myapp.py 
+ * Serving Flask app "myapp" (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+127.0.0.1 - - [17/Sep/2019 11:36:22] "GET / HTTP/1.1" 200 -
+^C(venv) quinton@quintonSANBI:~/tutorials/deployment/first_tutorial$ gunicorn --bind 0.0.0.0:5000 wsgi:a[2019-09-17 11:37:05 +0200] [31450] [INFO] Starting gunicorn 19.9.0
+[2019-09-17 11:37:05 +0200] [31450] [INFO] Listening at: http://0.0.0.0:5000 (31450)
+[2019-09-17 11:37:05 +0200] [31450] [INFO] Using worker: sync
+[2019-09-17 11:37:05 +0200] [31453] [INFO] Booting worker with pid: 31453
+[2019-09-17 11:37:06 +0200] [31453] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/home/quinton/tutorials/deployment/first_tutorial/venv/lib/python3.5/site-packages/gunicorn/arbiter.py", line 583, in spawn_worker
+    worker.init_process()
+  File "/home/quinton/tutorials/deployment/first_tutorial/venv/lib/python3.5/site-packages/gunicorn/workers/base.py", line 129, in init_process
+    self.load_wsgi()
+  File "/home/quinton/tutorials/deployment/first_tutorial/venv/lib/python3.5/site-packages/gunicorn/workers/base.py", line 138, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/home/quinton/tutorials/deployment/first_tutorial/venv/lib/python3.5/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/home/quinton/tutorials/deployment/first_tutorial/venv/lib/python3.5/site-packages/gunicorn/app/wsgiapp.py", line 52, in load
+    return self.load_wsgiapp()
+  File "/home/quinton/tutorials/deployment/first_tutorial/venv/lib/python3.5/site-packages/gunicorn/app/wsgiapp.py", line 41, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/home/quinton/tutorials/deployment/first_tutorial/venv/lib/python3.5/site-packages/gunicorn/util.py", line 350, in import_app
+    __import__(module)
+  File "/home/quinton/tutorials/deployment/first_tutorial/wsgi.py", line 1, in <module>
+    from myproject import app
+ImportError: No module named 'myproject'
+[2019-09-17 11:37:06 +0200] [31453] [INFO] Worker exiting (pid: 31453)
+[2019-09-17 11:37:06 +0200] [31450] [INFO] Shutting down: Master
+[2019-09-17 11:37:06 +0200] [31450] [INFO] Reason: Worker failed to boot.
+(venv) quinton@quintonSANBI:~/tutorials/deployment/first_tutorial$ gunicorn --bind 0.0.0.0:5000 wsgi:myapp
+[2019-09-17 11:37:11 +0200] [31457] [INFO] Starting gunicorn 19.9.0
+[2019-09-17 11:37:11 +0200] [31457] [INFO] Listening at: http://0.0.0.0:5000 (31457)
+[2019-09-17 11:37:11 +0200] [31457] [INFO] Using worker: sync
+[2019-09-17 11:37:11 +0200] [31460] [INFO] Booting worker with pid: 31460
+[2019-09-17 11:37:11 +0200] [31460] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/home/quinton/tutorials/deployment/first_tutorial/venv/lib/python3.5/site-packages/gunicorn/arbiter.py", line 583, in spawn_worker
+    worker.init_process()
+  File "/home/quinton/tutorials/deployment/first_tutorial/venv/lib/python3.5/site-packages/gunicorn/workers/base.py", line 129, in init_process
+    self.load_wsgi()
+  File "/home/quinton/tutorials/deployment/first_tutorial/venv/lib/python3.5/site-packages/gunicorn/workers/base.py", line 138, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/home/quinton/tutorials/deployment/first_tutorial/venv/lib/python3.5/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/home/quinton/tutorials/deployment/first_tutorial/venv/lib/python3.5/site-packages/gunicorn/app/wsgiapp.py", line 52, in load
+    return self.load_wsgiapp()
+  File "/home/quinton/tutorials/deployment/first_tutorial/venv/lib/python3.5/site-packages/gunicorn/app/wsgiapp.py", line 41, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/home/quinton/tutorials/deployment/first_tutorial/venv/lib/python3.5/site-packages/gunicorn/util.py", line 350, in import_app
+    __import__(module)
+  File "/home/quinton/tutorials/deployment/first_tutorial/wsgi.py", line 1, in <module>
+    from myproject import app
+ImportError: No module named 'myproject'
+[2019-09-17 11:37:11 +0200] [31460] [INFO] Worker exiting (pid: 31460)
+[2019-09-17 11:37:11 +0200] [31457] [INFO] Shutting down: Master
+[2019-09-17 11:37:11 +0200] [31457] [INFO] Reason: Worker failed to boot.
+(venv) quinton@quintonSANBI:~/tutorials/deployment/first_tutorial$ gunicorn --bind 0.0.0.0:5000 wsgi:myapp
+[2019-09-17 11:37:48 +0200] [31526] [INFO] Starting gunicorn 19.9.0
+[2019-09-17 11:37:48 +0200] [31526] [INFO] Listening at: http://0.0.0.0:5000 (31526)
+[2019-09-17 11:37:48 +0200] [31526] [INFO] Using worker: sync
+[2019-09-17 11:37:48 +0200] [31529] [INFO] Booting worker with pid: 31529
+Failed to find application object 'myapp' in 'wsgi'
+[2019-09-17 11:37:49 +0200] [31529] [INFO] Worker exiting (pid: 31529)
+[2019-09-17 11:37:49 +0200] [31526] [INFO] Shutting down: Master
+[2019-09-17 11:37:49 +0200] [31526] [INFO] Reason: App failed to load.
+(venv) quinton@quintonSANBI:~/tutorials/deployment/first_tutorial$ gunicorn --bind 0.0.0.0:5000 wsgi:app
+[2019-09-17 11:37:54 +0200] [31532] [INFO] Starting gunicorn 19.9.0
+[2019-09-17 11:37:54 +0200] [31532] [INFO] Listening at: http://0.0.0.0:5000 (31532)
+[2019-09-17 11:37:54 +0200] [31532] [INFO] Using worker: sync
+[2019-09-17 11:37:54 +0200] [31535] [INFO] Booting worker with pid: 31535
+^C[2019-09-17 11:43:11 +0200] [31532] [INFO] Handling signal: int
+[2019-09-17 11:43:11 +0200] [31535] [INFO] Worker exiting (pid: 31535)
+[2019-09-17 11:43:11 +0200] [31532] [INFO] Shutting down: Master
+(venv) quinton@quintonSANBI:~/tutorials/deployment/first_tutorial$ gunicorn --bind 0.0.0.0:5500 wsgi:app 
+[2019-09-17 11:43:16 +0200] [32232] [INFO] Starting gunicorn 19.9.0
+[2019-09-17 11:43:16 +0200] [32232] [INFO] Listening at: http://0.0.0.0:5500 (32232)
+[2019-09-17 11:43:16 +0200] [32232] [INFO] Using worker: sync
+[2019-09-17 11:43:16 +0200] [32235] [INFO] Booting worker with pid: 32235
+
+

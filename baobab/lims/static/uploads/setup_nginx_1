@@ -1,0 +1,215 @@
+quinton@quintonSANBI:~/tutorials/deployment/myproject$ ifconfig
+docker0   Link encap:Ethernet  HWaddr 02:42:9b:28:d3:d0  
+          inet addr:172.18.0.1  Bcast:172.18.255.255  Mask:255.255.0.0
+          UP BROADCAST MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+docker_gwbridge Link encap:Ethernet  HWaddr 02:42:2d:f8:31:1a  
+          inet addr:172.17.0.1  Bcast:172.17.255.255  Mask:255.255.0.0
+          UP BROADCAST MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+enp0s31f6 Link encap:Ethernet  HWaddr a4:4c:c8:15:dc:fb  
+          inet addr:172.20.0.44  Bcast:172.20.0.255  Mask:255.255.255.0
+          inet6 addr: fe80::146b:a5c5:6af4:7573/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:150917 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:87575 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:161987739 (161.9 MB)  TX bytes:9804163 (9.8 MB)
+          Interrupt:16 Memory:ef200000-ef220000 
+
+eth0      Link encap:Ethernet  HWaddr 2e:61:f6:de:2b:7e  
+          UP BROADCAST MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:7272 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:7272 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:1867166 (1.8 MB)  TX bytes:1867166 (1.8 MB)
+
+wlp2s0    Link encap:Ethernet  HWaddr 88:b1:11:8b:11:f4  
+          inet addr:172.16.212.105  Bcast:172.16.212.255  Mask:255.255.255.0
+          inet6 addr: fe80::98:5b56:8b19:d2ab/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:243 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:371 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:76884 (76.8 KB)  TX bytes:45491 (45.4 KB)
+
+quinton@quintonSANBI:~/tutorials/deployment/myproject$ ip addr show eth0 | grep inet | awk '{ print $2; }' | sed 's/\/.*$//'
+quinton@quintonSANBI:~/tutorials/deployment/myproject$ ip addr show eth0 | grep inet | awk '{ print $2; }' | sed 's/\/.*$//'
+quinton@quintonSANBI:~/tutorials/deployment/myproject$ curl -4 icanhazip.com
+196.21.250.36
+quinton@quintonSANBI:~/tutorials/deployment/myproject$ ifconfig
+docker0   Link encap:Ethernet  HWaddr 02:42:9b:28:d3:d0  
+          inet addr:172.18.0.1  Bcast:172.18.255.255  Mask:255.255.0.0
+          UP BROADCAST MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+docker_gwbridge Link encap:Ethernet  HWaddr 02:42:2d:f8:31:1a  
+          inet addr:172.17.0.1  Bcast:172.17.255.255  Mask:255.255.0.0
+          UP BROADCAST MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+enp0s31f6 Link encap:Ethernet  HWaddr a4:4c:c8:15:dc:fb  
+          inet addr:172.20.0.44  Bcast:172.20.0.255  Mask:255.255.255.0
+          inet6 addr: fe80::146b:a5c5:6af4:7573/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:197469 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:115620 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:222709900 (222.7 MB)  TX bytes:12382395 (12.3 MB)
+          Interrupt:16 Memory:ef200000-ef220000 
+
+eth0      Link encap:Ethernet  HWaddr 2e:61:f6:de:2b:7e  
+          UP BROADCAST MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:7821 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:7821 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:2027679 (2.0 MB)  TX bytes:2027679 (2.0 MB)
+
+wlp2s0    Link encap:Ethernet  HWaddr 88:b1:11:8b:11:f4  
+          inet addr:172.16.212.105  Bcast:172.16.212.255  Mask:255.255.255.0
+          inet6 addr: fe80::98:5b56:8b19:d2ab/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:271 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:397 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:87702 (87.7 KB)  TX bytes:47974 (47.9 KB)
+
+quinton@quintonSANBI:~/tutorials/deployment/myproject$ ss -tulpn
+Netid State      Recv-Q Send-Q     Local Address:Port                    Peer Address:Port              
+udp   UNCONN     0      0                      *:631                                *:*                  
+udp   UNCONN     0      0               *%wlp2s0:43347                              *:*                  
+udp   UNCONN     0      0                      *:5353                               *:*                  
+udp   UNCONN     0      0                      *:54989                              *:*                  
+udp   UNCONN     0      0            *%enp0s31f6:57079                              *:*                  
+udp   UNCONN     0      0              127.0.1.1:53                                 *:*                  
+udp   UNCONN     0      0                      *:68                                 *:*                  
+udp   UNCONN     0      0                      *:68                                 *:*                  
+udp   UNCONN     0      0                     :::52179                             :::*                  
+udp   UNCONN     0      0                     :::45296                             :::*                   users:(("skypeforlinux",pid=4836,fd=91))
+udp   UNCONN     0      0                     :::5353                              :::*                  
+tcp   LISTEN     0      128            127.0.0.1:40971                              *:*                  
+tcp   LISTEN     0      128                    *:80                                 *:*                  
+tcp   LISTEN     0      5              127.0.1.1:53                                 *:*                  
+tcp   LISTEN     0      5              127.0.0.1:631                                *:*                  
+tcp   LISTEN     0      128            127.0.0.1:5432                               *:*                  
+tcp   LISTEN     0      128                    *:5000                               *:*                   users:(("python",pid=18509,fd=3))
+tcp   LISTEN     0      128            127.0.0.1:27017                              *:*                  
+tcp   LISTEN     0      80             127.0.0.1:3306                               *:*                  
+tcp   LISTEN     0      128                   :::80                                :::*                  
+tcp   LISTEN     0      5                    ::1:631                               :::*                  
+quinton@quintonSANBI:~/tutorials/deployment/myproject$ ip -f inet addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+2: enp0s31f6: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    inet 172.20.0.44/24 brd 172.20.0.255 scope global dynamic enp0s31f6
+       valid_lft 419sec preferred_lft 419sec
+3: wlp2s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
+    inet 172.16.212.105/24 brd 172.16.212.255 scope global dynamic wlp2s0
+       valid_lft 424sec preferred_lft 424sec
+5: docker_gwbridge: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default 
+    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker_gwbridge
+       valid_lft forever preferred_lft forever
+6: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default 
+    inet 172.18.0.1/16 brd 172.18.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+quinton@quintonSANBI:~/tutorials/deployment/myproject$ sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.backup
+[sudo] password for quinton: 
+quinton@quintonSANBI:~/tutorials/deployment/myproject$ sudo cp /home/quinton/tutorials/knockout/first_tutorial/nginx.conf /etc/nginx/nginx.conf
+quinton@quintonSANBI:~/tutorials/deployment/myproject$ sudo cat /etc/nginx/nginx.conf
+worker_processes 1;
+
+events { worker_connections 1024; }
+
+http {
+
+    sendfile on;
+
+    # Configuration for the servers
+    server {
+        server_name _;
+        listen 80;
+
+        location / {
+            proxy_pass http://0.0.0.0:5000;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+    }
+}
+quinton@quintonSANBI:~/tutorials/deployment/myproject$ sudo systemctl restart nginx
+quinton@quintonSANBI:~/tutorials/deployment/myproject$ sudo systemctl status nginx
+● nginx.service - A high performance web server and a reverse proxy server
+   Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+   Active: active (running) since Tue 2019-09-17 10:12:47 SAST; 14s ago
+  Process: 19989 ExecStop=/sbin/start-stop-daemon --quiet --stop --retry QUIT/5 --pidfile /run/nginx.pid 
+  Process: 20003 ExecStart=/usr/sbin/nginx -g daemon on; master_process on; (code=exited, status=0/SUCCES
+  Process: 19992 ExecStartPre=/usr/sbin/nginx -t -q -g daemon on; master_process on; (code=exited, status
+ Main PID: 20006 (nginx)
+    Tasks: 2
+   Memory: 2.7M
+      CPU: 16ms
+   CGroup: /system.slice/nginx.service
+           ├─20006 nginx: master process /usr/sbin/nginx -g daemon on; master_process on
+           └─20007 nginx: worker process                           
+
+Sep 17 10:12:47 quintonSANBI systemd[1]: Starting A high performance web server and a reverse proxy serve
+Sep 17 10:12:47 quintonSANBI systemd[1]: Started A high performance web server and a reverse proxy server
+lines 1-16/16 (END)...skipping...
+● nginx.service - A high performance web server and a reverse proxy server
+   Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+   Active: active (running) since Tue 2019-09-17 10:12:47 SAST; 14s ago
+  Process: 19989 ExecStop=/sbin/start-stop-daemon --quiet --stop --retry QUIT/5 --pidfile /run/nginx.pid 
+  Process: 20003 ExecStart=/usr/sbin/nginx -g daemon on; master_process on; (code=exited, status=0/SUCCES
+  Process: 19992 ExecStartPre=/usr/sbin/nginx -t -q -g daemon on; master_process on; (code=exited, status
+ Main PID: 20006 (nginx)
+    Tasks: 2
+   Memory: 2.7M
+      CPU: 16ms
+   CGroup: /system.slice/nginx.service
+           ├─20006 nginx: master process /usr/sbin/nginx -g daemon on; master_process on
+           └─20007 nginx: worker process                           
+
+Sep 17 10:12:47 quintonSANBI systemd[1]: Starting A high performance web server and a reverse proxy serve
+Sep 17 10:12:47 quintonSANBI systemd[1]: Started A high performance web server and a reverse proxy server
+~
+~
+~
+~
+~
+~
+~
+
