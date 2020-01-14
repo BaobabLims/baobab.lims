@@ -17,26 +17,6 @@
 
             (function($){
                 $(function(){
-                    var dataPost = {};
-
-                    // $("#assemble").on("click", function (e) {
-                    //     var path = window.location.href.split('/?')[0];
-                    //      $.ajax({
-                    //          dataType: "json",
-                    //          contentType: 'application/json',
-                    //          url: path + '/fetch_stock_prds',
-                    //          data: JSON.stringify(dataPost),
-                    //          success: function (data) {
-                    //              if (data["error"]){
-                    //                  window.bika.lims.portalWarningMessage(data.error);
-                    //              }
-                    //              else{
-                    //                  window.bika.lims.portalInfoMessage("Stock Items Selected");
-                    //              }
-                    //          }
-                    //      });
-                    //     e.preventDefault();
-                    // });
 
                     $(".one_more_aliquot").on("click", function(e){
                         console.log("test this log");
@@ -44,8 +24,6 @@
                         alert('This is a click test');
                         e.preventDefault();
                     });
-
-
 
                     $("#new_sample_group").on("click", function(e){
                         // alert('This is a new click test.');
@@ -59,6 +37,10 @@
                                         <option value="0">-- Select a sample to Aliquot --</option>\
                                     </select>\
                                     <button class="one_more_aliquot" id="btn_sample_group_' + next_sample_group + '">One more aliquot</button>\
+                                    <div>\
+                                        <select id="storage_unit_' + next_sample_group + '" class="storage_unit"><option>-- Select Storage Unit --</option></select>\
+                                        <select id="storage_box_' + next_sample_group + '" class="storage_box"><option>-- Select Box --</option></select>\
+                                    </div>\
                                 </div>\
                                 <div class="sample' + next_sample_group + '_aliquots">\
                                     <table id="aliquots_table_' + next_sample_group + '">\
@@ -69,6 +51,7 @@
                                         <tr class="aliquots_' + next_sample_group + '_rows aliquot_rows aliquots_' + next_sample_group + '_row_1">\
                                             <td><input type="text" id="aliquots_' + next_sample_group + '_barcode_row_1" class="barcode"></td>\
                                             <td><input type="text" id="aliquots_' + next_sample_group + '_volume_row_1" class="volume"></td>\
+                                            <td><select id="aliquots_' + next_sample_group + '_storage_row_1" class="storage"><option value=0>-- Select Storage --</option></select></td>\
                                         </tr>\
                                     </table>\
                                 </div>\
@@ -76,23 +59,18 @@
 
                         $('#samples_and_aliquots_groups').append(sample_group_div);
                         $("#btn_sample_group_" + next_sample_group).on('click', add_aliquot_row);
+                        $("#storage_unit_" + next_sample_group).on('change', storage_unit_changed);
+                        $("#storage_box_" + next_sample_group).on('change', storage_box_changed);
 
                         get_samples('sample_group_' + next_sample_group);
-
+                        get_storage_units('storage_unit_' + next_sample_group);
 
                         e.preventDefault();
                     });
 
                     $("#create_aliquots").on("click", function(e){
-                        aliquots_data = get_aliquots_data();
-
-                        final_data = JSON.stringify(aliquots_data);
-
-                        console.log('----final aliquots data');
-                        console.log(final_data);
-
-
-                        //
+                        var aliquots_data = get_aliquots_data();
+                        var final_data = JSON.stringify(aliquots_data);
                         var path = window.location.href.split('/aliquotsamples')[0];
 
                         $.ajax({
@@ -102,15 +80,20 @@
                             data: {'sample_aliquots': final_data},
                             success: function (data) {
 
-                                console.log('------successfully posted the aliquots data')
+                                $("#success_message").css("display", "block");
+                                $("#success_message").find('.response_header').css("display", "block");
+                                $(".sample_group").remove();
 
-                                // if (data["error"]){
-                                //     window.bika.lims.portalWarningMessage(data.error);
-                                // }
-                                // else{
-                                //     window.bika.lims.portalInfoMessage("Stock Items Selected");
-                                // }
-                            }
+                                $.each(data, function(key, value) {
+                                    $("#success_list").append('<li>' + value + '</li>');
+                                });
+
+                            },
+                            error: function (data) {
+                                $("#error_message").css("display", "block");
+                                $("#error_message").find('.response_header').css("display", "block");
+                                $(".sample_group").remove();
+                            },
                         });
 
                       e.preventDefault();
@@ -123,7 +106,6 @@
 
         <script type="text/javascript" charset="utf-8">
             function get_aliquots_data(){
-                console.log('-----------get_aliquots_data reched');
                 aliquots_data = {};
 
                 // iterate all the sample groups and extract their values to be posted
@@ -136,11 +118,13 @@
                     $(sample_group).find('.aliquot_rows').each(function(alqt_index, aliquot_row){
                         barcode = $(aliquot_row).find('.barcode').val();
                         volume = $(aliquot_row).find('.volume').val();
+                        storage = $(aliquot_row).find('.storage').val();
 
                         aliquots.push(
                             {
                               'barcode': barcode,
-                              'volume': volume
+                              'volume': volume,
+                              'storage': storage
                             }
                         );
                     });
@@ -171,24 +155,129 @@
         </script>
 
         <script type="text/javascript" charset="utf-8">
+            function get_storage_units(select_id){
+                var path = window.location.href.split('/aliquotsamples')[0];
+
+                 $.ajax({
+                     dataType: "json",
+                     contentType: 'application/json',
+                     url: path + '/ajax_get_storage_units',
+                     success: function (data) {
+                         $.each(data, function() {
+                            $.each(this, function(key, value){
+                                $('#' + select_id).append($('<option>').val(key).text(value));
+                            });
+                        });
+                     }
+                 });
+            }
+        </script>
+
+
+        <script type="text/javascript" charset="utf-8">
+            function storage_unit_changed() {
+
+                var sample_group_number = this.id.split('storage_unit_')[1];
+
+                var aliquots_table_id = 'aliquots_table_' + sample_group_number;
+                var aliquots_table = $('#' + aliquots_table_id);
+                var storages = $(aliquots_table).find('.storage');
+
+                set_boxes(this.value, 'storage_box_' + sample_group_number);
+                set_storage_positions(storages, this.value, 'StorageUnit');
+            }
+        </script>
+
+
+        <script type="text/javascript" charset="utf-8">
+            function storage_box_changed() {
+
+                var sample_group_number = this.id.split('storage_box_')[1];
+
+                var aliquots_table_id = 'aliquots_table_' + sample_group_number;
+                var aliquots_table = $('#' + aliquots_table_id);
+                var storages = $(aliquots_table).find('.storage');
+
+                // set_boxes(this.value, 'storage_box_' + sample_group_number);
+                set_storage_positions(storages, this.value, 'ManagedStorage');
+            }
+        </script>
+
+
+        <script type="text/javascript" charset="utf-8">
+            function set_storage_positions(storages, storage_uid, storage_type) {
+
+                var path = window.location.href.split('/aliquotsamples')[0];
+
+                $.ajax({
+                     dataType: "json",
+                     contentType: 'application/json',
+                     data: {'storage_uid': storage_uid, 'storage_type': storage_type},
+                     url: path + '/ajax_get_storage_positions',
+                     success: function (data) {
+
+                         $.each(storages, function(idx, storage){
+                             $(storage).empty();
+                             $(storage).append($('<option>').val(0).text('-- Select Storage --'));
+
+                             $.each(data, function(){
+                                 $.each(this, function(key, value){
+                                    $(storage).append($('<option>').val(key).text(value));
+                                 });
+                             });
+                         });
+                     }
+                 });
+
+            }
+        </script>
+
+        <script type="text/javascript" charset="utf-8">
+            //TODO : This still has to be programmed for
+            function set_boxes(storage_unit, storage_box_id){
+                var path = window.location.href.split('/aliquotsamples')[0];
+
+                 $.ajax({
+                     dataType: "json",
+                     contentType: 'application/json',
+                     data: {'storage_unit': storage_unit},
+                     url: path + '/ajax_get_boxes',
+                     success: function (data) {
+
+                         $('#' + storage_box_id).empty();
+                         $('#' + storage_box_id).append($('<option>').val(0).text('-- Select Storage --'));
+
+                         $.each(data, function() {
+                            $.each(this, function(key, value){
+                                $('#' + storage_box_id).append($('<option>').val(key).text(value));
+                            });
+                        });
+                     }
+                 });
+            }
+        </script>
+
+
+        <script type="text/javascript" charset="utf-8">
             function add_aliquot_row(event){
                 event.preventDefault();
                 // get the sample group number from the id on the button
-                id = this.id;
-                sample_group = id.substring(17);
+                var id = this.id;
+                var sample_group = id.substring(17);
 
                 // get the table
-                table_id = "aliquots_table_" + sample_group;
+                var table_id = "aliquots_table_" + sample_group;
 
                 // get the rows in this table
-                aliquot_rows = $('.aliquots_' + sample_group + '_rows');
-                row_count = aliquot_rows.length + 1;
+                var aliquot_rows = $('.aliquots_' + sample_group + '_rows');
+                var row_count = aliquot_rows.length + 1;
 
                 // create a new row
                 var new_row = '\
                     <tr class="aliquots_' + sample_group + '_rows aliquot_rows">\
                         <td><input type="text" id="aliquots_' + sample_group + '_barcode_row_' + row_count + '" class="barcode"></td>\
                         <td><input type="text" id="aliquots_' + sample_group + '_volume_row_' + row_count + '" class="volume"></td> \
+                        <td><select id="aliquots_' + sample_group + '_storage_row_' + row_count + '" class="storage"><option value=0>-- Select Storage --</option></select></td> \
                     </tr>\
                     ';
 
@@ -224,6 +313,16 @@
                     background-color: #e7e7e7;
                     /*float: right;*/
                 }
+                .response_message{
+                    display: none;
+                }
+                .response_header{
+                    display: none;
+                }
+                /*.response_list{*/
+                    /*display: none;*/
+                /*}*/
+
             </style>
         </tal:css>
     </metal:css>
@@ -245,9 +344,18 @@
 
 
         <div id="aliquots_from_sample">
+            <div id="success_message" class="response_message">
+                <h1 class="response_header">Aliquot samples successfully created</h1>
+                <ul id="success_list" class="response_list">
+                </ul>
+            </div>
+            <div id="error_message" class="response_message">
+                <h1 class="response_header">Error when creating sample aliquots</h1>
+                <ul id="error_list" class="response_list">
+                </ul>
+            </div>
             <form name="add-aliquots" action="ajax_create_aliquots" method="POST">
                 <div id="samples_and_aliquots_groups">
-
 
                 </div>
                 <div id="buttons-group">

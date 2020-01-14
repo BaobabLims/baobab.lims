@@ -27,6 +27,27 @@
       permission="zope.Public"
     />
 
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="ajax_get_storage_units"
+      class=".aliquot_samples.ajaxGetStorageUnits"
+      permission="zope.Public"
+    />
+
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="ajax_get_storage_positions"
+      class=".aliquot_samples.ajaxGetStoragePositions"
+      permission="zope.Public"
+    />
+
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="ajax_get_boxes"
+      class=".aliquot_samples.ajaxGetBoxes"
+      permission="zope.Public"
+    />
+
     ajaxPostNewAliquots
 
     <!--<browser:viewlet

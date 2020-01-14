@@ -11,6 +11,7 @@ from Products.CMFPlone.utils import _createObjectByType
 from baobab.lims.idserver import renameAfterCreation
 
 from bika.lims.utils import tmpID
+from bika.lims.workflow import doActionFor
 
 import json
 import plone
@@ -314,9 +315,6 @@ class ajaxGetSamples(BrowserView):
         pc = getToolByName(self.context, 'portal_catalog')
         brains = pc(portal_type="Sample")
 
-        print('---brains')
-        print(brains)
-
         for sample in brains:
             # rows.append({'sample': sample.Title,
             #              'sample_uid': sample.UID,
@@ -346,6 +344,98 @@ class ajaxGetSamples(BrowserView):
         return json.dumps(rows)
 
 
+class ajaxGetStorageUnits(BrowserView):
+    """ Drug vocabulary source for jquery combo dropdown box
+    """
+
+    def __init__(self, context, request):
+        super(ajaxGetStorageUnits, self).__init__(context, request)
+        self.context = context
+        self.request = request
+
+    def __call__(self):
+        rows = []
+
+        pc = getToolByName(self.context, 'portal_catalog')
+        brains = pc(portal_type="StorageUnit")
+
+        # print('---storage units brains')
+        # print(brains)
+
+        for storage_unit in brains:
+            storage_unit = storage_unit.getObject()
+
+            rows.append({
+                storage_unit.UID(): storage_unit.getHierarchy()
+            })
+
+        return json.dumps(rows)
+
+
+class ajaxGetBoxes(BrowserView):
+    """ Drug vocabulary source for jquery combo dropdown box
+    """
+
+    def __init__(self, context, request):
+        super(ajaxGetBoxes, self).__init__(context, request)
+        self.context = context
+        self.request = request
+
+    def __call__(self):
+        rows = []
+
+        storage_unit = self.request.form['storage_unit']
+
+        pc = getToolByName(self.context, 'portal_catalog')
+        brains = pc(portal_type="StorageUnit", UID=storage_unit)
+
+        # print('---storage units brains')
+        # print(brains)
+
+        storage_unit = brains[0].getObject()
+        boxes = storage_unit.getBoxes()
+
+        for box in boxes:
+
+            rows.append({
+                box.UID(): box.getHierarchy()
+            })
+
+        return json.dumps(rows)
+
+
+class ajaxGetStoragePositions(BrowserView):
+    """ Drug vocabulary source for jquery combo dropdown box
+    """
+
+    def __init__(self, context, request):
+        super(ajaxGetStoragePositions, self).__init__(context, request)
+        self.context = context
+        self.request = request
+
+    def __call__(self):
+        rows = []
+
+        storage_uid = self.request.form['storage_uid']
+        storage_type = self.request.form['storage_type']
+
+        pc = getToolByName(self.context, 'portal_catalog')
+        brains = pc(portal_type=storage_type, UID=storage_uid)
+
+        storage = brains[0].getObject()
+
+        positions = storage.get_positions()
+
+        for position in positions:
+            if position.available():
+
+                rows.append({
+                    position.UID(): position.getHierarchy()
+                })
+
+        return json.dumps(rows)
+
+
 class ajaxCreateAliquots(BrowserView):
     """ Drug vocabulary source for jquery combo dropdown box
     """
@@ -355,25 +445,51 @@ class ajaxCreateAliquots(BrowserView):
         self.context = context
         self.request = request
         self.pc = getToolByName(self.context, 'portal_catalog')
+        self.sample_results = []
 
     def __call__(self):
-
-        aliquots_data = self.request.form['sample_aliquots']
-        aliquots_data = json.loads(aliquots_data)
+        try:
+            aliquots_data = self.request.form['sample_aliquots']
+            aliquots_data = json.loads(aliquots_data)
+        except:
+            return json.dumps(self.sample_results.append('No valid sample aliquots has been send to the server'))
 
         for sample_uid, new_aliquots in aliquots_data.iteritems():
-            sample = self.get_sample(sample_uid)
-            if not sample:
-                continue
-            for aliquot in new_aliquots:
-                new_aliquot = self.create_aliquot(sample, aliquot)
-                if new_aliquot:
-                    new_volume = float(str(sample.getField('Volume').get(sample))) - float(str(new_aliquot.getField('Volume').get(new_aliquot)))
-                    sample.getField('Volume').set(sample, new_volume)
-                    sample.reindexObject()
 
-        self.context.plone_utils.addPortalMessage('Sample aliquots successfully added.')
-        self.request.response.redirect(self.context.absolute_url() + '/biospecimens')
+            try:
+                sample = self.get_sample(sample_uid)
+                if not sample:
+                    self.sample_results.append('Sample with uid %s is not found' % sample_uid)
+                    continue
+                for aliquot in new_aliquots:
+                    if not all(k in aliquot for k in ('volume', 'barcode')):
+                        self.sample_results.append('Aliquot for sample %s is missing either barcode or volume' %sample.Title())
+                        continue
+
+                    try:
+                        storage_brains = self.pc(portal_type='StoragePosition', UID=aliquot['storage'])
+                        storage_location = storage_brains and storage_brains[0].getObject() or None
+
+                        new_aliquot = self.create_aliquot(sample, aliquot)
+                        new_aliquot.edit(
+                            StorageLocation=storage_location
+                        )
+
+                        doActionFor(storage_location, 'occupy')
+                        new_aliquot.reindexObject()
+                        self.sample_results.append('Successfully created aliquot with barcode %s and volume %s for sample %s'
+                                              % (aliquot['barcode'], aliquot['volume'], sample.Title()))
+
+                    except:
+                        self.sample_results.append("Error creating aliquot with barcode %s and volume %s for sample %s"
+                                              % (aliquot['barcode'], aliquot['volume'], sample.Title()))
+                        continue
+
+            except Exception as e:
+                self.sample_results.append('Exception occurred when creating aliquots.  %s' % str(e))
+                continue
+
+        return json.dumps(self.sample_results)
 
     def get_sample(self, sample_uid):
         # pc = getToolByName(self.context, 'portal_catalog')

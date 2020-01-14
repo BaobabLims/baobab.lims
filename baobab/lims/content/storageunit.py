@@ -108,6 +108,64 @@ class StorageUnit(ATFolder):
             item = item.aq_parent
         return separator.join(reversed(hierarchy))
 
+    def getBoxes(self):
+        available_boxes = []
+
+        storage_positions = self.get_positions()
+        for position in storage_positions:
+            if position.aq_parent not in available_boxes:
+                available_boxes.append(position.aq_parent)
+
+        print('----------available boxes')
+        print(available_boxes)
+
+        return available_boxes
+
+
+
+
+    def get_positions(self):
+        available_storage_positions = []
+
+        pc = getToolByName(self, 'portal_catalog')
+        brains = pc(portal_type='StoragePosition')
+
+        for brain in brains:
+
+            storage_position = brain.getObject()
+
+            if self.is_ancestor_of(storage_position):
+                available_storage_positions.append(storage_position)
+
+        # print('----------------available storage positions')
+        # print(available_storage_positions)
+
+        return available_storage_positions
+
+    def is_ancestor_of(self, storage_position):
+        '''
+        Determine if the current storage unit is an ancestor of the storage position
+        being passed in as an argument
+        :param storage_position:
+        :return: boolean
+        '''
+
+        is_ancestor = False
+        item = storage_position
+        while True:
+
+            if item.UID() == self.UID():
+                is_ancestor = True
+                break
+
+            # Don't report on the /storage folder
+            if item.portal_type == 'StorageUnits':
+                break
+
+            item = item.aq_parent
+
+        return is_ancestor
+
     def workflow_script_deactivate(self):
         # Deactivate all sub objects in the hierarchy
         catalog = getToolByName(self, 'portal_catalog')
