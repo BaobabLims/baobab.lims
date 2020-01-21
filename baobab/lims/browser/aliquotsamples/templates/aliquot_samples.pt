@@ -26,16 +26,27 @@
                     });
 
                     $("#new_sample_group").on("click", function(e){
+
+                        $("#success_message").css("display", "none");
+                        $("#success_message").find('.response_header').css("display", "none");
+
+                        $("#error_message").css("display", "none");
+                        $("#error_message").find('.response_header').css("display", "none");
+
+                        $(".response_li").remove();
+
+
                         // alert('This is a new click test.');
-                        sample_groups = $('.sample_group')
-                        next_sample_group = sample_groups.length + 1;
+                        var sample_groups = $('.sample_group');
+                        var next_sample_group = sample_groups.length + 1;
 
                         var sample_group_div = '\
                             <div class="sample_group">\
                                 <div>\
-                                    <select id="sample_group_' + next_sample_group + '">\
+                                    <select id="sample_group_' + next_sample_group + '" class="sample_group_select">\
                                         <option value="0">-- Select a sample to Aliquot --</option>\
                                     </select>\
+                                    <span id="sample_details_' + next_sample_group + '"></span>\
                                     <button class="one_more_aliquot" id="btn_sample_group_' + next_sample_group + '">One more aliquot</button>\
                                     <div>\
                                         <select id="storage_unit_' + next_sample_group + '" class="storage_unit"><option>-- Select Storage Unit --</option></select>\
@@ -51,6 +62,8 @@
                                         <tr class="aliquots_' + next_sample_group + '_rows aliquot_rows aliquots_' + next_sample_group + '_row_1">\
                                             <td><input type="text" id="aliquots_' + next_sample_group + '_barcode_row_1" class="barcode"></td>\
                                             <td><input type="text" id="aliquots_' + next_sample_group + '_volume_row_1" class="volume"></td>\
+                                            <td><span id="aliquots_' + next_sample_group + '_unit_row_1" class="unit"></span></td>\
+                                            <td><input type="date" id="aliquots_' + next_sample_group + '_datecreated_row_1" class="datecreated"></td>\
                                             <td><select id="aliquots_' + next_sample_group + '_storage_row_1" class="storage"><option value=0>-- Select Storage --</option></select></td>\
                                         </tr>\
                                     </table>\
@@ -61,6 +74,7 @@
                         $("#btn_sample_group_" + next_sample_group).on('click', add_aliquot_row);
                         $("#storage_unit_" + next_sample_group).on('change', storage_unit_changed);
                         $("#storage_box_" + next_sample_group).on('change', storage_box_changed);
+                        $("#sample_group_" + next_sample_group).on('change', select_parent_sample);
 
                         get_samples('sample_group_' + next_sample_group);
                         get_storage_units('storage_unit_' + next_sample_group);
@@ -85,7 +99,7 @@
                                 $(".sample_group").remove();
 
                                 $.each(data, function(key, value) {
-                                    $("#success_list").append('<li>' + value + '</li>');
+                                    $("#success_list").append('<li class="response_li">' + value + '</li>');
                                 });
 
                             },
@@ -105,6 +119,42 @@
         </script>
 
         <script type="text/javascript" charset="utf-8">
+            function select_parent_sample(event){
+                // get the sample group number from the id on the button
+                var selected_sample = this;
+                var id = selected_sample.id;
+                var sample_uid = $(selected_sample).val();
+
+                var sample_details_id = id.replace("group", "details");
+                var sample_details = $('#' + sample_details_id);
+
+                set_sample_details(sample_uid, sample_details);
+
+            }
+
+            function set_sample_details(sample_uid, sample_details){
+                var path = window.location.href.split('/aliquotsamples')[0];
+
+                $.ajax({
+                     dataType: "json",
+                     contentType: 'application/json',
+                     data: { 'sample_uid': sample_uid },
+                     url: path + '/ajax_get_sample_details',
+                     success: function (data) {
+                         $(sample_details).html('<strong>' + data['volume'] + ' ' + data['unit'] + ' ' + data['storage'] + '</strong>');
+
+                     },
+                    error: function(data){
+                        $(sample_details).html();
+                        // console.log('------An error here');
+                        // console.log(data);
+
+                    },
+                 });
+            }
+        </script>
+
+        <script type="text/javascript" charset="utf-8">
             function get_aliquots_data(){
                 aliquots_data = {};
 
@@ -119,12 +169,14 @@
                         barcode = $(aliquot_row).find('.barcode').val();
                         volume = $(aliquot_row).find('.volume').val();
                         storage = $(aliquot_row).find('.storage').val();
+                        datecreated = $(aliquot_row).find('.datecreated').val();
 
                         aliquots.push(
                             {
                               'barcode': barcode,
                               'volume': volume,
-                              'storage': storage
+                              'storage': storage,
+                              'datecreated': datecreated
                             }
                         );
                     });
@@ -277,6 +329,8 @@
                     <tr class="aliquots_' + sample_group + '_rows aliquot_rows">\
                         <td><input type="text" id="aliquots_' + sample_group + '_barcode_row_' + row_count + '" class="barcode"></td>\
                         <td><input type="text" id="aliquots_' + sample_group + '_volume_row_' + row_count + '" class="volume"></td> \
+                        <td><span id="aliquots_' + sample_group + '_unit_row_' + row_count + '" class="unit"></span></td>\
+                        <td><input type="date" id="aliquots_' + sample_group + '_datecreated_row_' + row_count + '" class="datecreated"></td>\
                         <td><select id="aliquots_' + sample_group + '_storage_row_' + row_count + '" class="storage"><option value=0>-- Select Storage --</option></select></td> \
                     </tr>\
                     ';

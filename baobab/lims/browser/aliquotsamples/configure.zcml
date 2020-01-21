@@ -19,6 +19,13 @@
       permission="zope.Public"
     />
 
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="ajax_get_sample_details"
+      class=".aliquot_samples.ajaxGetSampleDetails"
+      permission="zope.Public"
+    />
+
 
     <browser:page
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"

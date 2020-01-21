@@ -300,48 +300,82 @@ class ajaxGetSamples(BrowserView):
 
     def __call__(self):
         # plone.protect.CheckAuthenticator(self.request)
-        # searchTerm = 'searchTerm' in self.request and self.request[
-        #     'searchTerm'].lower() or ''
-        # page = self.request['page']
-        # nr_rows = self.request['rows']
-        # sord = self.request['sord']
-        # sidx = self.request['sidx']
         rows = []
-
-        # lookup objects from ZODB
-        # brains = self.portal_catalog(portal_type='Sample',
-        #                                  inactive_state='active')
 
         pc = getToolByName(self.context, 'portal_catalog')
         brains = pc(portal_type="Sample")
 
         for sample in brains:
-            # rows.append({'sample': sample.Title,
-            #              'sample_uid': sample.UID,
-            #              'Description': sample.Description})
             rows.append({
                 sample.UID: sample.Title
             })
 
-        # rows = sorted(rows, cmp=lambda x, y: cmp(x.lower(), y.lower()),
-        #               key=itemgetter(sidx and sidx or 'sample'))
-        #
-        # if sord == 'desc':
-        #     rows.reverse()
-        # pages = len(rows) / int(nr_rows)
-        # pages += divmod(len(rows), int(nr_rows))[1] and 1 or 0
-        # ret = {'page': page,
-        #        'total': pages,
-        #        'records': len(rows),
-        #        'rows': rows[(int(page) - 1) * int(nr_rows): int(page) * int(
-        #            nr_rows)]}
-        #
-        # return json.dumps(ret)
-        #
-        # print('-------samples to be returned')
-        # print(rows)
-
         return json.dumps(rows)
+
+
+class ajaxGetSampleDetails(BrowserView):
+
+    def __init__(self, context, request):
+        super(ajaxGetSampleDetails, self).__init__(context, request)
+        self.context = context
+        self.request = request
+        self.pc = getToolByName(self.context, 'portal_catalog')
+
+    def __call__(self):
+
+        print('---------Inside ajax get samples')
+
+        sample = self.get_sample(self.request.form['sample_uid'])
+        print('======This is sample')
+
+        if sample:
+            try:
+                storage = sample.getField('StorageLocation').get(sample).getHierarchy()
+                print('=============see storage')
+                print(storage)
+            except Exception as e:
+                print('========Exception %s' % str(e))
+                storage = ''
+
+            result_dict = {
+                'title': sample.Title(),
+                'uid': sample.UID(),
+                'storage': storage,
+                'volume': sample.getField('Volume').get(sample),
+                'unit': sample.getField('Unit').get(sample),
+            }
+
+            print(result_dict)
+
+            result = json.dumps(result_dict)
+
+            print(result)
+            return result
+
+        print('=====Now sample found')
+
+        return json.dumps({
+            'title': '',
+            'uid': '',
+            'storage': '',
+            'volume': '',
+            'unit': '',
+        })
+
+    def get_sample(self, sample_uid):
+        # pc = getToolByName(self.context, 'portal_catalog')
+        try:
+
+            print('======sample uid')
+
+            print(sample_uid)
+
+            brains = self.pc(UID=sample_uid)
+            return brains[0].getObject()
+        except Exception as e:
+            print('==exception as %s' %str(e))
+            return None
+
 
 
 class ajaxGetStorageUnits(BrowserView):
@@ -370,6 +404,16 @@ class ajaxGetStorageUnits(BrowserView):
             })
 
         return json.dumps(rows)
+
+
+    def get_sample(self, sample_uid):
+        # pc = getToolByName(self.context, 'portal_catalog')
+        try:
+            brains = self.pc(UID=sample_uid)
+            return brains[0].getObject()
+        except Exception as e:
+            return None
+
 
 
 class ajaxGetBoxes(BrowserView):
@@ -469,20 +513,37 @@ class ajaxCreateAliquots(BrowserView):
                     try:
                         storage_brains = self.pc(portal_type='StoragePosition', UID=aliquot['storage'])
                         storage_location = storage_brains and storage_brains[0].getObject() or None
+                        new_volume = float(str(sample.getField('Volume').get(sample))) - float(aliquot['volume'])
+                        # New aliquot volume too large.  Dont create aliquote.  return a warning.
+                        if new_volume < 0:
+                            self.sample_results.append('Aliquot %s volume %s exceed remaining sample volume %s for sample %s'
+                                                       % (aliquot['barcode'], aliquot['volume'],
+                                                          sample.getField('Volume').get(sample), sample.Title()))
+                            continue
 
                         new_aliquot = self.create_aliquot(sample, aliquot)
-                        new_aliquot.edit(
-                            StorageLocation=storage_location
-                        )
+                        if new_aliquot:
+                            # Subtract the new aliquot volume from the parent sample volume
+                            sample.getField('Volume').set(sample, str(new_volume))
+                            sample.reindexObject()
 
-                        doActionFor(storage_location, 'occupy')
-                        new_aliquot.reindexObject()
-                        self.sample_results.append('Successfully created aliquot with barcode %s and volume %s for sample %s'
-                                              % (aliquot['barcode'], aliquot['volume'], sample.Title()))
+                            # Set the storage location for the new aliquot
+                            new_aliquot.edit(
+                                StorageLocation=storage_location
+                            )
 
-                    except:
-                        self.sample_results.append("Error creating aliquot with barcode %s and volume %s for sample %s"
-                                              % (aliquot['barcode'], aliquot['volume'], sample.Title()))
+                            new_aliquot.reindexObject()
+                            if storage_location:
+                                doActionFor(storage_location, 'occupy')
+
+                            self.sample_results.append('Successfully created aliquot with barcode %s and volume %s for sample %s'
+                                                  % (aliquot['barcode'], aliquot['volume'], sample.Title()))
+
+                    except Exception as e:
+                        # print('------------Exception on aliquot create')
+                        # print(str(e))
+                        self.sample_results.append("Error creating aliquot with barcode %s and volume %s for sample %s."
+                            % (aliquot['barcode'], aliquot['volume'], sample.Title()))
                         continue
 
             except Exception as e:
@@ -507,15 +568,25 @@ class ajaxCreateAliquots(BrowserView):
             sample_type = parent_sample.getField('SampleType').get(parent_sample)
 
             obj = _createObjectByType('Sample', parent, tmpID())
+            # Only change date created if a valid date created was send from client
+            date_created = aliquot.get('datecreated', None)
+            if date_created:
+                obj.edit(
+                    DateCreated=date_created,
+                )
 
             obj.edit(
                 title=aliquot['barcode'],
                 description='',
                 Project=parent,
+                DiseaseOntology=parent_sample.getField('DiseaseOntology').get(parent_sample),
+                Donor=parent_sample.getField('Donor').get(parent_sample),
                 SampleType=sample_type,
+                SubjectID=parent_sample.getField('SubjectID').get(parent_sample),
                 Barcode=aliquot['barcode'],
                 Volume=aliquot['volume'],
                 Unit=unit,
+                SamplingDate=parent_sample.getField('SamplingDate').get(parent_sample),
                 LinkedSample=parent_sample
             )
 
