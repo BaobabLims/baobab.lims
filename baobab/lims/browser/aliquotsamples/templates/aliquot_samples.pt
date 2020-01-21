@@ -18,13 +18,6 @@
             (function($){
                 $(function(){
 
-                    $(".one_more_aliquot").on("click", function(e){
-                        console.log("test this log");
-                        console.debug("test this debug");
-                        alert('This is a click test');
-                        e.preventDefault();
-                    });
-
                     $("#new_sample_group").on("click", function(e){
 
                         $("#success_message").css("display", "none");
@@ -152,16 +145,14 @@
                     },
                  });
             }
-        </script>
 
-        <script type="text/javascript" charset="utf-8">
             function get_aliquots_data(){
-                aliquots_data = {};
+                var aliquots_data = {};
 
                 // iterate all the sample groups and extract their values to be posted
                 $('.sample_group').each(function(grp_index, sample_group){
                     //extract the uid of the sample that was selected
-                    select_value = $(sample_group).find('select').val();
+                    var select_value = $(sample_group).find('select').val();
 
                     //extract the aliquots that are being created in this sample group
                     var aliquots = [];
@@ -185,9 +176,7 @@
                 });
                 return aliquots_data;
             }
-        </script>
 
-        <script type="text/javascript" charset="utf-8">
             function get_samples(select_id){
                 var path = window.location.href.split('/aliquotsamples')[0];
 
@@ -204,9 +193,7 @@
                      }
                  });
             }
-        </script>
 
-        <script type="text/javascript" charset="utf-8">
             function get_storage_units(select_id){
                 var path = window.location.href.split('/aliquotsamples')[0];
 
@@ -223,10 +210,7 @@
                      }
                  });
             }
-        </script>
 
-
-        <script type="text/javascript" charset="utf-8">
             function storage_unit_changed() {
 
                 var sample_group_number = this.id.split('storage_unit_')[1];
@@ -238,10 +222,7 @@
                 set_boxes(this.value, 'storage_box_' + sample_group_number);
                 set_storage_positions(storages, this.value, 'StorageUnit');
             }
-        </script>
 
-
-        <script type="text/javascript" charset="utf-8">
             function storage_box_changed() {
 
                 var sample_group_number = this.id.split('storage_box_')[1];
@@ -253,10 +234,7 @@
                 // set_boxes(this.value, 'storage_box_' + sample_group_number);
                 set_storage_positions(storages, this.value, 'ManagedStorage');
             }
-        </script>
 
-
-        <script type="text/javascript" charset="utf-8">
             function set_storage_positions(storages, storage_uid, storage_type) {
 
                 var path = window.location.href.split('/aliquotsamples')[0];
@@ -282,10 +260,7 @@
                  });
 
             }
-        </script>
 
-        <script type="text/javascript" charset="utf-8">
-            //TODO : This still has to be programmed for
             function set_boxes(storage_unit, storage_box_id){
                 var path = window.location.href.split('/aliquotsamples')[0];
 
@@ -307,10 +282,7 @@
                      }
                  });
             }
-        </script>
 
-
-        <script type="text/javascript" charset="utf-8">
             function add_aliquot_row(event){
                 event.preventDefault();
                 // get the sample group number from the id on the button
@@ -366,6 +338,12 @@
                     width: 150px;
                     background-color: #e7e7e7;
                     /*float: right;*/
+                }
+                .sample_group{
+                    border: 3px solid;
+                    padding: 8px;
+                    margin: 6px;
+                    margin-bottom: 11px;
                 }
                 .response_message{
                     display: none;
