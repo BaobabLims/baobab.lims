@@ -57,6 +57,7 @@
                                             <td><input type="text" id="aliquots_' + next_sample_group + '_volume_row_1" class="volume"></td>\
                                             <td><span id="aliquots_' + next_sample_group + '_unit_row_1" class="unit"></span></td>\
                                             <td><input type="date" id="aliquots_' + next_sample_group + '_datecreated_row_1" class="datecreated"></td>\
+                                            <td><input type="time" id="aliquots_' + next_sample_group + '_timecreated_row_1" class="timecreated"></td>\
                                             <td><select id="aliquots_' + next_sample_group + '_storage_row_1" class="storage"><option value=0>-- Select Storage --</option></select></td>\
                                         </tr>\
                                     </table>\
@@ -109,9 +110,6 @@
                 });
             })(jQuery);
 
-        </script>
-
-        <script type="text/javascript" charset="utf-8">
             function select_parent_sample(event){
                 // get the sample group number from the id on the button
                 var selected_sample = this;
@@ -129,21 +127,21 @@
                 var path = window.location.href.split('/aliquotsamples')[0];
 
                 $.ajax({
-                     dataType: "json",
-                     contentType: 'application/json',
-                     data: { 'sample_uid': sample_uid },
-                     url: path + '/ajax_get_sample_details',
-                     success: function (data) {
-                         $(sample_details).html('<strong>' + data['volume'] + ' ' + data['unit'] + ' ' + data['storage'] + '</strong>');
+                    dataType: "json",
+                    contentType: 'application/json',
+                    data: { 'sample_uid': sample_uid },
+                    url: path + '/ajax_get_sample_details',
+                    success: function (data) {
+                        $(sample_details).html('<strong>' + data['volume'] + ' ' + data['unit'] + ' ' + data['storage'] + '</strong>');
 
-                     },
+                    },
                     error: function(data){
                         $(sample_details).html();
                         // console.log('------An error here');
                         // console.log(data);
 
                     },
-                 });
+                });
             }
 
             function get_aliquots_data(){
@@ -161,13 +159,15 @@
                         volume = $(aliquot_row).find('.volume').val();
                         storage = $(aliquot_row).find('.storage').val();
                         datecreated = $(aliquot_row).find('.datecreated').val();
+                        timecreated = $(aliquot_row).find('.timecreated').val();
 
                         aliquots.push(
                             {
                               'barcode': barcode,
                               'volume': volume,
                               'storage': storage,
-                              'datecreated': datecreated
+                              'datecreated': datecreated,
+                              'timecreated': timecreated
                             }
                         );
                     });
@@ -303,6 +303,7 @@
                         <td><input type="text" id="aliquots_' + sample_group + '_volume_row_' + row_count + '" class="volume"></td> \
                         <td><span id="aliquots_' + sample_group + '_unit_row_' + row_count + '" class="unit"></span></td>\
                         <td><input type="date" id="aliquots_' + sample_group + '_datecreated_row_' + row_count + '" class="datecreated"></td>\
+                        <td><input type="time" id="aliquots_' + sample_group + '_timecreated_row_' + row_count + '" class="timecreated"></td>\
                         <td><select id="aliquots_' + sample_group + '_storage_row_' + row_count + '" class="storage"><option value=0>-- Select Storage --</option></select></td> \
                     </tr>\
                     ';
@@ -339,8 +340,8 @@
                     background-color: #e7e7e7;
                     /*float: right;*/
                 }
-                .sample_group{
-                    border: 3px solid;
+                #buttons-group, .sample_group{
+                    border: 1.3px solid darkgray;
                     padding: 8px;
                     margin: 6px;
                     margin-bottom: 11px;

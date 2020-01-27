@@ -322,19 +322,12 @@ class ajaxGetSampleDetails(BrowserView):
         self.pc = getToolByName(self.context, 'portal_catalog')
 
     def __call__(self):
-
-        print('---------Inside ajax get samples')
-
         sample = self.get_sample(self.request.form['sample_uid'])
-        print('======This is sample')
 
         if sample:
             try:
                 storage = sample.getField('StorageLocation').get(sample).getHierarchy()
-                print('=============see storage')
-                print(storage)
             except Exception as e:
-                print('========Exception %s' % str(e))
                 storage = ''
 
             result_dict = {
@@ -345,14 +338,9 @@ class ajaxGetSampleDetails(BrowserView):
                 'unit': sample.getField('Unit').get(sample),
             }
 
-            print(result_dict)
-
             result = json.dumps(result_dict)
-
-            print(result)
             return result
 
-        print('=====Now sample found')
 
         return json.dumps({
             'title': '',
@@ -365,15 +353,9 @@ class ajaxGetSampleDetails(BrowserView):
     def get_sample(self, sample_uid):
         # pc = getToolByName(self.context, 'portal_catalog')
         try:
-
-            print('======sample uid')
-
-            print(sample_uid)
-
             brains = self.pc(UID=sample_uid)
             return brains[0].getObject()
         except Exception as e:
-            print('==exception as %s' %str(e))
             return None
 
 
@@ -568,8 +550,13 @@ class ajaxCreateAliquots(BrowserView):
             sample_type = parent_sample.getField('SampleType').get(parent_sample)
 
             obj = _createObjectByType('Sample', parent, tmpID())
+
             # Only change date created if a valid date created was send from client
+            # If date created is there and time create is there as well create a date time object
             date_created = aliquot.get('datecreated', None)
+            time_created = aliquot.get('timecreated', None)
+            if date_created and time_created:
+                date_created = date_created + ' ' + time_created
             if date_created:
                 obj.edit(
                     DateCreated=date_created,
