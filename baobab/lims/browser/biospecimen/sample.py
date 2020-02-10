@@ -118,7 +118,18 @@ class EditView(BrowserView):
             from Products.CMFPlone.utils import _createObjectByType
             from bika.lims.utils import tmpID
             pc = getToolByName(context, "portal_catalog")
+
             folder = pc(portal_type="Project", UID=request.form['Project_uid'])[0].getObject()
+            try:
+                project_accepted = folder.getField('ProjectAccepted').get(folder)
+            except:
+                project_accepted = ''
+
+            if project_accepted != 'Accepted':
+                # self.form_error('Project %s has not yet been approved.  Please select an approved project.')
+                self.context.plone_utils.addPortalMessage('Project %s has not yet been approved.  Please select an approved project.', 'error')
+                self.request.response.redirect(self.context.absolute_url())
+                return
 
             new_sample = False
             if not folder.hasObject(context.getId()):
@@ -198,9 +209,6 @@ class EditView(BrowserView):
         audit_logger.perform_reference_audit(sample, 'SampleType', sample.getField('SampleType').get(sample),
                                              pc, request.form['SampleType_uid'])
 
-
-
-
     def get_fields_with_visibility(self, visibility, mode=None):
         mode = mode if mode else 'edit'
         schema = self.context.Schema()
@@ -211,3 +219,7 @@ class EditView(BrowserView):
             if v == visibility:
                 fields.append(field)
         return fields
+
+    def form_error(self, msg):
+        self.context.plone_utils.addPortalMessage(msg)
+        self.request.response.redirect(self.context.absolute_url())

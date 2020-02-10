@@ -71,6 +71,18 @@
             <td tal:content="view/participants" style="padding-bottom: .5em;border: 1px solid #cecfd5;
                                                        padding: 10px 15px;"></td>
         </tr>
+        <tr>
+            <th i18n:translate="" style="padding-bottom: .2em;border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Project Accepted </th>
+            <td tal:content="view/project_accepted" style="padding-bottom: .5em;border: 1px solid #cecfd5;
+                                                       padding: 10px 15px;"></td>
+        </tr>
+        <tr tal:condition="python:context.getProjectAccepted()=='Rejected'">
+            <th i18n:translate="" style="padding-bottom: .2em;border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Reject Reason </th>
+            <td tal:content="view/refuse_reason" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
         <tr style="background: #f0f0f2;">
             <th i18n:translate="" style="padding-bottom: .2em;border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Age low - Age high </th>

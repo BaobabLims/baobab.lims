@@ -296,6 +296,8 @@ class Projects(WorksheetImporter):
                 AgeHigh=self.to_int(row.get('AgeHigh', 0)),
                 AgeLow=self.to_int(row.get('AgeLow', 0)),
                 NumParticipants=self.to_int(row.get('NumParticipants', 0)),
+                ProjectAccepted=row.get("ProjectAccepted", "Rejected"),
+                RefuseReason=row.get("RefuseReason", ""),
                 SampleType=st_objects,
                 Service=as_objects,
                 DateCreated=row.get('DateCreated', ''),
@@ -305,6 +307,9 @@ class Projects(WorksheetImporter):
             renameAfterCreation(obj)
             count += 1
         audit_logger.perform_simple_audit(None, '%s %s' % ('Project', str(count)))
+
+        from baobab.lims.subscribers.project import ObjectInitializedEventHandler
+        ObjectInitializedEventHandler(obj, None)
 
 class Biospecimens(WorksheetImporter):
     """ Import biospecimens

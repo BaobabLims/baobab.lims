@@ -3,6 +3,7 @@ from archetypes.schemaextender.interfaces import IOrderableSchemaExtender
 from archetypes.schemaextender.interfaces import ISchemaModifier
 from zope.component import adapts
 from Products.CMFCore import permissions
+from Products.CMFCore.utils import getToolByName
 
 from bika.lims.fields import *
 from bika.lims.interfaces import ISample
@@ -48,9 +49,29 @@ class SampleSchemaExtender(object):
                 size=30,
                 showOn=True,
                 render_own_label=True,
+                base_query={'review_state': 'approved'},
                 description=_("Select the project of the sample."),
             )
         ),
+        # ExtReferenceField(
+        #     'Project',
+        #     # mode="rw",
+        #     required=True,
+        #     relationship='InvoiceProject',
+        #     referenceClass=HoldingReference,
+        #     allowed_types=('Project',),
+        #     read_permission=permissions.View,
+        #     write_permission=permissions.ModifyPortalContent,
+        #     # vocabulary='_getProjectsDisplayList',
+        #     widget=SelectionWidget(
+        #     # widget=bika_ReferenceWidget(
+        #         format='select',
+        #         label=_("Project"),
+        #         description=_("Select the project of the sample."),
+        #         visible={'edit': 'visible', 'view': 'visible'},
+        #         render_own_label=True,
+        #     )
+        # ),
         ExtReferenceField(
             'DiseaseOntology',
             allowed_types=('DiseaseOntology',),
@@ -461,6 +482,25 @@ class Sample(BaseSample):
             doActionFor(box, 'occupy')
         elif free_pos and state == 'occupied':
             doActionFor(box, 'liberate')
+
+    # def _getProjectsDisplayList(self):
+    #     pc = getToolByName(self, 'portal_catalog')
+    #     brains = pc(portal_type='Project')
+    #     items = []
+    #     for brain in brains:
+    #         obj = brain.getObject()
+    #         try:
+    #             accepted = obj.getField('ProjectAccepted').get(obj)
+    #         except:
+    #             accepted = 'Rejected'
+    #         if accepted != 'Accepted':
+    #             items.append((obj.UID(), obj.Title()))
+    #     # items = [(i.UID, i.Title) \
+    #     #          for i in pc(portal_type='Project',
+    #     #                       inactive_state='active')]
+    #     items.sort(lambda x, y: cmp(x[1], y[1]))
+    #     items.insert(0, ('', _("None")))
+    #     return DisplayList(list(items))
 
     def at_post_create_script(self):
         """Execute once the object is created (CHECK ObjectInitializedEventHandler)

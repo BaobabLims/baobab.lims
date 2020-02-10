@@ -22,4 +22,10 @@
         handler=".project.ObjectInitializedEventHandler"
     />
 
+    <subscriber
+        for="baobab.lims.interfaces.IProject
+            Products.Archetypes.interfaces.IObjectEditedEvent"
+        handler=".project.ObjectInitializedEventHandler"
+    />
+
 </configure>

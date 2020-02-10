@@ -5,11 +5,37 @@ function CustomProjectAddView(){
         // disable browser auto-complete
         $('input[type=text]').prop('autocomplete', 'off');
         init();
+
+        $('#ProjectAccepted input:radio').on("click", function(event){
+            console.log('This is a test');
+            projectAcceptedClicked();
+        });
+
     }
 
     function init() {
         applyStyles();
         biospecSelection();
+    }
+
+    function projectAcceptedClicked(){
+        var radio_button = this;
+        console.log('======');
+        // console.log(radio_button);
+
+        // checked = $('#ProjectAccepted_2').checked()
+        if ($('#ProjectAccepted_2').is(':checked')){
+            // In this case project refused has been clicked
+            console.log('refused has been clicked');
+            $('#RefuseReason').show();
+
+        }else{
+            // In this case project accepted has been clicked
+            console.log('accepted has been clicked');
+            $('#RefuseReason').hide();
+
+        }
+
     }
 
     function biospecSelection(){
@@ -150,5 +176,7 @@ function CustomProjectAddView(){
             .css('background-color', '#efefef')
             .css('padding', '10px')
             .css('margin-bottom', '20px');
+
+        $('#RefuseReason').hide();
     }
 }

@@ -145,6 +145,8 @@ class ProjectView(BrowserView):
 
         self.study_type = context.getStudyType()
         self.participants = context.getNumParticipants()
+        self.project_accepted = context.getProjectAccepted()
+        self.refuse_reason = context.getRefuseReason()
         self.age_interval = str(context.getAgeLow()) + ' - ' + str(
             context.getAgeHigh())
 

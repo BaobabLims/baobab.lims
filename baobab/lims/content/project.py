@@ -12,6 +12,7 @@ from baobab.lims import bikaMessageFactory as _
 from baobab.lims.interfaces import IProject
 from baobab.lims import config
 from baobab.lims.browser.widgets import ProjectAnalysesWidget
+from bika.lims.browser.widgets import ReferenceWidget
 
 schema = BikaSchema.copy() + Schema((
 
@@ -63,6 +64,31 @@ schema = BikaSchema.copy() + Schema((
         )
     ),
 
+    StringField(
+        'ProjectAccepted',
+        read_permission=permissions.View,
+        write_permission=permissions.ModifyPortalContent,
+        vocabulary='getProjectAcceptedOptions',
+        widget=SelectionWidget(
+        format='radio',
+        label=_("Project Accepted"),
+            description=_("Indicates if project is accepted or not"),
+            visible={'edit': 'visible', 'view': 'visible'},
+            render_own_label=True,
+        )
+    ),
+
+    TextField(
+        'RefuseReason',
+        allowable_content_types=('text/plain',),
+        default_output_type="text/plain",
+        mode="rw",
+        widget=TextAreaWidget(
+            label=_("Reason for Refusal"),
+            description=_("Reason why this project has been refused.")
+        ),
+    ),
+
     LinesField(
         'SampleType',
         vocabulary='_getBiospecimensDisplayList',
@@ -99,6 +125,7 @@ schema = BikaSchema.copy() + Schema((
     )),
 ))
 
+
 schema['title'].required = True
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 schema['title'].widget.size = 100
@@ -134,6 +161,9 @@ class Project(BaseFolder):
 
     def getClientID(self):
         return self.aq_parent.getId() if self.aq_parent.portal_type == 'Client' \
-                                      else ''
+                              else ''
+
+    def getProjectAcceptedOptions(self):
+        return ['Accepted', 'Rejected']
 
 registerType(Project, config.PROJECTNAME)
