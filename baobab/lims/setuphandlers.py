@@ -26,7 +26,11 @@ class BikaCustomGenerator:
                 'donors',
                 'disease_ontologies',
                 'sampleshipments',
-                'auditlogs'):
+                'auditlogs',
+                'sample_poolings',
+                'inputsamples',
+                'resultsamples',
+        ):
             try:
                 obj = portal._getOb(obj_id)
                 obj.unmarkCreationFlag()
@@ -95,6 +99,9 @@ class BikaCustomGenerator:
         at.setCatalogsByType('DiseaseOntology', ['bika_catalog'])
         at.setCatalogsByType('SampleShipment', ['bika_catalog'])
         at.setCatalogsByType('AuditLog', ['bika_catalog', 'portal_catalog'])
+        at.setCatalogsByType('SamplePooling', ['bika_catalog', 'portal_catalog'])
+        at.setCatalogsByType('InputSamples', ['bika_catalog', 'portal_catalog'])
+        at.setCatalogsByType('ResultSamples', ['bika_catalog', 'portal_catalog'])
 
         addIndex(bc, 'getParentUID', 'FieldIndex')
         addIndex(bc, 'getProjectUID', 'FieldIndex')

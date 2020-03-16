@@ -40,9 +40,17 @@
     <object name="SampleShipment" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="SampleShipments" meta_type="Factory-based Type Information with dynamic views"/>
 
-
     <object name="AuditLogs" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="AuditLog" meta_type="Factory-based Type Information with dynamic views"/>
+
+    <object name="SamplePoolings" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="SamplePooling" meta_type="Factory-based Type Information with dynamic views"/>
+
+    <object name="InputSamples" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="InputSample" meta_type="Factory-based Type Information with dynamic views"/>
+
+    <object name="ResultSamples" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="ResultSample" meta_type="Factory-based Type Information with dynamic views"/>
 
     <!-- Override values from bika.lims -->
     <object name="Client" meta_type="Factory-based Type Information with dynamic views"/>

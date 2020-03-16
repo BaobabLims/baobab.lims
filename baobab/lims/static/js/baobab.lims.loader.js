@@ -32,6 +32,10 @@ window.baobab.lims.controllers =  {
         ['BaobabSampleShipmentView'],
     "#baobab_sample_shipment_edit":
         ['BaobabSampleShipmentEditView'],
+    "#baobab_sample_pooling_edit":
+        ['BaobabSamplePoolingEditView'],
+    ".portaltype-samplepooling":
+        ['BaobabSamplePoolingView'],
     ".portaltype-sample":
         ['BaobabSampleView']
 };

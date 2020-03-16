@@ -169,3 +169,27 @@ class IAuditLog(Interface):
 class IAuditLogs(Interface):
     """
     """
+
+class ISamplePooling(Interface):
+    """
+    """
+
+class ISamplePoolings(Interface):
+    """
+    """
+
+class IInputSample(Interface):
+    """
+    """
+
+class IInputSamples(Interface):
+    """
+    """
+
+class IResultSample(Interface):
+    """
+    """
+
+class IResultSamples(Interface):
+    """
+    """

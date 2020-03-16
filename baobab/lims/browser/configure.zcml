@@ -33,6 +33,8 @@
     <include package=".sampleshipment"/>
     <include package=".auditlogs"/>
     <include package=".aliquotsamples"/>
+    <include package=".samplepooling"/>
+    <include package=".samplepoolings"/>
 
 
     <!-- This registration allows additional sticker templates.

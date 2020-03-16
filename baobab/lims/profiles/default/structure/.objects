@@ -10,3 +10,6 @@ donors,SampleDonors
 disease_ontologies,DiseaseOntologies
 sampleshipments,SampleShipments
 auditlogs,AuditLogs
+sample_poolings,SamplePoolings
+inputsamples,InputSamples
+resultsamples,ResultSamples

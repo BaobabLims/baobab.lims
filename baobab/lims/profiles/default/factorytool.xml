@@ -21,6 +21,9 @@
         <type portal_type="DiseaseOntology"/>
         <type portal_type="SampleShipment"/>
         <type portal_type="AuditLog"/>
+        <type portal_type="SamplePooling"/>
+        <type portal_type="InputSample"/>
+        <type portal_type="ResultSample"/>
 
     </factorytypes>
 </object>
