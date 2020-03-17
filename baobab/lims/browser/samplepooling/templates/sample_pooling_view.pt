@@ -35,105 +35,77 @@
 
     <input type="hidden" name="sample_pooling_uid" id="sample_pooling_uid" tal:attributes="value view/sample_pooling_uid">
 
-    <table class="storage" style="border-collapse: collapse; width: 100%;">
-        <tbody>
-        <tr>
-            <th i18n:translate="" style="border: 1px solid #cecfd5;
-                                         padding: 10px 15px;text-align: left;">Title </th>
-            <td tal:content="view/title" style="border: 1px solid #cecfd5;
-                                               padding: 10px 15px;width:70%"></td>
-        </tr>
-        <tr tal:condition="view/description">
-            <th i18n:translate="" style="border: 1px solid #cecfd5;
-                                         padding: 10px 15px;text-align: left;">Description</th>
-            <td tal:content="view/description" style="border: 1px solid #cecfd5;
-                                               padding: 10px 15px;"></td>
-        </tr>
-        <tr tal:condition="view/date_created" style="background: #f0f0f2;">
-            <th i18n:translate="" style="border: 1px solid #cecfd5;
-                                         padding: 10px 15px;text-align: left;">Date Created</th>
-            <td tal:content="view/from_contact" style="border: 1px solid #cecfd5;
-                                               padding: 10px 15px;"></td>
-        </tr>
-        <tr tal:condition="view/person_pooling">
-            <th i18n:translate="" style="border: 1px solid #cecfd5;
-                                         padding: 10px 15px;text-align: left;">Person Pooling</th>
-            <td tal:content="view/person_pooling" style="border: 1px solid #cecfd5;
-                                               padding: 10px 15px;"></td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="pooling-content" style="border: solid; border-width: thin; margin: 15px;">
+        <table class="storage" style="border-collapse: collapse; width: 100%;">
+            <tbody>
+            <tr>
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Title </th>
+                <td tal:content="view/title" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;width:70%"></td>
+            </tr>
+            <tr tal:condition="view/description">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Description</th>
+                <td tal:content="view/description" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            <tr tal:condition="view/date_created" style="background: #f0f0f2;">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Date Created</th>
+                <td tal:content="view/date_created" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            <tr tal:condition="view/person_pooling">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Person Pooling</th>
+                <td tal:content="view/person_pooling" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
-    <table class="invoice-items items">
-        <caption>Input Samples</caption>
-        <tr>
-          <th style='text-align:left;' i18n:translate=''>Sample</th>
-          <th style='text-align:left;' i18n:translate=''>Location</th>
-          <th style='text-align:left;' i18n:translate=''>Quantity Pooled</th>
-          <th style='text-align:left;' i18n:translate=''>Unit</th>
-        </tr>
-        <tr tal:repeat="input_sample view/input_samples">
+    <div class="pooling-content" style="border: solid; border-width: thin; margin: 15px;">
+        <table class="invoice-items items">
+            <caption><strong>Input Samples</strong></caption>
+            <tr>
+              <th style='text-align:left;' i18n:translate=''>Sample</th>
+              <th style='text-align:left;' i18n:translate=''>Location</th>
+              <th style='text-align:left;' i18n:translate=''>Quantity Pooled</th>
+              <th style='text-align:left;' i18n:translate=''>Unit</th>
+            </tr>
+            <tr tal:repeat="input_sample view/input_samples">
 
-            <td  style='text-align:left;' tal:content='python:input_sample["title"]'>barcode</td>
-            <td  style='text-align:left;' tal:content='python:input_sample["location"]'>barcode</td>
-            <td  style='text-align:left;' tal:content='python:input_sample["volume"]'>barcode</td>
-            <td  style='text-align:left;' tal:content='python:input_sample["unit"]'>barcode</td>
+                <td  style='text-align:left;' tal:content='python:input_sample["title"]'>barcode</td>
+                <td  style='text-align:left;' tal:content='python:input_sample["location"]'>barcode</td>
+                <td  style='text-align:left;' tal:content='python:input_sample["volume"]'>barcode</td>
+                <td  style='text-align:left;' tal:content='python:input_sample["unit"]'>barcode</td>
 
-            <!--?<td  style='text-align:left;'>-->
-              <!--?<span tal:condition="python:sample"-->
-                <!--?tal:content="python:sample.Title()">-->
-                <!--?barcode-->
-              <!--?</span>-->
-            <!--?</td>-->
+            </tr>
+        </table>
+    </div>
 
-            <!--?<td  style='text-align:left;'>-->
-              <!--?<span tal:condition="python:sample.getStorageLocation()"-->
-                <!--?tal:content="python:sample.getStorageLocation().Title()">-->
-                <!--?location-->
-              <!--?</span>-->
-            <!--?</td>-->
+    <div class="pooling-content" style="border: solid; border-width: thin; margin: 15px;">
+        <table class="invoice-items items">
+            <caption><strong>Pool Result Samples</strong></caption>
+            <tr>
+              <th style='text-align:left;' i18n:translate=''>Sample</th>
+              <th style='text-align:left;' i18n:translate=''>Location</th>
+              <th style='text-align:left;' i18n:translate=''>Pool Quantity</th>
+              <th style='text-align:left;' i18n:translate=''>Unit</th>
+            </tr>
+            <tr tal:repeat="result_sample view/result_samples">
 
-            <!--?<td  style='text-align:left;' tal:content="python:sample.getQuantityPooled()">personpooling</td>-->
+                <td  style='text-align:left;' tal:content='python:result_sample["title"]'>barcode</td>
+                <td  style='text-align:left;' tal:content='python:result_sample["location"]'>barcode</td>
+                <td  style='text-align:left;' tal:content='python:result_sample["volume"]'>barcode</td>
+                <td  style='text-align:left;' tal:content='python:result_sample["unit"]'>barcode</td>
 
-            <!--?<td  style='text-align:left;' tal:content="python:sample.getQuantityUnit()">quantityunit</td>-->
 
-        </tr>
-    </table>
-
-    <table class="invoice-items items">
-        <caption>Result Samples</caption>
-        <tr>
-          <th style='text-align:left;' i18n:translate=''>Sample</th>
-          <th style='text-align:left;' i18n:translate=''>Location</th>
-          <th style='text-align:left;' i18n:translate=''>Pool Quantity</th>
-          <th style='text-align:left;' i18n:translate=''>Unit</th>
-        </tr>
-        <tr tal:repeat="result_sample view/result_samples">
-
-            <td  style='text-align:left;' tal:content='python:result_sample["title"]'>barcode</td>
-            <td  style='text-align:left;' tal:content='python:result_sample["location"]'>barcode</td>
-            <td  style='text-align:left;' tal:content='python:result_sample["volume"]'>barcode</td>
-            <td  style='text-align:left;' tal:content='python:result_sample["unit"]'>barcode</td>
-            <!--?<td  style='text-align:left;'>-->
-              <!--?<span tal:condition="python:sample"-->
-                <!--?tal:content="python:sample.Title()">-->
-                <!--?barcode-->
-              <!--?</span>-->
-            <!--?</td>-->
-
-            <!--?<td  style='text-align:left;'>-->
-              <!--?<span tal:condition="python:sample.getStorageLocation()"-->
-                <!--?tal:content="python:sample.getStorageLocation().Title()">-->
-                <!--?location-->
-              <!--?</span>-->
-            <!--?</td>-->
-
-            <!--?<td  style='text-align:left;' tal:content="python:sample.getQuantityPooled()">personpooling</td>-->
-
-            <!--?<td  style='text-align:left;' tal:content="python:sample.getQuantityUnit()">quantityunit</td>-->
-
-        </tr>
-      </table>
+            </tr>
+          </table>
+    </div>
 
 </metal:content-core>
 

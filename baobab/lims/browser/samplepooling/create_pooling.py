@@ -55,6 +55,10 @@ class AjaxCreatePoolings(BrowserView):
         pooling_obj.unmarkCreationFlag()
         renameAfterCreation(pooling_obj)
 
+        print('---------------The redirect happens here.')
+        print(pooling_obj.absolute_url())
+        self.request.response.redirect(pooling_obj.absolute_url())
+
     def create_sample_pooling_object(self, sample_pooling_data):
         poolings = self.context.sample_poolings
         obj = _createObjectByType('SamplePooling', poolings, tmpID())

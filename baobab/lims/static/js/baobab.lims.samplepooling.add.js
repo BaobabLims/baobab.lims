@@ -29,8 +29,16 @@ function BaobabSamplePoolingView() {
         var input_samples = $('#fieldset-input-samples');
 
         //Add the section for selecting the samples to pool
-        $(input_samples).append('<div class="div-input-samples"></div>');
+        $(input_samples).append('<div class="div-input-samples" style="border: solid; border-width: thin; margin: 10px; padding: 5px;"></div>');
         $('.div-input-samples').append('<table class="tbl-input-samples"><thead class="head-input-samples"></thead><tbody class="body-input-samples"></tbody></table>');
+        var input_sample_header_row = '\
+            <tr>\
+                <th>Aliquot Barcode</th>\
+                <th>Volume</th>\
+                <th>Unit</th>\
+            </tr>\
+        ';
+        $('.head-input-samples').append(input_sample_header_row);
         $('.body-input-samples').append('<tr class="input-samples-rows"><td class="selected-input-sample"><td class="input-sample-volume"></td></td></tr>');
 
         $('.selected-input-sample').append('<select class="selected_sample" id="selected_sample_1"><option value=0>-- Select Input Sample --</option></select>');
@@ -45,8 +53,16 @@ function BaobabSamplePoolingView() {
         });
 
         //Add the section for creating new aliquots from this pooling
-        $(input_samples).append('<div class="div-aliquot-samples"></div>');
+        $(input_samples).append('<div class="div-aliquot-samples" style="border: solid; border-width: thin; margin: 10px; padding: 5px;"></div>');
         $('.div-aliquot-samples').append('<table class="tbl-aliquot-samples"><thead class="head-aliquot-samples"></thead><tbody class="body-aliquot-samples"></tbody></table>');
+
+        var aliquot_header_row = '\
+            <tr>\
+                <th>Aliquot Barcode</th>\
+                <th>Volume</th>\
+                <th>Unit</th>\
+            </tr>\
+        ';
 
         var aliquot_row = '\
             <tr class="aliquot-samples-rows" id="aliquot-samples-row-1">\
@@ -62,6 +78,7 @@ function BaobabSamplePoolingView() {
         //     </select>
         // </td>
 
+        $('.head-aliquot-samples').append(aliquot_header_row);
         $('.body-aliquot-samples').append(aliquot_row);
 
         $('.div-aliquot-samples').append('<div><button class="extra-aliquot-samples">Another Aliquot Sample</button></div>');
