@@ -36,7 +36,7 @@ before_install:
   - virtualenv .
   - bin/pip install --upgrade pip setuptools zc.buildout
 install:
-  - bin/buildout -n -t 3 -c travis.cfg
+  - bin/buildout -vvv -n -t 3 -c travis.cfg 
 script:
   - bin/test -m baobab.lims --layer=baobab.lims.testing.BaobabTestingLayer:Functional
   - bin/test test_textual_doctests
