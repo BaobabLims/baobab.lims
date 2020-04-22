@@ -36,7 +36,7 @@ before_install:
   - virtualenv .
   - source bin/activate
   #- python bootstrap.py
-  # - bin/pip install --upgrade pip setuptools zc.buildout
+  - bin/pip install --upgrade pip setuptools zc.buildout
 install:
   - bin/buildout -c travis.cfg
 script:
