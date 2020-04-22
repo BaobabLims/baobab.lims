@@ -35,7 +35,7 @@ before_install:
   - echo "eggs-directory = $TRAVIS_BUILD_DIR/buildout-cache/eggs" >> $TRAVIS_BUILD_DIR/default.cfg
   - virtualenv .
   #- source bin/activate
-  - bin/pip install zc.buildout
+  - bin/pip install --upgrade pip setuptools zc.buildout
 install:
   - bin/buildout -vvv -n -t 3 -c travis.cfg 
 script:
