@@ -30,7 +30,7 @@ schema = BikaSchema.copy() + Schema((
         relationship='ItemStorageLocation',
         widget=bika_ReferenceWidget(
             label=_("Storage Location"),
-            description=_("Location where item is kept"),
+            description=_("Location where item is kept."),
             size=40,
             visible={'edit': 'visible', 'view': 'visible'},
             catalog_name='portal_catalog',
@@ -68,7 +68,7 @@ schema = BikaSchema.copy() + Schema((
         widget=IntegerWidget(
             label=_("Quantity"),
             description=_("The number of items of this product already in "
-                          "storage. eg. 15, 100"),
+                          "storage. eg. 15, 100."),
         ),
     ),
 
