@@ -41,7 +41,7 @@ class KitTemplatesView(BikaListingView):
         self.show_select_column = False
         self.form_id = "kittemplates"
 
-        self.icon = self.portal_url + "/++resource++bika.lims.images/samplepartition_big.png"
+        self.icon = self.portal_url + "/++resource++bika.lims.images/product_big.png"
         self.title = self.context.translate(_("Kit Templates"))
         self.description = ""
 

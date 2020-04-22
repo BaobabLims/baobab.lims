@@ -13,76 +13,87 @@ from baobab.lims.browser.widgets import ProductSuppliersWidget
 
 schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
 
-    ComputedField('SupplierUID',
-        expression = 'context.aq_parent.portal_type=="Supplier" and context.aq_parent.UID() or ""',
-        widget = ComputedWidget(
-            visible = False,
+    ComputedField(
+        'SupplierUID',
+        expression='context.aq_parent.portal_type=="Supplier" and context.aq_parent.UID() or ""',
+        widget=ComputedWidget(
+            visible=False,
         ),
     ),
-    StringField('CAS',
-        searchable = True,
-        widget = StringWidget(
+    StringField(
+        'CAS',
+        searchable=True,
+        widget=StringWidget(
             label=_("CAS Registry Number"),
         ),
     ),
-    StringField('SupplierCatalogueID',
-        searchable = True,
-        widget = StringWidget(
+    StringField(
+        'SupplierCatalogueID',
+        searchable=True,
+        widget=StringWidget(
             label=_("Supplier Catalogue ID"),
         ),
     ),
-    BooleanField('Hazardous',
-        default = False,
-        widget = BooleanWidget(
+    BooleanField(
+        'Hazardous',
+        default=False,
+        widget=BooleanWidget(
             label=_("Hazardous"),
-            description=_("Samples of this type should be treated as hazardous"),
+            description=_("Samples of this type should be treated as hazardous."),
         ),
     ),
-    IntegerField('Quantity',
+    IntegerField(
+        'Quantity',
         widget=IntegerWidget(
             label=_("Quantity"),
             description=_("The number of items of this product already in "
-                       "storage. eg. 15, 100"),
+                          "storage. eg. 15, 100."),
         ),
     ),
-    StringField('Unit',
+    StringField(
+        'Unit',
         widget=StringWidget(
             label=_("Unit"),
-            description=_(" Unit for the quantity eg. ml or kg"),
+            description=_(" Unit for the quantity eg. ml or kg."),
         ),
     ),
-    FixedPointField('VAT',
+    FixedPointField(
+        'VAT',
         schemata='Price',
         default_method='getDefaultVAT',
-        widget = DecimalWidget(
+        widget=DecimalWidget(
             label=_("VAT %"),
-            description=_("Enter percentage value eg. 14.0"),
+            description=_("Enter percentage value eg. 14.0."),
         ),
     ),
-    FixedPointField('Price',
+    FixedPointField(
+        'Price',
         schemata='Price',
         default='0.00',
-        widget = DecimalWidget(
+        widget=DecimalWidget(
             label=_("Price excluding VAT"),
         )
     ),
-    ComputedField('VATAmount',
-        expression = 'context.getVATAmount()',
-        widget = ComputedWidget(
+    ComputedField(
+        'VATAmount',
+        expression='context.getVATAmount()',
+        widget=ComputedWidget(
             label=_("VAT"),
             default='14.00',
             visible={'edit': 'hidden'}
         ),
     ),
-    ComputedField('TotalPrice',
-        expression = 'context.getTotalPrice()',
-        widget = ComputedWidget(
+    ComputedField(
+        'TotalPrice',
+        expression='context.getTotalPrice()',
+        widget=ComputedWidget(
             label=_("Total price"),
-            visible = {'edit':'hidden', }
+            visible={'edit': 'hidden', }
         ),
     ),
 
-    ReferenceField('Supplier',
+    ReferenceField(
+        'Supplier',
         required=1,
         multiValued=1,
         allowed_types=('Supplier',),
@@ -96,12 +107,13 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
 schema['description'].schemata = 'default'
 schema['description'].widget.visible = True
 
+
 class Product(ATFolder):
     security = ClassSecurityInfo()
     displayContentsTab = False
     implements(IProduct)
     schema = schema
-    
+
     _at_rename_after_creation = True
 
     def _renameAfterCreation(self, check_auto_id=False):
@@ -152,5 +164,5 @@ class Product(ATFolder):
         """
         return self.objectValues('Multifile')
 
-schemata.finalizeATCTSchema(schema, folderish = True, moveDiscussion = False)
+schemata.finalizeATCTSchema(schema, folderish=True, moveDiscussion=False)
 registerType(Product, PROJECTNAME)

@@ -19,19 +19,18 @@ schema = BikaSchema.copy() + Schema((
         schemata='Product List',
         type='productList',
         subfields=('product', 'quantity', 'product_uid'),
-        subfield_hidden = {'product_uid': True},
+        subfield_hidden={'product_uid': True},
         required_subfields=('product', 'quantity', 'product_uid'),
-        subfield_sizes={'product': 50, 'quantity': 5,},
+        subfield_sizes={'product': 50, 'quantity': 5},
         subfield_labels={'product': _('Product'),
-                         'quantity': _('Quantity'),
-        },
+                         'quantity': _('Quantity')},
         widget=RecordsWidget(
-            label = _("Product List"),
-            description=_("Select complete list of the components required to create this kit"),
+            label=_("Product List"),
+            description=_("Select complete list of the components required to create this kit."),
             combogrid_options={
                  'product': {
-                     'colModel': [{'columnName':'product', 'width':'30', 'label':_('Title')},
-                                  {'columnName':'Description', 'width':'70', 'label':_('Description')},
+                     'colModel': [{'columnName': 'product', 'width': '30', 'label': _('Title')},
+                                  {'columnName': 'Description', 'width': '70', 'label': _('Description')},
                                   {'columnName': 'product_uid', 'hidden': True}],
                      'url': 'getproducts',
                      'showOn': True,
@@ -80,7 +79,7 @@ schema = BikaSchema.copy() + Schema((
         'Price',
         schemata='Price',
         expression='context.getTotal()',
-        widget = DecimalWidget(
+        widget=DecimalWidget(
             label=_("Price excluding VAT"),
             description=_("This is the price will be charged for each completed kit. "
                           "The price will be set automatically"),
@@ -90,7 +89,7 @@ schema = BikaSchema.copy() + Schema((
         expression='context.getVATAmount()',
         widget=ComputedWidget(
             label=_("VAT"),
-            visible = {'edit':'hidden', }
+            visible={'edit': 'hidden', }
         ),
     ),
 ))
