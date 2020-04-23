@@ -5,7 +5,7 @@ version = '1.3'
 
 setup(name='baobab.lims',
       version=version,
-      description="Starting point for creating Bika LIMS extension packages",
+      description="Starting point for creating Baobab LIMS extension packages",
       long_description=open("README.md").read(),
       # Get more strings from ...
       # http://pypi.python.org/pypi?:action=list_classifiers
@@ -14,9 +14,9 @@ setup(name='baobab.lims',
         "Programming Language :: Python",
         ],
       keywords='',
-      author='Bika Lab Systems',
-      author_email='support@bikalabs.com',
-      url='http://www.bikalabs.com',
+      author='South African Bioinformatics Institute',
+      author_email='support@baobablims.org',
+      url='http://www.baobablims.org',
       license='GPL',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['baobab'],
