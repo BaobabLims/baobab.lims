@@ -1,20 +1,10 @@
-.. figure:: hhttps://baobablims.org/wp-content/uploads/2018/11/cropped-Baobab-LOGO.png
-   :alt: Baobab Logo
+![](https://baobablims.org/wp-content/uploads/2018/11/cropped-Baobab-LOGO.png)
 
-The latest information about Baobab LIMS can be found on the `Baobab LIMS <https://baobablims.org/>`__.
-# Baobab LIMS
+The latest information about Baobab LIMS can be found on the [Baobab
+LIMS](https://baobablims.org/).
 
-.. image:: https://img.shields.io/badge/chat-gitter-blue.svg
-    :target: https://gitter.im/galaxyproject/Lobby
-    :alt: Chat on gitter
+![image](https://travis-ci.org/BaobabLims/baobab.lims.svg?branch=master%0A%20:target:%20https://travis-ci.org/github/BaobabLims/baobab.lims%0A%20:alt:%20Inspect%20the%20test%20results)
 
-.. image:: https://img.shields.io/badge/release-documentation-blue.svg
-    :target: https://baobab-lims.readthedocs.io/en/latest
-    :alt: Release Documentation
-
-.. image:: https://travis-ci.org/BaobabLims/baobab.lims.svg?branch=master
-    :target: https://travis-ci.org/github/BaobabLims/baobab.lims
-    :alt: Inspect the test results
     
 # Baobab LIMS
 
