@@ -1,11 +1,40 @@
-![](https://baobablims.org/wp-content/uploads/2018/11/cropped-Baobab-LOGO.png)
+<div align="center">
 
-The latest information about Baobab LIMS can be found on the [Baobab
-LIMS](https://baobablims.org/).
+  <h1>
+    <a href="https://github.com/BaobabLims/baobab.lims">
+      <div>
+        <img src="https://baobablims.org/wp-content/uploads/2018/11/cropped-Baobab-LOGO.png" alt="senaite.lims" height="64" />
+      </div>
+    </a>
+  </h1>
+
+  <p>Baobab LIMS Meta Installation Package</p>
+
+  <div>
+    <!--<a href="https://pypi.python.org/pypi/senaite.lims">
+      <img src="https://img.shields.io/pypi/v/senaite.lims.svg?style=flat-square" alt="pypi-version" />
+    </a> -->
+    <a href="https://github.com/BaobabLims/baobab.lims/pulls">
+      <img src="https://img.shields.io/github/issues-pr/senaite/senaite.lims.svg?style=flat-square" alt="open PRs" />
+    </a>
+    <a href="https://github.com/BaobabLims/baobab.lims/issues">
+      <img src="https://img.shields.io/github/issues/senaite/senaite.lims.svg?style=flat-square" alt="open Issues" />
+    </a>
+    <a href="https://github.com/BaobabLims/baobab.lims">
+      <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="pr" />
+    </a>
+    <!--
+    <a href="https://www.baobab.org">
+      <img src="https://img.shields.io/badge/Made%20for%20SENAITE-%E2%AC%A1-lightgrey.svg" alt="Made for SENAITE" />
+    </a>-->
+  </div>
+</div>
 
 ![image](https://travis-ci.org/BaobabLims/baobab.lims.svg?branch=master%0A%20:target:%20https://travis-ci.org/github/BaobabLims/baobab.lims%0A%20:alt:%20Inspect%20the%20test%20results)
 
-    
+The latest information about Baobab LIMS community can be found on the [Baobab
+LIMS](https://baobablims.org/).
+
 # Baobab LIMS
 
 Baobab LIMS is an open-source laboratory information management system (LIMS) software that will ensure that researchers can track the lifecycle of a biospecimen in the laboratory from receipt to storage and reuse. This software ensures that sufficient metadata is captured.
