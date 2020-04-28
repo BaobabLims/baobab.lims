@@ -5,7 +5,6 @@ from bika.lims.utils import tmpID
 from bika.lims.workflow import doActionFor
 from bika.lims.utils.analysisrequest import get_sample_from_values, _resolve_items_to_service_uids
 
-
 def create_analysisrequest(context, request, values, analyses=None,
                            partitions=None, specifications=None, prices=None):
     """Overrides the method one in bika.lims
@@ -28,10 +27,10 @@ def create_analysisrequest(context, request, values, analyses=None,
         raise RuntimeError(
                 "create_analysisrequest: no analyses services provided")
 
-    # Baobab do not create a sample when the sample is not selected in AR
+    # Baobab does not create a sample when the sample is not selected in AR
     if not values.get('Sample', False):
         raise RuntimeError(
-            "create_analysisrequest: no sample selected for analysise")
+            "create_analysisrequest: no sample selected for analysis request")
     else:
         secondary = True
         sample = get_sample_from_values(context, values)
@@ -51,6 +50,7 @@ def create_analysisrequest(context, request, values, analyses=None,
 
     # Set initial AR state
     action = '{0}sampling_workflow'.format('' if workflow_enabled else 'no_')
+
     workflow.doActionFor(ar, action)
 
     # Set analysis request analyses
@@ -76,6 +76,9 @@ def create_analysisrequest(context, request, values, analyses=None,
     for analysis in analyses:
         revers = analysis.getService().getNumberOfRequiredVerifications()
         analysis.setNumberOfRequiredVerifications(revers)
+
+        analysis.updateDueDate(ar)
+
         doActionFor(analysis, 'sample_due')
         analysis_state = workflow.getInfoFor(analysis, 'review_state')
         if analysis_state not in skip_receive:
@@ -86,4 +89,5 @@ def create_analysisrequest(context, request, values, analyses=None,
     if reject_field and reject_field.get('checkbox', False):
         doActionFor(ar, 'reject')
     # Return the newly created Analysis Request
+
     return ar
