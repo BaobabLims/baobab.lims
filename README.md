@@ -1,3 +1,21 @@
+.. figure:: hhttps://baobablims.org/wp-content/uploads/2018/11/cropped-Baobab-LOGO.png
+   :alt: Baobab Logo
+
+The latest information about Baobab LIMS can be found on the `Baobab LIMS <https://baobablims.org/>`__.
+# Baobab LIMS
+
+.. image:: https://img.shields.io/badge/chat-gitter-blue.svg
+    :target: https://gitter.im/galaxyproject/Lobby
+    :alt: Chat on gitter
+
+.. image:: https://img.shields.io/badge/release-documentation-blue.svg
+    :target: https://baobab-lims.readthedocs.io/en/latest
+    :alt: Release Documentation
+
+.. image:: https://travis-ci.org/BaobabLims/baobab.lims.svg?branch=master
+    :target: https://travis-ci.org/github/BaobabLims/baobab.lims
+    :alt: Inspect the test results
+    
 # Baobab LIMS
 
 Baobab LIMS is an open-source laboratory information management system (LIMS) software that will ensure that researchers can track the lifecycle of a biospecimen in the laboratory from receipt to storage and reuse. This software ensures that sufficient metadata is captured.
