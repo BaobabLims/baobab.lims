@@ -38,12 +38,7 @@
   </div>
 </div>
 
-![image](https://travis-ci.org/BaobabLims/baobab.lims.svg?branch=master%0A%20:target:%20https://travis-ci.org/github/BaobabLims/baobab.lims%0A%20:alt:%20Inspect%20the%20test%20results)
-
-The latest information about Baobab LIMS community can be found on the [Baobab
-LIMS](https://baobablims.org/).
-
-# Baobab LIMS
+# Baobab LIMS in a Nutshell
 
 Baobab LIMS is an open-source laboratory information management system (LIMS) software that will ensure that researchers can track the lifecycle of a biospecimen in the laboratory from receipt to storage and reuse. This software ensures that sufficient metadata is captured.
 
@@ -51,9 +46,12 @@ _Baobab_ is a common name given to nine tree species in different countries in t
 
 Baobab LIMS written in Plone, a python framework known for its robustness, and inherits some modules from Bika LIMS.
 
-## Up and Running
+The latest information about Baobab LIMS community can be found on the [Baobab
+LIMS](https://baobablims.org/).
 
-### Using PWD
+# QuickStart
+
+## Using PWD
 
 Click the _Try in PWD_ button below to get 4 hours to try Baobab LIMS in the cloud.
 
@@ -63,7 +61,7 @@ Click the _Try in PWD_ button below to get 4 hours to try Baobab LIMS in the clo
 
 [![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](http://play-with-docker.com?stack=https://raw.githubusercontent.com/BaobabLims/baobab.lims/master/stack.yml)
 
-### Using our [`docker`](https://docs.docker.com/install/) container:
+## Using our [`docker`](https://docs.docker.com/install/) container:
 
 [![Docker Repository on Quay](https://quay.io/repository/baobab-lims/baobab-lims/status "Docker Repository on Quay")](https://quay.io/repository/baobab-lims/baobab-lims)
 
@@ -73,7 +71,7 @@ Kindly install docker using instructions from [here](https://www.docker.com/comm
 docker run -p 8080:8080 quay.io/baobab-lims/baobab-lims
 ```
 
-### Using [`docker-compose`](https://docs.docker.com/install/):
+## Using [`docker-compose`](https://docs.docker.com/install/):
 
 ```sh
 $ pip install docker-compose
