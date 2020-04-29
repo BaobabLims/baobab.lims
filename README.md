@@ -35,7 +35,7 @@
     </a>
   </div>
 </div>
-
+<br />
 The latest information about Baobab LIMS community can be found on the [Baobab LIMS](https://baobablims.org/).
 
 # Baobab LIMS
