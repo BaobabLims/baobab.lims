@@ -36,6 +36,8 @@
   </div>
 </div>
 
+The latest information about Baobab LIMS community can be found on the [Baobab LIMS](https://baobablims.org/).
+
 # Baobab LIMS
 
 Baobab LIMS is an open-source laboratory information management system (LIMS) software that will ensure that researchers can track the lifecycle of a biospecimen in the laboratory from receipt to storage and reuse. This software ensures that sufficient metadata is captured.
@@ -43,9 +45,6 @@ Baobab LIMS is an open-source laboratory information management system (LIMS) so
 _Baobab_ is a common name given to nine tree species in different countries in the world, mostly in Africa.
 
 Baobab LIMS written in Plone, a python framework known for its robustness, and inherits some modules from Bika LIMS.
-
-The latest information about Baobab LIMS community can be found on the [Baobab
-LIMS](https://baobablims.org/).
 
 # QuickStart with Docker
 
