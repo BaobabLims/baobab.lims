@@ -3,7 +3,7 @@
   <h1>
     <a href="https://github.com/BaobabLims/baobab.lims">
       <div>
-        <img src="https://baobablims.org/wp-content/uploads/2018/11/cropped-Baobab-LOGO.png" alt="senaite.lims" height="64" />
+        <img src="https://baobablims.org/wp-content/uploads/2018/11/cropped-Baobab-LOGO.png" alt="senaite.lims" height="164" />
       </div>
     </a>
   </h1>
