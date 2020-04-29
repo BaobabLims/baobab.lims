@@ -9,9 +9,6 @@
   </h1>
 
   <div>
-    <!--<a href="https://pypi.python.org/pypi/senaite.lims">
-      <img src="https://img.shields.io/pypi/v/senaite.lims.svg?style=flat-square" alt="pypi-version" />
-    </a> -->
     <a href="https://github.com/BaobabLims/baobab.lims/pulls">
       <img src="https://img.shields.io/github/issues-pr/BaobabLims/baobab.lims.svg?style=for-the-badge" alt="open PRs" />
     </a>
