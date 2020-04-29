@@ -64,7 +64,7 @@ Play with Docker will give 4 hours to try Baobab LIMS in the cloud.
 
 **Authentication: `admin:adminsecret`**
 
-## Using [`Docker`](https://docs.docker.com/install/):
+## Using [`Docker`](https://docs.docker.com/install/)
 
 [![Docker Repository on Quay](https://quay.io/repository/baobab-lims/baobab-lims/status "Docker Repository on Quay")](https://quay.io/repository/baobab-lims/baobab-lims)
 
@@ -99,8 +99,3 @@ $ docker-compose up -d
 - [User Manual](https://b3abiobank.sanbi.ac.za/demo/manual.pdf)
 - [Github Wiki](https://github.com/hocinebendou/baobab.lims/wiki)
 - [Online Documentation](https://baobab-lims.readthedocs.io/en/latest/)
-
-# Feedback and Support
-
-- Baobab LIMS Team on [Gitter](https://gitter.im/BaobabLims/Lobby)
-- Issues can be submitted via [GitHub Issues](https://github.com/BaobabLims/baobab.lims/issues)
