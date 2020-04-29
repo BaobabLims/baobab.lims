@@ -53,7 +53,7 @@ LIMS](https://baobablims.org/).
   <img src="https://img.shields.io/badge/Try%20in%20-PWD-blue?style=for-the-badge" />
 </a>
 
-Play with Docker will give 4 hours to try Baobab LIMS in the cloud.
+Play with Docker will give you 4 hours to try Baobab LIMS in the cloud.
 
 **[DockerHub](https://hub.docker.com/) account needed.**
 
