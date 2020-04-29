@@ -49,7 +49,7 @@ Baobab LIMS written in Plone, a python framework known for its robustness, and i
 The latest information about Baobab LIMS community can be found on the [Baobab
 LIMS](https://baobablims.org/).
 
-# QuickStart
+# QuickStart with Docker
 
 [![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](http://play-with-docker.com?stack=https://raw.githubusercontent.com/BaobabLims/baobab.lims/master/stack.yml)
 
@@ -85,17 +85,17 @@ $ docker-compose up -d
 - Check **`Baobab LIMS`** option, then click **`Install`** the form.
 - Authentication: **`admin:adminsecret`**
 
-## Standalone installation:
+# Standalone Installation
 
 - Baobab LIMS Standalone [installation](https://github.com/hocinebendou/baobab.lims/wiki/Installation)
 
-## Documentation
+# Documentation
 
 - [User Manual](https://b3abiobank.sanbi.ac.za/demo/manual.pdf)
 - [Github Wiki](https://github.com/hocinebendou/baobab.lims/wiki)
 - [Online Documentation](https://baobab-lims.readthedocs.io/en/latest/)
 
-## Feedback and Support
+# Feedback and Support
 
 - Baobab LIMS Team on [Gitter](https://gitter.im/BaobabLims/Lobby)
 - Issues can be submitted via [GitHub Issues](https://github.com/BaobabLims/baobab.lims/issues)
