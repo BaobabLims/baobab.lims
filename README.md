@@ -15,18 +15,27 @@
       <img src="https://img.shields.io/pypi/v/senaite.lims.svg?style=flat-square" alt="pypi-version" />
     </a> -->
     <a href="https://github.com/BaobabLims/baobab.lims/pulls">
-      <img src="https://img.shields.io/github/issues-pr/senaite/senaite.lims.svg?style=flat-square" alt="open PRs" />
+      <img src="https://img.shields.io/github/issues-pr/BaobabLims/baobab.lims.svg?style=for-the-badge" alt="open PRs" />
     </a>
     <a href="https://github.com/BaobabLims/baobab.lims/issues">
-      <img src="https://img.shields.io/github/issues/senaite/senaite.lims.svg?style=flat-square" alt="open Issues" />
+      <img src="https://img.shields.io/github/issues/BaobabLims/baobab.lims?style=for-the-badge" alt="open Issues" />
     </a>
     <a href="https://github.com/BaobabLims/baobab.lims">
-      <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="pr" />
+      <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge" alt="pr" />
     </a>
-    <!--
+    <a href="https://travis-ci.org/github/BaobabLims/baobab.lims">
+       <img src="https://img.shields.io/travis/BaobabLims/baobab.lims/master?style=for-the-badge" alt="travis" />
+    </a>
+    <a href="https://github.com/BaobabLims/baobab.lims">
+       <img src="https://img.shields.io/github/languages/top/BaobabLims/baobab.lims?style=for-the-badge" alt="language" />
+    </a>
+    <a href="https://github.com/BaobabLims/baobab.lims">
+        <img src="https://img.shields.io/github/license/BaobabLims/baobab.lims?style=for-the-badge" alt="license" />
+    </a>
     <a href="https://www.baobab.org">
-      <img src="https://img.shields.io/badge/Made%20for%20SENAITE-%E2%AC%A1-lightgrey.svg" alt="Made for SENAITE" />
-    </a>-->
+      <img src="https://img.shields.io/badge/Developed%20by-SANBI-yellowgreen" alt="Made by SANBI for LIMS Community" />
+    </a>
+  
   </div>
 </div>
 
