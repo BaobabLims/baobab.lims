@@ -8,8 +8,6 @@
     </a>
   </h1>
 
-  <p>Installation Package</p>
-
   <div>
     <!--<a href="https://pypi.python.org/pypi/senaite.lims">
       <img src="https://img.shields.io/pypi/v/senaite.lims.svg?style=flat-square" alt="pypi-version" />
