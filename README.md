@@ -33,9 +33,8 @@
         <img src="https://img.shields.io/github/license/BaobabLims/baobab.lims?style=for-the-badge" alt="license" />
     </a>
     <a href="https://www.baobab.org">
-      <img src="https://img.shields.io/badge/Developed%20by-SANBI-yellowgreen" alt="Made by SANBI for LIMS Community" />
-    </a>
-  
+      <img src="https://img.shields.io/badge/Developed%20by-SANBI-yellowgreen?style=for-the-badge" alt="Made by SANBI for LIMS Community" />
+    </a>  
   </div>
 </div>
 
