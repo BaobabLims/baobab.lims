@@ -51,17 +51,15 @@ LIMS](https://baobablims.org/).
 
 # QuickStart
 
-## Using PWD
+[![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](http://play-with-docker.com?stack=https://raw.githubusercontent.com/BaobabLims/baobab.lims/master/stack.yml)
 
-Click the _Try in PWD_ button below to get 4 hours to try Baobab LIMS in the cloud.
+Click the _Try in PWD_ button above to get 4 hours to try Baobab LIMS in the cloud.
 
 **[DockerHub](https://hub.docker.com/) account needed.**
 
 **Authentication: `admin:adminsecret`**
 
-[![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](http://play-with-docker.com?stack=https://raw.githubusercontent.com/BaobabLims/baobab.lims/master/stack.yml)
-
-## Using our [`docker`](https://docs.docker.com/install/) container:
+## Using [`Docker`](https://docs.docker.com/install/):
 
 [![Docker Repository on Quay](https://quay.io/repository/baobab-lims/baobab-lims/status "Docker Repository on Quay")](https://quay.io/repository/baobab-lims/baobab-lims)
 
