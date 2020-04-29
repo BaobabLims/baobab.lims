@@ -92,9 +92,9 @@ $ docker-compose up -d
 
 # Standalone Installation
 
-- Baobab LIMS Standalone [installation](https://github.com/hocinebendou/baobab.lims/wiki/Installation)
+Baobab LIMS Standalone [installation](https://github.com/hocinebendou/baobab.lims/wiki/Installation)
 
-# Documentation
+# Further Documentation
 
 - [User Manual](https://b3abiobank.sanbi.ac.za/demo/manual.pdf)
 - [Github Wiki](https://github.com/hocinebendou/baobab.lims/wiki)
