@@ -34,7 +34,10 @@
     </a>
     <a href="https://www.baobab.org">
       <img src="https://img.shields.io/badge/Developed%20by-SANBI-yellowgreen?style=for-the-badge" alt="Made by SANBI for LIMS Community" />
-    </a>  
+    </a>
+    <a href="https://gitter.im/BaobabLims/Lobby">
+      <img src="https://img.shields.io/gitter/room/BaobabLims/baobab.lims?style=for-the-badge" alt="Gitter"/>
+    </a>
   </div>
 </div>
 
@@ -51,9 +54,11 @@ LIMS](https://baobablims.org/).
 
 # QuickStart with Docker
 
-[![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](http://play-with-docker.com?stack=https://raw.githubusercontent.com/BaobabLims/baobab.lims/master/stack.yml)
+<a href="http://play-with-docker.com?stack=https://raw.githubusercontent.com/BaobabLims/baobab.lims/master/stack.yml">
+  <img src="https://img.shields.io/badge/Try%20in%20-PWD-blue" />
+</a>
 
-Click the _Try in PWD_ button above to get 4 hours to try Baobab LIMS in the cloud.
+Play with Docker will give 4 hours to try Baobab LIMS in the cloud.
 
 **[DockerHub](https://hub.docker.com/) account needed.**
 
