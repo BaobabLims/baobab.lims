@@ -8,7 +8,7 @@
     </a>
   </h1>
 
-  <p>Baobab LIMS Meta Installation Package</p>
+  <p>Installation Package</p>
 
   <div>
     <!--<a href="https://pypi.python.org/pypi/senaite.lims">
