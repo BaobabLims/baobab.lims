@@ -55,7 +55,7 @@ LIMS](https://baobablims.org/).
 # QuickStart with Docker
 
 <a href="http://play-with-docker.com?stack=https://raw.githubusercontent.com/BaobabLims/baobab.lims/master/stack.yml">
-  <img src="https://img.shields.io/badge/Try%20in%20-PWD-blue" />
+  <img src="https://img.shields.io/badge/Try%20in%20-PWD-blue?style=for-the-badge" />
 </a>
 
 Play with Docker will give 4 hours to try Baobab LIMS in the cloud.
