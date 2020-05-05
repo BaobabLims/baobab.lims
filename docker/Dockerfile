@@ -1,6 +1,6 @@
 FROM plone:4.3.11
 
-LABEL MAINTAINERS="thoba@sanbi.ac.za and hocine@sanbi.ac.za"
+LABEL MAINTAINERS="support@baobablims.org"
 
 USER root
 RUN apt-get update \
@@ -12,6 +12,7 @@ RUN apt-get update \
     && usermod -aG sudo plone
 
 USER plone
+
 # Clone baobablims repositories 
 RUN git clone https://github.com/BaobabLims/baobab.lims.git \
     && git clone https://github.com/BaobabLims/bika.lims.git \
