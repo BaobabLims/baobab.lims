@@ -39,5 +39,7 @@ before_install:
 install:
   - bin/buildout -n -t 3 -c travis.cfg 
 script:
-  - bin/test -m baobab.lims --layer=baobab.lims.testing.BaobabTestingLayer:Functional
-  - bin/test test_textual_doctests
+#  - bin/test -m baobab.lims --layer=baobab.lims.testing.BaobabTestingLayer:Functional
+#  - bin/test test_textual_doctests
+  - bin/instance test -m baobab.lims --layer=baobab.lims.testing.BaobabTestingLayer:Functional
+  - bin/instance test test_textual_doctests
