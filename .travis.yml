@@ -41,5 +41,5 @@ install:
 script:
   - bin/test -m baobab.lims --layer=baobab.lims.testing.BaobabTestingLayer:Functional
   - bin/test test_textual_doctests
-  - bin/instance fg
+  - bin/instance bg
   
