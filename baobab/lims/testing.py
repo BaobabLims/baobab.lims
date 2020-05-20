@@ -17,7 +17,7 @@ from plone.app.robotframework.remote import RemoteLibraryLayer
 from plone.app.robotframework import AutoLogin, Content
 
 
-class SanbiTestLayer(PloneSandboxLayer):
+class BaobabTestLayer(PloneSandboxLayer):
     defaultBases = (PLONE_FIXTURE,)
 
     def setUpZope(self, app, configurationContext):
@@ -99,23 +99,28 @@ class SanbiTestLayer(PloneSandboxLayer):
         logout()
 
 
-SANBIO_TEST_FIXTURE = SanbiTestLayer()
+BAOBAB_TEST_FIXTURE = BaobabTestLayer()
 
-SANBI_FUNCTIONAL_FIXTURE = SanbiTestLayer()
-SANBI_FUNCTIONAL_FIXTURE['getBrowser'] = getBrowser
-SANBI_FUNCTIONAL_TESTING = FunctionalTesting(
-    bases=(SANBI_FUNCTIONAL_FIXTURE,),
-    name="SanbiTestingLayer:Functional"
+# defining a shared layer
+BAOBAB_FUNCTIONAL_FIXTURE = BaobabTestLayer()
+BAOBAB_FUNCTIONAL_FIXTURE['getBrowser'] = getBrowser
+
+# layer
+BAOBAB_FUNCTIONAL_TESTING = FunctionalTesting(
+    bases=(BAOBAB_FUNCTIONAL_FIXTURE,),
+    name="BaobabTestingLayer:Custom"
 )
 
+#layer
 REMOTE_FIXTURE = RemoteLibraryLayer(
     libraries=(AutoLogin, Content, RemoteKeywords,),
     name="RemoteLibrary:RobotRemote"
 )
 
-SANBI_ROBOT_TESTING = FunctionalTesting(
-    bases=(SANBI_FUNCTIONAL_FIXTURE,
+#layer
+BAOBAB_SITE_SETUP_MAIL_ROBOT_TESTING = FunctionalTesting(
+    bases=(BAOBAB_FUNCTIONAL_FIXTURE,
            REMOTE_FIXTURE,
            z2.ZSERVER_FIXTURE),
-    name="SanbiTestingLayer:Robot"
+    name="BaobabTestingLayer:SiteSetUpMailRobot"
 )
