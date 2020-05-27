@@ -89,12 +89,12 @@ class BaobabTestLayer(PloneSandboxLayer):
                     portal.clients.manage_setLocalRoles(username, ['Owner', ])
 
         ## load test data
-        # from bika.lims.exportimport.load_setup_data import LoadSetupData
-        # self.request = makerequest(portal.aq_parent).REQUEST
-        # self.request.form['setupexisting'] = 1
-        # self.request.form['existing'] = "baobab.lims:test"
-        # lsd = LoadSetupData(portal, self.request)
-        # lsd()
+        #from bika.lims.exportimport.load_setup_data import LoadSetupData
+        #self.request = makerequest(portal.aq_parent).REQUEST
+        #self.request.form['setupexisting'] = 1
+        #self.request.form['existing'] = "baobab.lims:test"
+        #lsd = LoadSetupData(portal, self.request)
+        #lsd()
 
         logout()
 
@@ -111,16 +111,32 @@ BAOBAB_FUNCTIONAL_TESTING = FunctionalTesting(
     name="BaobabTestingLayer:Custom"
 )
 
-#layer
+#Remote Library layer
 REMOTE_FIXTURE = RemoteLibraryLayer(
     libraries=(AutoLogin, Content, RemoteKeywords,),
     name="RemoteLibrary:RobotRemote"
 )
 
-#layer
-BAOBAB_SITE_SETUP_MAIL_ROBOT_TESTING = FunctionalTesting(
+#Setup - Mail layer
+SETUP_MAIL_TESTING = FunctionalTesting(
     bases=(BAOBAB_FUNCTIONAL_FIXTURE,
            REMOTE_FIXTURE,
            z2.ZSERVER_FIXTURE),
     name="BaobabTestingLayer:SiteSetUpMailRobot"
+)
+
+#Setup - Lab layer
+SETUP_LAB_TESTING = FunctionalTesting(
+    bases=(BAOBAB_FUNCTIONAL_FIXTURE,
+           REMOTE_FIXTURE,
+           z2.ZSERVER_FIXTURE),
+    name="BaobabTestingLayer:SiteSetUpLabRobot"
+)
+
+#Setup - Supplier layer
+SETUP_SUPPLIER_TESTING = FunctionalTesting(
+    bases=(BAOBAB_FUNCTIONAL_FIXTURE,
+           REMOTE_FIXTURE,
+           z2.ZSERVER_FIXTURE),
+    name="BaobabTestingLayer:SiteSetUpSupplierRobot"
 )

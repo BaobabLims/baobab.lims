@@ -12,43 +12,51 @@ Variables         ../../variables.py
 Library           DebugLibrary
 
 *** Variables ***
-
-${ADMIN_ROLE}  Site Administrator
+${USER_ROLE}  admin
+${USER}  admin
+${PASSWORD}    secret
 
 *** Test Cases ***
-valid_email_address
-    Enable autologin as     ${ADMIN_ROLE}
+MAIL SETTINGS SETUP
+    #Enable autologin as     ${USER_ROLE}
+    Login    ${USER}    ${PASSWORD}
+    Go To Mail Settings
+    Valid Email Address
+    Invalid Email Address
+    
+*** Keywords ***
+Go To Mail Settings
     Go to    ${PLONEURL}/@@overview-controlpanel
     wait until page contains   Configuration area for Plone and add-on Products.
     Go to    ${PLONEURL}/@@mail-controlpanel 
     wait until page contains    Mail settings
-    Input Text    form.smtp_host    smtp.sanbi.ac.za
+
+
+Email Form Parameters   
     Input Text    form.smtp_port    55
     Input Text    form.smtp_userid    test@sanbi.ac.za
     Input Text    form.smtp_pass    123qwesecret
     Input Text    form.email_from_name    Test Postmaster
     Input Text    form.email_from_address    info@testbaoab.org
+
+
+Valid Email Address  
+    Go To Mail Settings
+    Input Text    form.smtp_host    smtp.sanbi.ac.za
+    Email Form Parameters
     Click Button    Save
     wait until page contains    Changes saved.
     Go to    ${PLONEURL}/@@overview-controlpanel
     
-invalid_email_address
-    Enable autologin as     ${ADMIN_ROLE}
-    Go to    ${PLONEURL}/@@overview-controlpanel
-    wait until page contains   Configuration area for Plone and add-on Products.
-    Go to    ${PLONEURL}/@@mail-controlpanel 
-    wait until page contains    Mail settings
+
+Invalid Email Address
+    Go To Mail Settings
     Input Text    form.smtp_host    ${EMPTY}
-    Input Text    form.smtp_port    55
-    Input Text    form.smtp_userid    test
-    Input Text    form.smtp_pass    123qwesecret
-    Input Text    form.email_from_name    Test Postmaster
-    Input Text    form.email_from_address    info@testbaoab.org
+    Email Form Parameters
     Click Button    Save
     wait until page contains    There were errors
     Go to    ${PLONEURL}/@@overview-controlpanel
 
-*** Keywords ***
 Start browser
     Open browser    ${PLONEURL}    chrome
     Set selenium speed    ${SELENIUM_SPEED}
