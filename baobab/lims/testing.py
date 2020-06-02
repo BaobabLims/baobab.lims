@@ -98,18 +98,9 @@ class BaobabTestLayer(PloneSandboxLayer):
 
         logout()
 
-
-BAOBAB_TEST_FIXTURE = BaobabTestLayer()
-
-# defining a shared layer
-BAOBAB_FUNCTIONAL_FIXTURE = BaobabTestLayer()
-BAOBAB_FUNCTIONAL_FIXTURE['getBrowser'] = getBrowser
-
-# layer
-BAOBAB_FUNCTIONAL_TESTING = FunctionalTesting(
-    bases=(BAOBAB_FUNCTIONAL_FIXTURE,),
-    name="BaobabTestingLayer:Custom"
-)
+# defining a shared layer/fixture
+BAOBAB_SITE_SETUP_FIXTURE = BaobabTestLayer()
+BAOBAB_SITE_SETUP_FIXTURE['getBrowser'] = getBrowser
 
 #Remote Library layer
 REMOTE_FIXTURE = RemoteLibraryLayer(
@@ -117,25 +108,37 @@ REMOTE_FIXTURE = RemoteLibraryLayer(
     name="RemoteLibrary:RobotRemote"
 )
 
-#Setup - Mail layer
-SETUP_MAIL_TESTING = FunctionalTesting(
-    bases=(BAOBAB_FUNCTIONAL_FIXTURE,
+#Define Setup Layer
+SITE_SETUP_LAYER = FunctionalTesting(
+    bases=(BAOBAB_SITE_SETUP_FIXTURE,
+           REMOTE_FIXTURE,
+           z2.ZSERVER_FIXTURE),
+    name="BaobabTestingLayer:SiteSetUpRobot"
+)
+
+#Define User Manual Layer
+
+
+#------------------
+##Setup - Mail (FunctionalTesting Layer Instance)
+SETUP_MAIL_LAYER = FunctionalTesting(
+    bases=(BAOBAB_SITE_SETUP_FIXTURE,
            REMOTE_FIXTURE,
            z2.ZSERVER_FIXTURE),
     name="BaobabTestingLayer:SiteSetUpMailRobot"
 )
 
-#Setup - Lab layer
-SETUP_LAB_TESTING = FunctionalTesting(
-    bases=(BAOBAB_FUNCTIONAL_FIXTURE,
+#Setup - Lab (FunctionalTesting Layer Instance)
+SETUP_LAB_LAYER = FunctionalTesting(
+    bases=(BAOBAB_SITE_SETUP_FIXTURE,
            REMOTE_FIXTURE,
            z2.ZSERVER_FIXTURE),
     name="BaobabTestingLayer:SiteSetUpLabRobot"
 )
 
-#Setup - Supplier layer
-SETUP_SUPPLIER_TESTING = FunctionalTesting(
-    bases=(BAOBAB_FUNCTIONAL_FIXTURE,
+#Setup - Supplier (FunctionalTesting Layer Instance)
+SETUP_SUPPLIER_LAYER = FunctionalTesting(
+    bases=(BAOBAB_SITE_SETUP_FIXTURE,
            REMOTE_FIXTURE,
            z2.ZSERVER_FIXTURE),
     name="BaobabTestingLayer:SiteSetUpSupplierRobot"
