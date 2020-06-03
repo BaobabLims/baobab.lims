@@ -3,19 +3,15 @@ import robotsuite
 import os
 from pkg_resources import resource_listdir
 from plone.testing import layered
-
-from baobab.lims.testing import SETUP_MAIL_LAYER
-from baobab.lims.testing import SETUP_LAB_LAYER
-from baobab.lims.testing import SETUP_SUPPLIER_LAYER
+from baobab.lims.testing import SITE_SETUP_LAYER
+from baobab.lims.testing import USER_MANUAL_LAYER
 
 
-layers = {'mail' : SETUP_MAIL_LAYER, 
-          'lab'  : SETUP_LAB_LAYER,
-          'supplier': SETUP_SUPPLIER_LAYER}
- 
+layers = {'site_setup': SITE_SETUP_LAYER, 'user_manual' : USER_MANUAL_LAYER}
+
 def get_robot_tests(cat):
     tests = []
-    dir = os.path.dirname(os.path.abspath(__file__))
+    dir = os.path.dirname(os. path.abspath(__file__))
     path = "{}/{}".format(dir, cat)
     for item in os.listdir(path):
         if os.path.isdir('{}/{}'.format(path, item)):
@@ -29,10 +25,12 @@ robots = {'site_setup': get_robot_tests('site_setup'),
 def test_suite():
     suite = unittest.TestSuite()
     for cat in robots:
-        for robot in robots[cat]:            
-            rb = robot[:-11] #testsuite name
+        for robot in robots[cat]:  
+            rb = robot[5:len(robot)-6] #testsuite name
             suite.addTests([
                 layered(robotsuite.RobotTestSuite(robot, package='baobab.lims.tests.{}.{}'.format(cat, rb)),
-                        layer=layers[rb]),
+                        layer=layers[cat]),
             ])   
+            #import pdb
+            #pdb.set_trace()             
     return suite

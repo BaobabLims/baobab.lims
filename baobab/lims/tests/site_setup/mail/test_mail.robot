@@ -17,7 +17,7 @@ ${USER}  admin
 ${PASSWORD}    secret
 
 *** Test Cases ***
-MAIL SETTINGS SETUP
+MAIL SETTINGS
     #Enable autologin as     ${USER_ROLE}
     Login    ${USER}    ${PASSWORD}
     Go To Mail Settings

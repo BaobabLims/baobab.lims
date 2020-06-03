@@ -1,6 +1,6 @@
 *** Settings ***
 
-Documentation    Generally useful keywords for Bika tests.
+Documentation    Generally useful keywords for Baobab tests.
 ...              To include this file, use this:
 ...              *** settings ***
 ...              Resource  keywords.txt

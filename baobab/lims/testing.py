@@ -108,38 +108,18 @@ REMOTE_FIXTURE = RemoteLibraryLayer(
     name="RemoteLibrary:RobotRemote"
 )
 
-#Define Setup Layer
+# Site-Setup Layer
 SITE_SETUP_LAYER = FunctionalTesting(
     bases=(BAOBAB_SITE_SETUP_FIXTURE,
            REMOTE_FIXTURE,
            z2.ZSERVER_FIXTURE),
-    name="BaobabTestingLayer:SiteSetUpRobot"
+    name="BaobabTestingLayer:site_setup"
 )
 
-#Define User Manual Layer
-
-
-#------------------
-##Setup - Mail (FunctionalTesting Layer Instance)
-SETUP_MAIL_LAYER = FunctionalTesting(
+# User manual Layer
+USER_MANUAL_LAYER = FunctionalTesting(
     bases=(BAOBAB_SITE_SETUP_FIXTURE,
            REMOTE_FIXTURE,
            z2.ZSERVER_FIXTURE),
-    name="BaobabTestingLayer:SiteSetUpMailRobot"
-)
-
-#Setup - Lab (FunctionalTesting Layer Instance)
-SETUP_LAB_LAYER = FunctionalTesting(
-    bases=(BAOBAB_SITE_SETUP_FIXTURE,
-           REMOTE_FIXTURE,
-           z2.ZSERVER_FIXTURE),
-    name="BaobabTestingLayer:SiteSetUpLabRobot"
-)
-
-#Setup - Supplier (FunctionalTesting Layer Instance)
-SETUP_SUPPLIER_LAYER = FunctionalTesting(
-    bases=(BAOBAB_SITE_SETUP_FIXTURE,
-           REMOTE_FIXTURE,
-           z2.ZSERVER_FIXTURE),
-    name="BaobabTestingLayer:SiteSetUpSupplierRobot"
+    name="BaobabTestingLayer:user_manual"
 )

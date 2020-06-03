@@ -18,7 +18,7 @@ ${USER}  admin
 ${PASSWORD}    secret
 
 *** Test Cases ***
-LAB SETTINGS SETUP
+LAB SETTINGS
     #Enable autologin as     ${USER_ROLE}
     Login    ${USER}    ${PASSWORD}
     LAB Settings Links
