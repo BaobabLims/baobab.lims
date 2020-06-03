@@ -33,13 +33,13 @@ before_install:
   - echo "[buildout]" > $TRAVIS_BUILD_DIR/default.cfg
   - echo "download-cache = $TRAVIS_BUILD_DIR/buildout-cache/downloads" >> $TRAVIS_BUILD_DIR/default.cfg
   - echo "eggs-directory = $TRAVIS_BUILD_DIR/buildout-cache/eggs" >> $TRAVIS_BUILD_DIR/default.cfg
-  - virtualenv .
+  - virtualenv .6
   #- source bin/activate
   - bin/pip install --upgrade pip setuptools zc.buildout
 install:
   - bin/buildout -n -t 3 -c travis.cfg 
 script:
-  - bin/test -m baobab.lims --layer=baobab.lims.testing.BaobabTestingLayer:Functional
-  - bin/test test_textual_doctests
-  - bin/instance bg
+  - bin/test -m baobab.lims --layer=baobab.lims.testing.BaobabTestingLayer:site_setup
+  #- bin/test test_textual_doctests
+  #- bin/instance bg
   
