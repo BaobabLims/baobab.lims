@@ -14,20 +14,19 @@
 
   <include file="permissions.zcml" />
 
-  <i18n:registerTranslations directory="locales" />
-
   <include package=".adapters"/>
+  <include package=".browser"/>
   <include package=".content"/>
   <include package=".extenders"/>
-  <include package=".browser"/>
   <include package=".controlpanel"/>
+  <!--<include package=".jsonapi" /> -->
   <include package=".reports"/>
   <include package=".static"/>
-  <include package=".setupdata"/>
   <include package=".monkey"/>
   <include package=".subscribers"/>
-  <include package=".jsonapi" />
+  <include package=".setupdata"/>
 
+  <i18n:registerTranslations directory="locales" />
 
   <include file="profiles.zcml" />
 

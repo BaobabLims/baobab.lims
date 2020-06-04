@@ -1,5 +1,5 @@
 from zope.component import getUtility
-from bika.lims.numbergenerator import INumberGenerator
+#from bika.lims.numbergenerator import INumberGenerator
 
 from bika.lims.idserver import generateUniqueId as generate
 
