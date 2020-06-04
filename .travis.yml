@@ -36,6 +36,7 @@ before_install:
   - virtualenv .
   - source bin/activate
   - bin/pip install --upgrade pip setuptools zc.buildout
+  - bin/pip install simplejson xlsxwriter
 install:
   - bin/buildout -n -t 3 -c travis.cfg 
 script:
