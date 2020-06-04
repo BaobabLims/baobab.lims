@@ -25,9 +25,9 @@ before_script:
   ### Install the latest chromedriver manually from https://sites.google.com/a/chromium.org/chromedriver/downloads
   # NB: must be setuid root to move this executable
   #     => commented out, since the chrome browser exits unexpeted and the robot tests are not passing anyhow
-  #- wget http://chromedriver.storage.googleapis.com/2.26/chromedriver_linux64.zip
-  #- unzip chromedriver_linux64.zip
-  #- sudo mv chromedriver /usr/bin/
+  - wget http://chromedriver.storage.googleapis.com/2.26/chromedriver_linux64.zip
+  - unzip chromedriver_linux64.zip
+  - sudo mv chromedriver /usr/bin/
   ###
   - export DISPLAY=99.0
   #- sh -e /etc/init.d/xvfb start
