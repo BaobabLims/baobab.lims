@@ -44,6 +44,4 @@ install:
   - bin/buildout -n -t 3 -c travis.cfg 
 script:
   - bin/test -m baobab.lims --layer=baobab.lims.testing.BaobabTestingLayer:site_setup
-  #- bin/test test_textual_doctests
-  #- bin/instance bg
   
