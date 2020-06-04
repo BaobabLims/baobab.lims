@@ -30,8 +30,6 @@ class BaobabTestLayer(PloneSandboxLayer):
         self.loadZCML(package=collective.js.jqueryui)
         self.loadZCML(package=archetypes.schemaextender)
         self.loadZCML(package=bika.lims)
-        #import pdb
-        #pdb.set_trace()
         self.loadZCML(package=baobab.lims)
 
         # Required by Products.CMFPlone:plone-content
@@ -52,8 +50,6 @@ class BaobabTestLayer(PloneSandboxLayer):
             default_view='folder_listing')
 
         applyProfile(portal, 'bika.lims:default')
-        #import pdb
-        #pdb.set_trace()
         applyProfile(portal, 'baobab.lims:default')
 
         # Add some test users
