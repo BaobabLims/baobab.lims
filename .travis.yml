@@ -9,7 +9,7 @@ python:
 services:
     - xvfb
 addons:
-    apt:
+  apt:
     packages:
     - libpcre3
     - libpcre3-dev
@@ -20,7 +20,7 @@ addons:
     # needed libs for chromedriver
     - libnss3-dev
     - libgconf-2-4
-   chrome: stable
+  chrome: stable
 before_script:
   ### Install the latest chromedriver manually from https://sites.google.com/a/chromium.org/chromedriver/downloads
   # NB: must be setuid root to move this executable
