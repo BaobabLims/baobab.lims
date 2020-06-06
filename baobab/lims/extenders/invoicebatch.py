@@ -28,6 +28,7 @@ class InvoiceBatchSchemaExtender(object):
         ExtReferenceField(
             'Project',
             allowed_types=('Project',),
+            required=True,
             relationship='InvoiceProject',
             referenceClass=HoldingReference,
             widget=bika_ReferenceWidget(
@@ -230,6 +231,11 @@ def ObjectModifiedEventHandler(instance, event):
         services = instance.Schema()['Services'].get(instance)
         field = instance.getField('Project')
         project = field.getAccessor(instance)()
+        if project is None:
+            # Invoice created from the analysisrequest view
+            # Project is 2 parents up
+            project = instance.aq_parent.aq_parent
+
         client = project.aq_parent
         # field.getMutator(instance)('Storage')
 
