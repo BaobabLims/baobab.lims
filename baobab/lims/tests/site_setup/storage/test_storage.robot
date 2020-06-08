@@ -31,12 +31,15 @@ STORAGE SETUP
     
 *** Keywords ***
 Add Valid Storage  
+    Add Valid Department
     Go to  ${PLONEURL}/storage
     Wait until page contains element  css=.expandedBlockCollapsible
     Input text  units-prefix-text  Room
     Click element  name=units_type
     Click element  css=#ui-active-menuitem .cg-DivItem:nth-child(1)
-    Click element  id=units_department
+    Click element  name=units_department
+    Click element  css=#ui-active-menuitem .cg-DivItem:nth-child(1)
+    #Select From List By Label  id=units_department  My Test Department
     Click element  add_units_submitted
     Wait until page contains  Storage units created.
 
@@ -46,7 +49,7 @@ Add Valid Storage
     Click element  name=units_type
     Click element  css=#ui-active-menuitem .cg-DivItem:nth-child(1)
     Input text  units_nr_items  2
-    Click element  id=units_department
+    #Click element  id=units_department
     Click element  add_units_submitted
     Wait until page contains  Storage units created.
 
@@ -56,7 +59,7 @@ Add Valid Storage
     Click element  name=units_type
     Click element  css=#ui-active-menuitem .cg-DivItem:nth-child(1)
     Input text  units_nr_items  6
-    Click element  id=units_department
+    #Click element  id=units_department
     Click element  add_units_submitted
     Wait until page contains  Storage units created.
     Click Link  Shelf 1
@@ -65,7 +68,7 @@ Add Valid Storage
     Click element  name=units_type
     Click element  css=#ui-active-menuitem .cg-DivItem:nth-child(1)
     Input text  units_nr_items  2
-    Click element  id=units_department
+    #Click element  id=units_department
     Click element  add_units_submitted
     Wait until page contains  Storage units created.
     Add Managed Storage

@@ -35,7 +35,8 @@ LAB Settings Links
     Go to    ${PLONEURL}/@@overview-controlpanel
     wait until page contains   Configuration area for Plone and add-on Products.
     Go to    ${PLONEURL}/bika_setup/laboratory/base_edit    
-    wait until page contains   Laboratory Supervisor
+    wait until page contains   Laboratory
+    
     
 Default Lab Form Parameters   
     Input Text    TaxNumber    123456777
@@ -97,44 +98,20 @@ Login Form Details
 
 Adding Valid Login Details
     click element    //a[text()='Login details']
-    wait until page contains    Create a new User
+    wait until page contains    Login details
     Input Text    username    dominique_user
     Login Form Details
     Click Button    Save
-    wait until page contains    SMTP server disconnected. User creation aborted.
+    wait until page contains    SMTP server disconnected.
  
 Adding InValid Login Details
     click element    //a[text()='Login details']
-    wait until page contains    Create a new User
+    wait until page contains    Login details
     Input Text    username    ${EMPTY}
     Login Form Details
     Click Button    Save
     wait until page contains    username: Input is required but not given.
          
-Add Valid Department
-    Go to    ${PLONEURL}/bika_setup/bika_departments
-    wait until page contains   Lab Departments
-    Click link    Add
-    Input Text    title    My Test Department
-    Department Form Details
-    Click Button    Save
-    wait until page contains    Changes saved.
-    Go To    ${PLONEURL}/bika_setup/bika_departments
-    wait until page contains   My Test Department
-    
-Add InValid Department
-    Go to    ${PLONEURL}/bika_setup/bika_departments
-    wait until page contains   Lab Departments
-    Click link    Add
-    Input Text    title    ${EMPTY}
-    Department Form Details
-    Click Button    Save
-    wait until page contains    Please correct the indicated errors.
-    
-Department Form Details
-    Input Text    description    The Baobab LIMS Test Department 
-    #select from dropdown    Manager:list    Dominique Elizabeth Johnson
-
 Start browser
     Open browser    ${PLONEURL}    chrome
     Set selenium speed    ${SELENIUM_SPEED}

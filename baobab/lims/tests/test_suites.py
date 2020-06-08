@@ -30,7 +30,5 @@ def test_suite():
             suite.addTests([
                 layered(robotsuite.RobotTestSuite(robot, package='baobab.lims.tests.{}.{}'.format(cat, rb)),
                         layer=layers[cat]),
-            ])   
-            #import pdb
-            #pdb.set_trace()             
+            ])              
     return suite

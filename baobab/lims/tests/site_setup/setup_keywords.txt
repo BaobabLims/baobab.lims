@@ -6,7 +6,30 @@ Documentation    Generally useful keywords for Baobab tests.
 ...              Resource  setup_keywords.txt
 
 *** Keywords ***
-
+Add Valid Department
+    Go to    ${PLONEURL}/bika_setup/bika_departments
+    wait until page contains   Lab Departments
+    Click link    Add
+    Input Text    title    My Test Department
+    Department Form Details
+    Click Button    Save
+    wait until page contains    Changes saved.
+    Go To    ${PLONEURL}/bika_setup/bika_departments
+    wait until page contains   My Test Department
+    
+Add InValid Department
+    Go to    ${PLONEURL}/bika_setup/bika_departments
+    wait until page contains   Lab Departments
+    Click link    Add
+    Input Text    title    ${EMPTY}
+    Department Form Details
+    Click Button    Save
+    wait until page contains    Please correct the indicated errors.
+    
+Department Form Details
+    Input Text    description    The Baobab LIMS Test Department 
+    #select from dropdown    Manager:list    Dominique Elizabeth Johnson
+    
 Add Valid Supplier  
     Go to    ${PLONEURL}/@@overview-controlpanel
     wait until page contains   Configuration area for Plone and add-on Products.
