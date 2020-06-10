@@ -40,9 +40,6 @@ before_install:
   - source bin/activate
   - bin/pip install --upgrade pip setuptools zc.buildout
   - bin/pip install simplejson xlsxwriter
-  #- mkdir -p src/
-  #- git clone https://github.com/BaobabLims/bika.lims.git src/bika.lims
-  #- git clone https://github.com/BaobabLims/graphite.theme.git src/graphite.theme 
 install:
   - bin/buildout -n -t 3 -c travis.cfg 
 script:
