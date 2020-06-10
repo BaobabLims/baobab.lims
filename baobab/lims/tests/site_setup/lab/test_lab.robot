@@ -5,6 +5,7 @@ Library           BuiltIn
 Library           Selenium2Library    timeout=5    implicit_wait=0.3
 Library           String
 Resource          ../../keywords.txt
+Resource          ../setup_keywords.txt
 Resource          plone/app/robotframework/selenium.robot
 Library           Remote    ${PLONEURL}/RobotRemote
 Variables         plone/app/testing/interfaces.py
