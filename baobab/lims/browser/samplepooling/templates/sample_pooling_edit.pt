@@ -59,12 +59,12 @@
                 <li class="formTab firstFormTab" class="selected">
                     <button id="fieldsetlegend-pooling-info" type="button" style="background-color: #ffffff; padding: 6px; border-radius: 7pt 7pt 0pt 0pt;"><span>Pooling Information</span></button>
                 </li>
-                <li class="formTab">
-                    <button id="fieldsetlegend-input-samples" type="button" style="background-color: #ccc; padding: 6px; border-radius: 7pt 7pt 0pt 0pt;">Input Samples</button>
-                </li>
-                <li class="formTab">
-                    <button id="fieldsetlegend-result-samples" type="button" style="background-color: #ccc; padding: 6px; border-radius: 7pt 7pt 0pt 0pt;">Resultant Samples</button>
-                </li>
+                <!--?<li class="formTab">-->
+                    <!--?<button id="fieldsetlegend-input-samples" type="button" style="background-color: #ccc; padding: 6px; border-radius: 7pt 7pt 0pt 0pt;">Input Samples</button>-->
+                <!--?</li>-->
+                <!--?<li class="formTab">-->
+                    <!--?<button id="fieldsetlegend-result-samples" type="button" style="background-color: #ccc; padding: 6px; border-radius: 7pt 7pt 0pt 0pt;">Resultant Samples</button>-->
+                <!--?</li>-->
             </ul>
 
          <form id="sample_pooling_edit_form" name="sample_pooling_edit_info_form" method="POST">
@@ -120,27 +120,27 @@
                 </table>
             </fieldset>
 
-            <fieldset id="fieldset-delivery-info" class="tabcontent" style="display: none">
+            <!--?<fieldset id="fieldset-delivery-info" class="tabcontent" style="display: none">-->
                 <!--?<legend id="fieldsetlegend-delivery-info">Delivery info-->
                 <!--?</legend>-->
-                <table summary="Project info" class="listing add nosort" cellpadding="0" cellspacing="0" style="width: 100%">
-                    <thead>
+                <!--?<table summary="Project info" class="listing add nosort" cellpadding="0" cellspacing="0" style="width: 100%">-->
+                    <!--?<thead>-->
 
 
-                    </thead>
-                </table>
-            </fieldset>
+                    <!--?</thead>-->
+                <!--?</table>-->
+            <!--?</fieldset>-->
 
 
-            <fieldset id="fieldset-dates" class="tabcontent" style="display: none">
+            <!--?<fieldset id="fieldset-dates" class="tabcontent" style="display: none">-->
                 <!--?<legend id="fieldsetlegend-dates">Dates</legend>-->
-                <table summary="Project info" class="listing add nosort" cellpadding="0" cellspacing="0" style="width: 100%">
-                    <thead>
+                <!--?<table summary="Project info" class="listing add nosort" cellpadding="0" cellspacing="0" style="width: 100%">-->
+                    <!--?<thead>-->
 
 
-                    </thead>
-                </table>
-            </fieldset>
+                    <!--?</thead>-->
+                <!--?</table>-->
+            <!--?</fieldset>-->
 
         <span>
             <div style="text-align:left;padding-bottom:10px;">

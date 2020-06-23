@@ -193,3 +193,59 @@ class IResultSample(Interface):
 class IResultSamples(Interface):
     """
     """
+
+class ICentrifugation(Interface):
+    """
+    """
+
+class ICentrifugations(Interface):
+    """
+    """
+
+class ISampleCompliance(Interface):
+    """
+    """
+
+class ISampleCompliances(Interface):
+    """
+    """
+
+class ISampleKingdom(Interface):
+    """
+    """
+
+class ISampleKingdoms(Interface):
+    """
+    """
+
+class ICollectionRequest(Interface):
+    """
+    """
+
+class ICollectionRequests(Interface):
+    """
+    """
+
+class IStrain(Interface):
+    """
+    """
+
+class IStrains(Interface):
+    """
+    """
+
+class IHumanSampleRequest(Interface):
+    """
+    """
+
+class IHumanSampleRequests(Interface):
+    """
+    """
+
+class IMicrobeSampleRequest(Interface):
+    """
+    """
+
+class IMicrobeSampleRequests(Interface):
+    """
+    """

@@ -36,8 +36,12 @@ window.baobab.lims.controllers =  {
         ['BaobabSamplePoolingEditView'],
     ".portaltype-samplepooling":
         ['BaobabSamplePoolingView'],
+    ".portaltype-centrifugation":
+        ['BaobabSampleCentrifugationView', 'BaobabSampleCentrifugationEditView'],
     ".portaltype-sample":
-        ['BaobabSampleView']
+        ['BaobabSampleView'],
+    "#collectionrequest-base-edit":
+        ['BaobabCollectionRequestView'],
 };
 
 /**

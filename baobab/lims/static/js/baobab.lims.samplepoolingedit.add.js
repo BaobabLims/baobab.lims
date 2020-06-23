@@ -3,91 +3,43 @@ function BaobabSamplePoolingEditView() {
     var that = this;
 
     that.load = function () {
-        $('#edit-bar').remove()
 
-        $('#fieldsetlegend-default span').trigger("click")
-
-        // $('#fieldsetlegend-delivery-info').css('background-color', '#ccc')
-        // $('#fieldsetlegend-default').css('background-color', '#ccc')
-        // $('#fieldsetlegend-correspondence').css('background-color', '#ccc')
-        // $('#fieldsetlegend-shipping-information').css('background-color', '#ccc')
-
-        $('#fieldsetlegend-default').click(function(){
-            console.log('test default');
-            $('#fieldsetlegend-default').css('background-color', '#ffffff')
-            $('#fieldsetlegend-delivery-info').css('background-color', '#ccc')
-            $('#fieldsetlegend-dates').css('background-color', '#ccc')
-            $('#fieldsetlegend-correspondence').css('background-color', '#ccc')
-            $('#fieldsetlegend-shipping-information').css('background-color', '#ccc')
-
-            $('#fieldset-default').css('display', 'block');
-            $('#fieldset-delivery-info').css('display', 'none');
-            $('#fieldset-dates').css('display', 'none');
-            $('#fieldset-correspondence').css('display', 'none');
-            $('#fieldset-shipping-information').css('display', 'none');
-        });
-
-        $('#fieldsetlegend-delivery-info').click(function(){
-            console.log('test delivery info');
-            $('#fieldsetlegend-default').css('background-color', '#ccc')
-            $('#fieldsetlegend-delivery-info').css('background-color', '#ffffff')
-            $('#fieldsetlegend-dates').css('background-color', '#ccc')
-            $('#fieldsetlegend-correspondence').css('background-color', '#ccc')
-            $('#fieldsetlegend-shipping-information').css('background-color', '#ccc')
-
-            $('#fieldset-default').css('display', 'none');
-            $('#fieldset-delivery-info').css('display', 'block');
-            $('#fieldset-dates').css('display', 'none');
-            $('#fieldset-correspondence').css('display', 'none');
-            $('#fieldset-shipping-information').css('display', 'none');
-        });
-
-        $('#fieldsetlegend-dates').click(function(){
-            console.log('test dates');
-            $('#fieldsetlegend-default').css('background-color', '#ccc')
-            $('#fieldsetlegend-delivery-info').css('background-color', '#ccc')
-            $('#fieldsetlegend-dates').css('background-color', '#ffffff')
-            $('#fieldsetlegend-correspondence').css('background-color', '#ccc')
-            $('#fieldsetlegend-shipping-information').css('background-color', '#ccc')
-
-            $('#fieldset-default').css('display', 'none');
-            $('#fieldset-delivery-info').css('display', 'none');
-            $('#fieldset-dates').css('display', 'block');
-            $('#fieldset-correspondence').css('display', 'none');
-            $('#fieldset-shipping-information').css('display', 'none');
-        });
-
-        $('#fieldsetlegend-correspondence').click(function(){
-            console.log('test correspondence');
-            $('#fieldsetlegend-default').css('background-color', '#ccc')
-            $('#fieldsetlegend-delivery-info').css('background-color', '#ccc')
-            $('#fieldsetlegend-dates').css('background-color', '#ccc')
-            $('#fieldsetlegend-correspondence').css('background-color', '#ffffff')
-            $('#fieldsetlegend-shipping-information').css('background-color', '#ccc')
-
-            $('#fieldset-default').css('display', 'none');
-            $('#fieldset-delivery-info').css('display', 'none');
-            $('#fieldset-dates').css('display', 'none');
-            $('#fieldset-correspondence').css('display', 'block');
-            $('#fieldset-shipping-information').css('display', 'none');
-        });
-
-        $('#fieldsetlegend-shipping-information').click(function(){
-            console.log('test shipping information');
-            $('#fieldsetlegend-default').css('background-color', '#ccc')
-            $('#fieldsetlegend-delivery-info').css('background-color', '#ccc')
-            $('#fieldsetlegend-dates').css('background-color', '#ccc')
-            $('#fieldsetlegend-correspondence').css('background-color', '#ccc')
-            $('#fieldsetlegend-shipping-information').css('background-color', '#ffffff')
-
-            $('#fieldset-default').css('display', 'none');
-            $('#fieldset-delivery-info').css('display', 'none');
-            $('#fieldset-dates').css('display', 'none');
-            $('#fieldset-correspondence').css('display', 'none');
-            $('#fieldset-shipping-information').css('display', 'block');
-        });
+        setDateCreated();
 
     };
 
+    function setDateCreated(){
+        var path = window.location.href.split('/sample_poolings')[0];
+        var uid = $('#archetypes-fieldname-DateCreated').attr('data-uid');
 
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: path + '/ajax_get_samplepoolingdata',
+            data: {UID: uid}
+        }).done(function (data) {
+            var date_created = data['date_created']
+            if (date_created) {
+                var final_sampling_date = getDatePickerDateAndTime(date_created)
+                $('#DateCreated').val(final_sampling_date)
+            }
+        });
+    }
+
+    function getDatePickerDateAndTime(plone_date){
+        try{
+            var gmt_format_date = getGMTFormatDate(plone_date);
+            return gmt_format_date;
+        }
+        catch(err){
+            return plone_date;
+        }
+
+    }
+
+    function getGMTFormatDate(plone_date_string){
+
+        var pieces = plone_date_string.split(/[-/ :]/)
+        return [pieces[0], pieces[1], pieces[2]].join('-') + ' ' + [pieces[3], pieces[4]].join(':')
+    }
 }

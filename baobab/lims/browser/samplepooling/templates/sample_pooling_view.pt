@@ -86,6 +86,26 @@
         </table>
     </div>
 
+    <div tal:condition="view/intermediate_samples" class="pooling-content" style="border: solid; border-width: thin; margin: 15px;">
+        <table class="invoice-items items">
+            <caption><strong>Intermediate Sample</strong></caption>
+            <tr>
+              <th style='text-align:left;' i18n:translate=''>Sample</th>
+              <th style='text-align:left;' i18n:translate=''>Location</th>
+              <th style='text-align:left;' i18n:translate=''>Quantity Pooled</th>
+              <th style='text-align:left;' i18n:translate=''>Unit</th>
+            </tr>
+            <tr tal:repeat="input_sample view/intermediate_samples">
+
+                <td  style='text-align:left;' tal:content='python:input_sample["title"]'>title</td>
+                <td  style='text-align:left;' tal:content='python:input_sample["location"]'>location</td>
+                <td  style='text-align:left;' tal:content='python:input_sample["volume"]'>volume</td>
+                <td  style='text-align:left;' tal:content='python:input_sample["unit"]'>unit</td>
+
+            </tr>
+        </table>
+    </div>
+
     <div class="pooling-content" style="border: solid; border-width: thin; margin: 15px;">
         <table class="invoice-items items">
             <caption><strong>Pool Result Samples</strong></caption>

@@ -143,12 +143,14 @@ class ProjectView(BrowserView):
             context.aq_parent.Title()
         )
 
-        self.study_type = context.getStudyType()
-        self.participants = context.getNumParticipants()
+        self.project_type = context.getProjectType()
+        self.project_theme = context.getProjectTheme()
         self.project_accepted = context.getProjectAccepted()
         self.refuse_reason = context.getRefuseReason()
-        self.age_interval = str(context.getAgeLow()) + ' - ' + str(
-            context.getAgeHigh())
+        # self.age_interval = str(context.getAgeLow()) + ' - ' + str(
+        #     context.getAgeHigh())
+        self.start_date = context.getStartDate()
+        self.end_date = context.getEndDate()
 
         biospecimen_types = ProjectBiospecView(context, request,
                                            context.getSampleType())
@@ -208,49 +210,49 @@ class ProjectEdit(BrowserView):
         audit_logger = AuditLogger(self.context, 'Project')
         pc = getToolByName(self.context, "portal_catalog")
 
-        if project.getField('StudyType').get(project) != request.form['StudyType']:
-            audit_logger.perform_simple_audit(project, 'StudyType', project.getField('StudyType').get(project),
-                                              request.form['StudyType'])
+        if project.getField('ProjectType').get(project) != request.form['ProjectType']:
+            audit_logger.perform_simple_audit(project, 'ProjectType', project.getField('ProjectType').get(project),
+                                              request.form['ProjectType'])
 
         if project.getField('EthicsFormLink').get(project) != request.form['EthicsFormLink']:
             audit_logger.perform_simple_audit(project, 'EthicsFormLink', project.getField('EthicsFormLink').get(project),
                                               request.form['EthicsFormLink'])
 
-        # audit age high
-        current_age_high = project.getField('AgeHigh').get(project)
-        if not current_age_high:
-            current_age_high = ''
+        # audit end date
+        current_end_date = project.getField('EndDate').get(project)
+        if not current_end_date:
+            current_end_date = ''
         else:
-            current_age_high = str(project.getField('AgeHigh').get(project))
+            current_end_date = str(project.getField('EndDate').get(project))
 
-        if current_age_high != request.form['AgeHigh']:
-            request.form['AgeHigh']
-            audit_logger.perform_simple_audit(project, 'AgeHigh', current_age_high,
-                                              request.form['AgeHigh'])
+        if current_end_date != request.form['EndDate']:
+            request.form['EndDate']
+            audit_logger.perform_simple_audit(project, 'EndDate', current_end_date,
+                                              request.form['EndDate'])
 
-        # audit age low
-        current_age_low = project.getField('AgeLow').get(project)
-        if not current_age_low:
-            current_age_low = ''
+        # audit start date
+        current_start_date = project.getField('StartDate').get(project)
+        if not current_start_date:
+            current_start_date = ''
         else:
-            current_age_low = str(current_age_low)
+            current_start_date = str(current_start_date)
 
-        if current_age_low != request.form['AgeLow']:
-            request.form['AgeLow']
-            audit_logger.perform_simple_audit(project, 'AgeLow', current_age_low,
-                                              request.form['AgeLow'])
+        if current_start_date != request.form['StartDate']:
+            request.form['StartDate']
+            audit_logger.perform_simple_audit(project, 'StartDate', current_start_date,
+                                              request.form['StartDate'])
 
         # audit number of participants
-        num_participants = project.getField('NumParticipants').get(project)
-        if not num_participants:
-            num_participants = ''
+        project_themes = project.getField('ProjectTheme').get(project)
+        if not project_themes:
+            project_themes = ''
         else:
-            num_participants = str(num_participants)
+            project_themes = str(project_themes)
 
-        if num_participants != request.form['NumParticipants']:
-            request.form['NumParticipants']
-            audit_logger.perform_simple_audit(project, 'NumParticipants', num_participants,
-                                              request.form['NumParticipants'])
+        if project_themes != request.form['ProjectTheme']:
+            request.form['ProjectTheme']
+            audit_logger.perform_simple_audit(project, 'ProjectTheme', project_themes,
+                                              request.form['ProjectTheme'])
 
         audit_logger.perform_multi_reference_list_to_list_audit(project, 'SampleType', project.getField('SampleType').get(project),
                                              pc, request.form['SampleType'])

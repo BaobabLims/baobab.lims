@@ -11,3 +11,10 @@ auditlogs
 sample_poolings
 inputsamples
 resultsamples
+centrifugations
+sample_compliances
+sample_kingdoms
+collection_requests
+strains
+human_sample_requests
+microbe_sample_requests

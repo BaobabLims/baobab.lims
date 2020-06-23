@@ -17,11 +17,15 @@ from bika.lims.browser.widgets import ReferenceWidget
 schema = BikaSchema.copy() + Schema((
 
     StringField(
-        'StudyType',
-        searchable=True,
-        widget=StringWidget(
-            label=_('Type of study'),
+        'ProjectType',
+        read_permission=permissions.View,
+        write_permission=permissions.ModifyPortalContent,
+        vocabulary='getProjectTypes',
+        widget=SelectionWidget(
+            label=_("Type of Project"),
+            description=_("The type of project this is"),
             visible={'edit': 'visible', 'view': 'visible'},
+            render_own_label=True,
         )
     ),
 
@@ -34,32 +38,40 @@ schema = BikaSchema.copy() + Schema((
         )
     ),
 
-    IntegerField(
-        'AgeHigh',
-        widget=IntegerWidget(
-            label=_("Age High"),
-            description=_("Maximum age of the participants."),
-            size=10,
+    StringField(
+        'ProjectCode',
+        searchable=True,
+        widget=StringWidget(
+            label=_('Project Code'),
             visible={'edit': 'visible', 'view': 'visible'},
         )
     ),
 
-    IntegerField(
-        'AgeLow',
-        widget=IntegerWidget(
-            label=_("Age low"),
-            description=_("Minimum age of the participants."),
-            size=10,
+    DateTimeField(
+        'StartDate',
+        mode="rw",
+        read_permission=permissions.View,
+        write_permission=permissions.ModifyPortalContent,
+        widget=DateTimeWidget(
+            label=_("Start Date"),
             visible={'edit': 'visible', 'view': 'visible'},
-        )
-    ),
+    )),
 
-    IntegerField(
-        'NumParticipants',
-        widget=IntegerWidget(
-            label=_("Number of Participants"),
-            description=_("Number of participants in the study."),
-            size=10,
+    DateTimeField(
+        'EndDate',
+        mode="rw",
+        read_permission=permissions.View,
+        write_permission=permissions.ModifyPortalContent,
+        widget=DateTimeWidget(
+            label=_("End Date"),
+            visible={'edit': 'visible', 'view': 'visible'},
+    )),
+
+    StringField(
+        'ProjectTheme',
+        widget=StringWidget(
+            label=_("Project Theme"),
+            description=_("The theme of this project."),
             visible={'edit': 'visible', 'view': 'visible'},
         )
     ),
@@ -125,7 +137,6 @@ schema = BikaSchema.copy() + Schema((
     )),
 ))
 
-
 schema['title'].required = True
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 schema['title'].widget.size = 100
@@ -165,5 +176,8 @@ class Project(BaseFolder):
 
     def getProjectAcceptedOptions(self):
         return ['Accepted', 'Rejected']
+
+    def getProjectTypes(self):
+        return ['Surveillance', 'Diagnostic', 'Research', 'Routine', 'Project', 'Memory']
 
 registerType(Project, config.PROJECTNAME)

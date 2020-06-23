@@ -59,9 +59,27 @@ InputSamples = ReferenceField(
     )
 )
 
+IntermediateSample = ReferenceField(
+    'IntermediateSample',
+    schemata='Input Samples',
+    allowed_types=('Sample'),
+    referenceClass=HoldingReference,
+    relationship='SamplePoolingSample',
+    mode="rw",
+    widget=bika_ReferenceWidget(
+        label=_("Intermediate sample"),
+        description=_("Intermediate sample created before aliquoting"),
+        size=40,
+        base_query={'review_state': 'sample_received', 'cancellation_state': 'active'},
+        visible={'edit': 'invisible', 'view': 'invisible'},
+        catalog_name='portal_catalog',
+        showOn=True
+    )
+)
+
 ResultSamples = ReferenceField(
     'ResultSamples',
-    schemata='Result Samples',
+    schemata='Input Samples',
     multiValued=1,
     allowed_types=('ResultSample'),
     referenceClass=HoldingReference,
@@ -72,44 +90,17 @@ ResultSamples = ReferenceField(
         description=_("The result samples that result from pooling"),
         size=40,
         base_query={'review_state': 'sample_received', 'cancellation_state': 'active'},
-        visible={'edit': 'visible', 'view': 'visible'},
+        visible={'edit': 'invisible', 'view': 'visible'},
         catalog_name='bika_catalog',
         showOn=True
     )
 )
 
-# InputSamples = StringField(
-#     'InputSamples',
-#     schemata='Input Samples',
-#     read_permission=permissions.View,
-#     write_permission=permissions.ModifyPortalContent,
-#     widget=StringWidget(
-#         label=_("Input Samples"),
-#         description=_("Input samples to pool"),
-#         size=40,
-#         visible={'edit': 'visible', 'view': 'invisible'},
-#         showOn=True
-#     )
-# )
-
-# ResultSamples = StringField(
-#     'ResultSamples',
-#     schemata='Result Samples',
-#     read_permission=permissions.View,
-#     write_permission=permissions.ModifyPortalContent,
-#     widget=StringWidget(
-#         label=_("Result Samples"),
-#         description=_("Samples resulting from pooling"),
-#         size=40,
-#         visible={'edit': 'visible', 'view': 'invisible'},
-#         showOn=True
-#     )
-# )
-
 schema = BikaSchema.copy() + Schema((
     DateCreation,
     PersonPooling,
     InputSamples,
+    IntermediateSample,
     ResultSamples,
 ))
 
@@ -131,40 +122,6 @@ class SamplePooling(BaseContent):
         from bika.lims.idserver import renameAfterCreation
         renameAfterCreation(self)
 
-    # def get_input_samples(self):
-    #     pc = getToolByName(self, 'portal_catalog')
-    #     path = "/".join(self.getPhysicalPath())
-    #     brains = pc.searchResults(
-    #         portal_type='InputSample',
-    #         inactive_state='active',
-    #         # sort_on='sortable_title',
-    #         path={'query': path, 'level': 0})
-    #
-    #     samples = []
-    #     for brain in brains:
-    #         input_sample = brain.getObject()
-    #         sample = input_sample.getField('SelectedSample').get(input_sample)
-    #         samples.append(sample)
-    #
-    #     return samples
-
-    # def get_result_samples(self):
-    #     pc = getToolByName(self, 'portal_catalog')
-    #     path = "/".join(self.getPhysicalPath())
-    #     brains = pc.searchResults(
-    #         portal_type='ResultSample',
-    #         inactive_state='active',
-    #         # sort_on='sortable_title',
-    #         path={'query': path, 'level': 0})
-    #
-    #     samples = []
-    #     for brain in brains:
-    #         input_sample = brain.getObject()
-    #         sample = input_sample.getField('SelectedSample').get(input_sample)
-    #         samples.append(sample)
-    #
-    #     return samples
-
     def get_input_samples(self):
         input_samples = self.getInputSamples()
 
@@ -174,6 +131,10 @@ class SamplePooling(BaseContent):
             samples.append(sample)
 
         return samples
+
+    def get_intermediate_sample(self):
+        intermediate_sample = self.getField('IntermediateSample').get(self)
+        return intermediate_sample
 
     def get_result_samples(self):
         result_samples = self.getResultSamples()

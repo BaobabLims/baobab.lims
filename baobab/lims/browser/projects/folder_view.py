@@ -31,7 +31,7 @@ class ProjectsView(BikaListingView):
                       'index': 'sortable_title'},
             'getClient': {'title': _('Client'),
                           'toggle': True},
-            'getStudyType': {'title': _('Study Type'),
+            'getProjectType': {'title': _('Project Type'),
                              'toggle': True},
         }
 
@@ -42,7 +42,7 @@ class ProjectsView(BikaListingView):
              'transitions': [],
              'columns': ['Title',
                          'getClient',
-                         'getStudyType']},
+                         'getProjectType']},
         ]
 
     def __call__(self):
@@ -55,7 +55,7 @@ class ProjectsView(BikaListingView):
             if self.context.portal_type == "Client":
                 if not active_contacts:
                     msg = _("Client contact required before request may be submitted")
-                    addPortalMessage(msg)
+                    addPortalMessage(msg, "error")
                 else:
                     if mtool.checkPermission(AddProject, self.context):
                         self.context_actions[_('Add')] = {
@@ -71,7 +71,7 @@ class ProjectsView(BikaListingView):
                  'transitions': [{'id': 'activate'}, ],
                  'columns': ['Title',
                              'getClient',
-                             'getStudyType']})
+                             'getProjectType']})
             self.review_states.append(
                 {'id': 'all',
                  'title': _('All'),
@@ -79,7 +79,7 @@ class ProjectsView(BikaListingView):
                  'transitions': [{'id': 'empty'}],
                  'columns': ['Title',
                              'getClient',
-                             'getStudyType']})
+                             'getProjectType']})
             stat = self.request.get("%s_review_state" % self.form_id, 'default')
             self.show_select_column = stat != 'all'
         return BikaListingView.__call__(self)
@@ -91,7 +91,7 @@ class ProjectsView(BikaListingView):
                 continue
             obj = items[x]['obj']
             items[x]['getClient'] = obj.aq_parent.Title()
-            items[x]['getStudyType'] = obj.getStudyType()
+            items[x]['getProjectType'] = obj.getProjectType()
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                            (items[x]['url'], items[x]['Title'])
 

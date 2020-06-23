@@ -69,7 +69,9 @@ class ajaxGetSampleDetails(BrowserView):
         self.pc = getToolByName(self.context, 'portal_catalog')
 
     def __call__(self):
+
         sample = self.get_sample(self.request.form['sample_uid'])
+        print(sample.__dict__)
 
         if sample:
             try:
@@ -122,9 +124,6 @@ class ajaxGetStorageUnits(BrowserView):
         pc = getToolByName(self.context, 'portal_catalog')
         brains = pc(portal_type="StorageUnit")
 
-        # print('---storage units brains')
-        # print(brains)
-
         for storage_unit in brains:
             storage_unit = storage_unit.getObject()
 
@@ -144,7 +143,6 @@ class ajaxGetStorageUnits(BrowserView):
             return None
 
 
-
 class ajaxGetBoxes(BrowserView):
     """ Drug vocabulary source for jquery combo dropdown box
     """
@@ -161,9 +159,6 @@ class ajaxGetBoxes(BrowserView):
 
         pc = getToolByName(self.context, 'portal_catalog')
         brains = pc(portal_type="StorageUnit", UID=storage_unit)
-
-        # print('---storage units brains')
-        # print(brains)
 
         storage_unit = brains[0].getObject()
         boxes = storage_unit.getBoxes()
@@ -269,8 +264,6 @@ class ajaxCreateAliquots(BrowserView):
                                                   % (aliquot['barcode'], aliquot['volume'], sample.Title()))
 
                     except Exception as e:
-                        # print('------------Exception on aliquot create')
-                        # print(str(e))
                         self.sample_results.append("Error creating aliquot with barcode %s and volume %s for sample %s."
                             % (aliquot['barcode'], aliquot['volume'], sample.Title()))
                         continue

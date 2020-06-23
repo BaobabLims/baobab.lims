@@ -26,22 +26,17 @@ class ajaxGetStorages(BrowserView):
             path={'query': path, 'depth': 1, 'level': 0})
 
         storages = [brain.getObject() for brain in brains]
-        print('======storages')
-        print(storages)
 
         storage3 = storages[2]
 
-        print('-----path')
-        print("/".join(storage3.getPhysicalPath()))
+        # print('-----path')
+        # print("/".join(storage3.getPhysicalPath()))
 
     def __call__(self):
         plone.protect.CheckAuthenticator(self.request)
 
         pc = getToolByName(self, 'portal_catalog')
         path = "/".join(self.context.getPhysicalPath())
-
-        print('======path')
-        print(path)
 
 
 

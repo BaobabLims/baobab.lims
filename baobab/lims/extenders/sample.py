@@ -49,7 +49,7 @@ class SampleSchemaExtender(object):
                 size=30,
                 showOn=True,
                 render_own_label=True,
-                base_query={'review_state': 'approved'},
+                # base_query={'review_state': 'finalised'},
                 description=_("Select the project of the sample."),
             )
         ),
@@ -72,6 +72,30 @@ class SampleSchemaExtender(object):
         #         render_own_label=True,
         #     )
         # ),
+        ExtReferenceField(
+            'SampleCompliance',
+            allowed_types=('SampleCompliance',),
+            relationship='ComplianceSampleCompliance',
+            referenceClass=HoldingReference,
+            widget=bika_ReferenceWidget(
+                label=_("Sample Compliance"),
+                # catalog_name='bika_catalog',
+                visible={'edit': 'visible',
+                         'view': 'visible',
+                         'header_table': 'visible',
+                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         'sample_due': {'view': 'visible', 'edit': 'visible'},
+                         'sampled': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'visible'},
+                         'expired': {'view': 'visible', 'edit': 'invisible'},
+                         'disposed': {'view': 'visible', 'edit': 'invisible'},
+                         },
+                size=30,
+                showOn=True,
+                render_own_label=True,
+                description=_("Select compliance of the sample."),
+            )
+        ),
         ExtReferenceField(
             'DiseaseOntology',
             allowed_types=('DiseaseOntology',),
@@ -473,6 +497,9 @@ class Sample(BaseSample):
         except:
             return 0
         return last_ar_number
+
+    def get_sample_condition(self):
+        pass
 
     def update_box_status(self, location):
         box = location.aq_parent

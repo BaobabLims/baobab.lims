@@ -99,7 +99,7 @@
                     "description": "the path to the parent for example clients/client-1"
                 },
                 {
-                    "name": "StudyType",
+                    "name": "ProjectType",
                     "required": "false",
                     "type": "string",
                     "description": "The name of the client"
@@ -117,19 +117,19 @@
                     "description": "What the project is all about"
                 },
                 {
-                    "name": "NumParticipants",
+                    "name": "ProjectTheme",
                     "required": "false",
                     "type": "integer",
                     "description": "How many will participate in this study"
                 },
                 {
-                    "name": "AgeLow",
+                    "name": "StartDate",
                     "required": "false",
                     "type": "integer",
                     "description": "The youngest allowed age for a participant"
                 },
                 {
-                    "name": "AgeHigh",
+                    "name": "EndDate",
                     "required": "false",
                     "type": "integer",
                     "description": "The oldest allowed age for a participant"

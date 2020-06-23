@@ -32,6 +32,13 @@
         <element value="SamplePooling"/>
         <element value="InputSample"/>
         <element value="ResultSample"/>
+        <element value="Centrifugation"/>
+        <element value="SampleKingdom"/>
+        <element value="SampleCompliance"/>
+        <element value="CollectionRequest"/>
+        <element value="Strain"/>
+        <element value="HumanSampleRequest"/>
+        <element value="MicrobeSampleRequest"/>
   </property>
 </object>
 

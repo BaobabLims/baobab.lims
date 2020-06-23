@@ -68,8 +68,8 @@ class ProjectsExporter(object):
         pc = getToolByName(self.context, 'portal_catalog')
         project_brains = pc(portal_type="Project")
         if project_brains:
-            list_of_projects.append(['Title', 'Description', 'StudyType', 'EthicsFormLink', 'AgeHigh', 'AgeLow',
-                                     'NumParticipants', 'Biospecimen_Types', 'Client', 'Client_ID',
+            list_of_projects.append(['Title', 'Description', 'ProjectType', 'EthicsFormLink', 'EndDate', 'StartDate',
+                                     'ProjectTheme', 'Biospecimen_Types', 'Client', 'Client_ID',
                                      'Date_Created', 'Project_ID', 'UID', 'Parent_UID', 'URL_path',
                                      'Portal_URL'])
 
@@ -80,11 +80,11 @@ class ProjectsExporter(object):
                 row = []
                 row.append(str(project.Title()))
                 row.append(str(project.Description()).rstrip())
-                row.append(str(project.getField('StudyType').get(project)))
+                row.append(str(project.getField('ProjectType').get(project)))
                 row.append(str(project.getField('EthicsFormLink').get(project)))
-                row.append(project.getField('AgeHigh').get(project))
-                row.append(project.getField('AgeLow').get(project))
-                row.append(project.getField('NumParticipants').get(project))
+                row.append(project.getField('EndDate').get(project))
+                row.append(project.getField('StartDate').get(project))
+                row.append(project.getField('ProjectTheme').get(project))
                 pc = getToolByName(self.context, 'portal_catalog')
                 biospecimen_types = project.getField('SampleType').get(project)
                 biospecimen_titles = []

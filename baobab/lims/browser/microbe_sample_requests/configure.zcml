@@ -1,0 +1,14 @@
+<configure
+        xmlns="http://namespaces.zope.org/zope"
+        xmlns:browser="http://namespaces.zope.org/browser"
+        i18n_domain="baobab.lims">
+
+    <browser:page
+        for="baobab.lims.interfaces.IMicrobeSampleRequests"
+        name="folder_view"
+        class=".microbe_sample_requests.MicrobeSampleRequestsView"
+        permission="zope2.View"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+</configure>

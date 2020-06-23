@@ -63,6 +63,20 @@ def initialize(context):
     from content.inputsamples import InputSamples
     from content.resultsample import ResultSample
     from content.resultsamples import ResultSamples
+    from content.centrifugation import Centrifugation
+    from content.centrifugations import Centrifugations
+    from content.sample_kingdom import SampleKingdom
+    from content.sample_kingdoms import SampleKingdoms
+    from content.sample_compliance import SampleCompliance
+    from content.sample_compliances import SampleCompliances
+    from content.collection_request import CollectionRequest
+    from content.collection_requests import CollectionRequests
+    from content.strain import Strain
+    from content.strains import Strains
+    from content.human_sample_request import HumanSampleRequest
+    from content.human_sample_requests import HumanSampleRequests
+    from content.microbe_sample_request import MicrobeSampleRequest
+    from content.microbe_sample_requests import MicrobeSampleRequests
 
     content_types, constructors, ftis = process_types(
         listTypes(PROJECTNAME),

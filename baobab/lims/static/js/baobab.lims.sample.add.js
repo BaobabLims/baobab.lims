@@ -7,6 +7,8 @@ function BaobabSampleView() {
         $('input[type=text]').prop('autocomplete', 'off');
 
         $('#Project_uid').focus(function() {
+            console.log('-----------This is project select');
+
             var uid = $(this).val();
             var element = $("#Kit");
             filterKitByProject(element, "getParentUID", uid);
@@ -27,6 +29,10 @@ function BaobabSampleView() {
     };
 
     function filterKitByProject(element, filterKey, filterValue) {
+
+        console.log('==========================');
+        console.log(filterKey);
+
         var query = $.parseJSON($(element).attr('base_query'));
         query[filterKey] = filterValue;
         var options = $.parseJSON($(element).attr('combogrid_options'));

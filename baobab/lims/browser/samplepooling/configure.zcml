@@ -27,4 +27,25 @@
       permission="zope.Public"
     />
 
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="ajax_get_sampletypes"
+      class=".samplepooling.ajaxGetSampleTypes"
+      permission="zope.Public"
+    />
+
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="ajax_get_samplepoolingdata"
+      class=".getsamplepoolingdata.GetSamplePoolingData"
+      permission="zope.Public"
+    />
+
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="ajax_get_projects"
+      class=".samplepooling.ajaxGetProjects"
+      permission="zope.Public"
+    />
+
 </configure>

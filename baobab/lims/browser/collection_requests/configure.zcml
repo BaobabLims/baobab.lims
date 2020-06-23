@@ -1,0 +1,21 @@
+<configure
+        xmlns="http://namespaces.zope.org/zope"
+        xmlns:browser="http://namespaces.zope.org/browser"
+        i18n_domain="baobab.lims">
+
+    <browser:page
+        for="baobab.lims.interfaces.ICollectionRequests"
+        name="folder_view"
+        class=".collection_requests.CollectionRequestsView"
+        permission="zope2.View"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="is_micro_organism_kingdom"
+      class=".ajax_collection_request.IsMicroOrganismSampleKing"
+      permission="zope.Public"
+    />
+
+</configure>

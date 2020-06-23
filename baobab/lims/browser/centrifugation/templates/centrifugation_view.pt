@@ -1,0 +1,107 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:tal="http://xml.zope.org/namespaces/tal"
+	xmlns:metal="http://xml.zope.org/namespaces/metal"
+	xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+	metal:use-macro="here/main_template/macros/master"
+	i18n:domain="baobab">
+
+<head>
+    <style>
+
+    </style>
+</head>
+
+<body>
+<metal:title fill-slot="content-title">
+    <h1>
+        <img tal:condition="view/icon | nothing"
+            src="" tal:attributes="src view/icon"/>
+        <span class="documentFirstHeading" tal:content="view/id" />
+    </h1>
+    <hr/>
+</metal:title>
+
+<metal:content-description fill-slot="content-description">
+</metal:content-description>
+
+<metal:content-core fill-slot="content-core" tal:define="portal context/@@plone_portal_state/portal;">
+    <h3 style="margin-top:1em;">
+        <tal:current_storage>
+            <img title="Project"
+                tal:attributes="src string:${view/portal_url}/++resource++baobab.lims.images/project.png">
+            <span i18n:translate="">Info Project</span>:
+        </tal:current_storage>
+    </h3><br/>
+
+    <input type="hidden" name="sample_pooling_uid" id="sample_pooling_uid" tal:attributes="value view/sample_pooling_uid">
+
+    <div class="pooling-content" style="border: solid; border-width: thin; margin: 15px;">
+        <table class="storage" style="border-collapse: collapse; width: 100%;">
+            <tbody>
+            <tr>
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Title </th>
+                <td tal:content="view/title" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;width:70%"></td>
+            </tr>
+            <tr tal:condition="view/description">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Description</th>
+                <td tal:content="view/description" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            <tr tal:condition="view/date_created" style="background: #f0f0f2;">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Date Created</th>
+                <td tal:content="view/date_created" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            <tr tal:condition="view/selected_sample" style="background: #f0f0f2;">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Selected Sample</th>
+                <td tal:content="view/selected_sample" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            <tr tal:condition="view/technician" style="background: #f0f0f2;">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Technician</th>
+                <td tal:content="view/technician" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            <tr tal:condition="view/technique">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Technique</th>
+                <td tal:content="view/technique" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="pooling-content" style="border: solid; border-width: thin; margin: 15px;">
+        <table class="invoice-items items">
+            <caption><strong>Centrifuge Samples</strong></caption>
+            <tr>
+              <th style='text-align:left;' i18n:translate=''>Sample</th>
+              <th style='text-align:left;' i18n:translate=''>Location</th>
+              <th style='text-align:left;' i18n:translate=''>Condition</th>
+              <th style='text-align:left;' i18n:translate=''>Pool Quantity</th>
+              <th style='text-align:left;' i18n:translate=''>Unit</th>
+            </tr>
+            <tr tal:repeat="centrifuge_sample view/centrifugation_rows">
+
+                <td  style='text-align:left;' tal:content='python:centrifuge_sample["title"]'>title</td>
+                <td  style='text-align:left;' tal:content='python:centrifuge_sample["location"]'>location</td>
+                <td  style='text-align:left;' tal:content='python:centrifuge_sample["condition"]'>condition</td>
+                <td  style='text-align:left;' tal:content='python:centrifuge_sample["volume"]'>volume</td>
+                <td  style='text-align:left;' tal:content='python:centrifuge_sample["unit"]'>unit</td>
+
+            </tr>
+          </table>
+    </div>
+
+</metal:content-core>
+
+</body>
+</html>

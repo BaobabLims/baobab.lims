@@ -116,13 +116,7 @@ class StorageUnit(ATFolder):
             if position.aq_parent not in available_boxes:
                 available_boxes.append(position.aq_parent)
 
-        print('----------available boxes')
-        print(available_boxes)
-
         return available_boxes
-
-
-
 
     def get_positions(self):
         available_storage_positions = []
@@ -136,9 +130,6 @@ class StorageUnit(ATFolder):
 
             if self.is_ancestor_of(storage_position):
                 available_storage_positions.append(storage_position)
-
-        # print('----------------available storage positions')
-        # print(available_storage_positions)
 
         return available_storage_positions
 

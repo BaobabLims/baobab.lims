@@ -21,7 +21,7 @@ class ClientProjectsView(ProjectsView):
         self.columns = {
             'Title': {'title': _('Project'),
                       'index': 'sortable_title'},
-            'getStudyType': {'title': _('Study Type'),
+            'getProjectType': {'title': _('Project Type'),
                              'toggle': True},
         }
 
@@ -31,7 +31,7 @@ class ClientProjectsView(ProjectsView):
              'contentFilter': {'inactive_state': 'active'},
              'transitions': [],
              'columns': ['Title',
-                         'getStudyType']},
+                         'getProjectType']},
         ]
 
     def folderitems(self):

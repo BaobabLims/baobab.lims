@@ -312,10 +312,10 @@ Bio Bank Demo
     wait until page contains element  css=#title
     input text                        title                    Storage project
     select from dropdown              Client                   Happy Hills
-    input text                        StudyType                Storage
-    input text                        AgeLow                   10
-    input text                        AgeHigh                  20
-    input text                        NumParticipants          1000
+    input text                        ProjectType                Storage
+    input text                        StartDate                10
+    input text                        EndDate                  20
+    input text                        ProjectTheme             1000
     select from list                  css=#Biospectypes        Human blood      Human flesh
     select checkbox                   css=input[item_title="Calcium"]
     select checkbox                   css=input[item_title="Ecoli"]

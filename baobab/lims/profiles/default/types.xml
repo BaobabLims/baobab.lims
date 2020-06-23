@@ -52,6 +52,27 @@
     <object name="ResultSamples" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="ResultSample" meta_type="Factory-based Type Information with dynamic views"/>
 
+    <object name="Centrifugations" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="Centrifugation" meta_type="Factory-based Type Information with dynamic views"/>
+
+    <object name="SampleKingdoms" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="SampleKingdom" meta_type="Factory-based Type Information with dynamic views"/>
+
+    <object name="SampleCompliances" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="SampleCompliance" meta_type="Factory-based Type Information with dynamic views"/>
+
+    <object name="CollectionRequests" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="CollectionRequest" meta_type="Factory-based Type Information with dynamic views"/>
+
+    <object name="Strains" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="Strain" meta_type="Factory-based Type Information with dynamic views"/>
+
+    <object name="HumanSampleRequests" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="HumanSampleRequest" meta_type="Factory-based Type Information with dynamic views"/>
+
+    <object name="MicrobeSampleRequests" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="MicrobeSampleRequest" meta_type="Factory-based Type Information with dynamic views"/>
+
     <!-- Override values from bika.lims -->
     <object name="Client" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Supplier" meta_type="Factory-based Type Information with dynamic views"/>

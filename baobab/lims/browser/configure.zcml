@@ -8,7 +8,6 @@
     xmlns:plone="http://namespaces.plone.org/plone"
     i18n_domain="baobab">
 
-
     <include package=".client"/>
     <include package=".analysisrequest"/>
     <include package=".kits"/>
@@ -35,7 +34,14 @@
     <include package=".aliquotsamples"/>
     <include package=".samplepooling"/>
     <include package=".samplepoolings"/>
-
+    <include package=".centrifugation"/>
+    <include package=".centrifugations"/>
+    <include package=".sample_kingdoms"/>
+    <include package=".human_sample_requests"/>
+    <include package=".sample_compliances"/>
+    <include package=".collection_requests"/>
+    <include package=".strains"/>
+    <include package=".microbe_sample_requests"/>
 
     <!-- This registration allows additional sticker templates.
          To enable these, just copy one or more of the *.pt files

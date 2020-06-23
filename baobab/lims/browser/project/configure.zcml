@@ -95,6 +95,7 @@
     />-->
 
     <!-- Workflow action button clicked in Biospecimens folder list -->
+    <!--class=".workflow.ProjectWorkflowAction"-->
     <browser:page
       for="baobab.lims.interfaces.IProject"
       name="workflow_action"

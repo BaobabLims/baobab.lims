@@ -26,6 +26,13 @@
     />
 
     <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="ajax_get_sample_conditions"
+      class=".getsampleconditions.ajaxGetSampleConditions"
+      permission="zope.Public"
+    />
+
+    <browser:page
       for="...interfaces.ISampleShipment"
       name="setsamplesreturn"
       class=".setsamples.ajaxSetSamplesReturn"

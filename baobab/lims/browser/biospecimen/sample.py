@@ -121,8 +121,11 @@ class EditView(BrowserView):
 
             folder = pc(portal_type="Project", UID=request.form['Project_uid'])[0].getObject()
             try:
+                print('================project')
+                print(folder.__dict__)
                 project_accepted = folder.getField('ProjectAccepted').get(folder)
-            except:
+            except Exception as e:
+                print('------------exception %s' % str(e))
                 project_accepted = ''
 
             if project_accepted != 'Accepted':

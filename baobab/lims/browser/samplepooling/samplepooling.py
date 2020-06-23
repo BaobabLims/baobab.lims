@@ -20,6 +20,8 @@ from bika.lims.browser import BrowserView
 from baobab.lims.utils.audit_logger import AuditLogger
 from baobab.lims.utils.local_server_time import getLocalServerTime
 
+import json
+
 
 class SamplePoolingView(BrowserView):
     template = ViewPageTemplateFile('templates/sample_pooling_view.pt')
@@ -46,6 +48,7 @@ class SamplePoolingView(BrowserView):
         self.person_pooling = self.context.getPersonPooling()
 
         self.input_samples = self.prepare_input_samples()
+        self.intermediate_samples = self.prepare_intermediate_samples()
         self.result_samples = self.prepare_result_samples()
 
         self.icon = self.portal_url + \
@@ -66,11 +69,34 @@ class SamplePoolingView(BrowserView):
                 'title': sample.Title(),
                 'location': self.get_storage_location(sample),
                 'volume': input_sample.getField('InputVolume').get(input_sample),
-                'unit': input_sample.getField('InputVolumeUnit').get(input_sample),
+                'unit': sample.getField('Unit').get(sample),
             }
             prepared_samples.append(prepared_sample)
 
         return prepared_samples
+
+    def prepare_intermediate_samples(self):
+
+        intermediate_sample = self.context.get_intermediate_sample()
+
+        if not intermediate_sample:
+            return
+
+        # intermediate_samples = self.context.getIntermediateSamples()
+        storage_location = self.get_storage_location(intermediate_sample)
+        # print(intermediate_sample.getField('StorageLocation').get(intermediate_sample))
+        # print(intermediate_sample.__dict__)
+
+        samples = [
+            {
+                'title': intermediate_sample.Title(),
+                'location': self.get_storage_location(intermediate_sample),
+                'volume': intermediate_sample.getField('Volume').get(intermediate_sample),
+                'unit': intermediate_sample.getField('Unit').get(intermediate_sample),
+            }
+        ]
+
+        return samples
 
     def prepare_result_samples(self):
 
@@ -88,6 +114,9 @@ class SamplePoolingView(BrowserView):
                 'unit': result_sample.getField('FinalVolumeUnit').get(result_sample),
             }
             prepared_samples.append(prepared_sample)
+        #
+        # print('------------Result samples')
+        # print(prepared_samples)
 
         return prepared_samples
 
@@ -101,8 +130,6 @@ class SamplePoolingEdit(BrowserView):
     template = ViewPageTemplateFile('templates/sample_pooling_edit.pt')
 
     def __call__(self):
-        print('This is the pooling edit entry')
-        # print('----SampleShipment call---------')
         # portal = self.portal
         request = self.request
         context = self.context
@@ -115,8 +142,10 @@ class SamplePoolingEdit(BrowserView):
             context = portal_factory.doCreate(context, context.id)
 
             # self.perform_sample_shipment_audit(self.context, request)
-
-            context.processForm()
+            context.getField('description').set(context, self.request.form['description'])
+            context.getField('DateCreated').set(context, self.request.form['DateCreated'])
+            context.getField('PersonPooling').set(context, self.request.form['PersonPooling'])
+            context.reindexObject()
 
             obj_url = context.absolute_url_path()
             request.response.redirect(obj_url)
@@ -264,3 +293,52 @@ class SamplePoolingEdit(BrowserView):
     #                 fields.append(field)
     #
     #     return fields
+
+class ajaxGetProjects(BrowserView):
+    """ Drug vocabulary source for jquery combo dropdown box
+    """
+
+    def __init__(self, context, request):
+        super(ajaxGetProjects, self).__init__(context, request)
+        self.context = context
+        self.request = request
+
+    def __call__(self):
+        # plone.protect.CheckAuthenticator(self.request)
+
+        rows = []
+
+        pc = getToolByName(self.context, 'portal_catalog')
+        brains = pc(portal_type="Project")
+
+        for project in brains:
+            rows.append({
+                project.UID: project.Title
+            })
+
+        return json.dumps(rows)
+
+
+class ajaxGetSampleTypes(BrowserView):
+    """ Drug vocabulary source for jquery combo dropdown box
+    """
+
+    def __init__(self, context, request):
+        super(ajaxGetSampleTypes, self).__init__(context, request)
+        self.context = context
+        self.request = request
+
+    def __call__(self):
+
+        # plone.protect.CheckAuthenticator(self.request)
+        rows = []
+
+        pc = getToolByName(self.context, 'portal_catalog')
+        brains = pc(portal_type="SampleType")
+
+        for sample_type in brains:
+            rows.append({
+                sample_type.UID: sample_type.Title
+            })
+
+        return json.dumps(rows)

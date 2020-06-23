@@ -58,7 +58,6 @@ class EditView(BrowserView):
     template = ViewPageTemplateFile('templates/sample_pooling_edit.pt')
 
     def __call__(self):
-        print('------This point')
         request = self.request
         context = self.context
         self.form = request.form
