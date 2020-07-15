@@ -12,6 +12,13 @@ from baobab.lims.interfaces import IMicrobeSampleRequest
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from Products.CMFPlone.utils import safe_unicode
 
+Approved = BooleanField(
+    'Approved',
+    default=False,
+    widget=SelectionWidget(
+        label=_("Approved"),
+    ),
+)
 
 Identification = StringField(
     'Identification',
@@ -32,7 +39,7 @@ Strain = ReferenceField(
     relationship='MicrobeSampleRequestStrain',
     referenceClass=HoldingReference,
     widget=bika_ReferenceWidget(
-        label=_("Microbe"),
+        label=_("Strain"),
         visible={'edit': 'visible', 'view': 'visible'},
         size=30,
         showOn=True,
@@ -40,25 +47,55 @@ Strain = ReferenceField(
     )
 )
 
-OriginIsolatedFrom = StringField(
-    'OriginIsolatedFrom',
+Origin = StringField(
+    'Origin',
     read_permission=permissions.View,
     write_permission=permissions.ModifyPortalContent,
-    vocabulary='getOriginIsolatedFrom',
+    vocabulary='getOrigin',
+    default='',
     widget=SelectionWidget(
         format='select',
-        label=_("Origin Isolated From"),
-        description=_("Select the origin this microbe was isolated from"),
+        label=_("Origin"),
+        description=_("Select the origin of this microbe"),
         visible={'edit': 'visible', 'view': 'visible'},
         render_own_label=True,
     )
 )
+
+SampleType = ReferenceField(
+    'SampleType',
+    allowed_types=('SampleType',),
+    relationship='MicrobeSampleRequestSampleType',
+    referenceClass=HoldingReference,
+    widget=bika_ReferenceWidget(
+        label=_("Sample Type"),
+        visible={'edit': 'visible', 'view': 'visible'},
+        size=30,
+        showOn=True,
+        description=_("Select the sample type of this sample request."),
+    )
+)
+
+# OriginIsolatedFrom = StringField(
+#     'OriginIsolatedFrom',
+#     read_permission=permissions.View,
+#     write_permission=permissions.ModifyPortalContent,
+#     vocabulary='getOriginIsolatedFrom',
+#     widget=SelectionWidget(
+#         format='select',
+#         label=_("Origin Isolated From"),
+#         description=_("Select the origin this microbe was isolated from"),
+#         visible={'edit': 'visible', 'view': 'visible'},
+#         render_own_label=True,
+#     )
+# )
 
 Phenotype = StringField(
     'Phenotype',
     read_permission=permissions.View,
     write_permission=permissions.ModifyPortalContent,
     vocabulary='getPhenotype',
+    default='',
     widget=SelectionWidget(
         format='select',
         label=_("Phenotype"),
@@ -68,39 +105,12 @@ Phenotype = StringField(
     )
 )
 
-# Container = ReferenceField(
-#     'Container',
-#     allowed_types=('StoragePosition',),
-#     relationship='HumanSampleRequestStoragePosition',
-#     referenceClass=HoldingReference,
-#     widget=bika_ReferenceWidget(
-#         label=_("Container"),
-#         visible={'edit': 'visible', 'view': 'visible'},
-#         size=30,
-#         showOn=True,
-#         description=_("Select the container of this requested sample."),
-#     )
-# )
-#
-# Volume = StringField(
-#     'Volume',
-#     required=0,
-#     # searchable=True,
-#     read_permission=permissions.View,
-#     write_permission=permissions.ModifyPortalContent,
-#     widget=StringWidget(
-#         label=_("Volume"),
-#         description=_("The volume to be collected for this requested sample."),
-#         visible={'edit': 'visible', 'view': 'visible'},
-#     )
-# )
-
-
-
 schema = BikaSchema.copy() + Schema((
+    Approved,
     Identification,
     Strain,
-    OriginIsolatedFrom,
+    Origin,
+    SampleType,
     Phenotype,
 ))
 schema['title'].widget.visible = {'view': 'invisible', 'edit': 'invisible'}
@@ -118,10 +128,10 @@ class MicrobeSampleRequest(BaseContent):
         from bika.lims.idserver import renameAfterCreation
         renameAfterCreation(self)
 
-    def getOriginIsolatedFrom(self):
-        return ['Human', 'Animal', 'Plant', 'Environmental']
+    def getOrigin(self):
+        return ['', 'Human', 'Animal', 'Plant', 'Environmental']
 
     def getPhenotype(self):
-        return ['Unknown', 'WildType', 'Recombinant']
+        return ['', 'Unknown', 'WildType', 'Recombinant']
 
 registerType(MicrobeSampleRequest, config.PROJECTNAME)

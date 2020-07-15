@@ -3,13 +3,13 @@ from Products.Archetypes import atapi
 from baobab.lims.config import PROJECTNAME
 from plone.app.folder.folder import ATFolder, ATFolderSchema
 from zope.interface.declarations import implements
-from baobab.lims.interfaces import IHumanSampleRequest
+from baobab.lims.interfaces import IHumanSampleRequests
 
 schema = ATFolderSchema.copy()
 
 
 class HumanSampleRequests(ATFolder):
-    implements(IHumanSampleRequest)
+    implements(IHumanSampleRequests)
     displayContentsTab = False
     schema = schema
 

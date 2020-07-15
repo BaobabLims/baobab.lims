@@ -17,7 +17,7 @@ class CollectionRequestsView(BikaListingView):
         BikaListingView.__init__(self, context, request)
 
         self.context = context
-        self.catalog = 'bika_catalog'
+        self.catalog = 'portal_catalog'
         request.set('disable_plone.rightcolumn', 1)
         self.contentFilter = {
             'portal_type': 'CollectionRequest',
@@ -41,11 +41,11 @@ class CollectionRequestsView(BikaListingView):
         self.columns = {
             'RequestNumber': {
                 'title': _('RequestNumber'),
-                'type': 'choices'
+                'input_width': '10'
             },
             'Client': {
                 'title': _('Client'),
-                'type': 'choices'
+                'input_width': '20'
             },
             'DateOfRequest': {
                 'title': _('Date Of Request'),
@@ -57,7 +57,7 @@ class CollectionRequestsView(BikaListingView):
             },
             'ResultOfEvaluation': {
                 'title': _('Result Of Evaluation'),
-                'type': 'choices'
+                'input_width': '10'
             }
         }
 
@@ -74,9 +74,9 @@ class CollectionRequestsView(BikaListingView):
                 'columns': [
                     'RequestNumber',
                     'Client',
+                    'ResultOfEvaluation',
                     'DateOfRequest',
                     'DateEvaluated',
-                    'ResultOfEvaluation',
                 ]
             }
         ]
@@ -89,7 +89,6 @@ class CollectionRequestsView(BikaListingView):
         return BikaListingView.__call__(self)
 
     def folderitems(self, full_objects=False):
-
         items = BikaListingView.folderitems(self)
 
         for x in range(len(items)):
@@ -98,18 +97,22 @@ class CollectionRequestsView(BikaListingView):
                 continue
             obj = items[x]['obj']
 
-            items[x]['RequestNumber'] = obj.getId()
+            if 'RequestNumber' in items[x] and items[x]['RequestNumber']:
+                items[x]['replace']['RequestNumber'] = "<a href='%s'>%s</a>" % \
+                    (items[x]['url'], items[x]['RequestNumber'])
+            else:
+                items[x]['RequestNumber'] = obj.getId()
+                items[x]['replace']['RequestNumber'] = "<a href='%s'>%s</a>" % \
+                                                       (items[x]['url'], items[x]['RequestNumber'])
 
-            items[x]['replace']['RequestNumber'] = "<a href='%s'>%s</a>" % \
-                                                   (items[x]['url'],
-                                                    items[x]['RequestNumber'])
             items[x]['DateOfRequest'] = obj.getField('DateOfRequest').get(obj)
             items[x]['DateEvaluated'] = obj.getField('DateEvaluated').get(obj)
             items[x]['ResultOfEvaluation'] = obj.getField('ResultOfEvaluation').get(obj)
 
             client = obj.getClient()
+            print(client)
             if client and hasattr(client, 'title'):
-                items[x]['Client'] = client.title
+                items[x]['Client'] = client.Title()
 
         return items
 

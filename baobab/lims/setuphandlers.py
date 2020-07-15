@@ -181,7 +181,7 @@ class BikaCustomGenerator:
         mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
         mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
         mp(permissions.AddPortalContent, ['Manager', 'LabManager'], 0)
-        portal.projects.reindexObject()
+        portal.strains.reindexObject()
 
         # microbe sample requests
         mp = portal.microbe_sample_requests.manage_permission
@@ -196,7 +196,7 @@ class BikaCustomGenerator:
         mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
         mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
         mp(permissions.AddPortalContent, ['Manager', 'LabManager'], 0)
-        portal.projects.reindexObject()
+        portal.microbe_sample_requests.reindexObject()
 
         # human sample requests
         mp = portal.human_sample_requests.manage_permission
@@ -211,7 +211,7 @@ class BikaCustomGenerator:
         mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
         mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
         mp(permissions.AddPortalContent, ['Manager', 'LabManager'], 0)
-        portal.projects.reindexObject()
+        portal.human_sample_requests.reindexObject()
 
         # collection requests
         mp = portal.collection_requests.manage_permission
@@ -226,7 +226,7 @@ class BikaCustomGenerator:
         mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
         mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
         mp(permissions.AddPortalContent, ['Manager', 'LabManager'], 0)
-        portal.projects.reindexObject()
+        portal.collection_requests.reindexObject()
 
         # sample kingdoms
         mp = portal.sample_kingdoms.manage_permission
@@ -241,7 +241,7 @@ class BikaCustomGenerator:
         mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
         mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
         mp(permissions.AddPortalContent, ['Manager', 'LabManager'], 0)
-        portal.projects.reindexObject()
+        portal.sample_kingdoms.reindexObject()
 
         # sample compliances
         mp = portal.sample_compliances.manage_permission
@@ -256,7 +256,7 @@ class BikaCustomGenerator:
         mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
         mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
         mp(permissions.AddPortalContent, ['Manager', 'LabManager'], 0)
-        portal.projects.reindexObject()
+        portal.sample_compliances.reindexObject()
 
         # audit logger
         mp = portal.auditlogs.manage_permission
@@ -423,7 +423,7 @@ def setupCustomVarious(context):
         'bika_samplingrounds',
         'bika_clientdepartments',
         'bika_clienttypes',
-        'bika_biospectypes'
+        'bika_biospectypes',
     ]:
         obj = bika_setup._getOb(x)
         obj.schema['excludeFromNav'].set(obj, True)

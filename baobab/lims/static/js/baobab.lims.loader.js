@@ -42,6 +42,8 @@ window.baobab.lims.controllers =  {
         ['BaobabSampleView'],
     "#collectionrequest-base-edit":
         ['BaobabCollectionRequestView'],
+    "#baobab_collection_request_edit":
+        ['BaobabCollectionRequestEditView'],
 };
 
 /**

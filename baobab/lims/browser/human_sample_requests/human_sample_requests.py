@@ -25,7 +25,7 @@ class HumanSampleRequestsView(BikaListingView):
         self.context_actions = {_('Add'):
                                     {'url': 'createObject?type_name=HumanSampleRequest',
                                      'icon': '++resource++bika.lims.images/add.png'}}
-        self.title = self.context.translate(_("HumanSampleRequests"))
+        self.title = self.context.translate(_("Human Sample Requests"))
         self.icon = self.portal_url + \
                     "/++resource++baobab.lims.images/patient_big.png"
         self.description = ''

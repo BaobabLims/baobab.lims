@@ -37,10 +37,11 @@
     <include package=".centrifugation"/>
     <include package=".centrifugations"/>
     <include package=".sample_kingdoms"/>
-    <include package=".human_sample_requests"/>
     <include package=".sample_compliances"/>
+    <include package=".collection_request"/>
     <include package=".collection_requests"/>
     <include package=".strains"/>
+    <include package=".human_sample_requests"/>
     <include package=".microbe_sample_requests"/>
 
     <!-- This registration allows additional sticker templates.

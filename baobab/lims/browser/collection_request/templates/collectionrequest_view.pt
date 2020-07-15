@@ -1,0 +1,136 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:tal="http://xml.zope.org/namespaces/tal"
+	xmlns:metal="http://xml.zope.org/namespaces/metal"
+	xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+	metal:use-macro="here/main_template/macros/master"
+	i18n:domain="baobab">
+
+<head>
+    <style>
+
+    </style>
+</head>
+
+<body>
+<metal:title fill-slot="content-title">
+    <h1>
+        <img tal:condition="view/icon | nothing"
+            src="" tal:attributes="src view/icon"/>
+        <span class="documentFirstHeading" tal:content="view/id" />
+    </h1>
+    <hr/>
+</metal:title>
+
+<metal:content-description fill-slot="content-description">
+</metal:content-description>
+
+<metal:content-core fill-slot="content-core" tal:define="portal context/@@plone_portal_state/portal;">
+    <h3 style="margin-top:1em;">
+        <tal:current_storage>
+            <img title="Project"
+                tal:attributes="src string:${view/portal_url}/++resource++baobab.lims.images/project.png">
+            <span i18n:translate="">Info Project</span>:
+        </tal:current_storage>
+    </h3><br/>
+
+    <input type="hidden" name="collection_request_uid" id="collection_request_uid" tal:attributes="value view/collection_request_uid">
+
+    <div class="collectionrequest-content" style="border: solid; border-width: thin; margin: 15px;">
+        <table class="storage" style="border-collapse: collapse; width: 100%;">
+            <tbody>
+            <tr tal:condition="view/client" style="background: #f0f0f2;">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Client</th>
+                <td tal:content="view/client" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            <tr tal:condition="view/request_number" style="background: #f0f0f2;">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Request Number</th>
+                <td tal:content="view/request_number" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            <tr tal:condition="view/sample_kingdom" style="background: #f0f0f2;">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Sample Kingdom</th>
+                <td tal:content="view/sample_kingdom" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            <tr tal:condition="view/number_requested">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Number Requested</th>
+                <td tal:content="view/number_requested" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            <tr tal:condition="view/date_evaluated">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Date Evaluated</th>
+                <td tal:content="view/date_evaluated" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            <tr tal:condition="view/result_of_evaluation">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Result Of Evaluation</th>
+                <td tal:content="view/result_of_evaluation" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            <tr tal:condition="view/reason_for_evaluation">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Reason For Evaluation</th>
+                <td tal:content="view/reason_for_evaluation" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="sample-requests-content" style="border: solid; border-width: thin; margin: 15px;">
+        <table class="invoice-items items">
+            <caption><strong>Human Sample Requests</strong></caption>
+            <tr>
+              <th style='text-align:left;' i18n:translate=''>Approved</th>
+              <th style='text-align:left;' i18n:translate=''>Barcode</th>
+              <th style='text-align:left;' i18n:translate=''>Sample Type</th>
+              <th style='text-align:left;' i18n:translate=''>Volume</th>
+              <th style='text-align:left;' i18n:translate=''>Unit</th>
+            </tr>
+            <tr tal:repeat="human_sample_request view/human_sample_request_rows">
+
+                <td  style='text-align:left;' tal:content='python:human_sample_request["approved"]'>approved</td>
+                <td  style='text-align:left;' tal:content='python:human_sample_request["barcode"]'>barcode</td>
+                <td  style='text-align:left;' tal:content='python:human_sample_request["sample_type"]'>sample_type</td>
+                <td  style='text-align:left;' tal:content='python:human_sample_request["volume"]'>volume</td>
+                <td  style='text-align:left;' tal:content='python:human_sample_request["unit"]'>unit</td>
+
+            </tr>
+        </table>
+
+        <table class="invoice-items items">
+            <caption><strong>Microbe Sample Requests</strong></caption>
+            <tr>
+              <th style='text-align:left;' i18n:translate=''>Approved</th>
+              <th style='text-align:left;' i18n:translate=''>Identification</th>
+              <th style='text-align:left;' i18n:translate=''>Strain</th>
+              <th style='text-align:left;' i18n:translate=''>Origin</th>
+              <th style='text-align:left;' i18n:translate=''>Sample Type</th>
+              <th style='text-align:left;' i18n:translate=''>Phenotype</th>
+            </tr>
+            <tr tal:repeat="microbe_sample_request view/microbe_sample_request_rows">
+
+                <td  style='text-align:left;' tal:content='python:microbe_sample_request["approved"]'>approved</td>
+                <td  style='text-align:left;' tal:content='python:microbe_sample_request["identification"]'>identification</td>
+                <td  style='text-align:left;' tal:content='python:microbe_sample_request["strain"]'>strain</td>
+                <td  style='text-align:left;' tal:content='python:microbe_sample_request["origin"]'>origin</td>
+                <td  style='text-align:left;' tal:content='python:microbe_sample_request["sample_type"]'>sample_type</td>
+                <td  style='text-align:left;' tal:content='python:microbe_sample_request["phenotype"]'>phenotype</td>
+
+            </tr>
+        </table>
+    </div>
+
+
+
+</metal:content-core>
+
+</body>
+</html>

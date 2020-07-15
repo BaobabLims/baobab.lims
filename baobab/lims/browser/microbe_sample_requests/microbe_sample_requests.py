@@ -25,7 +25,7 @@ class MicrobeSampleRequestsView(BikaListingView):
         self.context_actions = {_('Add'):
                                     {'url': 'createObject?type_name=MicrobeSampleRequest',
                                      'icon': '++resource++bika.lims.images/add.png'}}
-        self.title = self.context.translate(_("Strains"))
+        self.title = self.context.translate(_("Microbe Sample Requests"))
         self.icon = self.portal_url + \
                     "/++resource++baobab.lims.images/patient_big.png"
         self.description = ''
@@ -47,9 +47,13 @@ class MicrobeSampleRequestsView(BikaListingView):
                 'title': _('Strain'),
                 'input_width': '20'
             },
-            'OriginIsolatedFrom': {
+            'Origin': {
                 'title': _('OriginIsolatedFrom'),
                 'input_width': '15'
+            },
+            'SampleType': {
+                'title': _('Sample Type'),
+                'input_width': '30'
             },
             'Phenotype': {
                 'title': _('Phenotype'),
@@ -70,7 +74,8 @@ class MicrobeSampleRequestsView(BikaListingView):
                 'columns': [
                     'Identification',
                     'Strain',
-                    'OriginIsolatedFrom',
+                    'Origin',
+                    'SampleType',
                     'Phenotype',
                 ]
             }
@@ -93,13 +98,14 @@ class MicrobeSampleRequestsView(BikaListingView):
                 continue
             obj = items[x]['obj']
 
-            items[x]['Identification'] = obj.Title()
+            items[x]['Identification'] = obj.getField('Identification').get(obj) or ''
 
             items[x]['replace']['Identification'] = "<a href='%s'>%s</a>" % \
                                                    (items[x]['url'],
                                                     items[x]['Identification'])
             items[x]['Strain'] = obj.getStrain() and obj.getStrain().Title() or ''
-            items[x]['OriginIsolatedFrom'] = obj.getField('OriginIsolatedFrom').get(obj)
-            items[x]['Phenotype'] = obj.getField('Phenotype').get(obj)
+            items[x]['Origin'] = obj.getField('Origin').get(obj) or ''
+            items[x]['SampleType'] = obj.getSampleType() and obj.getSampleType().Title() or ''
+            items[x]['Phenotype'] = obj.getField('Phenotype').get(obj) or ''
 
         return items

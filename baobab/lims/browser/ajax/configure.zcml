@@ -39,4 +39,18 @@
       permission="zope.Public"
     />
 
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="ajax_get_strains"
+      class=".getstrains.ajaxGetStrains"
+      permission="zope.Public"
+    />
+
+    <!--<browser:page-->
+      <!--for="Products.CMFPlone.interfaces.IPloneSiteRoot"-->
+      <!--name="ajax_get_phenotype"-->
+      <!--class=".getphenotypes.ajaxGetPhenotypes"-->
+      <!--permission="zope.Public"-->
+    <!--/>-->
+
 </configure>

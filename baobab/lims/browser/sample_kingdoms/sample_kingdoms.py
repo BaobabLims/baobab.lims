@@ -39,7 +39,7 @@ class SampleKingdomsView(BikaListingView):
             self.request.set('disable_border', 1)
 
         self.columns = {
-            'Title': {'title': _('SampleKingdoms'),
+            'Title': {'title': _('Sample Kingdoms'),
                       'index': 'sortable_title'},
             'Description': {
                 'title': _('Description'),

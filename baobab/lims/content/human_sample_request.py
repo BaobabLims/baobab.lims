@@ -12,6 +12,19 @@ from baobab.lims.interfaces import IHumanSampleRequest
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from Products.CMFPlone.utils import safe_unicode
 
+Approved = BooleanField(
+    'Approved',
+    read_permission=permissions.View,
+    write_permission=permissions.ModifyPortalContent,
+    vocabulary='getApproved',
+    widget=SelectionWidget(
+        format='select',
+        label=_("Approved"),
+        description=_("Select approved or rejected for the requested sample"),
+        visible={'edit': 'visible', 'view': 'visible'},
+        render_own_label=True,
+    )
+)
 
 Barcode = StringField(
     'Barcode',
@@ -82,6 +95,7 @@ Unit = StringField(
 )
 
 schema = BikaSchema.copy() + Schema((
+    Approved,
     Barcode,
     SampleType,
     # Container,
@@ -105,6 +119,9 @@ class HumanSampleRequest(BaseContent):
 
     def getUnits(self):
         return ["ml", 'g']
+
+    def getApproved(self):
+        return ['', 'approved', 'rejected']
 
     # def Title(self):
     #     return safe_unicode(self.getField('SampleDonorID').get(self)).encode('utf-8')
