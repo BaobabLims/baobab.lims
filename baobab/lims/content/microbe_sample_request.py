@@ -12,7 +12,7 @@ from baobab.lims.interfaces import IMicrobeSampleRequest
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from Products.CMFPlone.utils import safe_unicode
 
-Approved = BooleanField(
+Approved = StringField(
     'Approved',
     default=False,
     widget=SelectionWidget(

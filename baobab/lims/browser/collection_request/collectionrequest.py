@@ -66,8 +66,14 @@ class CollectionRequestView(BrowserView):
         prepared_request_rows = []
 
         for sample_request in human_sample_request_rows:
+            # approved = sample_request.getField('Approved').get(sample_request)
+            # approval_status = self.get_approval_status(approved)
+
             prepared_request = {
-                'approved': sample_request.Title(),
+                'approved': sample_request.getField('Approved').get(sample_request),
+                # 'status_approved': approval_status['approved_status'],
+                # 'status_rejected': approval_status['rejected_status'],
+                # 'status_unspecified': approval_status['unspecified_status'],
                 'barcode': sample_request.getField('Barcode').get(sample_request),
                 'sample_type': self.get_sample_type(sample_request),
                 'volume': sample_request.getField('Volume').get(sample_request),
@@ -77,14 +83,38 @@ class CollectionRequestView(BrowserView):
 
         return prepared_request_rows
 
+    # def get_approval_status(self, approval):
+    #     approval_status = {
+    #         'rejected_status': False,
+    #         'approved_status': False,
+    #         'unspecified_status': False,
+    #     }
+    #
+    #     if approval == 'rejected':
+    #         approval_status['rejected_status'] = True
+    #         return approval_status
+    #
+    #     if approval == 'approved':
+    #         approval_status['approved_status'] = True
+    #         return approval_status
+    #
+    #     approval_status['unspecified_status'] = True
+    #     return approval_status
+
     def prepare_microbe_sample_request_rows(self):
 
         microbe_sample_request_rows = self.context.get_microbe_sample_requests()
         prepared_request_rows = []
 
         for sample_request in microbe_sample_request_rows:
+            # approved = sample_request.getField('Approved').get(sample_request)
+            # approval_status = self.get_approval_status(approved)
+
             prepared_request = {
-                'approved': sample_request.Title(),
+                'approved': sample_request.getField('Approved').get(sample_request),
+                # 'status_approved': approval_status['approved_status'],
+                # 'status_rejected': approval_status['rejected_status'],
+                # 'status_unspecified': approval_status['unspecified_status'],
                 'identification': sample_request.getField('Identification').get(sample_request),
                 'strain': self.get_strain(sample_request),
                 'origin': sample_request.getField('Origin').get(sample_request),
@@ -286,9 +316,14 @@ class CollectionRequestEdit(BrowserView):
         prepared_request_rows = []
 
         for sample_request in human_sample_request_rows:
+            approved = sample_request.getField('Approved').get(sample_request)
+            approval_status = self.get_approval_status(approved)
+
             prepared_request = {
                 'UID': sample_request.UID(),
-                'approved': sample_request.Title(),
+                'status_approved': approval_status['approved_status'],
+                'status_rejected': approval_status['rejected_status'],
+                'status_unspecified': approval_status['unspecified_status'],
                 'barcode': sample_request.getField('Barcode').get(sample_request),
                 'sample_type': self.get_sample_type(sample_request),
                 'volume': sample_request.getField('Volume').get(sample_request),
@@ -307,9 +342,14 @@ class CollectionRequestEdit(BrowserView):
         prepared_request_rows = []
 
         for sample_request in microbe_sample_request_rows:
+            approved = sample_request.getField('Approved').get(sample_request)
+            approval_status = self.get_approval_status(approved)
+
             prepared_request = {
                 'UID': sample_request.UID(),
-                'approved': sample_request.Title(),
+                'status_approved': approval_status['approved_status'],
+                'status_rejected': approval_status['rejected_status'],
+                'status_unspecified': approval_status['unspecified_status'],
                 'identification': sample_request.getField('Identification').get(sample_request),
                 'strain': self.get_strain(sample_request),
                 'origin': sample_request.getField('Origin').get(sample_request),
@@ -319,6 +359,24 @@ class CollectionRequestEdit(BrowserView):
             prepared_request_rows.append(prepared_request)
 
         return prepared_request_rows
+
+    def get_approval_status(self, approval):
+        approval_status = {
+            'rejected_status': False,
+            'approved_status': False,
+            'unspecified_status': False,
+        }
+
+        if approval == 'rejected':
+            approval_status['rejected_status'] = True
+            return approval_status
+
+        if approval == 'approved':
+            approval_status['approved_status'] = True
+            return approval_status
+
+        approval_status['unspecified_status'] = True
+        return approval_status
 
     def get_client(self, collection_request):
         try:

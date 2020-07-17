@@ -136,8 +136,20 @@
                             <tr tal:attributes='id python:human_sample_request["UID"]' class='human-collectionrequest-rows' tal:repeat="human_sample_request python:view.prepare_human_sample_request_rows()">
                                 <!--?<td  style='text-align:left;' tal:content='python:human_sample_request["approved"]'>approved</td>-->
                                 <td style='text-align:left;' >
-                                    <select class="human-request-approval" tal:attributes='datauid python:human_sample_request["UID"]'>
-                                        <option></option>
+                                    <select tal:condition='python:human_sample_request["status_approved"]' class="human-request-approval" tal:attributes='datauid python:human_sample_request["UID"]'>
+                                        <option value=""></option>
+                                        <option value="rejected">Rejected</option>
+                                        <option value="approved" selected>Approved</option>
+                                    </select>
+
+                                    <select tal:condition='python:human_sample_request["status_rejected"]' class="human-request-approval" tal:attributes='datauid python:human_sample_request["UID"]'>
+                                        <option value=""></option>
+                                        <option value="rejected" selected>Rejected</option>
+                                        <option value="approved">Approved</option>
+                                    </select>
+
+                                    <select tal:condition='python:human_sample_request["status_unspecified"]' class="human-request-approval" tal:attributes='datauid python:human_sample_request["UID"]'>
+                                        <option value="" selected></option>
                                         <option value="rejected">Rejected</option>
                                         <option value="approved">Approved</option>
                                     </select>
@@ -167,11 +179,25 @@
                             <tr tal:attributes='id python:microbe_sample_request["UID"]' class='microbe-collectionrequest-rows' tal:repeat="microbe_sample_request python:view.prepare_microbe_sample_request_rows()">
                                 <!--?<td  style='text-align:left;' tal:content='python:microbe_sample_request["approved"]'>approved</td>-->
                                 <td style='text-align:left;' >
-                                    <select class="microbe-request-approval" tal:attributes='datauid python:microbe_sample_request["UID"]'>
-                                        <option></option>
+
+                                    <select tal:condition='python:microbe_sample_request["status_approved"]' class="microbe-request-approval" tal:attributes='datauid python:microbe_sample_request["UID"]'>
+                                        <option value=""></option>
+                                        <option value="rejected">Rejected</option>
+                                        <option value="approved" selected>Approved</option>
+                                    </select>
+
+                                    <select tal:condition='python:microbe_sample_request["status_rejected"]' class="microbe-request-approval" tal:attributes='datauid python:microbe_sample_request["UID"]'>
+                                        <option value=""></option>
+                                        <option value="rejected" selected>Rejected</option>
+                                        <option value="approved">Approved</option>
+                                    </select>
+
+                                    <select tal:condition='python:microbe_sample_request["status_unspecified"]' class="microbe-request-approval" tal:attributes='datauid python:microbe_sample_request["UID"]'>
+                                        <option value="" selected></option>
                                         <option value="rejected">Rejected</option>
                                         <option value="approved">Approved</option>
                                     </select>
+
                                 </td>
                                 <td  style='text-align:left;' tal:content='python:microbe_sample_request["identification"]'>identification</td>
                                 <td  style='text-align:left;' tal:content='python:microbe_sample_request["strain"]'>strain</td>

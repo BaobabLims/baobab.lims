@@ -59,7 +59,7 @@ class AjaxApproveCollectionRequest(BrowserView):
             print('---------------------Microbe Rows')
             print(collection_request_microbe_samples)
 
-            raise Exception('This is the exception')
+            # raise Exception('This is the exception')
 
             # process input and result samples
             human_collection_requests = self.approve_collection_request_human_samples(
@@ -70,7 +70,7 @@ class AjaxApproveCollectionRequest(BrowserView):
             )
             collection_request_obj = self.approve_collection_request_object(collection_request_details)
 
-            #
+
             for obj in human_collection_requests:
                 obj.unmarkCreationFlag()
                 renameAfterCreation(obj)
@@ -81,8 +81,8 @@ class AjaxApproveCollectionRequest(BrowserView):
 
             # collection_request_obj.getField("HumanSampleRequests").set(collection_request_obj, collection_request_human_samples_results)
             # collection_request_obj.getField("MicrobeSampleRequests").set(collection_request_obj, collection_request_microbe_samples_results)
-            collection_request_obj.unmarkCreationFlag()
-            renameAfterCreation(collection_request_obj)
+            # collection_request_obj.unmarkCreationFlag()
+            # renameAfterCreation(collection_request_obj)
 
         except Exception as e:
             error_message = json.dumps({'error_message': str(e)})
@@ -100,13 +100,16 @@ class AjaxApproveCollectionRequest(BrowserView):
 
     def approve_collection_request_object(self, collection_request_details):
 
-        obj = self.pc(UID=collection_request_details['collection_request_uid'])
+        # obj = self.pc(UID=collection_request_details['collection_request_uid'])
+        obj = self.get_content_type(collection_request_details['collection_request_uid'])
 
         obj.edit(
             DateEvaluated=collection_request_details['date_evaluated'],
             ResultOfEvaluation=collection_request_details['result_of_evaluation'],
             ReasonForEvaluation=collection_request_details['reason_for_evaluation'],
         )
+
+        obj.reindexObject()
 
         return obj
 
@@ -115,9 +118,12 @@ class AjaxApproveCollectionRequest(BrowserView):
         human_collection_requests = []
 
         for row_data in collection_request_human_rows:
-            human_collection_request = self.get_content_type(row_data['collection_request_uid'])
+            human_collection_request = self.get_content_type(row_data['uid'])
+            print('---------Inside the human collection request')
             if row_data['approval'] in ['', 'approved', 'rejected']:
-                human_collection_request.getField('Approve').set(human_collection_request, row_data['approval'])
+                print('------approved')
+                human_collection_request.getField('Approved').set(human_collection_request, row_data['approval'])
+                human_collection_requests.append(human_collection_request)
 
         return human_collection_requests
 
@@ -126,9 +132,10 @@ class AjaxApproveCollectionRequest(BrowserView):
         microbe_collection_requests = []
 
         for row_data in collection_request_microbe_rows:
-            microbe_collection_request = self.get_content_type(row_data['collection_request_uid'])
+            microbe_collection_request = self.get_content_type(row_data['uid'])
             if row_data['approval'] in ['', 'approved', 'rejected']:
-                microbe_collection_request.getField('Approve').set(microbe_collection_request, row_data['approval'])
+                microbe_collection_request.getField('Approved').set(microbe_collection_request, row_data['approval'])
+                microbe_collection_requests.append(microbe_collection_request)
 
         return microbe_collection_requests
 

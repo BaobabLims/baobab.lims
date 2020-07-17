@@ -260,7 +260,7 @@ class CollectionRequest(BaseContent):
         renameAfterCreation(self)
 
     def getProjectAcceptedOptions(self):
-        return ['Approved', 'Conditionally Approved', 'Rejected']
+        return ['', 'Approved', 'Conditionally Approved', 'Rejected']
 
     def getOriginIsolatedFrom(self):
         return ['Human', 'Animal', 'Plant', 'Environmental']
