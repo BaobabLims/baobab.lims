@@ -1,22 +1,18 @@
-from zope.schema import ValidationError
-from zope.schema import ValidationError
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from Products.ATContentTypes.lib import constraintypes
+from Products.CMFCore.WorkflowCore import WorkflowException
+from smtplib import SMTPServerDisconnected, SMTPRecipientsRefused
+
+from bika.lims import logger
+
 from Products.CMFPlone.utils import _createObjectByType
 from Products.CMFCore.utils import getToolByName
 
-from baobab.lims.browser.project.util import SampleGeneration
-from baobab.lims.browser.project import get_first_sampletype
-from baobab.lims.browser.biospecimens.biospecimens import BiospecimensView
 from baobab.lims.idserver import renameAfterCreation
-
-from baobab.lims.subscribers.sample import ObjectInitializedEventHandler
-from baobab.lims.utils.audit_logger import AuditLogger
-from baobab.lims.utils.local_server_time import getLocalServerTime
 from bika.lims.browser import BrowserView
-from bika.lims.workflow import doActionFor
 from bika.lims.utils import tmpID
+from baobab.lims.utils.send_email import send_email
 
 import json
 from plone import api
@@ -39,9 +35,6 @@ class AjaxCreateCollectionRequests(BrowserView):
     def __call__(self):
 
         try:
-            # raise Exception('This is an exception from Plone.')
-            print('-------------This is Collection Requests')
-
             if 'collection_requests_data' not in self.request.form:
                 raise Exception('No valid collection request samples data has been send')
 
@@ -53,18 +46,12 @@ class AjaxCreateCollectionRequests(BrowserView):
             # process input and result samples
             collection_request_human_samples_results = self.create_collection_request_human_samples(
                 collection_request_human_samples,
-                # collection_request_details
             )
+
             collection_request_microbe_samples_results = self.create_collection_request_microbe_samples(
                 collection_request_microbe_samples,
-                # collection_request_details
             )
             collection_request_obj = self.create_collection_request_object(collection_request_details)
-            # print('-----------------This is the collection request')
-            # print(collection_request_human_samples_results)
-            # print(collection_request_microbe_samples_results)
-            # print(collection_request_obj.__dict__)
-            # raise Exception('This is the exception for collection request')
 
             for obj in collection_request_human_samples_results:
                 obj.unmarkCreationFlag()
@@ -79,15 +66,17 @@ class AjaxCreateCollectionRequests(BrowserView):
             collection_request_obj.unmarkCreationFlag()
             renameAfterCreation(collection_request_obj)
 
-            # print('---------------complete Correction Request')
-            # print(collection_request_obj.__dict__)
-
         except Exception as e:
             error_message = json.dumps({'error_message': str(e)})
             self.request.RESPONSE.setHeader('Content-Type', 'application/json')
             self.request.RESPONSE.setStatus(500)
             self.request.RESPONSE.write(error_message)
         else:
+            receiver = self.get_client_email_address(collection_request_obj)
+            message = self.get_email_message()
+            subject = 'Confirm reception of collection request'
+            send_email(self.context, receiver, receiver, subject, message)
+
             output = json.dumps({
                 'url': collection_request_obj.absolute_url()
             })
@@ -96,24 +85,37 @@ class AjaxCreateCollectionRequests(BrowserView):
             self.request.RESPONSE.setStatus(200)
             self.request.RESPONSE.write(output)
 
+    def get_client_email_address(self, collection_request):
+        try:
+            client = collection_request.getField('Client').get(collection_request)
+            return client.getField('EmailAddress').get(client)
+        except:
+            return ''
+
+    def get_email_message(self):
+        message = '''
+        Dear Client
+        
+        Your request has been registered.  It is currently being analysed.  You will receive an email telling you the next steps to follow.  
+        
+        Best regards.
+        From the Secretariat of BeReB IPCI
+        '''
+
+        return message
+
     def create_collection_request_object(self, collection_request_details):
         collection_requests = self.context.collection_requests
         obj = _createObjectByType('CollectionRequest', collection_requests, tmpID())
         client = self.get_content_type(collection_request_details['client'])
-        sample_kingdom = self.get_content_type(collection_request_details['sample_kingdom'])
-
 
         obj.edit(
-            # title=collection_request_details['title'],
-            # description=collection_request_details['description'],
             Client=client,
             RequestNumber=collection_request_details['request_number'],
-            # DateOfRequest=collection_request_details['date_of_request'],
-            SampleKingdom=sample_kingdom,
+            DateOfRequest=collection_request_details['date_of_request'],
             NumberRequested=collection_request_details['number_requested'],
-            # DateEvaluated=collection_request_details['date_evaluated'],
-            # ResultOfEvaluation=collection_request_details['result_of_evaluation'],
-            # ReasonForEvaluation=collection_request_details['reason_for_evaluation'],
+            CollectHumanSamples=collection_request_details['collect_human_samples'],
+            CollectMicrobeSamples=collection_request_details['collect_microbe_samples'],
         )
 
         return obj

@@ -46,7 +46,10 @@ class CollectionRequestView(BrowserView):
         # self.description = self.context.Description()
         self.client = self.get_client(self.context)
         self.request_number = self.context.getRequestNumber()
-        self.sample_kingdom = self.get_sample_kingdom(self.context)
+        self.date_of_request = self.context.getDateOfRequest()
+        self.collect_microbe_samples = self.context.getCollectMicrobeSamples()
+        self.collect_human_samples = self.context.getCollectHumanSamples()
+        # self.sample_kingdom = self.get_sample_kingdom(self.context)
         self.number_requested = self.context.getNumberRequested()
         self.date_evaluated= self.context.getDateEvaluated()
         self.result_of_evaluation= self.context.getResultOfEvaluation()
@@ -70,7 +73,7 @@ class CollectionRequestView(BrowserView):
             # approval_status = self.get_approval_status(approved)
 
             prepared_request = {
-                'approved': sample_request.getField('Approved').get(sample_request),
+                'approved': sample_request.getField('Approved').get(sample_request) or '',
                 # 'status_approved': approval_status['approved_status'],
                 # 'status_rejected': approval_status['rejected_status'],
                 # 'status_unspecified': approval_status['unspecified_status'],
@@ -111,7 +114,7 @@ class CollectionRequestView(BrowserView):
             # approval_status = self.get_approval_status(approved)
 
             prepared_request = {
-                'approved': sample_request.getField('Approved').get(sample_request),
+                'approved': sample_request.getField('Approved').get(sample_request) or '',
                 # 'status_approved': approval_status['approved_status'],
                 # 'status_rejected': approval_status['rejected_status'],
                 # 'status_unspecified': approval_status['unspecified_status'],

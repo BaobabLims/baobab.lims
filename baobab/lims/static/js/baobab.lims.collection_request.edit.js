@@ -9,6 +9,22 @@ function BaobabCollectionRequestEditView() {
     function setUpUI(){
         setUpFormTabs();
         setUpSaveButtons();
+        setNotEditable();
+    }
+
+    function setNotEditable(){
+        $('#Client').attr("disabled", true);
+        $('#RequestNumber').attr("disabled", true);
+        $('#DateOfRequest').attr("disabled", true);
+        $('#CollectMicrobeSamples').attr("disabled", true);
+        $('#CollectHumanSamples').attr("disabled", true);
+        $('#NumberRequested').attr("disabled", true);
+
+        if ($('#ResultOfEvaluation').val() != "") {
+            $('#DateEvaluated').attr("disabled", true);
+            $('#ResultOfEvaluation').attr("disabled", true);
+            $('#ReasonForEvaluation').attr("disabled", true);
+        }
     }
 
     function setUpSaveButtons(){
@@ -53,15 +69,15 @@ function BaobabCollectionRequestEditView() {
             url: path + '/ajax_approve_collection_request',
             data: {'approval_data': final_data},
             success: function (data) {
-                console.log('--------------Successful.');
-                console.log(data);
-                console.log(data.url);
+                // console.log('--------------Successful.');
+                // console.log(data);
+                // console.log(data.url);
                 window.location.href = data.url;
             },
             error: function (data) {
-                console.log('--------------Error has been reached.');
-                console.log(data);
-                console.log(data.responseText);
+                // console.log('--------------Error has been reached.');
+                // console.log(data);
+                // console.log(data.responseText);
                 var error_response = JSON.parse(data.responseText);
 
                 $("#error_message").css("display", "block");
@@ -76,6 +92,7 @@ function BaobabCollectionRequestEditView() {
     function get_collectionrequest_details(){
         var approval_data_details = {};
         approval_data_details['collection_request_uid'] = $('#archetypes-fieldname-NumberRequested').attr('data-uid');
+        approval_data_details['date_of_request'] = $("#DateOfRequest").val();
         approval_data_details['date_evaluated'] = $("#DateEvaluated").val();
         approval_data_details['result_of_evaluation'] = $("#ResultOfEvaluation").val();
         approval_data_details['reason_for_evaluation'] = $("#ReasonForEvaluation").val();

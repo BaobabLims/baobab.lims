@@ -58,76 +58,40 @@ DateOfRequest = DateTimeField(
     )
 )
 
-SampleKingdom = ReferenceField(
-    'SampleKingdom',
-    schemata='Client Information',
-    allowed_types=('SampleKingdom',),
-    relationship='CollectionRequestSampleKingdom',
-    referenceClass=HoldingReference,
-    widget=bika_ReferenceWidget(
-        label=_("Select Sample Kingdom"),
-        visible={'edit': 'visible', 'view': 'visible'},
-        size=30,
-        showOn=True,
-        description=_("Select the Sample Kingdom."),
+CollectHumanSamples = BooleanField(
+        'CollectHumanSamples',
+        schemata='Client Information',
+        default=False,
+        widget=BooleanWidget(
+            label=_("Collect Human Sample."),
+            description=_('Indicates if this collection request collects human samples.'),
+            visible={'view': 'visible', 'edit': 'visible'}
+        )
     )
-)
 
-# Identificationz = StringField(
-#         'Identificationz',
-#         schemata='Client Information',
-#         required=0,
-#         searchable=True,
-#         read_permission=permissions.View,
-#         write_permission=permissions.ModifyPortalContent,
-#         widget=StringWidget(
-#             label=_("Identification"),
-#             description=_("The identification of this collection request."),
-#             visible={'edit': 'visible', 'view': 'visible'},
-#         )
-#     )
-#
-# Strain = ReferenceField(
-#     'Strain',
+CollectMicrobeSamples = BooleanField(
+        'CollectMicrobeSamples',
+        schemata='Client Information',
+        default=False,
+        widget=BooleanWidget(
+            label=_("Collect Microbe Sample."),
+            description=_('Indicates if this collection request collects microbe samples.'),
+            visible={'view': 'visible', 'edit': 'visible'}
+        )
+    )
+
+# SampleKingdom = ReferenceField(
+#     'SampleKingdom',
 #     schemata='Client Information',
-#     allowed_types=('Strain',),
-#     relationship='CollectionRequestStrain',
+#     allowed_types=('SampleKingdom',),
+#     relationship='CollectionRequestSampleKingdom',
 #     referenceClass=HoldingReference,
 #     widget=bika_ReferenceWidget(
-#         label=_("Select Strain"),
+#         label=_("Select Sample Kingdom"),
 #         visible={'edit': 'visible', 'view': 'visible'},
 #         size=30,
 #         showOn=True,
-#         description=_("Select the Strain."),
-#     )
-# )
-#
-# OriginIsolatedFrom = StringField(
-#         'OriginIsolatedFrom',
-#         schemata='Client Information',
-#         read_permission=permissions.View,
-#         write_permission=permissions.ModifyPortalContent,
-#         vocabulary='getOriginIsolatedFrom',
-#         widget=SelectionWidget(
-#         label=_("Origin Isolated From"),
-#             description=_("The origin this sample has been isolated from."),
-#             visible={'edit': 'visible', 'view': 'visible'},
-#             render_own_label=True,
-#         )
-#     )
-#
-# Phenotype = StringField(
-#     'Phenotype',
-#     schemata='Client Information',
-#     read_permission=permissions.View,
-#     write_permission=permissions.ModifyPortalContent,
-#     vocabulary='getPhenotype',
-#     widget=SelectionWidget(
-#         format='select',
-#         label=_("Phenotype"),
-#         description=_("The Phenotype of this sample."),
-#         visible={'edit': 'visible', 'view': 'visible'},
-#         render_own_label=True,
+#         description=_("Select the Sample Kingdom."),
 #     )
 # )
 
@@ -232,7 +196,8 @@ schema = BikaSchema.copy() + Schema((
     Client,
     RequestNumber,
     DateOfRequest,
-    SampleKingdom,
+    CollectMicrobeSamples,
+    CollectHumanSamples,
     # Identificationz,
     # Strain,
     # OriginIsolatedFrom,

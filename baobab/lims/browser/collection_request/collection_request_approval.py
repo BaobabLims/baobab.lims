@@ -1,26 +1,9 @@
-from zope.schema import ValidationError
-from zope.schema import ValidationError
-
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from Products.ATContentTypes.lib import constraintypes
-from Products.CMFPlone.utils import _createObjectByType
-from Products.CMFCore.utils import getToolByName
-
-from baobab.lims.browser.project.util import SampleGeneration
-from baobab.lims.browser.project import get_first_sampletype
-from baobab.lims.browser.biospecimens.biospecimens import BiospecimensView
 from baobab.lims.idserver import renameAfterCreation
-
-from baobab.lims.subscribers.sample import ObjectInitializedEventHandler
-from baobab.lims.utils.audit_logger import AuditLogger
-from baobab.lims.utils.local_server_time import getLocalServerTime
+from baobab.lims.utils.send_email import send_email
 from bika.lims.browser import BrowserView
-from bika.lims.workflow import doActionFor
-from bika.lims.utils import tmpID
 
+from Products.CMFCore.utils import getToolByName
 import json
-from plone import api
-from datetime import datetime
 
 class AjaxApproveCollectionRequest(BrowserView):
     """ Drug vocabulary source for jquery combo dropdown box
@@ -33,15 +16,13 @@ class AjaxApproveCollectionRequest(BrowserView):
         self.request = request
         self.pc = getToolByName(self.context, 'portal_catalog')
         self.bsc = getToolByName(self.context, 'bika_setup_catalog')
+        self.workflow = getToolByName(self.context, 'portal_workflow')
         self.collection_request = []
         self.errors = []
 
     def __call__(self):
 
         try:
-            # raise Exception('This is an exception from Plone.')
-            print('-------------The Collection Request Approval')
-
             if 'approval_data' not in self.request.form:
                 raise Exception('No valid collection request approval data has been send')
 
@@ -50,16 +31,8 @@ class AjaxApproveCollectionRequest(BrowserView):
             collection_request_human_samples = approval_data.get('approval_data_human_rows', None)
             collection_request_microbe_samples = approval_data.get('approval_data_microbe_rows', None)
 
-            print('---------------------Approval data')
-            print(approval_data)
-            print('---------------------Approval Details')
-            print(collection_request_details)
-            print('---------------------Human Rows')
-            print(collection_request_human_samples)
-            print('---------------------Microbe Rows')
-            print(collection_request_microbe_samples)
-
             # raise Exception('This is the exception')
+            self.confirm_collection_request_status(collection_request_details['collection_request_uid'])
 
             # process input and result samples
             human_collection_requests = self.approve_collection_request_human_samples(
@@ -79,11 +52,6 @@ class AjaxApproveCollectionRequest(BrowserView):
                 obj.unmarkCreationFlag()
                 renameAfterCreation(obj)
 
-            # collection_request_obj.getField("HumanSampleRequests").set(collection_request_obj, collection_request_human_samples_results)
-            # collection_request_obj.getField("MicrobeSampleRequests").set(collection_request_obj, collection_request_microbe_samples_results)
-            # collection_request_obj.unmarkCreationFlag()
-            # renameAfterCreation(collection_request_obj)
-
         except Exception as e:
             error_message = json.dumps({'error_message': str(e)})
             self.request.RESPONSE.setHeader('Content-Type', 'application/json')
@@ -98,9 +66,54 @@ class AjaxApproveCollectionRequest(BrowserView):
             self.request.RESPONSE.setStatus(200)
             self.request.RESPONSE.write(output)
 
+    def get_client_email_address(self, collection_request):
+        try:
+            client = collection_request.getField('Client').get(collection_request)
+            return client.getField('EmailAddress').get(client)
+        except:
+            return ''
+
+    def get_approved_email_message(self, collection_request):
+        message = '''
+        Dear Client
+
+        We are pleased to inform you that your request for collection %s has been accepted. 
+        Please contact the IPCI for the deposit of your samples. 
+        Drop off days are Mondays and Wednesdays from 8 a.m. to 11:30.  
+
+        Best regards.
+        From the Secretariat of BeReB IPCI
+        ''' % collection_request.getField('RequestNumber').get(collection_request)
+
+        return message
+
+    def get_rejected_email_message(self, collection_request):
+        message = '''
+        Dear Client
+
+        Unfortunately, we cannot follow up on your request for the following reasons: 
+        %s 
+        
+        Please contact us for more information. 
+                
+        Best regards.
+        From the Secretariat of BeReB IPCI
+        ''' % collection_request.getField('ReasonForEvaluation').get(collection_request)
+
+        return message
+
+    def confirm_collection_request_status(self, collection_request_uid):
+        obj = self.get_content_type(collection_request_uid)
+        review_state = self.workflow.getInfoFor(obj, 'review_state')
+
+        print('-------review state')
+        print(review_state)
+
+        if review_state == 'finalised':
+            raise Exception('This collection request is already finalised and cannot be changed anymore.')
+
     def approve_collection_request_object(self, collection_request_details):
 
-        # obj = self.pc(UID=collection_request_details['collection_request_uid'])
         obj = self.get_content_type(collection_request_details['collection_request_uid'])
 
         obj.edit(
@@ -109,9 +122,27 @@ class AjaxApproveCollectionRequest(BrowserView):
             ReasonForEvaluation=collection_request_details['reason_for_evaluation'],
         )
 
-        obj.reindexObject()
+        if collection_request_details['result_of_evaluation'] in ['Approved', 'Conditionally Approved', 'Rejected']:
+            self.workflow.doActionFor(obj, 'make_ready')
+            self.workflow.doActionFor(obj, 'finalise')
 
+            self.email_confirmation_result(obj)
+
+        obj.reindexObject()
         return obj
+
+    def email_confirmation_result(self, collection_request):
+        receiver = self.get_client_email_address(collection_request)
+
+        if collection_request.getField('ResultOfEvaluation').get(collection_request) in ['Approved', 'Conditionally Approved']:
+            message = self.get_approved_email_message(collection_request)
+            subject = 'Approval of collection request %s' % collection_request.getField('RequestNumber').get(collection_request)
+
+        if collection_request.getField('ResultOfEvaluation').get(collection_request) in ['Rejected']:
+            message = self.get_rejected_email_message(collection_request)
+            subject = 'Rejection of collection request %s' % collection_request.getField('RequestNumber').get(collection_request)
+
+        send_email(self.context, receiver, receiver, subject, message)
 
     def approve_collection_request_human_samples(self, collection_request_human_rows):
 

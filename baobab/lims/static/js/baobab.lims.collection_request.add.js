@@ -14,6 +14,7 @@ function BaobabCollectionRequestView() {
         addMicrobeSampleRequestTable(fieldset_sample_requests);
         addHumanSampleRequestTable(fieldset_sample_requests);
         addSaveAndCancelButtons(fieldset_sample_requests);
+        setNotEditable();
     }
 
     function removeControlsAndButtons(){
@@ -31,6 +32,26 @@ function BaobabCollectionRequestView() {
         addMicrobeTableHeader($('.head-microbe-request-samples'));
         appendMicrobeSampleRequestTableRow($('.body-microbe-request-samples'));
         addMicrobeTableRowManageButtons($('.div-microbe-request-samples'));
+
+        if($('#CollectMicrobeSamples').prop("checked") == false){
+            $('.div-microbe-request-samples').hide();
+        }
+
+        addToggleMicrobeTableVisibility();
+    }
+
+    function addToggleMicrobeTableVisibility(){
+        $('#CollectMicrobeSamples').click(function(){
+            if($(this).prop("checked") == true){
+                // console.log("Checkbox is checked.");
+                $('.div-microbe-request-samples').show();
+            }
+
+            else if($(this).prop("checked") == false){
+                // console.log("Checkbox is unchecked.");
+                $('.div-microbe-request-samples').hide();
+            }
+        });
     }
 
     function addHumanSampleRequestTable(fieldset_sample_requests){
@@ -42,6 +63,12 @@ function BaobabCollectionRequestView() {
         addHumanTableHeader($('.head-human-request-samples'));
         appendHumanSampleRequestTableRow($('.body-human-request-samples'));
         addHumanTableRowManageButtons($('.div-human-request-samples'));
+
+        if($('#CollectHumanSamples').prop("checked") == false){
+            $('.div-human-request-samples').hide();
+        }
+
+        addToggleHumanTableVisibility();
     }
 
     function addMicrobeTableHeader(table_header){
@@ -70,7 +97,15 @@ function BaobabCollectionRequestView() {
                 <td><select class="microbe-collectionrequest-row-strain" id="microbe_collectionrequest_strain_' + row_count + '">\
                     <option value=0>-- Select Strain --</option>\
                 </select></td>\
-                <td><input type="text" class="microbe-collectionrequest-row-origin" id="microbe_collectionrequest_origin_' + row_count + '" /></td>\
+                <td>\
+                    <select  class="microbe-collectionrequest-row-origin" id="microbe_collectionrequest_origin_' + row_count + '">\
+                        <option value="">-- Select Origin --</option>\
+                        <option value="human">-- Human --</option>\
+                        <option value="plant">-- Plant --</option>\
+                        <option value="animal">-- Animal --</option>\
+                        <option value="environment">-- Environment --</option>\
+                   </select>\
+                </td>\
                 <td><select class="microbe-collectionrequest-row-sample-type" id="microbe_collectionrequest_sample_type_' + row_count + '">\
                     <option value=0>-- Select Sample Type --</option>\
                 </select></td>\
@@ -182,6 +217,20 @@ function BaobabCollectionRequestView() {
         });
     }
 
+    function addToggleHumanTableVisibility(){
+        $('#CollectHumanSamples').click(function(){
+            if($(this).prop("checked") == true){
+                // console.log("Checkbox is checked.");
+                $('.div-human-request-samples').show();
+            }
+
+            else if($(this).prop("checked") == false){
+                // console.log("Checkbox is unchecked.");
+                $('.div-human-request-samples').hide();
+            }
+        });
+    }
+
     function addSaveAndCancelButtons(div){
         var buttons = '\
             <div class="savecancel_centrifugations_buttons">\
@@ -197,13 +246,16 @@ function BaobabCollectionRequestView() {
         });
     }
 
+
+    function setNotEditable(){
+        $('#DateEvaluated').attr("disabled", true);
+        $('#ResultOfEvaluation').attr("disabled", true);
+        $('#ReasonForEvaluation').attr("disabled", true);
+    }
+
     function populate_dropdowns(dropdown_id, populate_type){
         var path = window.location.href.split('/collection_requests')[0];
-
-        console.log('--------This is for populating strains');
         var url_path = path + '/ajax_get_' + populate_type;
-        console.log(url_path);
-
 
          $.ajax({
              dataType: "json",
@@ -211,8 +263,8 @@ function BaobabCollectionRequestView() {
              // url: path + '/ajax_get_' + populate_type,
              url: url_path,
              success: function (data) {
-                 console.log('---------------dropdowns');
-                 console.log(data);
+                 // console.log('---------------dropdowns');
+                 // console.log(data);
                  $.each(data, function() {
                     $.each(this, function(key, value){
                         $('#' + dropdown_id).append($('<option>').val(key).text(value));
@@ -245,8 +297,6 @@ function BaobabCollectionRequestView() {
     }
 
     function save_collectionrequest_data(collectionrequest_data){
-        console.log('============collectionrequest data');
-        console.log(collectionrequest_data);
 
         var final_data = JSON.stringify(collectionrequest_data);
         var path = window.location.href.split('/collection_requests')[0];
@@ -257,15 +307,9 @@ function BaobabCollectionRequestView() {
             url: path + '/ajax_create_collection_requests',
             data: {'collection_requests_data': final_data},
             success: function (data) {
-                console.log('--------------Successful.');
-                console.log(data);
-                console.log(data.url);
                 window.location.href = data.url;
             },
             error: function (data) {
-                console.log('--------------Error has been reached.');
-                console.log(data);
-                console.log(data.responseText);
                 var error_response = JSON.parse(data.responseText);
 
                 $("#error_message").css("display", "block");
@@ -286,7 +330,9 @@ function BaobabCollectionRequestView() {
         collectionrequest_details['client'] = $("#Client_uid").val();
         collectionrequest_details['request_number'] = $("#RequestNumber").val();
         collectionrequest_details['date_of_request'] = $("#DateOfRequest").val();
-        collectionrequest_details['sample_kingdom'] = $("#SampleKingdom_uid").val();
+        // collectionrequest_details['sample_kingdom'] = $("#SampleKingdom_uid").val();
+        collectionrequest_details['collect_microbe_samples'] = $("#CollectMicrobeSamples").prop("checked");    //.val();
+        collectionrequest_details['collect_human_samples'] = $("#CollectHumanSamples").prop("checked");                         //.val();
         collectionrequest_details['number_requested'] = $("#NumberRequested").val();
 
         // collectionrequest_details['date_evaluated'] = $("#DateEvaluated").val();
@@ -341,6 +387,16 @@ function BaobabCollectionRequestView() {
         });
         return human_collectionrequests;
     }
+}
+
+function BaobabCollectionRequestGeneralView() {
+
+    var that = this;
+
+    that.load = function () {
+        // disable browser auto-complete
+        $('#contentActionMenus').remove();
+    };
 }
 
 

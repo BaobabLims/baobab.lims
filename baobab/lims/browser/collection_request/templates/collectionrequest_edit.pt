@@ -258,9 +258,6 @@
                 </thead>
                 </table>
             </fieldset>
-
-
-
             <span>
                 <div style="text-align:left;padding-bottom:10px;">
                 <input i18n:attributes="value"

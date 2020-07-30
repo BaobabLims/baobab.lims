@@ -13,6 +13,7 @@
 <object name="bika_storage_workflow" meta_type="Workflow"/>
 <object name="bika_storageposition_workflow" meta_type="Workflow"/>
 <object name="bika_sample_workflow" meta_type="Workflow"/>
+<object name="bika_collectionrequest_workflow" meta_type="Workflow"/>
 
 <bindings>
     <type type_id="KitTemplates"/>
@@ -169,7 +170,7 @@
 
     <type type_id="CollectionRequests"/>
     <type type_id="CollectionRequest">
-        <bound-workflow workflow_id="bika_one_state_workflow"/>
+        <bound-workflow workflow_id="bika_collectionrequest_workflow"/>
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>
 

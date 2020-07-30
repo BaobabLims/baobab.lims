@@ -50,10 +50,22 @@
                 <td tal:content="view/request_number" style="border: 1px solid #cecfd5;
                                                    padding: 10px 15px;"></td>
             </tr>
-            <tr tal:condition="view/sample_kingdom" style="background: #f0f0f2;">
+            <tr tal:condition="view/date_of_request">
                 <th i18n:translate="" style="border: 1px solid #cecfd5;
-                                             padding: 10px 15px;text-align: left;">Sample Kingdom</th>
-                <td tal:content="view/sample_kingdom" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Date Of Request</th>
+                <td tal:content="view/date_of_request" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            <tr tal:condition="view/collect_human_samples" style="background: #f0f0f2;">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Collect Human Samples</th>
+                <td tal:content="view/collect_human_samples" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            <tr tal:condition="view/collect_microbe_samples" style="background: #f0f0f2;">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Collect Microbe Samples</th>
+                <td tal:content="view/collect_microbe_samples" style="border: 1px solid #cecfd5;
                                                    padding: 10px 15px;"></td>
             </tr>
             <tr tal:condition="view/number_requested">
