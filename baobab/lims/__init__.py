@@ -79,6 +79,8 @@ def initialize(context):
     from content.microbe_sample_requests import MicrobeSampleRequests
     from content.sample_package import SamplePackage
     from content.sample_packages import SamplePackages
+    from content.culture_medium import CultureMedium
+    from content.culture_mediums import CultureMediums
 
     content_types, constructors, ftis = process_types(
         listTypes(PROJECTNAME),

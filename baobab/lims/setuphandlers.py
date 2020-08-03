@@ -38,6 +38,7 @@ class BikaCustomGenerator:
                 'human_sample_requests',
                 'microbe_sample_requests',
                 'sample_packages',
+                'culture_mediums',
         ):
             try:
                 obj = portal._getOb(obj_id)
@@ -118,6 +119,7 @@ class BikaCustomGenerator:
         at.setCatalogsByType('HumanSampleRequests', ['bika_catalog', 'portal_catalog'])
         at.setCatalogsByType('MicrobeSampleRequests', ['bika_catalog', 'portal_catalog'])
         at.setCatalogsByType('SamplePackages', ['bika_catalog', 'portal_catalog'])
+        at.setCatalogsByType('CultureMediums', ['bika_catalog', 'portal_catalog'])
 
         addIndex(bc, 'getParentUID', 'FieldIndex')
         addIndex(bc, 'getProjectUID', 'FieldIndex')
@@ -199,6 +201,21 @@ class BikaCustomGenerator:
         mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
         mp(permissions.AddPortalContent, ['Manager', 'LabManager'], 0)
         portal.sample_packages.reindexObject()
+
+        # culture mediums
+        mp = portal.culture_mediums.manage_permission
+
+        # Allow authenticated users to see the contents of the project folder
+        mp(permissions.View, ['Authenticated'], 0)
+        mp(permissions.AccessContentsInformation, ['Authenticated'], 0)
+        mp(permissions.ListFolderContents, ['Authenticated'], 0)
+
+        mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
+        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
+        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager'], 0)
+        portal.culture_mediums.reindexObject()
 
         # microbe sample requests
         mp = portal.microbe_sample_requests.manage_permission

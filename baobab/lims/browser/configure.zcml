@@ -44,6 +44,7 @@
     <include package=".human_sample_requests"/>
     <include package=".microbe_sample_requests"/>
     <include package=".sample_packages"/>
+    <include package=".culture_mediums"/>
 
     <!-- This registration allows additional sticker templates.
          To enable these, just copy one or more of the *.pt files

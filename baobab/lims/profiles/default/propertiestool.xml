@@ -40,6 +40,7 @@
         <element value="HumanSampleRequest"/>
         <element value="MicrobeSampleRequest"/>
         <element value="SamplePackage"/>
+        <element value="CultureMedium"/>
   </property>
 </object>
 

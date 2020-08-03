@@ -32,6 +32,7 @@
         <type portal_type="HumanSampleRequest"/>
         <type portal_type="MicrobeSampleRequest"/>
         <type portal_type="SamplePackage"/>
+        <type portal_type="CultureMedium"/>
 
     </factorytypes>
 </object>

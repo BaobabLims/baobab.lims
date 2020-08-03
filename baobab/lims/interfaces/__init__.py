@@ -257,3 +257,11 @@ class ISamplePackage(Interface):
 class ISamplePackages(Interface):
     """
     """
+
+class ICultureMedium(Interface):
+    """
+    """
+
+class ICultureMediums(Interface):
+    """
+    """
