@@ -202,11 +202,11 @@ class ICentrifugations(Interface):
     """
     """
 
-class ISampleCompliance(Interface):
+class IConformity(Interface):
     """
     """
 
-class ISampleCompliances(Interface):
+class IConformities(Interface):
     """
     """
 
@@ -247,5 +247,13 @@ class IMicrobeSampleRequest(Interface):
     """
 
 class IMicrobeSampleRequests(Interface):
+    """
+    """
+
+class ISamplePackage(Interface):
+    """
+    """
+
+class ISamplePackages(Interface):
     """
     """

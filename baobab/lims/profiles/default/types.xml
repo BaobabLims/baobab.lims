@@ -58,8 +58,8 @@
     <object name="SampleKingdoms" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="SampleKingdom" meta_type="Factory-based Type Information with dynamic views"/>
 
-    <object name="SampleCompliances" meta_type="Factory-based Type Information with dynamic views"/>
-    <object name="SampleCompliance" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="Conformities" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="Conformity" meta_type="Factory-based Type Information with dynamic views"/>
 
     <object name="CollectionRequests" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="CollectionRequest" meta_type="Factory-based Type Information with dynamic views"/>
@@ -72,6 +72,9 @@
 
     <object name="MicrobeSampleRequests" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="MicrobeSampleRequest" meta_type="Factory-based Type Information with dynamic views"/>
+
+    <object name="SamplePackages" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="SamplePackage" meta_type="Factory-based Type Information with dynamic views"/>
 
     <!-- Override values from bika.lims -->
     <object name="Client" meta_type="Factory-based Type Information with dynamic views"/>

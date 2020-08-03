@@ -11,39 +11,39 @@ from zope.interface import implements
 
 from baobab.lims.config import PROJECTNAME
 from bika.lims.content.bikaschema import BikaSchema
-from baobab.lims.interfaces import ISampleCompliance
+from baobab.lims.interfaces import IConformity
 from Products.Archetypes.atapi import registerType
 from baobab.lims import bikaMessageFactory as _
 
 
-NonComplianceNumber = StringField(
-    'NonComplianceNumber',
+NonConformityNumber = StringField(
+    'NonConformityNumber',
     widget=StringWidget(
-        label=_('Non Compliance Number'),
-        description=_('The Non Compliance Number.'),
+        label=_('Non Conformity Number'),
+        description=_('The Non Conformity Number.'),
         visible={'view': 'visible', 'edit': 'visible'}
     )
 )
 
-NonComplianceAction = StringField(
-    'NonComplianceAction',
+NonConformityAction = StringField(
+    'NonConformityAction',
     widget=StringWidget(
-        label=_('Non Compliance Action'),
-        description=_('The Non Compliance Action.'),
+        label=_('Non Conformity Action'),
+        description=_('The Non Conformity Action.'),
         visible={'view': 'visible', 'edit': 'visible'}
     )
 )
 
 schema = BikaSchema.copy() + Schema((
-    NonComplianceNumber,
-    NonComplianceAction,
+    NonConformityNumber,
+    NonConformityAction,
 ))
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 schema['description'].widget.visible = {'view': 'invisible', 'edit': 'invisible'}
 
 
-class SampleCompliance(BaseContent):
-    implements(ISampleCompliance, IConstrainTypes)
+class Conformity(BaseContent):
+    implements(IConformity, IConstrainTypes)
     security = ClassSecurityInfo()
     displayContentsTab = False
     schema = schema
@@ -54,7 +54,7 @@ class SampleCompliance(BaseContent):
         from bika.lims.idserver import renameAfterCreation
         renameAfterCreation(self)
 
-registerType(SampleCompliance, PROJECTNAME)
+registerType(Conformity, PROJECTNAME)
 
 # def SampleCompliances(self, instance=None, allow_blank=False):
 #     instance = instance or self

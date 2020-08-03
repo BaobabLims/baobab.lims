@@ -103,6 +103,7 @@
               <th style='text-align:left;' i18n:translate=''>Approved</th>
               <th style='text-align:left;' i18n:translate=''>Barcode</th>
               <th style='text-align:left;' i18n:translate=''>Sample Type</th>
+              <th style='text-align:left;' i18n:translate=''>Sample Package</th>
               <th style='text-align:left;' i18n:translate=''>Volume</th>
               <th style='text-align:left;' i18n:translate=''>Unit</th>
             </tr>
@@ -111,6 +112,7 @@
                 <td  style='text-align:left;' tal:content='python:human_sample_request["approved"]'>approved</td>
                 <td  style='text-align:left;' tal:content='python:human_sample_request["barcode"]'>barcode</td>
                 <td  style='text-align:left;' tal:content='python:human_sample_request["sample_type"]'>sample_type</td>
+                <td  style='text-align:left;' tal:content='python:human_sample_request["sample_package"]'>sample_package</td>
                 <td  style='text-align:left;' tal:content='python:human_sample_request["volume"]'>volume</td>
                 <td  style='text-align:left;' tal:content='python:human_sample_request["unit"]'>unit</td>
 

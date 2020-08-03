@@ -37,12 +37,13 @@
     <include package=".centrifugation"/>
     <include package=".centrifugations"/>
     <include package=".sample_kingdoms"/>
-    <include package=".sample_compliances"/>
+    <include package=".conformities"/>
     <include package=".collection_request"/>
     <include package=".collection_requests"/>
     <include package=".strains"/>
     <include package=".human_sample_requests"/>
     <include package=".microbe_sample_requests"/>
+    <include package=".sample_packages"/>
 
     <!-- This registration allows additional sticker templates.
          To enable these, just copy one or more of the *.pt files

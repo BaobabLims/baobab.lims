@@ -162,8 +162,8 @@
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>
 
-    <type type_id="SampleCompliances"/>
-    <type type_id="SampleCompliance">
+    <type type_id="Conformities"/>
+    <type type_id="Conformity">
         <bound-workflow workflow_id="bika_one_state_workflow"/>
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>
@@ -188,6 +188,12 @@
 
     <type type_id="MicrobeSampleRequests"/>
     <type type_id="MicrobeSampleRequest">
+        <bound-workflow workflow_id="bika_one_state_workflow"/>
+        <bound-workflow workflow_id="bika_inactive_workflow"/>
+    </type>
+
+    <type type_id="SamplePackages"/>
+    <type type_id="SamplePackage">
         <bound-workflow workflow_id="bika_one_state_workflow"/>
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>

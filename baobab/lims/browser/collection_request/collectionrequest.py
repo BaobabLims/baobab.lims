@@ -79,6 +79,7 @@ class CollectionRequestView(BrowserView):
                 # 'status_unspecified': approval_status['unspecified_status'],
                 'barcode': sample_request.getField('Barcode').get(sample_request),
                 'sample_type': self.get_sample_type(sample_request),
+                'sample_package': self.get_sample_package(sample_request),
                 'volume': sample_request.getField('Volume').get(sample_request),
                 'unit': sample_request.getField('Unit').get(sample_request),
             }
@@ -147,6 +148,13 @@ class CollectionRequestView(BrowserView):
         try:
             sample_type = sample_request.getSampleType()
             return sample_type.Title()
+        except:
+            return ''
+
+    def get_sample_package(self, sample_request):
+        try:
+            sample_package = sample_request.getField('SamplePackage').get(sample_request)
+            return sample_package.Title()
         except:
             return ''
 
@@ -329,6 +337,7 @@ class CollectionRequestEdit(BrowserView):
                 'status_unspecified': approval_status['unspecified_status'],
                 'barcode': sample_request.getField('Barcode').get(sample_request),
                 'sample_type': self.get_sample_type(sample_request),
+                'sample_package': self.get_sample_package(sample_request),
                 'volume': sample_request.getField('Volume').get(sample_request),
                 'unit': sample_request.getField('Unit').get(sample_request),
             }
@@ -407,6 +416,13 @@ class CollectionRequestEdit(BrowserView):
         try:
             strain = sample_request.getField('Strain').get(sample_request)
             return strain.Title()
+        except:
+            return ''
+
+    def get_sample_package(self, sample_request):
+        try:
+            sample_package = sample_request.getField('SamplePackage').get(sample_request)
+            return sample_package.Title()
         except:
             return ''
 

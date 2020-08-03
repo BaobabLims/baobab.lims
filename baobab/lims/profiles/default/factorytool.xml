@@ -26,11 +26,12 @@
         <type portal_type="ResultSample"/>
         <type portal_type="Centrifugation"/>
         <type portal_type="SampleKingdom"/>
-        <type portal_type="SampleCompliance"/>
+        <type portal_type="Conformity"/>
         <type portal_type="CollectionRequest"/>
         <type portal_type="Strain"/>
         <type portal_type="HumanSampleRequest"/>
         <type portal_type="MicrobeSampleRequest"/>
+        <type portal_type="SamplePackage"/>
 
     </factorytypes>
 </object>

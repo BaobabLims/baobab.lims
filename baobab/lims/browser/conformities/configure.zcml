@@ -4,9 +4,9 @@
         i18n_domain="baobab.lims">
 
     <browser:page
-        for="baobab.lims.interfaces.ISampleCompliances"
+        for="baobab.lims.interfaces.IConformities"
         name="folder_view"
-        class=".sample_compliances.SampleCompliancesView"
+        class=".conformities.ConformitiesView"
         permission="zope2.View"
         layer="bika.lims.interfaces.IBikaLIMS"
     />

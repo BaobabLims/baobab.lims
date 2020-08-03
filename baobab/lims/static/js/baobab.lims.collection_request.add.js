@@ -154,7 +154,7 @@ function BaobabCollectionRequestView() {
             <tr>\
                 <th>Barcode</th>\
                 <th>Sample Type</th>\
-                <th>Origin</th>\
+                <th>Sample Package</th>\
                 <th>Volume</th>\
                 <th>Unit</th>\
             </tr>\
@@ -175,7 +175,9 @@ function BaobabCollectionRequestView() {
                 <td><select class="human-collectionrequest-row-sample-type" id="human_collectionrequest_sample_type_' + row_count + '">\
                     <option value=0>-- Select Sample Type --</option>\
                 </select></td>\
-                <td><input type="text" class="human-collectionrequest-row-container" id="human_collectionrequest_container_' + row_count + '" /></td>\
+                <td><select class="human-collectionrequest-row-sample-package" id="human_collectionrequest_sample_package_' + row_count + '">\
+                    <option value=0>-- Select Sample Package --</option>\
+                </select></td>\
                 <td><input type="text" class="human-collectionrequest-row-volume" id="human_collectionrequest_volume_' + row_count + '" /></td>\
                 <td><select class="human-collectionrequest-row-unit" id="human_collectionrequest_unit_' + row_count + '">\
                     <option value="">-- Select Unit --</option>\
@@ -192,7 +194,7 @@ function BaobabCollectionRequestView() {
             $('.' + 'body-human-request-samples' + ' tr:last').after(table_row);
         }
         populate_dropdowns('human_collectionrequest_sample_type_' + row_count, 'sampletypes');
-        // populate_dropdowns('centrifugation_condition_' + row_count, 'sample_conditions');
+        populate_dropdowns('human_collectionrequest_sample_package_' + row_count, 'sample_packages');
     }
 
     function addHumanTableRowManageButtons(div){
@@ -370,18 +372,17 @@ function BaobabCollectionRequestView() {
         $('.human-collectionrequest-rows').each(function(alqt_index, human_collectionrequest_row){
             var barcode = $(human_collectionrequest_row).find('.human-collectionrequest-row-barcode').val();
             var sample_type = $(human_collectionrequest_row).find('.human-collectionrequest-row-sample-type').val();
+            var sample_package = $(human_collectionrequest_row).find('.human-collectionrequest-row-sample-package').val();
             var volume = $(human_collectionrequest_row).find('.human-collectionrequest-row-volume').val();
             var unit = $(human_collectionrequest_row).find('.human-collectionrequest-row-unit').val();
-            // var phenotype = $(human_collectionrequest_row).find('.human-collectionrequest-row-phenotype').val();
-            // var storage_position = $(microbe_collectionrequest_row).find('.microbe-collectionrequest-row-').val();
 
             human_collectionrequests.push(
                 {
                   'barcode': barcode,
                   'sample_type': sample_type,
+                  'sample_package': sample_package,
                   'volume': volume,
                   'unit': unit,
-                  // 'phenotype': phenotype,
                 }
             );
         });

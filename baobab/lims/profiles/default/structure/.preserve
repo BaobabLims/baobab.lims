@@ -12,9 +12,10 @@ sample_poolings
 inputsamples
 resultsamples
 centrifugations
-sample_compliances
+conformities
 sample_kingdoms
 collection_requests
 strains
 human_sample_requests
 microbe_sample_requests
+sample_packages

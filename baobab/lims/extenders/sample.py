@@ -73,12 +73,12 @@ class SampleSchemaExtender(object):
         #     )
         # ),
         ExtReferenceField(
-            'SampleCompliance',
-            allowed_types=('SampleCompliance',),
-            relationship='ComplianceSampleCompliance',
+            'Conformity',
+            allowed_types=('Conformity',),
+            relationship='SampleConformity',
             referenceClass=HoldingReference,
             widget=bika_ReferenceWidget(
-                label=_("Sample Compliance"),
+                label=_("Conformity"),
                 # catalog_name='bika_catalog',
                 visible={'edit': 'visible',
                          'view': 'visible',
@@ -93,7 +93,7 @@ class SampleSchemaExtender(object):
                 size=30,
                 showOn=True,
                 render_own_label=True,
-                description=_("Select compliance of the sample."),
+                description=_("Select the conformity of the sample."),
             )
         ),
         ExtReferenceField(

@@ -53,19 +53,19 @@ SampleType = ReferenceField(
     )
 )
 
-# Container = ReferenceField(
-#     'Container',
-#     allowed_types=('StoragePosition',),
-#     relationship='HumanSampleRequestStoragePosition',
-#     referenceClass=HoldingReference,
-#     widget=bika_ReferenceWidget(
-#         label=_("Container"),
-#         visible={'edit': 'visible', 'view': 'visible'},
-#         size=30,
-#         showOn=True,
-#         description=_("Select the container of this requested sample."),
-#     )
-# )
+SamplePackage = ReferenceField(
+    'SamplePackage',
+    allowed_types=('SamplePackage',),
+    relationship='HumanSampleRequestSamplePackage',
+    referenceClass=HoldingReference,
+    widget=bika_ReferenceWidget(
+        label=_("Sample Package"),
+        visible={'edit': 'visible', 'view': 'visible'},
+        size=30,
+        showOn=True,
+        description=_("Select the package this requested sample arrives in."),
+    )
+)
 
 Volume = StringField(
     'Volume',
@@ -98,7 +98,7 @@ schema = BikaSchema.copy() + Schema((
     Approved,
     Barcode,
     SampleType,
-    # Container,
+    SamplePackage,
     Volume,
     Unit,
 ))

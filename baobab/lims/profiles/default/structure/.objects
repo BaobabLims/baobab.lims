@@ -14,9 +14,10 @@ sample_poolings,SamplePoolings
 inputsamples,InputSamples
 resultsamples,ResultSamples
 centrifugations,Centrifugations
-sample_compliances,SampleCompliances
+conformities,Conformities
 sample_kingdoms,SampleKingdoms
 collection_requests,CollectionRequests
 strains,Strains
 human_sample_requests,HumanSampleRequests
 microbe_sample_requests,MicrobeSampleRequests
+sample_packages,SamplePackages

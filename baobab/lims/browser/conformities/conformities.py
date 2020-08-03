@@ -10,7 +10,7 @@ from bika.lims.browser.bika_listing import BikaListingView
 from baobab.lims import bikaMessageFactory as _
 
 
-class SampleCompliancesView(BikaListingView):
+class ConformitiesView(BikaListingView):
     implements(IFolderContentsView, IViewView)
 
     def __init__(self, context, request):
@@ -20,12 +20,12 @@ class SampleCompliancesView(BikaListingView):
         self.catalog = 'portal_catalog'
         request.set('disable_plone.rightcolumn', 1)
         self.contentFilter = {
-            'portal_type': 'SampleCompliance',
+            'portal_type': 'Conformity',
         }
         self.context_actions = {_('Add'):
-                                    {'url': 'createObject?type_name=SampleCompliance',
+                                    {'url': 'createObject?type_name=Conformity',
                                      'icon': '++resource++bika.lims.images/add.png'}}
-        self.title = self.context.translate(_("Sample Compliances"))
+        self.title = self.context.translate(_("Conformities"))
         self.icon = self.portal_url + \
                     "/++resource++baobab.lims.images/patient_big.png"
         self.description = ''
@@ -35,17 +35,17 @@ class SampleCompliancesView(BikaListingView):
         self.pagesize = 25
         self.allow_edit = True
 
-        if self.context.portal_type == 'SampleCompliances':
+        if self.context.portal_type == 'Conformities':
             self.request.set('disable_border', 1)
 
         self.columns = {
             'Title': {'title': _('SampleKingdoms'),
                       'index': 'sortable_title'},
-            'NonComplianceNumber': {
-                'title': _('NonComplianceNumber'),
+            'NonConformityNumber': {
+                'title': _('NonConformityNumber'),
             },
-            'NonComplianceAction': {
-                'title': _('NonComplianceAction'),
+            'NonConformityAction': {
+                'title': _('NonConformityAction'),
             },
         }
 
@@ -61,8 +61,8 @@ class SampleCompliancesView(BikaListingView):
                 'transitions': [{'id': 'deactivate'}],
                 'columns': [
                     'Title',
-                    'NonComplianceNumber',
-                    'NonComplianceAction',
+                    'NonConformityNumber',
+                    'NonConformityAction',
                 ]
             }
         ]
@@ -93,8 +93,8 @@ class SampleCompliancesView(BikaListingView):
 
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                            (items[x]['url'], obj.Title())
-            items[x]['NonComplianceNumber'] = obj.getField('NonComplianceNumber').get(obj)
-            items[x]['NonComplianceAction'] = obj.getField('NonComplianceAction').get(obj)
+            items[x]['NonConformityNumber'] = obj.getField('NonConformityNumber').get(obj)
+            items[x]['NonConformityAction'] = obj.getField('NonConformityAction').get(obj)
 
 
         return items

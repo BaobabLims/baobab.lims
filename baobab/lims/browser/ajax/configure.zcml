@@ -46,6 +46,13 @@
       permission="zope.Public"
     />
 
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="ajax_get_sample_packages"
+      class=".getsamplepackages.ajaxGetSamplePackages"
+      permission="zope.Public"
+    />
+
     <!--<browser:page-->
       <!--for="Products.CMFPlone.interfaces.IPloneSiteRoot"-->
       <!--name="ajax_get_phenotype"-->

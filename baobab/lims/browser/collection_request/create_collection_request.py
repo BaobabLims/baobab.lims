@@ -145,11 +145,13 @@ class AjaxCreateCollectionRequests(BrowserView):
         try:
             human_sample_requests = self.context.human_sample_requests
             sample_type = self.get_content_type(collection_request_microbe_sample.get('sample_type', 'unknown'))
+            sample_package = self.get_content_type(collection_request_microbe_sample.get('sample_package', 'unknown'))
             obj = _createObjectByType('HumanSampleRequest', human_sample_requests, tmpID())
 
             obj.edit(
                 Barcode=collection_request_microbe_sample['barcode'],
                 SampleType=sample_type,
+                SamplePackage=sample_package,
                 Volume=collection_request_microbe_sample['volume'],
                 Unit=collection_request_microbe_sample['unit'],
             )
