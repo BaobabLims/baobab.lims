@@ -23,11 +23,11 @@ from baobab.lims.utils.local_server_time import getLocalServerTime
 import json
 
 
-class CentrifugationView(BrowserView):
-    template = ViewPageTemplateFile('templates/centrifugation_view.pt')
+class TransportView(BrowserView):
+    template = ViewPageTemplateFile('templates/transport_view.pt')
 
     def __init__(self, context, request):
-        super(CentrifugationView, self).__init__(context, request)
+        super(TransportView, self).__init__(context, request)
         self.title = self.context.Title()
         self.context = context
         self.request = request
@@ -40,92 +40,60 @@ class CentrifugationView(BrowserView):
         self.reviewState = reviewState
         self.absolute_url = self.context.absolute_url()
         self.id = self.context.getId()
-        self.sample_pooling_uid = self.context.UID()
+        self.transport_uid = self.context.UID()
 
         self.title = self.context.Title()
-        self.description = self.context.Description()
-        self.date_created = self.context.getDateCreated()
-        self.selected_sample = self.context.getSelectedSample()
-        self.technician = self.context.getTechnician()
-        self.technique= self.context.getTechnique()
+        self.client = self.get_client_title()
+        self.project = self.get_project_title()
+        self.status = self.context.getStatus()
+        self.application_number = self.context.getApplicationNumber()
+        self.depositor_name = self.context.getDepositorName()
+        self.depositor_phone = self.context.getDepositorPhone()
+        self.departure_date = self.context.getDepartureDate()
+        self.arrival_date = self.context.getArrivalDate()
+        self.number_of_packages = self.context.getNumberOfPackages()
+        self.departure_temperature = self.context.getDepartureTemperature()
+        self.arrival_temperature = self.context.getArrivalTemperature()
+        self.conformance = self.context.getConformance()
 
-        self.centrifugation_rows = self.prepare_centrifugation_rows()
+        self.non_conformance = False
+        self.non_conformities_rows = []
+        if self.conformance.upper() == 'NO':
+            self.non_conformance = True
+            self.non_conformities_rows = self.prepare_nonconformities_rows()
 
         self.icon = self.portal_url + \
                     "/++resource++baobab.lims.images/shipment_big.png"
 
         return self.template()
 
-    def prepare_centrifugation_rows(self):
+    def prepare_nonconformities_rows(self):
+        nonconformities_rows = self.context.getNonConformities()
+        prepared_nonconformities_rows = []
 
-        centrifugation_rows = self.context.get_centrifugation_rows()
-        prepared_samples = []
-
-        for sample in centrifugation_rows:
-            prepared_sample = {
-                'title': sample.Title(),
-                'location': self.get_storage_location(sample),
-                'condition': self.get_sample_condition(sample),
-                'volume': sample.getField('Volume').get(sample),
-                'unit': sample.getField('Unit').get(sample),
+        for non_conformity in nonconformities_rows:
+            prepared_non_conformity = {
+                'title': non_conformity.Title(),
+                'NonConformityNumber': non_conformity.getField('NonConformityNumber').get(non_conformity),
+                'NonConformityAction': non_conformity.getField('NonConformityAction').get(non_conformity),
             }
-            prepared_samples.append(prepared_sample)
+            prepared_nonconformities_rows.append(prepared_non_conformity)
 
-        return prepared_samples
+        return prepared_nonconformities_rows
 
-    def get_storage_location(self, sample):
-        print('-------------sample details')
-        print(sample.__dict__)
+    def get_client_title(self):
         try:
-            storage_location = sample.getStorageLocation()
-            return storage_location.Title()
-        except:
-            return ''
-        # storage_location = sample.getStorageLocation()
-        # if storage_location:
-        #     return storage_location.Title()
-        # return ''
-
-    def get_sample_condition(self, sample):
-        try:
-            sample_condition = sample.getField('SampleCondition').get(sample)
-            return sample_condition.Title()
-        except:
+            client = self.context.getClient()
+            return client.Title()
+        except Exception as e:
             return ''
 
-class CentrifugationEdit(BrowserView):
-    # template = ViewPageTemplateFile('templates/sample_shipment_edit.pt')
-    template = ViewPageTemplateFile('templates/centrifugation_edit.pt')
-
-    def __call__(self):
-        # portal = self.portal
-        request = self.request
-        context = self.context
-        # setup = portal.bika_setup
-
-        if 'submitted' in request:
-
-            print('----------The submitted data before change')
-
-            context.setConstrainTypesMode(constraintypes.DISABLED)
-
-            portal_factory = getToolByName(context, 'portal_factory')
-            context = portal_factory.doCreate(context, context.id)
-
-            # self.perform_sample_shipment_audit(self.context, request)
-            context.getField('description').set(context, self.request.form['description'])
-            context.getField('DateCreated').set(context, self.request.form['DateCreated'])
-            # context.getField('SelectedSample').set(context, self.request.form['SelectedSample'])
-            context.getField('Technician').set(context, self.request.form['Technician'])
-            context.getField('Technique').set(context, self.request.form['Technique'])
-            # context.getField('PersonPooling').set(context, self.request.form['PersonPooling'])
-            context.reindexObject()
-
-            obj_url = context.absolute_url_path()
-            request.response.redirect(obj_url)
-            return
-
-        return self.template()
+    def get_project_title(self):
+        try:
+            project = self.context.getProject()
+            return project.Title()
+        except Exception as e:
+            return ''
 
     def perform_sample_shipment_audit(self, sample_shipment, request):
         audit_logger = AuditLogger(self.context, 'SampleShipment')
@@ -247,86 +215,7 @@ class CentrifugationEdit(BrowserView):
         for field in schema.fields():
             isVisible = field.widget.isVisible
             v = isVisible(self.context, mode, default='invisible', field=field)
-            # accepted_fields = ['title', 'description', 'DateCreated', 'Technician', 'Technique']
-            accepted_fields = ['title', 'description', 'DateCreated', 'Technique']
+            accepted_fields = ['title', 'description', 'DateCreated', 'Technician', 'Technique']
             if v == visibility and field.getName() in accepted_fields:
                 fields.append(field)
         return fields
-
-class GetCentrifugationData(BrowserView):
-
-    def __init__(self, context, request):
-
-        super(GetCentrifugationData, self).__init__(context, request)
-        self.context = context
-        self.request = request
-
-    def __call__(self):
-
-        uc = getToolByName(self.context, 'portal_catalog')
-
-        try:
-            uid = self.request['UID']
-            brains = uc.searchResults(portal_type='Centrifugation', UID=uid)
-            sample_pooling = brains[0].getObject()
-
-            return_val = {
-                'date_created': str(sample_pooling.getField('DateCreated').get(sample_pooling) or ''),
-            }
-
-            return json.dumps(return_val)
-
-        except:
-            return json.dumps({
-                'date_created': '',
-            })
-
-
-class ajaxGetProjects(BrowserView):
-    """ Drug vocabulary source for jquery combo dropdown box
-    """
-
-    def __init__(self, context, request):
-        super(ajaxGetProjects, self).__init__(context, request)
-        self.context = context
-        self.request = request
-
-    def __call__(self):
-        # plone.protect.CheckAuthenticator(self.request)
-
-        rows = []
-
-        pc = getToolByName(self.context, 'portal_catalog')
-        brains = pc(portal_type="Project")
-
-        for project in brains:
-            rows.append({
-                project.UID: project.Title
-            })
-
-        return json.dumps(rows)
-
-
-class ajaxGetSampleTypes(BrowserView):
-    """ Drug vocabulary source for jquery combo dropdown box
-    """
-
-    def __init__(self, context, request):
-        super(ajaxGetSampleTypes, self).__init__(context, request)
-        self.context = context
-        self.request = request
-
-    def __call__(self):
-
-        # plone.protect.CheckAuthenticator(self.request)
-        rows = []
-
-        pc = getToolByName(self.context, 'portal_catalog')
-        brains = pc(portal_type="SampleType")
-
-        for sample_type in brains:
-            rows.append({
-                sample_type.UID: sample_type.Title
-            })
-
-        return json.dumps(rows)

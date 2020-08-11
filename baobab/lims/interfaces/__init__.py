@@ -265,3 +265,11 @@ class ICultureMedium(Interface):
 class ICultureMediums(Interface):
     """
     """
+
+class ITransport(Interface):
+    """
+    """
+
+class ITransports(Interface):
+    """
+    """

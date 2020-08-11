@@ -13,6 +13,7 @@
 <object name="bika_storage_workflow" meta_type="Workflow"/>
 <object name="bika_storageposition_workflow" meta_type="Workflow"/>
 <object name="bika_sample_workflow" meta_type="Workflow"/>
+<object name="bika_transport_workflow" meta_type="Workflow"/>
 <object name="bika_collectionrequest_workflow" meta_type="Workflow"/>
 
 <bindings>
@@ -200,6 +201,12 @@
 
     <type type_id="CultureMediums"/>
     <type type_id="CultureMedium">
+        <bound-workflow workflow_id="bika_one_state_workflow"/>
+        <bound-workflow workflow_id="bika_inactive_workflow"/>
+    </type>
+
+    <type type_id="Transports"/>
+    <type type_id="Transport">
         <bound-workflow workflow_id="bika_one_state_workflow"/>
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>

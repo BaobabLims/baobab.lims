@@ -77,7 +77,7 @@
                         errors python:{};
                         mode string:edit;">
                         <tr tal:attributes="fieldName fieldName">
-                            <tal:columns tal:condition="python: fieldName != 'Remarks'" tal:repeat="arnum python:range(1)">
+                            <tal:columns tal:condition="python: fieldName != 'Remarks' or fieldName != 'Remarks'" tal:repeat="arnum python:range(1)">
                                 <td class="nowrap" tal:attributes="arnum arnum">
                                     <div class="field">
                                         <tal:ifLabel tal:condition="widget/render_own_label | nothing">

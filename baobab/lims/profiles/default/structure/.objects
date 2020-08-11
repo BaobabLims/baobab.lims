@@ -22,3 +22,4 @@ human_sample_requests,HumanSampleRequests
 microbe_sample_requests,MicrobeSampleRequests
 sample_packages,SamplePackages
 culture_mediums,CultureMediums
+transports,Transports

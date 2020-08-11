@@ -1,0 +1,144 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:tal="http://xml.zope.org/namespaces/tal"
+	xmlns:metal="http://xml.zope.org/namespaces/metal"
+	xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+	metal:use-macro="here/main_template/macros/master"
+	i18n:domain="baobab">
+
+<head>
+    <style>
+
+    </style>
+</head>
+
+<body>
+<metal:title fill-slot="content-title">
+    <h1>
+        <img tal:condition="view/icon | nothing"
+            src="" tal:attributes="src view/icon"/>
+        <span class="documentFirstHeading" tal:content="view/title" />
+    </h1>
+    <hr/>
+</metal:title>
+
+<metal:content-description fill-slot="content-description">
+</metal:content-description>
+
+<metal:content-core fill-slot="content-core" tal:define="portal context/@@plone_portal_state/portal;">
+    <h3 style="margin-top:1em;">
+        <tal:current_storage>
+            <img title="Project"
+                tal:attributes="src string:${view/portal_url}/++resource++baobab.lims.images/project.png">
+            <span i18n:translate="">Info Project</span>:
+        </tal:current_storage>
+    </h3><br/>
+
+    <input type="hidden" name="transport_uid" id="transport_uid" tal:attributes="value view/transport_uid">
+
+    <div class="transport-content" style="border: solid; border-width: thin; margin: 15px;">
+        <table class="storage" style="border-collapse: collapse; width: 100%;">
+            <tbody>
+            <tr>
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Title </th>
+                <td tal:content="view/title" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;width:70%"></td>
+            </tr>
+            <tr tal:condition="view/client" style="background: #f0f0f2;">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Client</th>
+                <td tal:content="view/client" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            <tr tal:condition="view/project" style="background: #f0f0f2;">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Project</th>
+                <td tal:content="view/project" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            <tr tal:condition="view/status" style="background: #f0f0f2;">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Status</th>
+                <td tal:content="view/status" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            <tr tal:condition="view/application_number">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Application Number</th>
+                <td tal:content="view/application_number" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            <tr tal:condition="view/depositor_name">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Depositor Name</th>
+                <td tal:content="view/depositor_name" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            <tr tal:condition="view/depositor_phone">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Depositor Phone</th>
+                <td tal:content="view/depositor_phone" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            <tr tal:condition="view/departure_date">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Departure Date</th>
+                <td tal:content="view/departure_date" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            <tr tal:condition="view/arrival_date">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Arrival Date</th>
+                <td tal:content="view/arrival_date" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            <tr tal:condition="view/number_of_packages">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Number of Packages</th>
+                <td tal:content="view/number_of_packages" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            <tr tal:condition="view/departure_temperature">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Departure Temperature</th>
+                <td tal:content="view/departure_temperature" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            <tr tal:condition="view/arrival_temperature">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Arrival Temperature</th>
+                <td tal:content="view/arrival_temperature" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+            <tr tal:condition="view/conformance">
+                <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Conformance</th>
+                <td tal:content="view/conformance" style="border: 1px solid #cecfd5;
+                                                   padding: 10px 15px;"></td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <div tal:condition="view/non_conformance" class="pooling-content" style="border: solid; border-width: thin; margin: 15px;">
+        <table class="invoice-items items">
+            <caption><strong>Non Conformities</strong></caption>
+            <tr>
+              <th style='text-align:left;' i18n:translate=''>Non Conformity</th>
+              <th style='text-align:left;' i18n:translate=''>Action</th>
+            </tr>
+            <tr tal:repeat="non_conformity view/non_conformities_rows">
+
+                <td  style='text-align:left;' tal:content='python:non_conformity["title"]'>NonComformity</td>
+                <td  style='text-align:left;' tal:content='python:non_conformity["NonConformityAction"]'>Action</td>
+
+            </tr>
+          </table>
+    </div>
+
+</metal:content-core>
+
+</body>
+</html>

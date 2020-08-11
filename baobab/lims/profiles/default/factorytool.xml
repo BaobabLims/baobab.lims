@@ -33,6 +33,7 @@
         <type portal_type="MicrobeSampleRequest"/>
         <type portal_type="SamplePackage"/>
         <type portal_type="CultureMedium"/>
+        <type portal_type="Transport"/>
 
     </factorytypes>
 </object>

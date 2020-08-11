@@ -81,6 +81,8 @@ def initialize(context):
     from content.sample_packages import SamplePackages
     from content.culture_medium import CultureMedium
     from content.culture_mediums import CultureMediums
+    from content.transport import Transport
+    from content.transports import Transports
 
     content_types, constructors, ftis = process_types(
         listTypes(PROJECTNAME),

@@ -41,6 +41,7 @@
         <element value="MicrobeSampleRequest"/>
         <element value="SamplePackage"/>
         <element value="CultureMedium"/>
+        <element value="Transport"/>
   </property>
 </object>
 

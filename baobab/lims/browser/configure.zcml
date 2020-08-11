@@ -45,6 +45,8 @@
     <include package=".microbe_sample_requests"/>
     <include package=".sample_packages"/>
     <include package=".culture_mediums"/>
+    <include package=".transport"/>
+    <include package=".transports"/>
 
     <!-- This registration allows additional sticker templates.
          To enable these, just copy one or more of the *.pt files
