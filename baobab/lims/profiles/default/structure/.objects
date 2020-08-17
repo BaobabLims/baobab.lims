@@ -23,3 +23,5 @@ microbe_sample_requests,MicrobeSampleRequests
 sample_packages,SamplePackages
 culture_mediums,CultureMediums
 transports,Transports
+culturings,Culturings
+reculturings,ReCulturings

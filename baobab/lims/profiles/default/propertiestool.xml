@@ -42,6 +42,8 @@
         <element value="SamplePackage"/>
         <element value="CultureMedium"/>
         <element value="Transport"/>
+        <element value="Culturing"/>
+        <element value="ReCulturing"/>
   </property>
 </object>
 

@@ -48,6 +48,10 @@ window.baobab.lims.controllers =  {
         ['BaobabCollectionRequestGeneralView'],
     ".portaltype-transport":
         ['BaobabTransportView'],
+    ".portaltype-culturing":
+        ['BaobabCulturingView'],
+    ".portaltype-reculturing":
+        ['BaobabReCulturingView'],
 };
 
 /**

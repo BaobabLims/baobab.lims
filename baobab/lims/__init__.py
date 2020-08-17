@@ -83,6 +83,10 @@ def initialize(context):
     from content.culture_mediums import CultureMediums
     from content.transport import Transport
     from content.transports import Transports
+    from content.culturing import Culturing
+    from content.culturings import Culturings
+    from content.reculturing import ReCulturing
+    from content.reculturings import ReCulturings
 
     content_types, constructors, ftis = process_types(
         listTypes(PROJECTNAME),

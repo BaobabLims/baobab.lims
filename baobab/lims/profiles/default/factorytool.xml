@@ -34,6 +34,8 @@
         <type portal_type="SamplePackage"/>
         <type portal_type="CultureMedium"/>
         <type portal_type="Transport"/>
+        <type portal_type="Culturing"/>
+        <type portal_type="ReCulturing"/>
 
     </factorytypes>
 </object>
