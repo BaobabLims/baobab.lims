@@ -45,8 +45,8 @@ class CentrifugationView(BrowserView):
         self.title = self.context.Title()
         self.description = self.context.Description()
         self.date_created = self.context.getDateCreated()
-        self.selected_sample = self.context.getSelectedSample()
-        self.technician = self.context.getTechnician()
+        self.selected_sample = self.context.get_selected_sample()
+        self.technician = self.context.get_technician()
         self.technique= self.context.getTechnique()
 
         self.centrifugation_rows = self.prepare_centrifugation_rows()
@@ -105,8 +105,6 @@ class CentrifugationEdit(BrowserView):
 
         if 'submitted' in request:
 
-            print('----------The submitted data before change')
-
             context.setConstrainTypesMode(constraintypes.DISABLED)
 
             portal_factory = getToolByName(context, 'portal_factory')
@@ -115,7 +113,7 @@ class CentrifugationEdit(BrowserView):
             # self.perform_sample_shipment_audit(self.context, request)
             context.getField('description').set(context, self.request.form['description'])
             context.getField('DateCreated').set(context, self.request.form['DateCreated'])
-            # context.getField('SelectedSample').set(context, self.request.form['SelectedSample'])
+            context.getField('SelectedSample').set(context, self.request.form['SelectedSample'])
             context.getField('Technician').set(context, self.request.form['Technician'])
             context.getField('Technique').set(context, self.request.form['Technique'])
             # context.getField('PersonPooling').set(context, self.request.form['PersonPooling'])
@@ -247,8 +245,7 @@ class CentrifugationEdit(BrowserView):
         for field in schema.fields():
             isVisible = field.widget.isVisible
             v = isVisible(self.context, mode, default='invisible', field=field)
-            # accepted_fields = ['title', 'description', 'DateCreated', 'Technician', 'Technique']
-            accepted_fields = ['title', 'description', 'DateCreated', 'Technique']
+            accepted_fields = ['title', 'description', 'DateCreated', 'SelectedSample', 'Technician', 'Technique']
             if v == visibility and field.getName() in accepted_fields:
                 fields.append(field)
         return fields

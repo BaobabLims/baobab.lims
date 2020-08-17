@@ -121,13 +121,25 @@ class Centrifugation(BaseContent):
         from baobab.lims.idserver import renameAfterCreation
         renameAfterCreation(self)
 
-    def getSelectedSample(self):
+    # def getSelectedSample(self):
+    #     selected_sample = self.getField('SelectedSample').get(self)
+    #     if selected_sample:
+    #         return selected_sample.Title()
+    #     return ''
+    #
+    # def getTechnician(self):
+    #     technician = self.getField('Technician').get(self)
+    #     if technician:
+    #         return technician.Title()
+    #     return ''
+
+    def get_selected_sample(self):
         selected_sample = self.getField('SelectedSample').get(self)
         if selected_sample:
             return selected_sample.Title()
         return ''
 
-    def getTechnician(self):
+    def get_technician(self):
         technician = self.getField('Technician').get(self)
         if technician:
             return technician.Title()

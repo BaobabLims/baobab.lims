@@ -35,48 +35,4 @@
       permission="zope.Public"
     />
 
-    <!--<browser:page-->
-      <!--for="baobab.lims.interfaces.ISamplePooling"-->
-      <!--name="base_view"-->
-      <!--class=".samplepooling.SamplePoolingView"-->
-      <!--permission="cmf.ModifyPortalContent"-->
-      <!--layer="bika.lims.interfaces.IBikaLIMS"-->
-    <!--/>-->
-
-    <!--<browser:page-->
-      <!--for="baobab.lims.interfaces.ISamplePooling"-->
-      <!--name="base_edit"-->
-      <!--class=".samplepooling.SamplePoolingEdit"-->
-      <!--permission="cmf.ModifyPortalContent"-->
-      <!--layer="bika.lims.interfaces.IBikaLIMS"-->
-    <!--/>-->
-
-    <!--<browser:page-->
-      <!--for="Products.CMFPlone.interfaces.IPloneSiteRoot"-->
-      <!--name="ajax_create_poolings"-->
-      <!--class=".create_pooling.AjaxCreatePoolings"-->
-      <!--permission="zope.Public"-->
-    <!--/>-->
-
-    <!--<browser:page-->
-      <!--for="Products.CMFPlone.interfaces.IPloneSiteRoot"-->
-      <!--name="ajax_get_sampletypes"-->
-      <!--class=".samplepooling.ajaxGetSampleTypes"-->
-      <!--permission="zope.Public"-->
-    <!--/>-->
-
-    <!--<browser:page-->
-      <!--for="Products.CMFPlone.interfaces.IPloneSiteRoot"-->
-      <!--name="ajax_get_samplepoolingdata"-->
-      <!--class=".getsamplepoolingdata.GetSamplePoolingData"-->
-      <!--permission="zope.Public"-->
-    <!--/>-->
-
-    <!--<browser:page-->
-      <!--for="Products.CMFPlone.interfaces.IPloneSiteRoot"-->
-      <!--name="ajax_get_projects"-->
-      <!--class=".samplepooling.ajaxGetProjects"-->
-      <!--permission="zope.Public"-->
-    <!--/>-->
-
 </configure>
