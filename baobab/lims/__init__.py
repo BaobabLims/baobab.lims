@@ -43,7 +43,7 @@ def initialize(context):
     from content.donors import SampleDonors
     from content.disease_ontology import DiseaseOntology
     from content.disease_ontologies import DiseaseOntologies
-
+    
     from content.sampleshipment import SampleShipment
     from content.sampleshipments import SampleShipments
 

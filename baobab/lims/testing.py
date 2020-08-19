@@ -17,7 +17,7 @@ from plone.app.robotframework.remote import RemoteLibraryLayer
 from plone.app.robotframework import AutoLogin, Content
 
 
-class SanbiTestLayer(PloneSandboxLayer):
+class BaobabTestLayer(PloneSandboxLayer):
     defaultBases = (PLONE_FIXTURE,)
 
     def setUpZope(self, app, configurationContext):
@@ -89,33 +89,37 @@ class SanbiTestLayer(PloneSandboxLayer):
                     portal.clients.manage_setLocalRoles(username, ['Owner', ])
 
         ## load test data
-        # from bika.lims.exportimport.load_setup_data import LoadSetupData
-        # self.request = makerequest(portal.aq_parent).REQUEST
-        # self.request.form['setupexisting'] = 1
-        # self.request.form['existing'] = "baobab.lims:test"
-        # lsd = LoadSetupData(portal, self.request)
-        # lsd()
+        #from bika.lims.exportimport.load_setup_data import LoadSetupData
+        #self.request = makerequest(portal.aq_parent).REQUEST
+        #self.request.form['setupexisting'] = 1
+        #self.request.form['existing'] = "baobab.lims:test"
+        #lsd = LoadSetupData(portal, self.request)
+        #lsd()
 
         logout()
 
+# defining a shared layer/fixture
+BAOBAB_SITE_SETUP_FIXTURE = BaobabTestLayer()
+BAOBAB_SITE_SETUP_FIXTURE['getBrowser'] = getBrowser
 
-SANBIO_TEST_FIXTURE = SanbiTestLayer()
-
-SANBI_FUNCTIONAL_FIXTURE = SanbiTestLayer()
-SANBI_FUNCTIONAL_FIXTURE['getBrowser'] = getBrowser
-SANBI_FUNCTIONAL_TESTING = FunctionalTesting(
-    bases=(SANBI_FUNCTIONAL_FIXTURE,),
-    name="SanbiTestingLayer:Functional"
-)
-
+#Remote Library layer
 REMOTE_FIXTURE = RemoteLibraryLayer(
     libraries=(AutoLogin, Content, RemoteKeywords,),
     name="RemoteLibrary:RobotRemote"
 )
 
-SANBI_ROBOT_TESTING = FunctionalTesting(
-    bases=(SANBI_FUNCTIONAL_FIXTURE,
+# Site-Setup Layer
+SITE_SETUP_LAYER = FunctionalTesting(
+    bases=(BAOBAB_SITE_SETUP_FIXTURE,
            REMOTE_FIXTURE,
            z2.ZSERVER_FIXTURE),
-    name="SanbiTestingLayer:Robot"
+    name="BaobabTestingLayer:site_setup"
+)
+
+# User manual Layer
+USER_MANUAL_LAYER = FunctionalTesting(
+    bases=(BAOBAB_SITE_SETUP_FIXTURE,
+           REMOTE_FIXTURE,
+           z2.ZSERVER_FIXTURE),
+    name="BaobabTestingLayer:user_manual"
 )

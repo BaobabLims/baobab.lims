@@ -34,3 +34,7 @@ var
 *ide-plugin.xml
 /tags
 venv
+.coverage
+.installed.cfg
+develop-eggs
+htmlcov

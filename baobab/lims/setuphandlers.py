@@ -488,11 +488,11 @@ def setupCustomVarious(context):
         'bika_batchlabels',
         'bika_containers',
         'bika_containertypes',
-        'bika_identifiertypes',
-        'bika_instrumentlocations',
+        #'bika_identifiertypes',
+        #'bika_instrumentlocations',
         # 'bika_instrumenttypes',
         # 'bika_labcontacts',
-        # 'bika_departments',
+        'bika_departments',
         'bika_labproducts',
         'bika_manufacturers',
         'bika_preservations',
@@ -506,10 +506,12 @@ def setupCustomVarious(context):
         'bika_subgroups',
         'bika_worksheettemplates',
         'bika_samplingrounds',
-        'bika_clientdepartments',
-        'bika_clienttypes',
-        'bika_biospectypes',
+        #'bika_clientdepartments',
+        #'bika_clienttypes',
+        'bika_biospectypes'
     ]:
+        #import pdb
+        #pdb.set_trace()
         obj = bika_setup._getOb(x)
         obj.schema['excludeFromNav'].set(obj, True)
         obj.reindexObject()

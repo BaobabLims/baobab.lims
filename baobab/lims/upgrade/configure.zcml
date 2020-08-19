@@ -75,5 +75,14 @@
         sortkey="8"
         profile="baobab.lims:default"/>
 
+  <genericsetup:upgradeStep
+        title="Control Panel"
+        description="Reload Kits Templates image on the control panel"
+        source="1600"
+        destination="1601"
+        handler="baobab.lims.upgrade.to1601.upgrade"
+        sortkey="8"
+        profile="baobab.lims:default"/>
+
 
 </configure>

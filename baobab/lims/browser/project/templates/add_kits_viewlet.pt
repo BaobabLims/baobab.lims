@@ -55,42 +55,46 @@
                     console.log($(idRefField));
                     var storageVal = $(idRefField).val();
                     var storageUID = $(idUID).val();
-                    var html = '<tr id="' + storageUID + '"><td>' + storageVal + '</td><td>' +
-                            '<img src="++resource++bika.lims.images/delete.png" class="remove-tr">' +
+                    var html = '<tr id="' + storageUID + '"><td>' + storageVal +
+                            '&nbsp; <img style="vertical-align: bottom;" src="++resource++bika.lims.images/delete.png" class="remove-tr">' +
                             '</td></tr>';
                     $(html).appendTo(idTable);
-
                     updateArrayUIDs(storageType, storageUID, 'ADD');
                 }
 
                 /* Adjust button names */
 
-                $("#stockItem_uid").on("focus", function (e) {
-                    $("#si-button").val("Add");
-                });
-
                 $("#kit_uid").on("focus", function (e) {
                     $("#k-button").val("Add");
                 });
 
-                $("#biospecimen_uid").on("focus", function (e) {
-                    $("#b-button").val("Add");
-                });
-
                 /* Process */
 
-                $("#si-button").on("click", function (e) {
-                    createStorageRow('#stockItem', '#stockItem_uid', '#stockitem-table-storages', 'StockItem');
+                $("#stockItem_uid").on("focus", function (e) {
+                    var storageUID = $("#stockItem_uid").val();
+                    if (stockItemUIDs.indexOf(storageUID) < 0){
+                        createStorageRow('#stockItem', '#stockItem_uid', '#stockitem-table-storages', 'StockItem');
+                    }
+                    $('input[name ="stockItem"]').val('')
                 });
+
+
+                $("#biospecimen_uid").on("focus", function (e) {
+                    var storageUID = $("#biospecimen_uid").val();
+                    if (biospecimenUIDs.indexOf(storageUID) < 0){
+                        createStorageRow('#StorageLevel', '#biospecimen_uid', '#biospecimen-table-storages', 'Biospecimen');
+                        }
+                    $('input[name ="StorageLevel"]').val('')
+
+                });
+
 
                 $("#k-button").on("click", function (e) {
                     createStorageRow('#kitAssembly', '#kit_uid', '#kit-table-storages', 'Kit');
                 });
 
-                $("#b-button").on("click", function (e) {
-                    console.log($("#b-button").val());
-                    createStorageRow('#StorageLevel', '#biospecimen_uid', '#biospecimen-table-storages', 'Biospecimen');
-                });
+
+                /* REMOVE */
 
                 $("#stockitem-table-storages").on("click", ".remove-tr", function (e) {
                     $(this).parents("tr").remove();
@@ -160,6 +164,11 @@
         cursor: pointer;
         background-color: #0B486B;
     }
+    p {
+        margin:0;
+        font-weight: bold
+    }
+
 </style>
 
 <dl class="collapsible collapsedOnLoad">
@@ -180,8 +189,8 @@
                     <tr>
                         <td>Prefix Text:
                             <div class="discreet">
-                                The display titles and IDs for new storage units. Provide the prefix to
-                                be append to the leading zeros number.
+                                <p>The display titles and IDs for new storage units.</p>
+                                <p>Provide the prefix to be append to the leading zeros number.</p>
                             </div>
                         </td>
                         <td><input name="kits-prefix-text"
@@ -202,7 +211,9 @@
                     <tr>
                         <td>Leading Zeros:
                             <div class="discreet">
-                                Prepend the zeros specified here to the sequence numbers of the storage units to create, ex: 00
+                                <p>
+                                    Prepend the zeros specified here to the sequence numbers of the storage units to create, e.g: 00
+                                </p>
                             </div>
                         </td>
                         <td><input name="kits-leading-zeros"
@@ -223,7 +234,8 @@
                     </tr>
                     <tr>
                         <td>Kit Template
-                            <div class="discreet">Templates referencing components/products kits will contain
+                            <div class="discreet">
+                                <p>Templates referencing components/products kits will contain.</p>
                             </div>
                         </td>
                         <td>
@@ -279,7 +291,10 @@
                             <span></span>
                         </fieldset>
                         <div class="discreet helptext">
-                            Select the storage of items to use in kit assembling. Possibility to select multiple storages.
+                            <p>
+                                Select the storage of items to use in kit assembling.
+                            </p>
+                            <p>Possibility to select multiple storages.</p>
                         </div>
                         <div style="width:100%" class="field ArchetypesReferenceWidget">
                             <input
@@ -313,7 +328,6 @@
 
                             <input type="hidden" name="stockItem_uid" id="stockItem_uid">
 
-                            <input type="button" id='si-button' class="add-button" value="Add"/>
                         </div>
                         <table id="stockitem-table-storages"></table>
                     </div>
@@ -324,7 +338,8 @@
                             <span></span>
                         </fieldset>
                         <div class="discreet helptext">
-                            Select the storage(s) to contain the biospecimens created. Possibility to select multiple locations.<br/>
+                            <p>Select the storage(s) to contain the biospecimens created.</p>
+                            <p>Possibility to select multiple locations.</p>
                         </div>
                         <div style="display: inline-block;">
                             <div style="width:100%" class="field ArchetypesReferenceWidget">
@@ -359,7 +374,6 @@
                                                         "portal_types": {}}'/>
 
                                 <input type="hidden" name="biospecimen_uid" id="biospecimen_uid">
-                                <input type="button" id='b-button' class="add-button" value="Add"/>
                             </div>
                         </div>
                         <table id="biospecimen-table-storages"></table>
