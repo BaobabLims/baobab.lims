@@ -36,6 +36,7 @@
         <type portal_type="Transport"/>
         <type portal_type="Culturing"/>
         <type portal_type="ReCulturing"/>
+        <type portal_type="MaldiTof"/>
 
     </factorytypes>
 </object>

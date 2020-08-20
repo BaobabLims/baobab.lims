@@ -289,3 +289,13 @@ class IReCulturing(Interface):
 class IReCulturings(Interface):
     """
     """
+
+
+class IMaldiTof(Interface):
+    """
+    """
+
+
+class IMaldiTofs(Interface):
+    """
+    """

@@ -52,6 +52,8 @@ window.baobab.lims.controllers =  {
         ['BaobabCulturingView'],
     ".portaltype-reculturing":
         ['BaobabReCulturingView'],
+    ".portaltype-malditof":
+        ['CustomMALDITOFAddView'],
 };
 
 /**

@@ -56,7 +56,8 @@ class BikaCustomGenerator:
                 'bika_biospectypes',
                 'bika_storagetypes',
                 'bika_products',
-                'bika_stockitems'):
+                'bika_stockitems',
+                'bika_malditofs'):
 
             obj = bika_setup._getOb(obj_id)
             obj.unmarkCreationFlag()
@@ -126,6 +127,7 @@ class BikaCustomGenerator:
         at.setCatalogsByType('Transports', ['bika_catalog', 'portal_catalog'])
         at.setCatalogsByType('Culturings', ['bika_catalog', 'portal_catalog'])
         at.setCatalogsByType('ReCulturings', ['bika_catalog', 'portal_catalog'])
+        at.setCatalogsByType('MaldiTofs', ['bika_catalog', 'portal_catalog'])
 
         addIndex(bc, 'getParentUID', 'FieldIndex')
         addIndex(bc, 'getProjectUID', 'FieldIndex')
@@ -510,8 +512,6 @@ def setupCustomVarious(context):
         #'bika_clienttypes',
         'bika_biospectypes'
     ]:
-        #import pdb
-        #pdb.set_trace()
         obj = bika_setup._getOb(x)
         obj.schema['excludeFromNav'].set(obj, True)
         obj.reindexObject()

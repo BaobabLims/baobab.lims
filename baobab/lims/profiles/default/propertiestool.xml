@@ -44,6 +44,7 @@
         <element value="Transport"/>
         <element value="Culturing"/>
         <element value="ReCulturing"/>
+        <element value="MaldiTof"/>
   </property>
 </object>
 
