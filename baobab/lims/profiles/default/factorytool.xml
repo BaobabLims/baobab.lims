@@ -37,6 +37,7 @@
         <type portal_type="Culturing"/>
         <type portal_type="ReCulturing"/>
         <type portal_type="MaldiTof"/>
+        <type portal_type="ResultValidation"/>
 
     </factorytypes>
 </object>

@@ -57,7 +57,8 @@ class BikaCustomGenerator:
                 'bika_storagetypes',
                 'bika_products',
                 'bika_stockitems',
-                'bika_malditofs'):
+                'bika_malditofs',
+                'bika_resultvalidations'):
 
             obj = bika_setup._getOb(obj_id)
             obj.unmarkCreationFlag()
@@ -128,6 +129,7 @@ class BikaCustomGenerator:
         at.setCatalogsByType('Culturings', ['bika_catalog', 'portal_catalog'])
         at.setCatalogsByType('ReCulturings', ['bika_catalog', 'portal_catalog'])
         at.setCatalogsByType('MaldiTofs', ['bika_catalog', 'portal_catalog'])
+        at.setCatalogsByType('ResultValidations', ['bika_catalog', 'portal_catalog'])
 
         addIndex(bc, 'getParentUID', 'FieldIndex')
         addIndex(bc, 'getProjectUID', 'FieldIndex')

@@ -43,10 +43,19 @@
         permission="bika.lims.ManageBika"
         layer="bika.lims.interfaces.IBikaLIMS"
     />
+
     <browser:page
         for="baobab.lims.interfaces.IMaldiTofs"
         name="folder_view"
         class=".bika_malditofs.MaldiTofsView"
+        permission="bika.lims.ManageBika"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+        for="baobab.lims.interfaces.IResultValidations"
+        name="folder_view"
+        class=".bika_resultvalidations.ResultValidationsView"
         permission="bika.lims.ManageBika"
         layer="bika.lims.interfaces.IBikaLIMS"
     />

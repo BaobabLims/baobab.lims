@@ -290,12 +290,19 @@ class IReCulturings(Interface):
     """
     """
 
-
 class IMaldiTof(Interface):
     """
     """
 
-
 class IMaldiTofs(Interface):
+    """
+    """
+
+class IResultValidation(Interface):
+    """
+    """
+
+
+class IResultValidations(Interface):
     """
     """
