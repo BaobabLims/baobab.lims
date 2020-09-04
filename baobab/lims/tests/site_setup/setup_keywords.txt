@@ -1,0 +1,110 @@
+*** Settings ***
+
+Documentation    Generally useful keywords for Baobab tests.
+...              To include this file, use this:
+...              *** settings ***
+...              Resource  setup_keywords.txt
+
+*** Keywords ***
+Add Valid Department
+    Go to    ${PLONEURL}/bika_setup/bika_departments
+    wait until page contains   Lab Departments
+    Click link    Add
+    Input Text    title    My Test Department
+    Department Form Details
+    Click Button    Save
+    wait until page contains    Changes saved.
+    Go To    ${PLONEURL}/bika_setup/bika_departments
+    wait until page contains   My Test Department
+    
+Add InValid Department
+    Go to    ${PLONEURL}/bika_setup/bika_departments
+    wait until page contains   Lab Departments
+    Click link    Add
+    Input Text    title    ${EMPTY}
+    Department Form Details
+    Click Button    Save
+    wait until page contains    Please correct the indicated errors.
+    
+Department Form Details
+    Input Text    description    The Baobab LIMS Test Department 
+    #select from dropdown    Manager:list    Dominique Elizabeth Johnson
+    
+Add Valid Supplier  
+    Go to    ${PLONEURL}/@@overview-controlpanel
+    wait until page contains   Configuration area for Plone and add-on Products.
+    Go to    ${PLONEURL}/bika_setup/bika_suppliers   
+    wait until page contains   Suppliers
+    Click link    Add
+    wait until page contains   Add Supplier
+    Input Text    Name    Baobab Test Supplier
+    Input Text    TaxNumber    123456777
+    Input Text    Phone    0214454441
+    Input Text    Fax    0214454442
+    Input Text    Website    http://www.testsupplier.com
+    Click Button    Save
+    wait until page contains    Changes saved.
+    Go to    ${PLONEURL}/bika_setup/bika_suppliers
+    wait until page contains   Baobab Test Supplier
+ 
+Add Managed Storage
+    # Replace with go
+    #Go to  ${PLONEURL}/Room-1/Freezer-1/Shelf-1/Box-1
+    Click Link  Box 1
+    Wait until page contains  Managed storage
+    Click element  css=#fieldsetlegend-managed > span
+    # Create Storage units and managed/unmanaged storages
+    Input text  managed-prefix-text  Box
+    Input text  managed-nr-items  1
+    Input text  managed-positions  10
+    Input text  managed-y  2
+    Input text  managed-x  5
+    Click element  addstorage_managed_submitted
+    Wait until page contains  Box 1
+    # Shelves
+    Click Link  Box 1
+    Table cell should contain  xpath=//div[@id='stats']/table  1  1  Total Positions
+    Table cell should contain  xpath=//div[@id='stats']/table  1  2  10
+    Table cell should contain  xpath=//div[@id='stats']/table  3  1  Available
+    Table cell should contain  xpath=//div[@id='stats']/table  3  2  10
+    Table cell should contain  xpath=//div[@id='stats']/table  5  1  Reserved
+    Table cell should contain  xpath=//div[@id='stats']/table  5  2  0
+    Table cell should contain  xpath=//div[@id='stats']/table  6  1  Occupied
+    Table cell should contain  xpath=//div[@id='stats']/table  6  2  0
+
+    Select checkbox  xpath=//td[1]/input
+    Click element  id=reserve_transition
+    Wait until page contains  Changes saved.
+    Table cell should contain  xpath=//div[@id='stats']/table  3  1  Available
+    Table cell should contain  xpath=//div[@id='stats']/table  3  2  9
+    Table cell should contain  xpath=//div[@id='stats']/table  5  1  Reserved
+    Table cell should contain  xpath=//div[@id='stats']/table  5  2  1
+    Select checkbox  xpath=//td[1]/input
+    Click element  id=liberate_transition
+    Table cell should contain  xpath=//div[@id='stats']/table  1  1  Total Positions
+    Table cell should contain  xpath=//div[@id='stats']/table  1  2  10
+    Table cell should contain  xpath=//div[@id='stats']/table  3  1  Available
+    Table cell should contain  xpath=//div[@id='stats']/table  3  2  10
+    Table cell should contain  xpath=//div[@id='stats']/table  5  1  Reserved
+    Table cell should contain  xpath=//div[@id='stats']/table  5  2  0
+    # TODO: department/facility
+
+Add Unmanaged Storage
+    Click Link  Room 1
+    Click element  css=.collapsibleHeader > span
+    Wait until page contains  Unmanaged storage
+    Click element  css=#fieldsetlegend-unmanaged > span
+    input text  unmanaged-prefix-text  Shelf
+    input text  unmanaged-nr-items  3
+    click element  addstorage_unmanaged_submitted
+    Wait until page contains  Shelf-3
+
+Add Valid Storage Types
+    Go to  ${PLONEURL}/bika_setup/bika_storagetypes
+    Wait Until Page Contains  Add
+    Click link                        Add
+    Wait Until Page Contains  Add Storage Type
+    Input Text  title  LN tank storage
+    Input Text  description   Stored in liquid nitrogen freezer
+    Click Button  Save
+    wait until page contains          Changes saved.
