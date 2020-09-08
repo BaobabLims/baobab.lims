@@ -56,6 +56,7 @@ def initialize(context):
     from controlpanel.bika_products import Products
     from controlpanel.bika_stockitems import StockItems
     from controlpanel.bika_malditofs import MaldiTofs
+    from controlpanel.bika_resultvalidations import ResultValidations
     from content.auditlog import AuditLog
     from content.auditlogs import AuditLogs
     from content.sample_pooling import SamplePooling
@@ -91,6 +92,7 @@ def initialize(context):
     from content.maldi_tof import MaldiTof
     from content.volume_unit import VolumeUnit
     from content.volume_units import VolumeUnits
+    from content.resultvalidation import ResultValidation
 
     content_types, constructors, ftis = process_types(
         listTypes(PROJECTNAME),

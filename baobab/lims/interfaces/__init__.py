@@ -305,3 +305,11 @@ class IVolumeUnit(Interface):
 class IVolumeUnits(Interface):
     """
     """
+
+class IResultValidation(Interface):
+    """
+    """
+
+class IResultValidations(Interface):
+    """
+    """

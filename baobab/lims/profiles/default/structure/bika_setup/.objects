@@ -4,3 +4,4 @@ bika_storagetypes,StorageTypes
 bika_products,Products
 bika_stockitems,StockItems
 bika_malditofs,MaldiTofs
+bika_resultvalidations,ResultValidations

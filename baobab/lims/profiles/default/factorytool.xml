@@ -38,6 +38,7 @@
         <type portal_type="ReCulturing"/>
         <type portal_type="MaldiTof"/>
         <type portal_type="VolumeUnit"/>
+        <type portal_type="ResultValidation"/>
 
     </factorytypes>
 </object>

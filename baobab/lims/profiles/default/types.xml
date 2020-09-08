@@ -94,6 +94,9 @@
     <object name="VolumeUnits" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="VolumeUnit" meta_type="Factory-based Type Information with dynamic views"/>
 
+    <object name="ResultValidations" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="ResultValidation" meta_type="Factory-based Type Information with dynamic views"/>
+
     <!-- Override values from bika.lims -->
     <object name="Client" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Supplier" meta_type="Factory-based Type Information with dynamic views"/>

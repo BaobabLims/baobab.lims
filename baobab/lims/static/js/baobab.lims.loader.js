@@ -54,6 +54,8 @@ window.baobab.lims.controllers =  {
         ['BaobabReCulturingView'],
     ".portaltype-malditof":
         ['CustomMALDITOFAddView'],
+    ".portaltype-resultvalidation":
+        ['CustomResultVerifiationAddView'],
 };
 
 /**
