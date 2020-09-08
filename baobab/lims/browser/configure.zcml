@@ -49,6 +49,7 @@
     <include package=".transports"/>
     <include package=".culturings"/>
     <include package=".reculturings"/>
+    <include package=".volume_units"/>
 
     <!-- This registration allows additional sticker templates.
          To enable these, just copy one or more of the *.pt files

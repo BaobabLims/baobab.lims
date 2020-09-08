@@ -3,20 +3,10 @@
 
 from DateTime import DateTime
 from Products.ATContentTypes.lib import constraintypes
-# from Products.Archetypes.public import BaseFolder
 from Products.CMFCore.utils import getToolByName
-# from Products.CMFPlone.utils import _createObjectByType
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-# from plone.app.content.browser.interfaces import IFolderContentsView
-# from plone.app.layout.globals.interfaces import IViewView
-# from zope.interface import implements
 
-#from Products.Five.browser import BrowserView
 from bika.lims.browser import BrowserView
-# from bika.lims.browser.bika_listing import BikaListingView
-# from bika.lims.browser.multifile import MultifileView
-# from bika.lims.utils import to_utf8
-# from baobab.lims import bikaMessageFactory as _
 from baobab.lims.utils.audit_logger import AuditLogger
 from baobab.lims.utils.local_server_time import getLocalServerTime
 

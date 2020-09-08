@@ -69,6 +69,7 @@
 
          <form id="sample_pooling_edit_form" name="sample_pooling_edit_info_form" method="POST">
             <input type="hidden" name="submitted" value="1"/>
+            <input type="hidden" id="sample_pooling_obj_uid" value="python:view.get_sample_pooling_uid()"/>
             <span tal:replace="structure context/@@authenticator/authenticator"/>
 
             <fieldset id="fieldset-pooling-info" class="tabcontent" style="display: block">
@@ -148,7 +149,9 @@
                     class="context button allowMultiSubmit"
                     type="submit"
                     name="save_button"
-                    value="Save"/>
+                    value="Save The value you see here"/>
+
+            <button type="button" class="reverse_sample_pooling">Reverse Sampling Pooling</button>
             </div>
         </span>
 

@@ -76,20 +76,6 @@ SampleType = ReferenceField(
     )
 )
 
-# OriginIsolatedFrom = StringField(
-#     'OriginIsolatedFrom',
-#     read_permission=permissions.View,
-#     write_permission=permissions.ModifyPortalContent,
-#     vocabulary='getOriginIsolatedFrom',
-#     widget=SelectionWidget(
-#         format='select',
-#         label=_("Origin Isolated From"),
-#         description=_("Select the origin this microbe was isolated from"),
-#         visible={'edit': 'visible', 'view': 'visible'},
-#         render_own_label=True,
-#     )
-# )
-
 Phenotype = StringField(
     'Phenotype',
     read_permission=permissions.View,
@@ -115,7 +101,6 @@ schema = BikaSchema.copy() + Schema((
 ))
 schema['title'].widget.visible = {'view': 'invisible', 'edit': 'invisible'}
 schema['description'].widget.visible = {'view': 'invisible', 'edit': 'invisible'}
-
 
 class MicrobeSampleRequest(BaseContent):
     security = ClassSecurityInfo()

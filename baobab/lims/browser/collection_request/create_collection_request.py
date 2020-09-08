@@ -1,11 +1,4 @@
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-
-from Products.CMFCore.WorkflowCore import WorkflowException
-from smtplib import SMTPServerDisconnected, SMTPRecipientsRefused
-
-from bika.lims import logger
-
+from baobab.lims.utils.audit_logger import AuditLogger
 from Products.CMFPlone.utils import _createObjectByType
 from Products.CMFCore.utils import getToolByName
 
@@ -15,8 +8,6 @@ from bika.lims.utils import tmpID
 from baobab.lims.utils.send_email import send_email
 
 import json
-from plone import api
-from datetime import datetime
 
 class AjaxCreateCollectionRequests(BrowserView):
     """ Drug vocabulary source for jquery combo dropdown box
@@ -77,6 +68,9 @@ class AjaxCreateCollectionRequests(BrowserView):
             subject = 'Confirm reception of collection request'
             send_email(self.context, receiver, receiver, subject, message)
 
+            audit_logger = AuditLogger(self.context, 'CollectionRequest')
+            audit_logger.perform_simple_audit(collection_request_obj, 'New')
+
             output = json.dumps({
                 'url': collection_request_obj.absolute_url()
             })
@@ -113,7 +107,7 @@ class AjaxCreateCollectionRequests(BrowserView):
             Client=client,
             RequestNumber=collection_request_details['request_number'],
             DateOfRequest=collection_request_details['date_of_request'],
-            NumberRequested=collection_request_details['number_requested'],
+            # NumberRequested=collection_request_details['number_requested'],
             CollectHumanSamples=collection_request_details['collect_human_samples'],
             CollectMicrobeSamples=collection_request_details['collect_microbe_samples'],
         )
@@ -162,8 +156,6 @@ class AjaxCreateCollectionRequests(BrowserView):
             return obj
 
         except Exception as e:
-            print('---------create human sample request error')
-            print(str(e))
             return None
 
     def create_microbe_sample_request(self, collection_request_microbe_sample):

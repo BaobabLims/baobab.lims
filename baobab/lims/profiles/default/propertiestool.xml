@@ -45,6 +45,7 @@
         <element value="Culturing"/>
         <element value="ReCulturing"/>
         <element value="MaldiTof"/>
+        <element value="VolumeUnit"/>
   </property>
 </object>
 

@@ -16,7 +16,7 @@
     <h1>
         <img tal:condition="view/icon | nothing"
             src="" tal:attributes="src view/icon"/>
-        <span class="documentFirstHeading" tal:content="view/id" />
+        <span class="documentFirstHeading" tal:content="view/request_number" />
     </h1>
     <hr/>
 </metal:title>
@@ -68,12 +68,12 @@
                 <td tal:content="view/collect_microbe_samples" style="border: 1px solid #cecfd5;
                                                    padding: 10px 15px;"></td>
             </tr>
-            <tr tal:condition="view/number_requested">
-                <th i18n:translate="" style="border: 1px solid #cecfd5;
-                                             padding: 10px 15px;text-align: left;">Number Requested</th>
-                <td tal:content="view/number_requested" style="border: 1px solid #cecfd5;
-                                                   padding: 10px 15px;"></td>
-            </tr>
+            <!--?<tr tal:condition="view/number_requested">-->
+                <!--?<th i18n:translate="" style="border: 1px solid #cecfd5;-->
+                                             <!--?padding: 10px 15px;text-align: left;">Number Requested</th>-->
+                <!--?<td tal:content="view/number_requested" style="border: 1px solid #cecfd5;-->
+                                                   <!--?padding: 10px 15px;"></td>-->
+            <!--?</tr>-->
             <tr tal:condition="view/date_evaluated">
                 <th i18n:translate="" style="border: 1px solid #cecfd5;
                                              padding: 10px 15px;text-align: left;">Date Evaluated</th>
@@ -96,7 +96,7 @@
         </table>
     </div>
 
-    <div class="sample-requests-content" style="border: solid; border-width: thin; margin: 15px;">
+    <div tal:condition="view/human_sample_requests" class="sample-requests-content" style="border: solid; border-width: thin; margin: 15px;">
         <table class="invoice-items items">
             <caption><strong>Human Sample Requests</strong></caption>
             <tr>
@@ -119,7 +119,7 @@
             </tr>
         </table>
 
-        <table class="invoice-items items">
+        <table tal:condition="view/microbe_sample_requests" class="invoice-items items">
             <caption><strong>Microbe Sample Requests</strong></caption>
             <tr>
               <th style='text-align:left;' i18n:translate=''>Approved</th>

@@ -55,29 +55,10 @@ Technician = ReferenceField(
         label=_("Technician"),
         description=_("The technician doing centrifugation."),
         size=40,
-        # base_query={'review_state': 'sample_received', 'cancellation_state': 'active'},
         visible={'edit': 'visible', 'view': 'visible'},
-        # catalog_name='bika_catalog',
         showOn=True
     )
 )
-
-#
-# ReferenceField(
-#         'LabContacts',
-#         multiValued=1,
-#         allowed_types=('LabContact'),
-#         referenceClass=HoldingReference,
-#         relationship='ProjectLabContact',
-#         mode="rw",
-#         widget=bika_ReferenceWidget(
-#             label=_("Lab Contacts"),
-#             # description=_("Lab Contacts"),
-#             showOn=True
-#         )
-#     ),
-#
-
 
 Technique = StringField(
     'Technique',

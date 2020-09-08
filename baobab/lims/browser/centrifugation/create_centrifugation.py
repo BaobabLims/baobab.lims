@@ -1,26 +1,14 @@
-from zope.schema import ValidationError
-from zope.schema import ValidationError
-
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from Products.ATContentTypes.lib import constraintypes
 from Products.CMFPlone.utils import _createObjectByType
 from Products.CMFCore.utils import getToolByName
-
-from baobab.lims.browser.project.util import SampleGeneration
-from baobab.lims.browser.project import get_first_sampletype
-from baobab.lims.browser.biospecimens.biospecimens import BiospecimensView
 from baobab.lims.idserver import renameAfterCreation
 
-from baobab.lims.subscribers.sample import ObjectInitializedEventHandler
 from baobab.lims.utils.audit_logger import AuditLogger
-from baobab.lims.utils.local_server_time import getLocalServerTime
 from bika.lims.browser import BrowserView
 from bika.lims.workflow import doActionFor
 from bika.lims.utils import tmpID
 
 import json
-from plone import api
-from datetime import datetime
+import plone.protect
 
 class AjaxCreateCentrifugations(BrowserView):
     """ Drug vocabulary source for jquery combo dropdown box
@@ -39,8 +27,7 @@ class AjaxCreateCentrifugations(BrowserView):
     def __call__(self):
 
         try:
-            # raise Exception('This is an exception from Plone.')
-            print('-------------Centrifugation')
+            # plone.protect.CheckAuthenticator(self.request.form)
 
             if 'centrifugation_data' not in self.request.form:
                 raise Exception('No valid sample centrifugation data has been send')
@@ -68,6 +55,8 @@ class AjaxCreateCentrifugations(BrowserView):
             self.request.RESPONSE.setStatus(500)
             self.request.RESPONSE.write(error_message)
         else:
+            audit_logger = AuditLogger(self.context, 'Centrifugation')
+            audit_logger.perform_simple_audit(centrifugation_obj, 'New')
             output = json.dumps({
                 'url': centrifugation_obj.absolute_url()
             })
@@ -106,13 +95,7 @@ class AjaxCreateCentrifugations(BrowserView):
     def create_aliquot(self, aliquot_data, selected_sample):
 
         try:
-            # storage_brains = self.pc(portal_type='StoragePosition', UID=aliquot_data.get('storageposition', 'unknown'))
-            # storage_location = storage_brains and storage_brains[0].getObject() or None
             storage_location = self.get_content_type(aliquot_data.get('storageposition', 'unknown'))
-            # print('------------Storage Position')
-            # print(storage_location)
-            #
-            # raise Exception('This is a storage position exception')
 
             project = self.get_project(selected_sample)
             sample_type = self.get_content_type(aliquot_data.get('project', 'unknown'))
@@ -136,22 +119,15 @@ class AjaxCreateCentrifugations(BrowserView):
                 # LinkedSample=parent_sample
             )
 
-            # obj.unmarkCreationFlag()
-            # renameAfterCreation(obj)
-
             if storage_location:
                 doActionFor(storage_location, 'occupy')
 
             return obj
 
         except Exception as e:
-            print('---------create aliquot error')
-            print(str(e))
+            # print('---------create aliquot error')
+            # print(str(e))
             return None
-
-    # def get_storage_location(self, storage_position_uid):
-    #     try:
-    #         brains =
 
     def get_sample(self, sample_uid):
         try:
@@ -167,7 +143,8 @@ class AjaxCreateCentrifugations(BrowserView):
         except Exception as e:
             raise Exception('No suitable sample has been selected')
 
-    def get_sample_type(self, sample_type_uid='8f255d3f572540db840decf059ead122'):
+    # def get_sample_type(self, sample_type_uid='8f255d3f572540db840decf059ead122'):
+    def get_sample_type(self, sample_type_uid):
         try:
             brains = self.pc(UID=sample_type_uid)
             return brains[0].getObject()
@@ -177,7 +154,6 @@ class AjaxCreateCentrifugations(BrowserView):
     def get_content_type(self, content_type_uid, catalog="portal_catalog"):
         try:
             catalog = self.get_catalog(catalog)
-            # brains = self.pc(UID=content_type_uid)
             brains = catalog(UID=content_type_uid)
             return brains[0].getObject()
         except Exception as e:
@@ -189,84 +165,3 @@ class AjaxCreateCentrifugations(BrowserView):
 
         if catalog == 'portal_catalog':
             return getToolByName(self.context, 'portal_catalog')
-
-    # def get_bika_setup_type(self, content_type_uid):
-    #     try:
-    #         brains = self.bsc(UID=content_type_uid)
-    #         return brains[0].getObject()
-    #     except Exception as e:
-    #         return None
-
-# def process_input_samples(self, input_samples_data):
-    #
-    #     input_samples = []
-    #
-    #     for input_sample_data in input_samples_data:
-    #
-    #         sample = self.get_sample(input_sample_data['sample'])
-    #         self.adjust_input_sample_volume(sample, input_sample_data['volume'])
-    #         input_sample = self.create_pooling_input(input_sample_data, sample)
-    #         input_samples.append(input_sample)
-    #
-    #     return input_samples
-    #
-    # def process_intermediate_sample(self, intermediate_sample_data):
-    #
-    #     if not intermediate_sample_data:
-    #         return
-    #     try:
-    #         storage_brains = self.pc(portal_type='StoragePosition', UID=intermediate_sample_data.get('storage', 'unknown'))
-    #         storage_location = storage_brains and storage_brains[0].getObject() or None
-    #         project = self.get_content_type(intermediate_sample_data.get('project', 'unknown'))
-    #         obj = _createObjectByType('Sample', project, tmpID())
-    #         sample_type = self.get_content_type(intermediate_sample_data.get('sampletype', 'unknown'))
-    #         obj.edit(
-    #             title=intermediate_sample_data['barcode'],
-    #             description='',
-    #             Project=project,
-    #             SampleType=sample_type,
-    #             Barcode=intermediate_sample_data['barcode'],
-    #             Volume=intermediate_sample_data['volume'],
-    #             Unit=intermediate_sample_data['unit'],
-    #             StorageLocation=storage_location,
-    #             # SubjectID=parent_sample.getField('SubjectID').get(parent_sample),
-    #             # DiseaseOntology=parent_sample.getField('DiseaseOntology').get(parent_sample),
-    #             # Donor=parent_sample.getField('Donor').get(parent_sample),
-    #             # SamplingDate=parent_sample.getField('SamplingDate').get(parent_sample),
-    #             # LinkedSample=parent_sample
-    #         )
-    #         obj.unmarkCreationFlag()
-    #         renameAfterCreation(obj)
-    #         ObjectInitializedEventHandler(obj, None)
-    #         if storage_location:
-    #             doActionFor(storage_location, 'occupy')
-    #         return obj
-    #
-    #     except Exception as e:
-    #         return None
-    #
-    # def create_pooling_input(self, input_sample_data, sample):
-    #     folder = self.context.inputsamples
-    #
-    #     input_sample = api.content.create(
-    #         container=folder,
-    #         type="InputSample",
-    #         id=tmpID(),
-    #         title='input_sample' + datetime.now().strftime('%Y-%m-%d_%H.%M.%S.%f'),
-    #         InputVolume=input_sample_data['volume'],
-    #         # InputVolumeUnit=input_sample_data['unit'],
-    #     )
-    #
-    #     input_sample.getField('SelectedSample').set(input_sample, sample)
-    #
-    #     input_sample.reindexObject()
-    #     return input_sample
-    #
-    # def adjust_input_sample_volume(self, sample, volume):
-    #
-    #     new_volume = float(str(sample.getField('Volume').get(sample))) - float(volume)
-    #     if new_volume < 0:
-    #         raise Exception('New volume too low')
-    #
-    #     sample.getField('Volume').set(sample, str(new_volume))
-    #     sample.reindexObject()

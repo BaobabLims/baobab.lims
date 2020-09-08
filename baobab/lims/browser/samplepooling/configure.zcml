@@ -29,6 +29,13 @@
 
     <browser:page
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="ajax_reverse_pooling"
+      class=".reverse_pooling.AjaxReversePooling"
+      permission="zope.Public"
+    />
+
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
       name="ajax_get_sampletypes"
       class=".samplepooling.ajaxGetSampleTypes"
       permission="zope.Public"

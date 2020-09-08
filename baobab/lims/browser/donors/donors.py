@@ -47,6 +47,10 @@ class DonorsView(BikaListingView):
                 'title': _('Project'),
                 'type': 'choices'
             },
+            'Consent': {
+                'title': _('Consent'),
+                # 'type': 'choices'
+            },
             'Sex': {
                 'title': _('Sex'),
                 'type': 'choices'
@@ -74,6 +78,7 @@ class DonorsView(BikaListingView):
                 'columns': [
                     'SampleDonorID',
                     'SelectedProject',
+                    'Consent',
                     'Sex',
                     'Age',
                 ]
@@ -105,6 +110,8 @@ class DonorsView(BikaListingView):
             project = obj.getSelectedProject()
             if project and hasattr(project, 'title'):
                 items[x]['SelectedProject'] = project.title
+
+            items[x]['Consent'] = obj.getConsent()
 
             items[x]['Age'] = ('%f' % float(obj.getAge())).rstrip('0').rstrip('.') + " " + obj.getAgeUnit()
 

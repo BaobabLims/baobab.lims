@@ -89,6 +89,8 @@ def initialize(context):
     from content.reculturing import ReCulturing
     from content.reculturings import ReCulturings
     from content.maldi_tof import MaldiTof
+    from content.volume_unit import VolumeUnit
+    from content.volume_units import VolumeUnits
 
     content_types, constructors, ftis = process_types(
         listTypes(PROJECTNAME),

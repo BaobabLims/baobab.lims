@@ -40,6 +40,20 @@ SelectedProject = ReferenceField(
     )
 )
 
+Consent = StringField(
+    'Consent',
+    # schemata='Non Conformance',
+    read_permission=permissions.View,
+    write_permission=permissions.ModifyPortalContent,
+    vocabulary='getYesNoOptions',
+    widget=SelectionWidget(
+        format='select',
+        label=_("Consent"),
+        description=_("Did the donor give consent for this sample?"),
+        visible={'edit': 'visible', 'view': 'visible'},
+    )
+)
+
 InfoLink = StringField(
         'InfoLink',
         required=0,
@@ -99,6 +113,7 @@ schema = BikaSchema.copy() + Schema((
     SampleDonorID,
     SelectedProject,
     InfoLink,
+    Consent,
     Sex,
     Age,
     AgeUnit
@@ -129,5 +144,8 @@ class SampleDonor(BaseContent):
 
     def getAgeUnits(self):
         return ['Years', 'Months', 'Weeks', 'Days', 'Hours', 'Minutes']
+
+    def getYesNoOptions(self):
+        return ['', 'Yes', 'No']
 
 registerType(SampleDonor, config.PROJECTNAME)

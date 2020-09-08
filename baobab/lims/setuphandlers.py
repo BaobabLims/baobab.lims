@@ -42,6 +42,7 @@ class BikaCustomGenerator:
                 'transports',
                 'culturings',
                 'reculturings',
+                'volume_units',
         ):
             try:
                 obj = portal._getOb(obj_id)
@@ -128,6 +129,7 @@ class BikaCustomGenerator:
         at.setCatalogsByType('Culturings', ['bika_catalog', 'portal_catalog'])
         at.setCatalogsByType('ReCulturings', ['bika_catalog', 'portal_catalog'])
         at.setCatalogsByType('MaldiTofs', ['bika_catalog', 'portal_catalog'])
+        at.setCatalogsByType('VolumeUnits', ['bika_catalog', 'portal_catalog'])
 
         addIndex(bc, 'getParentUID', 'FieldIndex')
         addIndex(bc, 'getProjectUID', 'FieldIndex')
@@ -224,6 +226,21 @@ class BikaCustomGenerator:
         mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
         mp(permissions.AddPortalContent, ['Manager', 'LabManager'], 0)
         portal.culture_mediums.reindexObject()
+
+        # volume units
+        mp = portal.volume_units.manage_permission
+
+        # Allow authenticated users to see the contents of the project folder
+        mp(permissions.View, ['Authenticated'], 0)
+        mp(permissions.AccessContentsInformation, ['Authenticated'], 0)
+        mp(permissions.ListFolderContents, ['Authenticated'], 0)
+
+        mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
+        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
+        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager'], 0)
+        portal.volume_units.reindexObject()
 
         # culturings
         mp = portal.culturings.manage_permission

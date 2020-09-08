@@ -53,6 +53,20 @@
       permission="zope.Public"
     />
 
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="ajax_get_volume_units"
+      class=".getvolumeunits.ajaxGetVolumeUnits"
+      permission="zope.Public"
+    />
+
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="get_transport_dates"
+      class=".gettransportdates.GetTransportDates"
+      permission="zope.Public"
+    />
+
     <!--<browser:page-->
       <!--for="Products.CMFPlone.interfaces.IPloneSiteRoot"-->
       <!--name="ajax_get_phenotype"-->

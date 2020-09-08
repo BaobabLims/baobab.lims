@@ -31,24 +31,24 @@ class ajaxGetStrains(BrowserView):
 
         return json.dumps(rows)
 
-class ComputeTotalPrice(BrowserView):
-    """Return prices of products selected in kit template.
-    """
-
-    def __init__(self, context, request):
-        BrowserView.__init__(self, context, request)
-        self.context = context
-        self.request = request
-
-    def __call__(self):
-        ret = []
-        if 'uids[]' in self.request.form:
-            uids = self.request.form['uids[]']
-            catalog = 'bika_setup_catalog'
-            uc = getToolByName(self.context, catalog)
-            for uid in uids:
-                brains = uc.searchResults(UID=uid)
-                product = brains[0].getObject()
-                ret.append({'title': product.Title(), 'price': product.getPrice()})
-
-        return json.dumps(ret)
+# class ComputeTotalPrice(BrowserView):
+#     """Return prices of products selected in kit template.
+#     """
+#
+#     def __init__(self, context, request):
+#         BrowserView.__init__(self, context, request)
+#         self.context = context
+#         self.request = request
+#
+#     def __call__(self):
+#         ret = []
+#         if 'uids[]' in self.request.form:
+#             uids = self.request.form['uids[]']
+#             catalog = 'bika_setup_catalog'
+#             uc = getToolByName(self.context, catalog)
+#             for uid in uids:
+#                 brains = uc.searchResults(UID=uid)
+#                 product = brains[0].getObject()
+#                 ret.append({'title': product.Title(), 'price': product.getPrice()})
+#
+#         return json.dumps(ret)

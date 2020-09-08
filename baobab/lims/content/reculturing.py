@@ -52,16 +52,16 @@ DateOfReplication = DateTimeField(
     )
 )
 
-Technician = ReferenceField(
-    'Technician',
+Analyst = ReferenceField(
+    'Analyst',
     # schemata='Culture Appearance On Solid Medium',
     allowed_types=('LabContact'),
     referenceClass=HoldingReference,
     relationship='CulturingLabContact',
     mode="rw",
     widget=bika_ReferenceWidget(
-        label=_("Technician"),
-        description=_("The technician doing the culturing."),
+        label=_("Analyst"),
+        description=_("The analyst doing the culturing."),
         size=40,
         # base_query={'review_state': 'sample_received', 'cancellation_state': 'active'},
         visible={'edit': 'visible', 'view': 'visible'},
@@ -198,7 +198,7 @@ BaccillusStain = StringField(
     schemata='Microscopic appearance after straining',
     read_permission=permissions.View,
     write_permission=permissions.ModifyPortalContent,
-    vocabulary='getYesNoOptions',
+    vocabulary='getPositiveNegativeOptions',
     widget=SelectionWidget(
         format='select',
         label=_("Baccillus Stain"),
@@ -258,15 +258,15 @@ Regularity = StringField(
     )
 )
 
-DateOfTesting = DateTimeField(
-    'DateOfTesting',
+DateOfControl = DateTimeField(
+    'DateOfControl',
     schemata='Culture Appearance On Solid Medium',
     mode="rw",
     read_permission=permissions.View,
     write_permission=permissions.ModifyPortalContent,
     widget=DateTimeWidget(
-        label=_("Date Of Testing"),
-        description=_("Date Of Testing."),
+        label=_("Date Of Control"),
+        description=_("Date Of Control."),
         # show_time=True,
         visible={'edit': 'visible', 'view': 'visible'}
     )
@@ -282,7 +282,7 @@ Conformity = StringField(
     widget=SelectionWidget(
         format='select',
         label=_("Conformity"),
-        description=_("Select the conformance of the transport"),
+        description=_("Select the conformance of the reculturing"),
         visible={'edit': 'visible', 'view': 'visible'},
     )
 )
@@ -308,7 +308,7 @@ schema = BikaSchema.copy() + Schema((
     BiobankNumber,
     CultureMedium,
     DateOfReplication,
-    Technician,
+    Analyst,
     Living,
     Spores,
     Contaminants,
@@ -323,7 +323,7 @@ schema = BikaSchema.copy() + Schema((
     ColonySize,
     SurfaceOfColony,
     Regularity,
-    DateOfTesting,
+    DateOfControl,
     Conformity,
     NonConformities,
 ))
@@ -347,5 +347,8 @@ class ReCulturing(BaseContent):
 
     def getYesNoOptions(self):
         return ['', 'Yes', 'No']
+
+    def getPositiveNegativeOptions(self):
+        return ['', 'Positive', 'Negative']
 
 registerType(ReCulturing, config.PROJECTNAME)

@@ -277,6 +277,12 @@ class SamplePoolingEdit(BrowserView):
                 fields.append(field)
         return fields
 
+    def get_sample_pooling_uid(self):
+        uid = self.context.UID()
+        print('-----This is UID')
+        print(uid)
+        return uid
+
 
 
     # def get_fields_with_visibility(self, visibility, schemata, mode=None):

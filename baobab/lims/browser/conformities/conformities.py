@@ -39,13 +39,15 @@ class ConformitiesView(BikaListingView):
             self.request.set('disable_border', 1)
 
         self.columns = {
-            'Title': {'title': _('SampleKingdoms'),
-                      'index': 'sortable_title'},
+            'Title': {
+                'title': _('Non Conformity'),
+                'index': 'sortable_title'
+            },
             'NonConformityNumber': {
-                'title': _('NonConformityNumber'),
+                'title': _('Non Conformity Number'),
             },
             'NonConformityAction': {
-                'title': _('NonConformityAction'),
+                'title': _('Non Conformity Action'),
             },
         }
 
@@ -78,24 +80,16 @@ class ConformitiesView(BikaListingView):
 
         items = BikaListingView.folderitems(self)
 
-        print('---------List of compliances')
-        print(items)
-
         for x in range(len(items)):
 
             if not items[x].has_key('obj'):
                 continue
             obj = items[x]['obj']
 
-            # items[x]['Title'] = obj.getId()
-            # items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
-            #                                        (items[x]['url'], items[x]['SampleComplianceID'])
-
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                            (items[x]['url'], obj.Title())
             items[x]['NonConformityNumber'] = obj.getField('NonConformityNumber').get(obj)
             items[x]['NonConformityAction'] = obj.getField('NonConformityAction').get(obj)
-
 
         return items
 

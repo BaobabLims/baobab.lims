@@ -7,12 +7,7 @@ function BaobabSamplePoolingView() {
     }
 
     function setUpUI(){
-        //Remove the buttons and input and result textboxes
-        $('#samplepooling_base_edit').find(':submit').remove();
-        // $('.formControls').append('<button id="save_sample_pooling" class="context">Save Sample Pooling</button>');
-
-        $('#archetypes-fieldname-InputSamples').remove();
-        $('#archetypes-fieldname-ResultSamples').remove();
+        removeExtraControls();
 
         //Add the Controls for the Pooling
         var input_samples = $('#fieldset-input-samples');
@@ -63,8 +58,8 @@ function BaobabSamplePoolingView() {
 
         //Add a checkbox for adding an intermediate pooling sample
         $(input_samples).append('<div class="div-intermediate-samples" style="border: solid; border-width: thin; margin: 10px; padding: 5px;"></div>');
-        $('.div-intermediate-samples').append('<input type="checkbox" id="intermediate-pooling-sample" name="intermediate-pooling-sample" value="pool-intermediate-sample">');
-        $('.div-intermediate-samples').append('<label for="intermediate-pooling-sample">Add an intermediate pooling sample</label>');
+        // $('.div-intermediate-samples').append('<input type="checkbox" id="intermediate-pooling-sample" name="intermediate-pooling-sample" value="pool-intermediate-sample">');
+        // $('.div-intermediate-samples').append('<label for="intermediate-pooling-sample">Add an intermediate pooling sample</label>');
         // $('.div-intermediate-samples').append('<div class="div-intermediate-sample" style="border: solid; border-width: thin; margin: 10px; padding: 5px;"></div>');
         // $('.div-intermediate-sample').append('<table class="tbl-intermediate-samples"></table>');
 
@@ -155,11 +150,55 @@ function BaobabSamplePoolingView() {
 
 
         //Add the new submit button and wire it up to the function that will save the new poolings
-        $('.formControls').append('<button id="save_sample_pooling" class="context">Save Sample Pooling</button>');
+        var buttons = '\
+            <div class="savecancel_centrifugations_buttons">\
+                <button id="save_sample_pooling" class="context">Save Sample Pooling</button>\
+                <button class="cancel-centrifugation" name="form.button.cancel">Cancel</button>\
+            </div>\
+        ';
+        $('.formControls').append(buttons);
+        // $('.formControls').append('<button id="save_sample_pooling" class="context">Save Sample Pooling</button>');
+
+
+        // <button class="save-centrifugation">Save Centrifugation</button>
+        // <button class="cancel-centrifugation" name="form.button.cancel">Cancel</button>
+
+
+
         $('#save_sample_pooling').click(function(event){
             event.preventDefault();
             save_sample_pooling();
         });
+    }
+
+    function removeExtraControls(){
+        //Remove the buttons and input and result textboxes
+        $('#samplepooling-base-edit').find(':submit').remove();
+        // $('.formControls').append('<button id="save_sample_pooling" class="context">Save Sample Pooling</button>');
+
+        $('#archetypes-fieldname-InputSamples').remove();
+        $('#archetypes-fieldname-ResultSamples').remove();
+    }
+
+    function addSaveAndCancelButtons(div){
+        var buttons = '\
+            <div class="savecancel_centrifugations_buttons">\
+                <button class="save-centrifugation">Save Centrifugation</button>\
+                <button class="cancel-centrifugation" name="form.button.cancel">Cancel</button>\
+            </div>\
+        ';
+        $(div).append(buttons);
+
+        $('.save-centrifugation').click(function(event){
+            event.preventDefault();
+            save_centrifugation();
+        });
+
+        // $('.cancel-centrifugation').click(function(event){
+        //     event.preventDefault();
+        //     console.log('-------------------');
+        //     console.log('Dummy cancel centrifugation');
+        // });
     }
 
     function save_sample_pooling(){

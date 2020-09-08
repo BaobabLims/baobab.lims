@@ -38,8 +38,10 @@ class CentrifugationsView(BikaListingView):
             self.request.set('disable_border', 1)
 
         self.columns = {
-            'Title': {'title': _('Centrifugations'),
-                      'index': 'sortable_title'},
+            'Title': {
+                'title': _('Centrifugations'),
+                'index': 'sortable_title'
+            },
             'DateCreated': {
                 'title': _('Date Create'),
             },

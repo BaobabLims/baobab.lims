@@ -290,12 +290,18 @@ class IReCulturings(Interface):
     """
     """
 
-
 class IMaldiTof(Interface):
     """
     """
 
-
 class IMaldiTofs(Interface):
+    """
+    """
+
+class IVolumeUnit(Interface):
+    """
+    """
+
+class IVolumeUnits(Interface):
     """
     """

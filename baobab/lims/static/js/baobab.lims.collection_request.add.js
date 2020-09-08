@@ -125,6 +125,7 @@ function BaobabCollectionRequestView() {
         }
         populate_dropdowns('microbe_collectionrequest_sample_type_' + row_count, 'sampletypes');
         populate_dropdowns('microbe_collectionrequest_strain_' + row_count, 'strains');
+        // populate_dropdowns('human_collectionrequest_unit_' + row_count, 'volume_units');
     }
 
     function addMicrobeTableRowManageButtons(div){
@@ -181,9 +182,6 @@ function BaobabCollectionRequestView() {
                 <td><input type="text" class="human-collectionrequest-row-volume" id="human_collectionrequest_volume_' + row_count + '" /></td>\
                 <td><select class="human-collectionrequest-row-unit" id="human_collectionrequest_unit_' + row_count + '">\
                     <option value="">-- Select Unit --</option>\
-                    <option value="ml">-- ml --</option>\
-                    <option value="g">-- g --</option>\
-                    <option value="mg">-- mg --</option>\
                 </select></td>\
             </tr>\
         ';
@@ -195,6 +193,7 @@ function BaobabCollectionRequestView() {
         }
         populate_dropdowns('human_collectionrequest_sample_type_' + row_count, 'sampletypes');
         populate_dropdowns('human_collectionrequest_sample_package_' + row_count, 'sample_packages');
+        populate_dropdowns('human_collectionrequest_unit_' + row_count, 'volume_units');
     }
 
     function addHumanTableRowManageButtons(div){
@@ -265,8 +264,8 @@ function BaobabCollectionRequestView() {
              // url: path + '/ajax_get_' + populate_type,
              url: url_path,
              success: function (data) {
-                 // console.log('---------------dropdowns');
-                 // console.log(data);
+                 console.log('---------------dropdowns');
+                 console.log(data);
                  $.each(data, function() {
                     $.each(this, function(key, value){
                         $('#' + dropdown_id).append($('<option>').val(key).text(value));

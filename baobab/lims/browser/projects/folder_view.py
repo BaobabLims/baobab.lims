@@ -33,6 +33,8 @@ class ProjectsView(BikaListingView):
                           'toggle': True},
             'getProjectType': {'title': _('Project Type'),
                              'toggle': True},
+            'ProjectStatus':{'title': _('Project Status'),
+                            },
         }
 
         self.review_states = [
@@ -42,7 +44,8 @@ class ProjectsView(BikaListingView):
              'transitions': [],
              'columns': ['Title',
                          'getClient',
-                         'getProjectType']},
+                         'getProjectType',
+                         'ProjectStatus']},
         ]
 
     def __call__(self):
@@ -71,7 +74,8 @@ class ProjectsView(BikaListingView):
                  'transitions': [{'id': 'activate'}, ],
                  'columns': ['Title',
                              'getClient',
-                             'getProjectType']})
+                             'getProjectType',
+                             'ProjectStatus']})
             self.review_states.append(
                 {'id': 'all',
                  'title': _('All'),
@@ -79,7 +83,8 @@ class ProjectsView(BikaListingView):
                  'transitions': [{'id': 'empty'}],
                  'columns': ['Title',
                              'getClient',
-                             'getProjectType']})
+                             'getProjectType',
+                             'ProjectStatus']})
             stat = self.request.get("%s_review_state" % self.form_id, 'default')
             self.show_select_column = stat != 'all'
         return BikaListingView.__call__(self)
@@ -94,6 +99,7 @@ class ProjectsView(BikaListingView):
             items[x]['getProjectType'] = obj.getProjectType()
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                            (items[x]['url'], items[x]['Title'])
+            items[x]['ProjectStatus'] = obj.getField('ProjectStatus').get(obj)
 
         return items
 

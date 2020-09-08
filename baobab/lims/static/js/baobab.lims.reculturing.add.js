@@ -9,13 +9,27 @@ function BaobabReCulturingView() {
     };
 
     function setUpUI() {
-        $('#archetypes-fieldname-NonConformities').hide();
+        if ($('#Conformity').val() != 'No') {
+            $('#archetypes-fieldname-NonConformities').hide();
+        }
 
         $('#Conformity').change(function () {
             if ($('#Conformity').val() == 'No') {
                 $('#archetypes-fieldname-NonConformities').show();
             } else {
                 $('#archetypes-fieldname-NonConformities').hide();
+            }
+        });
+
+        $('#Mobile').change(function () {
+            if ($('#Mobile').val() == 'No') {
+                $('#archetypes-fieldname-PolarFlagella').hide();
+                $('#archetypes-fieldname-Lophotrichous').hide();
+                $('#archetypes-fieldname-Peritrichous').hide();
+            } else {
+                $('#archetypes-fieldname-PolarFlagella').show();
+                $('#archetypes-fieldname-Lophotrichous').show();
+                $('#archetypes-fieldname-Peritrichous').show();
             }
         });
     }

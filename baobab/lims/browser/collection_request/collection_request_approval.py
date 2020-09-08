@@ -1,4 +1,5 @@
 from baobab.lims.idserver import renameAfterCreation
+from baobab.lims.utils.audit_logger import AuditLogger
 from baobab.lims.utils.send_email import send_email
 from bika.lims.browser import BrowserView
 
@@ -31,7 +32,6 @@ class AjaxApproveCollectionRequest(BrowserView):
             collection_request_human_samples = approval_data.get('approval_data_human_rows', None)
             collection_request_microbe_samples = approval_data.get('approval_data_microbe_rows', None)
 
-            # raise Exception('This is the exception')
             self.confirm_collection_request_status(collection_request_details['collection_request_uid'])
 
             # process input and result samples
@@ -61,6 +61,13 @@ class AjaxApproveCollectionRequest(BrowserView):
             output = json.dumps({
                 'url': collection_request_obj.absolute_url()
             })
+
+            audit_logger = AuditLogger(self.context, 'CollectionRequest')
+            audit_logger.perform_simple_audit(
+                collection_request_obj,
+                'ResultOfEvaluation',
+                '', collection_request_obj.getField('ResultOfEvaluation').get(collection_request_obj)
+            )
 
             self.request.RESPONSE.setHeader('Content-Type', 'application/json')
             self.request.RESPONSE.setStatus(200)
@@ -169,70 +176,6 @@ class AjaxApproveCollectionRequest(BrowserView):
                 microbe_collection_requests.append(microbe_collection_request)
 
         return microbe_collection_requests
-
-
-
-    #
-    #
-    # def create_collection_request_microbe_samples(self, collection_request_microbe_rows):
-    #
-    #     collection_request_microbe_samples = []
-    #
-    #     for row_data in collection_request_microbe_rows:
-    #         collection_request_microbe_sample = self.create_microbe_sample_request(row_data)
-    #         collection_request_microbe_samples.append(collection_request_microbe_sample)
-    #
-    #     return collection_request_microbe_samples
-    #
-    # def create_human_sample_request(self, collection_request_microbe_sample):
-    #
-    #     try:
-    #         human_sample_requests = self.context.human_sample_requests
-    #         sample_type = self.get_content_type(collection_request_microbe_sample.get('sample_type', 'unknown'))
-    #         obj = _createObjectByType('HumanSampleRequest', human_sample_requests, tmpID())
-    #
-    #         obj.edit(
-    #             Barcode=collection_request_microbe_sample['barcode'],
-    #             SampleType=sample_type,
-    #             Volume=collection_request_microbe_sample['volume'],
-    #             Unit=collection_request_microbe_sample['unit'],
-    #         )
-    #
-    #         obj.unmarkCreationFlag()
-    #         renameAfterCreation(obj)
-    #
-    #         return obj
-    #
-    #     except Exception as e:
-    #         print('---------create human sample request error')
-    #         print(str(e))
-    #         return None
-    #
-    # def create_microbe_sample_request(self, collection_request_microbe_sample):
-    #
-    #     try:
-    #         microbe_sample_requests = self.context.microbe_sample_requests
-    #         strain = self.get_content_type(collection_request_microbe_sample.get('strain', 'unknown'))
-    #         sample_type = self.get_content_type(collection_request_microbe_sample.get('sample_type', 'unknown'))
-    #         obj = _createObjectByType('MicrobeSampleRequest', microbe_sample_requests, tmpID())
-    #
-    #         obj.edit(
-    #             Identification=collection_request_microbe_sample['identification'],
-    #             Strain=strain,
-    #             Origin=collection_request_microbe_sample['origin'],
-    #             SampleType=sample_type,
-    #             Phenotype=collection_request_microbe_sample['phenotype'],
-    #         )
-    #
-    #         obj.unmarkCreationFlag()
-    #         renameAfterCreation(obj)
-    #
-    #         return obj
-    #
-    #     except Exception as e:
-    #         print('---------create microbe sample request error')
-    #         print(str(e))
-    #         return None
 
     def get_sample(self, sample_uid):
         try:

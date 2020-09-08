@@ -55,12 +55,12 @@ class CulturingsView(BikaListingView):
                 'title': _('Date of Collection Request'),
                 # 'type': 'choices'
             },
-            'Technician': {
-                'title': _('Technician'),
+            'Analyst': {
+                'title': _('Analyst'),
                 # 'input_width': '10'
             },
-            'DateOfTesting': {
-                'title': _('Date Of Testing'),
+            'DateOfControl': {
+                'title': _('Date Of Control'),
                 # 'type': 'choices'
             }
         }
@@ -81,8 +81,8 @@ class CulturingsView(BikaListingView):
                     'ProductionBatchNumber',
                     'BiobankNumber',
                     'DateCollectionRequest',
-                    'Technician',
-                    'DateOfTesting',
+                    'Analyst',
+                    'DateOfControl',
                 ]
             },
         ]
@@ -112,14 +112,14 @@ class CulturingsView(BikaListingView):
             items[x]['ProductionBatchNumber'] = obj.getField('ProductionBatchNumber').get(obj)
             items[x]['BiobankNumber'] = obj.getField('BiobankNumber').get(obj)
             items[x]['DateCollectionRequest'] = obj.getField('DateCollectionRequest').get(obj)
-            items[x]['Technician'] = self.get_technician_details(obj)
-            items[x]['DateOfTesting'] = obj.getField('DateOfTesting').get(obj)
+            items[x]['Analyst'] = self.get_analyst_details(obj)
+            items[x]['DateOfControl'] = obj.getField('DateOfControl').get(obj)
 
         return items
 
-    def get_technician_details(self, obj):
+    def get_analyst_details(self, obj):
         try:
-            return obj.getField('Technician').get(obj).Title()
+            return obj.getField('Analyst').get(obj).Title()
         except:
             return ''
 

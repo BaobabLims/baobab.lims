@@ -127,7 +127,7 @@
             <caption><strong>Non Conformities</strong></caption>
             <tr>
               <th style='text-align:left;' i18n:translate=''>Non Conformity</th>
-              <th style='text-align:left;' i18n:translate=''>Action</th>
+              <th style='text-align:left;' i18n:translate=''>Corrective Action</th>
             </tr>
             <tr tal:repeat="non_conformity view/non_conformities_rows">
 

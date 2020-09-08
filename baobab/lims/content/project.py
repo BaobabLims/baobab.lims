@@ -30,6 +30,21 @@ schema = BikaSchema.copy() + Schema((
     ),
 
     StringField(
+        'ProjectStatus',
+        # schemata='Non Conformance',
+        default='',
+        read_permission=permissions.View,
+        write_permission=permissions.ModifyPortalContent,
+        vocabulary='getProjectStatusOptions',
+        widget=SelectionWidget(
+            format='select',
+            label=_("Project Status"),
+            description=_("Select the project status"),
+            visible={'edit': 'visible', 'view': 'visible'},
+        )
+    ),
+
+    StringField(
         'EthicsFormLink',
         searchable=True,
         widget=StringWidget(
@@ -140,6 +155,7 @@ schema = BikaSchema.copy() + Schema((
 schema['title'].required = True
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 schema['title'].widget.size = 100
+schema['title'].widget.label = 'Title (Project Number):'
 schema['description'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 
 
@@ -178,6 +194,10 @@ class Project(BaseFolder):
         return ['Accepted', 'Rejected']
 
     def getProjectTypes(self):
-        return ['Surveillance', 'Diagnostic', 'Research', 'Routine', 'Project', 'Memory']
+        return ['', 'Surveillance', 'Diagnostic', 'Research', 'Routine', 'Project', 'Memory']
+
+
+    def getProjectStatusOptions(self):
+        return ['', 'Open', 'Closed']
 
 registerType(Project, config.PROJECTNAME)

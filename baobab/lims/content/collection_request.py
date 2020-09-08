@@ -80,21 +80,6 @@ CollectMicrobeSamples = BooleanField(
         )
     )
 
-# SampleKingdom = ReferenceField(
-#     'SampleKingdom',
-#     schemata='Client Information',
-#     allowed_types=('SampleKingdom',),
-#     relationship='CollectionRequestSampleKingdom',
-#     referenceClass=HoldingReference,
-#     widget=bika_ReferenceWidget(
-#         label=_("Select Sample Kingdom"),
-#         visible={'edit': 'visible', 'view': 'visible'},
-#         size=30,
-#         showOn=True,
-#         description=_("Select the Sample Kingdom."),
-#     )
-# )
-
 NumberRequested = StringField(
     'NumberRequested',
     schemata='Client Information',
@@ -198,11 +183,7 @@ schema = BikaSchema.copy() + Schema((
     DateOfRequest,
     CollectMicrobeSamples,
     CollectHumanSamples,
-    # Identificationz,
-    # Strain,
-    # OriginIsolatedFrom,
-    # Phenotype,
-    NumberRequested,
+    # NumberRequested,
     MicrobeSampleRequests,
     HumanSampleRequests,
     DateEvaluated,
@@ -234,8 +215,8 @@ class CollectionRequest(BaseContent):
         return ['Unknown', 'WildType', 'Recombinant']
 
     def get_human_sample_requests(self):
-        # human_sample_requests = self.getHumanSampleRequests()
-        human_sample_requests = self.getField('HumanSampleRequests').get(self)
+        human_sample_requests = self.getHumanSampleRequests()
+        # human_sample_requests = self.getField('HumanSampleRequests').get(self)
         print('----------Human sample requests')
         print(human_sample_requests)
 

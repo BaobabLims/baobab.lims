@@ -19,13 +19,6 @@ function BaobabSampleCentrifugationView() {
         $('#centrifugation-base-edit').find(':submit').remove();
         $('#archetypes-fieldname-Centrifuges').remove();
     }
-    //
-    // function addStructure(){
-    //     addResponseMessage()
-    //
-    //
-    //
-    // }
 
     function addResponseMessage(centrifugations){
         var div_response_message = '\
