@@ -40,11 +40,11 @@ class ConformitiesView(BikaListingView):
 
         self.columns = {
             'Title': {
-                'title': _('Non Conformity'),
+                'title': _('Non Conformity Code'),
                 'index': 'sortable_title'
             },
-            'NonConformityNumber': {
-                'title': _('Non Conformity Number'),
+            'NonConformityText': {
+                'title': _('Non Conformity Text'),
             },
             'NonConformityAction': {
                 'title': _('Non Conformity Action'),
@@ -63,7 +63,7 @@ class ConformitiesView(BikaListingView):
                 'transitions': [{'id': 'deactivate'}],
                 'columns': [
                     'Title',
-                    'NonConformityNumber',
+                    'NonConformityText',
                     'NonConformityAction',
                 ]
             }
@@ -88,7 +88,7 @@ class ConformitiesView(BikaListingView):
 
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                            (items[x]['url'], obj.Title())
-            items[x]['NonConformityNumber'] = obj.getField('NonConformityNumber').get(obj)
+            items[x]['NonConformityText'] = obj.getField('NonConformityText').get(obj)
             items[x]['NonConformityAction'] = obj.getField('NonConformityAction').get(obj)
 
         return items

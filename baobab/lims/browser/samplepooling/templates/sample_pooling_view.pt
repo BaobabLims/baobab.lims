@@ -56,10 +56,10 @@
                 <td tal:content="view/date_created" style="border: 1px solid #cecfd5;
                                                    padding: 10px 15px;"></td>
             </tr>
-            <tr tal:condition="view/person_pooling">
+            <tr tal:condition="view/analyst">
                 <th i18n:translate="" style="border: 1px solid #cecfd5;
-                                             padding: 10px 15px;text-align: left;">Person Pooling</th>
-                <td tal:content="view/person_pooling" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Analyst</th>
+                <td tal:content="view/analyst" style="border: 1px solid #cecfd5;
                                                    padding: 10px 15px;"></td>
             </tr>
             </tbody>

@@ -29,14 +29,32 @@ DateCreation = DateTimeField(
     )
 )
 
-PersonPooling = StringField(
-    'PersonPooling',
-    read_permission=permissions.View,
-    write_permission=permissions.ModifyPortalContent,
-    widget=StringWidget(
-        label=_("Person Pooling"),
-        description=_("The person pooling these samples."),
+# Analyst = StringField(
+#     'Analyst',
+#     read_permission=permissions.View,
+#     write_permission=permissions.ModifyPortalContent,
+#     widget=StringWidget(
+#         label=_("Analyst"),
+#         description=_("The person pooling these samples."),
+#         visible={'edit': 'visible', 'view': 'visible'},
+#     )
+# )
+
+Analyst = ReferenceField(
+    'Analyst',
+    # schemata='Culture Appearance On Solid Medium',
+    allowed_types=('LabContact'),
+    referenceClass=HoldingReference,
+    relationship='PoolingLabContact',
+    mode="rw",
+    widget=bika_ReferenceWidget(
+        label=_("Analyst"),
+        description=_("The analyst doing the culturing."),
+        size=40,
+        # base_query={'review_state': 'sample_received', 'cancellation_state': 'active'},
         visible={'edit': 'visible', 'view': 'visible'},
+        # catalog_name='bika_catalog',
+        showOn=True
     )
 )
 
@@ -98,7 +116,7 @@ ResultSamples = ReferenceField(
 
 schema = BikaSchema.copy() + Schema((
     DateCreation,
-    PersonPooling,
+    Analyst,
     InputSamples,
     IntermediateSample,
     ResultSamples,

@@ -235,7 +235,6 @@
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>
 
-
     <type type_id="ResultValidations"/>
     <type type_id="ResultValidation">
         <bound-workflow workflow_id="bika_one_state_workflow"/>

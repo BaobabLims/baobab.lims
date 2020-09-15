@@ -44,8 +44,8 @@ class SamplePoolingsView(BikaListingView):
                 'title': _('Samples'),
                 'type': 'choices'
             },
-            'PersonPooling': {
-                'title': _('Person Pooling'),
+            'Analyst': {
+                'title': _('Analyst'),
             },
             'PoolingSamples': {
                 'title': _('Pooling Samples'),
@@ -68,7 +68,7 @@ class SamplePoolingsView(BikaListingView):
                 'columns': [
                     'Title',
                     'DateCreated',
-                    'PersonPooling',
+                    'Analyst',
                     'PoolingSamples',
                     'ResultingSamples',
                 ]
@@ -95,7 +95,7 @@ class SamplePoolingsView(BikaListingView):
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                                    (items[x]['url'], obj.Title())
             items[x]['DateCreated'] = obj.getField('DateCreated').get(obj)
-            items[x]['PersonPooling'] = obj.getField('PersonPooling').get(obj)
+            items[x]['Analyst'] = obj.getField('Analyst').get(obj)
 
             items[x]['PoolingSamples'] = self.getStringified(obj.get_input_samples())
             items[x]['ResultingSamples'] = self.getStringified(obj.get_result_samples())

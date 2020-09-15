@@ -45,7 +45,7 @@ class SamplePoolingView(BrowserView):
         self.title = self.context.Title()
         self.description = self.context.Description()
         self.date_created = self.context.getDateCreated()
-        self.person_pooling = self.context.getPersonPooling()
+        self.analyst = self.get_analyst()
 
         self.input_samples = self.prepare_input_samples()
         self.intermediate_samples = self.prepare_intermediate_samples()
@@ -80,7 +80,7 @@ class SamplePoolingView(BrowserView):
         intermediate_sample = self.context.get_intermediate_sample()
 
         if not intermediate_sample:
-            return
+            return []
 
         # intermediate_samples = self.context.getIntermediateSamples()
         storage_location = self.get_storage_location(intermediate_sample)
@@ -97,6 +97,14 @@ class SamplePoolingView(BrowserView):
         ]
 
         return samples
+
+    def get_analyst(self):
+        try:
+            analyst = self.context.getAnalyst()
+            return analyst.Title()
+        except:
+            return ''
+
 
     def prepare_result_samples(self):
 
@@ -144,7 +152,7 @@ class SamplePoolingEdit(BrowserView):
             # self.perform_sample_shipment_audit(self.context, request)
             context.getField('description').set(context, self.request.form['description'])
             context.getField('DateCreated').set(context, self.request.form['DateCreated'])
-            context.getField('PersonPooling').set(context, self.request.form['PersonPooling'])
+            context.getField('Analyst').set(context, self.request.form['Analyst_uid'])
             context.reindexObject()
 
             obj_url = context.absolute_url_path()

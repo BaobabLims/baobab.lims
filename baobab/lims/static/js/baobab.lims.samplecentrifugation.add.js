@@ -83,11 +83,11 @@ function BaobabSampleCentrifugationView() {
     function addTableHeader(table_header){
         var centrifugations_table_header_row = '\
             <tr>\
-                <th>Condition</th>\
-                <th>Sample Type</th>\
+                <th>Barcode</th>\
                 <th>Volume</th>\
                 <th>Unit</th>\
-                <th>Barcode</th>\
+                <th>Sample Type</th>\
+                <th>Packaging</th>\
                 <th>Storage</th>\
             </tr>\
         ';
@@ -101,29 +101,41 @@ function BaobabSampleCentrifugationView() {
         const first_row = 1;
 
         var table_row = '\
-            <tr class="centrifugation-rows" id="centrifugation_row_' + row_count + '">\
-                <td><select class="centrifugation-row-condition" id="centrifugation_condition_' + row_count + '">\
-                    <option value=0>-- Select Sample Condition --</option>\
-                </select></td>\
-                <td><select class="centrifugation-row-sample-type" id="centrifugation_sample_type_' + row_count + '">\
-                    <option value=0>-- Select Sample Type --</option>\
-                </select></td>\
-                <td><input type="text" class="centrifugation-row-volume" id="centrifugation_volume_' + row_count + '" /></td>\
-                <td><input type="text" class="centrifugation-row-unit" id="centrifugation_unit_' + row_count + '" /></td>\
-                <td><input type="text" class="centrifugation-row-barcode" id="centrifugation_barcode_' + row_count + '" /></td>\
-                <td><select class="centrifugation-row-storage-position storage" id="centrifugation_storage_position_' + row_count + '" id>\
-                    <option value=0>-- Select Storage Position --</option>\
-                </select></td>\
-            </tr>\
+          <tr class="centrifugation-rows" id="centrifugation_row_' + row_count + '">\
+            <td><input type="text" class="centrifugation-row-barcode" id="centrifugation_barcode_' + row_count + '" ></td>\
+            <td><input type="text" class="centrifugation-row-volume" id="centrifugation_volume_' + row_count + '" ></td>\
+            <td><select class="centrifugation-row-unit" id="centrifugation_unit_' + row_count + '">\
+                <option value=0>-- Select Sample Unit --</option>\
+            </select></td>\
+            <td><select class="centrifugation-row-sample-type" id="centrifugation_sample_type_' + row_count + '">\
+                <option value=0>-- Select Sample Type --</option>\
+            </select></td>\
+            <td><select class="centrifugation-row-packaging" id="centrifugation_packaging_' + row_count + '">\
+                <option value=0>-- Select Sample Packaging --</option>\
+            </select></td>\
+            <td><select class="centrifugation-row-storage-position storage" id="centrifugation_storage_position_' + row_count + '" >\
+                <option value=0>-- Select Storage Position --</option>\
+            </select></td>\
+          </tr>\
         ';
 
+        console.log('Start check ----------------------');
+        console.log(centrifugation_rows);
+        console.log(row_count);
+
+        console.log('----------------');
+        console.log(table_row);
+
         if (row_count == first_row) {
+            console.log('---------First row');
             $(table_body).append(table_row);
         } else {
+            console.log('Not the first row');
             $('.' + 'body-centrifugation-samples' + ' tr:last').after(table_row);
         }
         populate_dropdowns('centrifugation_sample_type_' + row_count, 'sampletypes');
-        populate_dropdowns('centrifugation_condition_' + row_count, 'sample_conditions');
+        populate_dropdowns('centrifugation_packaging_' + row_count, 'sample_packages');
+        populate_dropdowns('centrifugation_unit_' + row_count, 'volume_units');
     }
 
     function addTableRowManageButtons(div){
@@ -309,8 +321,8 @@ function BaobabSampleCentrifugationView() {
         centrifugation_details['description'] = $("#description").val();
         centrifugation_details['selectedsample'] = $("#SelectedSample_uid").val();
         centrifugation_details['date_created'] = $("#DateCreated").val();
-        centrifugation_details['technician'] = $("#Technician_uid").val();
-        centrifugation_details['technique'] = $("#Technique").val();
+        centrifugation_details['analyst'] = $("#Analyst_uid").val();
+        centrifugation_details['instrument'] = $("#Instrument_uid").val();
 
         return centrifugation_details;
     }

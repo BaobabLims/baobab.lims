@@ -57,47 +57,7 @@ function BaobabSamplePoolingView() {
         });
 
         //Add a checkbox for adding an intermediate pooling sample
-        $(input_samples).append('<div class="div-intermediate-samples" style="border: solid; border-width: thin; margin: 10px; padding: 5px;"></div>');
-        // $('.div-intermediate-samples').append('<input type="checkbox" id="intermediate-pooling-sample" name="intermediate-pooling-sample" value="pool-intermediate-sample">');
-        // $('.div-intermediate-samples').append('<label for="intermediate-pooling-sample">Add an intermediate pooling sample</label>');
-        // $('.div-intermediate-samples').append('<div class="div-intermediate-sample" style="border: solid; border-width: thin; margin: 10px; padding: 5px;"></div>');
-        // $('.div-intermediate-sample').append('<table class="tbl-intermediate-samples"></table>');
-
-        $('.div-intermediate-samples').append('<div class="div-intermediate-storage-dropdowns"></div>');
-        $('.div-intermediate-storage-dropdowns').append('<select class="intermediate-storage-unit"><option>-- Select Storage Unit --</option></select>');
-        $('.div-intermediate-storage-dropdowns').append('<select class="intermediate-storage-box"><option>-- Select Box --</option></select>');
-
-        get_storage_units('intermediate-storage-unit');
-
-        $('.div-intermediate-samples').append('<table class="tbl-intermediate-samples"></table>');
-        $('.tbl-intermediate-samples').append('<tr><th>Barcode</th><th>Volume</th><th>Unit</th><th>Sample Type</th><th>Project</th><th>Storage Position</th></tr>');
-        var intermediate_row = '\
-            <tr class="intermediate-sample-row" id="intermediate-sample-row">\
-                <td><input type="text" class="intermediate-sample-barcode" id="intermediate-sample-barcode" /></td>\
-                <td><input type="text" class="intermediate-sample-volume" id="intermediate-sample-volume" /></td>\
-                <td><input type="text" class="intermediate-sample-unit" id="intermediate-sample-unit" /></td>\
-                <td><select class="intermediate-sample-sampletype" id="intermediate-sample-sampletype"><option value=0>-- Select Sample Type --</option></select></td>\
-                <td><select class="intermediate-sample-project" id="intermediate-sample-project"><option value=0>-- Select Project --</option></select></td>\
-                <td><select class="intermediate-sample-storageposition storage" id="intermediate-sample-storageposition"><option value=0>-- Storage Position --</option></select></td>\
-            </tr>\
-        ';
-
-        $('.tbl-intermediate-samples').append(intermediate_row);
-
-        $('.intermediate-storage-unit').on('change', storage_unit_changed);
-        $('.intermediate-storage-box').on('change', storage_box_changed);
-
-        populate_dropdowns('intermediate-sample-sampletype', 'sampletypes');
-        populate_dropdowns('intermediate-sample-project', 'projects');
-
-        // $('.div-intermediate-sample').append('<input type="text" id="pooling-sample-barcode" name="pooling-sample-barcode">');
-        // $('.div-intermediate-sample').append('<label for="pooling-sample-barcode">Barcode</label>');
-        // $('.div-intermediate-sample').append('<input type="text" id="pooling-sample-volume" name="pooling-sample-volume">');
-        // $('.div-intermediate-sample').append('<label for="pooling-sample-barcode">Volume</label>');
-        // $('.div-intermediate-sample').append('<input type="text" id="pooling-sample-unit" name="pooling-sample-unit">');
-        // $('.div-intermediate-sample').append('<label for="pooling-sample-unit">Unit</label>');
-
-        // $('.div-intermediate-samples').append('');
+        buildIntermediateSampleUI(input_samples);
 
         //Add the section for creating new aliquots from this pooling
         $(input_samples).append('<div class="div-aliquot-samples" style="border: solid; border-width: thin; margin: 10px; padding: 5px;"></div>');
@@ -148,7 +108,6 @@ function BaobabSamplePoolingView() {
             extra_aliquot_samples();
         });
 
-
         //Add the new submit button and wire it up to the function that will save the new poolings
         var buttons = '\
             <div class="savecancel_centrifugations_buttons">\
@@ -157,17 +116,62 @@ function BaobabSamplePoolingView() {
             </div>\
         ';
         $('.formControls').append(buttons);
-        // $('.formControls').append('<button id="save_sample_pooling" class="context">Save Sample Pooling</button>');
-
-
-        // <button class="save-centrifugation">Save Centrifugation</button>
-        // <button class="cancel-centrifugation" name="form.button.cancel">Cancel</button>
-
-
 
         $('#save_sample_pooling').click(function(event){
             event.preventDefault();
             save_sample_pooling();
+        });
+    }
+
+    function buildIntermediateSampleUI(input_samples){
+        $(input_samples).append('<div class="div-intermediate-samples" style="border: solid; border-width: thin; margin: 10px; padding: 5px;"></div>');
+        $('.div-intermediate-samples').append('<input type="checkbox" id="intermediate-pooling-sample" name="intermediate-pooling-sample" value="pool-intermediate-sample">');
+        $('.div-intermediate-samples').append('<label for="intermediate-pooling-sample">Add an intermediate pooling sample</label>');
+
+        $('.div-intermediate-samples').append('<div class="div-intermediate-storage-dropdowns"></div>');
+        $('.div-intermediate-storage-dropdowns').append('<select class="intermediate-storage-unit"><option>-- Select Storage Unit --</option></select>');
+        $('.div-intermediate-storage-dropdowns').append('<select class="intermediate-storage-box"><option>-- Select Box --</option></select>');
+
+        get_storage_units('intermediate-storage-unit');
+
+        $('.div-intermediate-samples').append('<table class="tbl-intermediate-samples"></table>');
+        $('.tbl-intermediate-samples').append('<tr><th>Barcode</th><th>Volume</th><th>Unit</th><th>Sample Type</th><th>Project</th><th>Storage Position</th></tr>');
+        var intermediate_row = '\
+            <tr class="intermediate-sample-row" id="intermediate-sample-row">\
+                <td><input type="text" class="intermediate-sample-barcode" id="intermediate-sample-barcode" /></td>\
+                <td><input type="text" class="intermediate-sample-volume" id="intermediate-sample-volume" /></td>\
+                <td><input type="text" class="intermediate-sample-unit" id="intermediate-sample-unit" /></td>\
+                <td><select class="intermediate-sample-sampletype" id="intermediate-sample-sampletype"><option value=0>-- Select Sample Type --</option></select></td>\
+                <td><select class="intermediate-sample-project" id="intermediate-sample-project"><option value=0>-- Select Project --</option></select></td>\
+                <td><select class="intermediate-sample-storageposition storage" id="intermediate-sample-storageposition"><option value=0>-- Storage Position --</option></select></td>\
+            </tr>\
+        ';
+
+        $('.tbl-intermediate-samples').append(intermediate_row);
+
+        $('.intermediate-storage-unit').on('change', storage_unit_changed);
+        $('.intermediate-storage-box').on('change', storage_box_changed);
+
+        populate_dropdowns('intermediate-sample-sampletype', 'sampletypes');
+        populate_dropdowns('intermediate-sample-project', 'projects');
+
+        toggleDisplayIntermediateSample();
+        $('.div-intermediate-storage-dropdowns').hide();
+        $('.tbl-intermediate-samples').hide();
+
+    }
+
+    function toggleDisplayIntermediateSample(){
+        $('#intermediate-pooling-sample').click(function(){
+            if($(this).prop("checked") == true){
+                $('.div-intermediate-storage-dropdowns').show();
+                $('.tbl-intermediate-samples').show();
+            }
+
+            else if($(this).prop("checked") == false){
+                $('.div-intermediate-storage-dropdowns').hide();
+                $('.tbl-intermediate-samples').hide();
+            }
         });
     }
 
@@ -399,7 +403,9 @@ function BaobabSamplePoolingView() {
 
         pooling_data['sample_pooling_data'] = sample_pooling_data;
         pooling_data['input_samples_data'] = input_sample_data;
-        pooling_data['intermediate_sample_data'] = intermediate_sample_data;
+        if($('#intermediate-pooling-sample').prop("checked") == true) {
+            pooling_data['intermediate_sample_data'] = intermediate_sample_data;
+        }
         pooling_data['aliquots_data'] = aliquots_data;
 
         // console.log('--------------Pooling Data');
@@ -414,7 +420,7 @@ function BaobabSamplePoolingView() {
         sample_pooling_data['title'] = $("#title").val();
         sample_pooling_data['description'] = $("#description").val();
         sample_pooling_data['date_created'] = $("#DateCreated").val();
-        sample_pooling_data['person_pooling'] = $("#PersonPooling").val();
+        sample_pooling_data['analyst'] = $("#Analyst_uid").val();
 
         return sample_pooling_data;
 

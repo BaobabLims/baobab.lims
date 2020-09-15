@@ -16,11 +16,11 @@ from Products.Archetypes.atapi import registerType
 from baobab.lims import bikaMessageFactory as _
 
 
-NonConformityNumber = StringField(
-    'NonConformityNumber',
+NonConformityText = StringField(
+    'NonConformityText',
     widget=StringWidget(
-        label=_('Non Conformity Number'),
-        description=_('The Non Conformity Number.'),
+        label=_('Non Conformity Text'),
+        description=_('A short description of this non conformity.'),
         visible={'view': 'visible', 'edit': 'visible'}
     )
 )
@@ -35,10 +35,11 @@ NonConformityAction = StringField(
 )
 
 schema = BikaSchema.copy() + Schema((
-    NonConformityNumber,
+    NonConformityText,
     NonConformityAction,
 ))
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
+schema['title'].widget.label = "Non Conformity Code"
 schema['description'].widget.visible = {'view': 'invisible', 'edit': 'invisible'}
 
 

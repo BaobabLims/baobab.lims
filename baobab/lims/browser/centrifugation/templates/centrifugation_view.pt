@@ -62,16 +62,16 @@
                 <td tal:content="view/selected_sample" style="border: 1px solid #cecfd5;
                                                    padding: 10px 15px;"></td>
             </tr>
-            <tr tal:condition="view/technician" style="background: #f0f0f2;">
+            <tr tal:condition="view/analyst" style="background: #f0f0f2;">
                 <th i18n:translate="" style="border: 1px solid #cecfd5;
-                                             padding: 10px 15px;text-align: left;">Technician</th>
-                <td tal:content="view/technician" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Analyst</th>
+                <td tal:content="view/analyst" style="border: 1px solid #cecfd5;
                                                    padding: 10px 15px;"></td>
             </tr>
-            <tr tal:condition="view/technique">
+            <tr tal:condition="view/instrument">
                 <th i18n:translate="" style="border: 1px solid #cecfd5;
-                                             padding: 10px 15px;text-align: left;">Technique</th>
-                <td tal:content="view/technique" style="border: 1px solid #cecfd5;
+                                             padding: 10px 15px;text-align: left;">Instrument</th>
+                <td tal:content="view/instrument" style="border: 1px solid #cecfd5;
                                                    padding: 10px 15px;"></td>
             </tr>
             </tbody>
@@ -93,7 +93,7 @@
 
                 <td  style='text-align:left;' tal:content='python:centrifuge_sample["title"]'>title</td>
                 <td  style='text-align:left;' tal:content='python:centrifuge_sample["location"]'>location</td>
-                <td  style='text-align:left;' tal:content='python:centrifuge_sample["condition"]'>condition</td>
+                <td  style='text-align:left;' tal:content='python:centrifuge_sample["packaging"]'>packaging</td>
                 <td  style='text-align:left;' tal:content='python:centrifuge_sample["volume"]'>volume</td>
                 <td  style='text-align:left;' tal:content='python:centrifuge_sample["unit"]'>unit</td>
 

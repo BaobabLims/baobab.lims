@@ -46,8 +46,8 @@ class CentrifugationView(BrowserView):
         self.description = self.context.Description()
         self.date_created = self.context.getDateCreated()
         self.selected_sample = self.context.get_selected_sample()
-        self.technician = self.context.get_technician()
-        self.technique= self.context.getTechnique()
+        self.analyst = self.context.get_analyst()
+        self.instrument = 'Test' # self.context.get_instrument()
 
         self.centrifugation_rows = self.prepare_centrifugation_rows()
 
@@ -65,7 +65,7 @@ class CentrifugationView(BrowserView):
             prepared_sample = {
                 'title': sample.Title(),
                 'location': self.get_storage_location(sample),
-                'condition': self.get_sample_condition(sample),
+                'packaging': self.get_sample_packaging(sample),
                 'volume': sample.getField('Volume').get(sample),
                 'unit': sample.getField('Unit').get(sample),
             }
@@ -75,15 +75,19 @@ class CentrifugationView(BrowserView):
 
     def get_storage_location(self, sample):
         try:
-            storage_location = sample.getStorageLocation()
+            print('-------get storage')
+            print(sample.__dict__)
+            storage_location = sample.getField('StorageLocation').get(sample)
+            # storage_location = sample.getStorageLocation()
             return storage_location.Title()
-        except:
+        except Exception as e:
+            print('-------- %s' % str(e))
             return ''
 
-    def get_sample_condition(self, sample):
+    def get_sample_packaging(self, sample):
         try:
-            sample_condition = sample.getField('SampleCondition').get(sample)
-            return sample_condition.Title()
+            sample_packaging = sample.getField('Packaging').get(sample)
+            return sample_packaging.Title()
         except:
             return ''
 
@@ -108,8 +112,8 @@ class CentrifugationEdit(BrowserView):
             context.getField('description').set(context, self.request.form['description'])
             context.getField('DateCreated').set(context, self.request.form['DateCreated'])
             context.getField('SelectedSample').set(context, self.request.form['SelectedSample_uid'])
-            context.getField('Technician').set(context, self.request.form['Technician_uid'])
-            context.getField('Technique').set(context, self.request.form['Technique'])
+            context.getField('Analyst').set(context, self.request.form['Analyst_uid'])
+            context.getField('Instrument').set(context, self.request.form['Instrument_uid'])
             context.reindexObject()
 
             obj_url = context.absolute_url_path()
@@ -142,16 +146,22 @@ class CentrifugationEdit(BrowserView):
         audit_logger.perform_reference_audit(centrifugation, 'SelectedSample', centrifugation.getField('SelectedSample').get(centrifugation),
                                              pc, request.form['SelectedSample_uid'])
 
-        # Technician
-        audit_logger.perform_reference_audit(centrifugation, 'Technician',
-                                             centrifugation.getField('Technician').get(centrifugation),
-                                             pc, request.form['Technician_uid'])
+        # Analyst
+        audit_logger.perform_reference_audit(centrifugation, 'Analyst',
+                                             centrifugation.getField('Analyst').get(centrifugation),
+                                             pc, request.form['Analyst_uid'])
 
-        # Technique
-        if centrifugation.getField('Technique').get(centrifugation) != request.form['Technique']:
-            audit_logger.perform_simple_audit(centrifugation, 'Technique',
-                                              centrifugation.getField('Technique').get(centrifugation),
-                                              request.form['Technique'])
+        # Instrument
+        audit_logger.perform_reference_audit(centrifugation, 'Instrument',
+                                             centrifugation.getField('Instrument').get(centrifugation),
+                                             pc, request.form['Instrument_uid'])
+
+
+        # # Technique
+        # if centrifugation.getField('Instrument').get(centrifugation) != request.form['Instrument_uid']:
+        #     audit_logger.perform_simple_audit(centrifugation, 'Technique',
+        #                                       centrifugation.getField('Technique').get(centrifugation),
+        #                                       request.form['Technique'])
 
     def get_fields_with_visibility(self, visibility, mode=None):
         mode = mode if mode else 'edit'
@@ -160,7 +170,7 @@ class CentrifugationEdit(BrowserView):
         for field in schema.fields():
             isVisible = field.widget.isVisible
             v = isVisible(self.context, mode, default='invisible', field=field)
-            accepted_fields = ['title', 'description', 'DateCreated', 'SelectedSample', 'Technician', 'Technique']
+            accepted_fields = ['title', 'description', 'DateCreated', 'SelectedSample', 'Analyst', 'Instrument']
             if v == visibility and field.getName() in accepted_fields:
                 fields.append(field)
         return fields

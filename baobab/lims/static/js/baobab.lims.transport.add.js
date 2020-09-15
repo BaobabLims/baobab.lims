@@ -62,7 +62,6 @@ function BaobabTransportView() {
             console.log("Error: " + err.message)
             return plone_date
         }
-
     }
 
     function getGMTFormatDate(plone_date_string){

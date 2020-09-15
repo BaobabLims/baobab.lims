@@ -40,32 +40,38 @@ DateCreation = DateTimeField(
     widget=DateTimeWidget(
         label=_("Date Created"),
         description=_("Define when the centrifugation has been created."),
-        show_time=True,
+        # show_time=True,
         visible={'edit': 'visible', 'view': 'visible'}
     )
 )
 
-Technician = ReferenceField(
-    'Technician',
+Analyst = ReferenceField(
+    'Analyst',
     allowed_types=('LabContact'),
     referenceClass=HoldingReference,
     relationship='CentrifugationLabContact',
     mode="rw",
     widget=bika_ReferenceWidget(
-        label=_("Technician"),
-        description=_("The technician doing centrifugation."),
+        label=_("Analyst"),
+        description=_("The analyst doing centrifugation."),
         size=40,
         visible={'edit': 'visible', 'view': 'visible'},
         showOn=True
     )
 )
 
-Technique = StringField(
-    'Technique',
-    widget=StringWidget(
-        label=_('Technique'),
-        description=_('The technique used to centrifuged.'),
-        visible={'view': 'visible', 'edit': 'visible'}
+Instrument = StringField(
+    'Instrument',
+    allowed_types=('Instrument'),
+    referenceClass=HoldingReference,
+    relationship='CentrifugationInstrument',
+    mode="rw",
+    widget=bika_ReferenceWidget(
+        label=_("Instrument"),
+        description=_("The analyst doing centrifugation."),
+        size=40,
+        visible={'edit': 'visible', 'view': 'visible'},
+        showOn=True
     )
 )
 
@@ -82,8 +88,8 @@ Centrifuges = StringField(
 schema = BikaSchema.copy() + Schema((
     SelectedSample,
     DateCreation,
-    Technician,
-    Technique,
+    Analyst,
+    Instrument,
     Centrifuges,
 ))
 
@@ -120,10 +126,18 @@ class Centrifugation(BaseContent):
             return selected_sample.Title()
         return ''
 
-    def get_technician(self):
-        technician = self.getField('Technician').get(self)
-        if technician:
-            return technician.Title()
+    def get_analyst(self):
+        analyst = self.getField('Analyst').get(self)
+        if analyst:
+            return analyst.Title()
+        return ''
+
+    def get_instrument(self):
+        instrument = self.getField('Instrument').get(self)
+        print('-----------instrument')
+        print(instrument)
+        if instrument:
+            return instrument.Title()
         return ''
 
     def get_centrifugation_rows(self):

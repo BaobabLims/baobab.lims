@@ -48,8 +48,8 @@ class CentrifugationsView(BikaListingView):
             'SelectedSample': {
                 'title': _('Selected Sample'),
             },
-            'Technician': {
-                'title': _('Technician'),
+            'Analyst': {
+                'title': _('Analyst'),
             },
             'Centrifuges': {
                 'title': _('Centrifuges'),
@@ -70,7 +70,7 @@ class CentrifugationsView(BikaListingView):
                     'Title',
                     'DateCreated',
                     'SelectedSample',
-                    'Technician',
+                    'Analyst',
                     'Centrifuges',
                 ]
             }
@@ -102,7 +102,7 @@ class CentrifugationsView(BikaListingView):
 
             items[x]['SelectedSample'] = self.getSelectedSample(obj)
 
-            items[x]['Technician'] = obj.getField('Technician').get(obj)
+            items[x]['Analyst'] = self.getAnalyst(obj)
             items[x]['Centrifuges'] = self.getStringified(obj.getCentrifuges())
 
         return items
@@ -111,6 +111,12 @@ class CentrifugationsView(BikaListingView):
         selected_sample = obj.getField('SelectedSample').get(obj)
         if selected_sample:
             return selected_sample.Title()
+        return ''
+
+    def getAnalyst(selfself, obj):
+        analyst = obj.getField('Analyst').get(obj)
+        if analyst:
+            return analyst.Title()
         return ''
 
     def getStringified(self, elements):

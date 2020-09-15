@@ -45,15 +45,17 @@ class AjaxCreatePoolings(BrowserView):
             pooling_data = json.loads(self.request.form['pooling_data'])
 
             # process input and result samples
-            intermediate_data = pooling_data.get('intermediate_sample_data', None)
-            intermediate_sample = self.process_intermediate_sample(intermediate_data)
-
             input_samples = self.process_input_samples(pooling_data['input_samples_data'])
             result_samples = self.process_result_samples(pooling_data['aliquots_data'])
 
             pooling_obj = self.create_sample_pooling_object(pooling_data['sample_pooling_data'])
             pooling_obj.getField("InputSamples").set(pooling_obj, input_samples)
-            pooling_obj.getField("IntermediateSample").set(pooling_obj, intermediate_sample)
+
+            if 'intermediate_sample_data' in pooling_data:
+                intermediate_data = pooling_data.get('intermediate_sample_data', None)
+                intermediate_sample = self.process_intermediate_sample(intermediate_data)
+                pooling_obj.getField("IntermediateSample").set(pooling_obj, intermediate_sample)
+
             pooling_obj.getField("ResultSamples").set(pooling_obj, result_samples)
             pooling_obj.unmarkCreationFlag()
             renameAfterCreation(pooling_obj)
@@ -74,12 +76,13 @@ class AjaxCreatePoolings(BrowserView):
 
     def create_sample_pooling_object(self, sample_pooling_data):
         poolings = self.context.sample_poolings
+        analyst = self.get_content_type(sample_pooling_data.get('analyst', 'unknown'))
         obj = _createObjectByType('SamplePooling', poolings, tmpID())
         obj.edit(
             title=sample_pooling_data['title'],
             description=sample_pooling_data['description'],
             DateCreated=sample_pooling_data['date_created'],
-            PersonPooling=sample_pooling_data['person_pooling'],
+            Analyst=analyst,
         )
 
         return obj

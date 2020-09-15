@@ -69,15 +69,16 @@ class AjaxCreateCentrifugations(BrowserView):
         centrifugations = self.context.centrifugations
         obj = _createObjectByType('Centrifugation', centrifugations, tmpID())
         selectedsample = self.get_content_type(centrifugation_details['selectedsample'])
-        technician = self.get_content_type(centrifugation_details['technician'])
+        analyst = self.get_content_type(centrifugation_details['analyst'])
+        instrument = self.get_content_type(centrifugation_details['instrument'])
 
         obj.edit(
             title=centrifugation_details['title'],
             description=centrifugation_details['description'],
             SelectedSample=selectedsample,
             DateCreated=centrifugation_details['date_created'],
-            Technician=technician,
-            Technique=centrifugation_details['technique'],
+            Analyst=analyst,
+            Instrument=instrument,
         )
 
         return obj
