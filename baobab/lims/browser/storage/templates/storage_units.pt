@@ -1,0 +1,81 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      xmlns="http://www.w3.org/1999/xhtml"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="baobab">
+
+<head>
+<metal:block fill-slot="javascript_head_slot">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script type="text/javascript" src="++theme++graphite.theme/js/vakata-jstree-6dce227/dist/jstree.js"></script>
+        <script type="text/javascript">
+         var jQuery_1_4_x = jQuery.noConflict();
+         (function($) {
+             $(document).ready(function(){
+                $("#sidebarxx-jstree").jstree({
+                    'core': {
+                        'multiple' : true,
+                        'data': {"url": 'http://localhost:8080/Plonerrr/storage/lungaxx',
+                                 "dataType": "json",
+                                 "data": function(node){
+                                    return {'id': node.id};
+                                }
+                        },
+                    },
+                    "types": {
+                      "default": {
+                        "icon": false
+                      },
+                    },
+                    "plugins": ["types", "ui","html_data", "checkbox"], //contextmenu
+
+                   });
+
+             });
+        })(jQuery_1_4_x);
+        </script>
+</metal:block>
+<metal:css fill-slot="style_slot">
+        <link rel="stylesheet" type="text/css" media="all" href="++theme++graphite.theme/js/vakata-jstree-6dce227/dist/themes/default/style.min.css" />
+        <style>
+            .workflow_actions{
+                position: absolute;
+                display: none;
+                color: #0B486B;
+                background-color: #FFFFFF;
+                border: 1px solid #AFAFAF;
+                border-radius: 5px 5px 5px 5px;
+                box-shadow: 1px 2px 10px #dcdcdc;
+                padding: 5px;
+                margin: 5px;
+            }
+            .selection-summary{
+                color: #0B486B;
+                font-size: 1.1em;
+                font-weight: bold;
+                line-height: 160%;
+                padding-left: 12px;
+            }
+        </style>
+</metal:css>
+</head>
+
+<body>
+
+
+<metal:core fill-slot="content-core">
+    <div style="float:left; width:30%; margin:0">
+        <div style="text-align: left; overflow:auto; height:500px">
+            <form id="list" action="workflow_action" method="post" name="bika_listing_form">
+                <div id="sidebarxx-jstree">
+                </div>
+            </form>
+        <p> This is the mada</p>
+         </div>
+    </div>
+</metal:core>
+
+</body>
+
+</html>

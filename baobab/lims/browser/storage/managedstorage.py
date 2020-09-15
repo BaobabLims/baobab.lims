@@ -27,9 +27,9 @@ class ManagedStorageView(BikaListingView):
         self.icon = self.portal_url + "/++resource++baobab.lims.images/" \
                                     + "managedstorage_big.png"
 
-        storage_positions = StoragePositionsView(self.context, self.request)
-        # self.positions_table = StoragePositions.contents_table(table_only=True)
-        self.positions_table = storage_positions.__call__()
+        # storage_positions = StoragePositionsView(self.context, self.request)
+        # # self.positions_table = StoragePositions.contents_table(table_only=True)
+        # self.positions_table = storage_positions.__call__()
 
         storage_graph = StorageGraphView(self.context, self.request)
         self.graph = storage_graph()
@@ -114,7 +114,9 @@ class StoragePositionsView(BikaListingView):
 
     def __init__(self, context, request):
         BikaListingView.__init__(self, context, request)
+        self.actions = None
         self.context = context
+        self.actions = None
         self.request = request
         # self.catalog = 'bika_setup_catalog'
         path = '/'.join(context.getPhysicalPath())
@@ -181,9 +183,86 @@ class StoragePositionsView(BikaListingView):
 
         return item
 
+    # def __call__(self):
+    #     self._process_request()
+    #     return self.contents_table(table_only=True)
+    # def folderitems(self):
+    #     items = BikaListingView.folderitems(self)
+    #     return items
+
     def __call__(self):
-        self._process_request()
-        return self.contents_table(table_only=True)
+        import pdb; pdb.set_trace()
+        self.positions = self.context.objectValues('StoragePosition')
+        self.title = self.context.title
+        self.show_select_column = True
+        self.items = BikaListingView.folderitems(self)
+        self.positions_table = [{"id": i.absolute_url(), "text": str(i.title)} 
+                for i in self.positions]
+
+        # stackoverflow - building nested dictionaries
+        def build_tree(tree_list):
+           if tree_list:
+               if len(tree_list) == 1:
+                   return {'text': tree_list[0],
+                           'state' : {'opened' : True },
+                           'children' : self.positions_table}
+               return {'text': tree_list[0],
+                       'state' : {'opened' : True },
+                       'children' : [build_tree(tree_list[1:])]}
+           return self.positions_table
+
+        import pdb; pdb.set_trace()
+        hierachy = self.context.getHierarchy().split('.')
+        data = {}
+        data = build_tree(hierachy)
+        # data['jstree'] = build_tree(hierachy)
+        # self.actions = self.get_workflow_actions()
+        # data['actions'] = self.actions
+        return json.dumps(data)
+
+
+class StoragePositionsJSTreeView(BrowserView):
+    template = ViewPageTemplateFile("templates/managedstorage_view.pt")
+
+    def __init__(self, context, request):
+        BikaListingView.__init__(self, context, request)
+        self.context = context
+        self.request = request
+    def __init__(self, context, request):
+        BrowserView.__init__(self, context, request)
+        self.context = context
+        self.request = request
+        self.request.set('disable_plone.rightcolumn', 1)
+
+    # def folderitems(self):
+    #     items = BikaListingView.folderitems(self)
+    #     import pdb; pdb.set_trace()
+    #     return items
+
+    def __call__(self):
+        self.positions = self.context.objectValues('StoragePosition')
+        self.title = self.context.title
+        self.show_select_column = True
+        # self.items = self.folderitems
+        self.positions_table = [{"id": i.UID(), "text": str(i.title)} 
+                for i in self.positions]
+
+        # stackoverflow - building nested dictionaries
+        def build_tree(tree_list):
+           if tree_list:
+               if len(tree_list) == 1:
+                   return {'text': tree_list[0],
+                           'state' : {'opened' : True },
+                           'children' : self.positions_table}
+               return {'text': tree_list[0],
+                       'state' : {'opened' : True },
+                       'children' : [build_tree(tree_list[1:])]}
+           return self.positions_table
+
+        hierachy = self.context.getHierarchy().split('.')
+        data = {'data': build_tree(hierachy)}
+        data['actions'] = self.get_workflow_actions()
+        return json.dumps(data)
 
 
 class StorageGraphView(BrowserView):
