@@ -3,24 +3,16 @@
 
 from DateTime import DateTime
 from Products.ATContentTypes.lib import constraintypes
-# from Products.Archetypes.public import BaseFolder
 from Products.CMFCore.utils import getToolByName
-# from Products.CMFPlone.utils import _createObjectByType
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-# from plone.app.content.browser.interfaces import IFolderContentsView
-# from plone.app.layout.globals.interfaces import IViewView
-# from zope.interface import implements
 
-#from Products.Five.browser import BrowserView
 from bika.lims.browser import BrowserView
-# from bika.lims.browser.bika_listing import BikaListingView
-# from bika.lims.browser.multifile import MultifileView
-# from bika.lims.utils import to_utf8
-# from baobab.lims import bikaMessageFactory as _
 from baobab.lims.utils.audit_logger import AuditLogger
 from baobab.lims.utils.local_server_time import getLocalServerTime
 
 import json
+from baobab.lims.utils.permissions_check import is_administrator
+
 
 
 class SamplePoolingView(BrowserView):
@@ -159,6 +151,8 @@ class SamplePoolingEdit(BrowserView):
             request.response.redirect(obj_url)
             return
 
+        # self.is_admin_user = True
+        self.is_admin_user = is_administrator(self.context)
         return self.template()
 
     def perform_sample_shipment_audit(self, sample_shipment, request):

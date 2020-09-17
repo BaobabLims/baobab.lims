@@ -1,26 +1,8 @@
-from zope.schema import ValidationError
-from zope.schema import ValidationError
-
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from Products.ATContentTypes.lib import constraintypes
-from Products.CMFPlone.utils import _createObjectByType
 from Products.CMFCore.utils import getToolByName
-
-from baobab.lims.browser.project.util import SampleGeneration
-from baobab.lims.browser.project import get_first_sampletype
-from baobab.lims.browser.biospecimens.biospecimens import BiospecimensView
-from baobab.lims.idserver import renameAfterCreation
-
-from baobab.lims.subscribers.sample import ObjectInitializedEventHandler
-from baobab.lims.utils.audit_logger import AuditLogger
-from baobab.lims.utils.local_server_time import getLocalServerTime
 from bika.lims.browser import BrowserView
-from bika.lims.workflow import doActionFor
-from bika.lims.utils import tmpID
 
 import json
-from plone import api
-from datetime import datetime
+from baobab.lims.utils.permissions_check import is_administrator
 
 class AjaxReversePooling(BrowserView):
     """ Drug vocabulary source for jquery combo dropdown box
@@ -37,8 +19,11 @@ class AjaxReversePooling(BrowserView):
         self.errors = []
 
     def __call__(self):
-
         try:
+
+            if not is_administrator(self.context):
+                raise Exception('Permission denied.  Only administrator can reverse pooling')
+
             if 'pooling_data' not in self.request.form:
                 raise Exception('No valid sample pooling object data has been send to the server')
 

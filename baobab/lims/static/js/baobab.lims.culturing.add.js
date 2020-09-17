@@ -9,6 +9,11 @@ function BaobabCulturingView() {
     };
 
     function setUpUI() {
+
+        $('#archetypes-fieldname-PolarFlagella').hide();
+        $('#archetypes-fieldname-Lophotrichous').hide();
+        $('#archetypes-fieldname-Peritrichous').hide();
+
         if ($('#Conformity').val() != 'No') {
             $('#archetypes-fieldname-NonConformities').hide();
         }

@@ -145,13 +145,13 @@
 
         <span>
             <div style="text-align:left;padding-bottom:10px;">
-            <input i18n:attributes="value"
-                    class="context button allowMultiSubmit"
-                    type="submit"
-                    name="save_button"
-                    value="Save The value you see here"/>
-
-            <button type="button" class="reverse_sample_pooling">Reverse Sampling Pooling</button>
+            <!--?<input i18n:attributes="value"-->
+                    <!--?class="context button allowMultiSubmit"-->
+                    <!--?type="submit"-->
+                    <!--?name="save_button"-->
+                    <!--?value="Save The value you see here"/>-->
+            <button type="submit" class="submit_sample_pooling">Save Changes</button>
+            <button tal:condition="view/is_admin_user" type="button" class="reverse_sample_pooling">Reverse Sampling Pooling</button>
             </div>
         </span>
 
