@@ -2,9 +2,7 @@ from Products.CMFCore.utils import getToolByName
 from zope.schema import ValidationError
 from Products.CMFPlone.utils import _createObjectByType
 from DateTime import DateTime
-from plone import api
 
-from bika.lims.workflow import doActionFor
 from bika.lims.utils import tmpID
 from bika.lims.idserver import renameAfterCreation
 from baobab.lims.interfaces import IManagedStorage
@@ -34,7 +32,6 @@ class SampleGeneration:
         if batch:
             field_b = sample.getField('Batch')
             field_b.set(sample, batch.UID())
-
         # set the project for both kit or batch
         field_p = sample.getField('Project')
         field_p.set(sample, self.project)
@@ -42,6 +39,28 @@ class SampleGeneration:
         if self.form.get('ParentBiospecimen', ''):
             field_s = sample.getField('LinkedSample')
             field_s.set(sample, self.form.get('ParentBiospecimen_uid'))
+
+        if self.form.get('HumanOrMicroOrganism', ''):
+            human_or_microorganism = self.form.get('HumanOrMicroOrganism')
+            field_h = sample.getField('HumanOrMicroOrganism')
+            field_h.set(sample, human_or_microorganism)
+            if human_or_microorganism == 'Human':
+                sample_package_uid = self.form.get('SamplePackage_uid')
+                field_sa = sample.getField('SamplePackage')
+                field_sa.set(sample, sample_package_uid)
+            elif human_or_microorganism == 'Microorganism':
+                strain_uid = self.form.get('Strain_uid', '')
+                field_st = sample.getField('Strain')
+                field_st.set(sample, strain_uid)
+
+                origin = self.form.get('Origin')
+                field_o = sample.getField('Origin')
+                field_o.set(sample, origin)
+
+                phenotype = self.form.get('Phenotype')
+                field_ph = sample.getField('Phenotype')
+                field_ph.set(sample, phenotype)
+
         sample.unmarkCreationFlag()
         renameAfterCreation(sample)
 
@@ -92,6 +111,6 @@ class SampleGeneration:
             if IManagedStorage.providedBy(storage):
                 count += storage.getFreePositions()
             else:
-                raise ValidationError("Storage %s is not a valid storage type" %
-                                      storage)
+                raise ValidationError(
+                        "Storage %s is not a valid storage type" % storage)
         return count

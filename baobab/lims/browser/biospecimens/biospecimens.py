@@ -34,7 +34,7 @@ class BiospecimensView(BikaListingView):
         self.context_actions = {}
         self.title = self.context.translate(_("Biospecimens"))
         self.icon = self.portal_url + \
-                    "/++resource++baobab.lims.images/biospecimen_big.png"
+            "/++resource++baobab.lims.images/biospecimen_big.png"
         self.description = ''
         self.show_sort_column = False
         self.show_select_row = False
@@ -48,7 +48,7 @@ class BiospecimensView(BikaListingView):
 
         if self.context.portal_type == 'Biospecimens':
             self.request.set('disable_border', 1)
-            
+
         self.columns = {
             'Title': {
                 'title': _('Title'),
@@ -101,6 +101,26 @@ class BiospecimensView(BikaListingView):
             #     'title': _('Location'),
             #     'toggle': True
             # },
+            'HumanOrMicroOrganism': {
+                'title': _('Human Or MicroOrganism'),
+                'toggle': True,
+            },
+            'SamplePackage': {
+                'title': _('Sample Package'),
+                'toggle': True,
+            },
+            'Strain': {
+                'title': _('Strain'),
+                'toggle': True,
+            },
+            'Origin': {
+                'title': _('Origin'),
+                'toggle': True,
+            },
+            'Phenotype': {
+                'title': _('Phenotype'),
+                'toggle': True,
+            },
         }
 
         self.review_states = [
@@ -127,6 +147,11 @@ class BiospecimensView(BikaListingView):
                     'Volume',
                     'Unit',
                     'state_title',
+                    'HumanOrMicroOrganism',
+                    'SamplePackage',
+                    'Strain',
+                    'Origin',
+                    'Phenotype'
                     # 'Location'
                 ]
             },
@@ -152,6 +177,11 @@ class BiospecimensView(BikaListingView):
                     'Barcode',
                     'state_title',
                     # 'Location'
+                    'HumanOrMicroOrganism',
+                    'SamplePackage',
+                    'Strain',
+                    'Origin',
+                    'Phenotype'
                 ]
             },
             {
@@ -178,6 +208,11 @@ class BiospecimensView(BikaListingView):
                     'Unit',
                     'state_title',
                     # 'Location'
+                    'HumanOrMicroOrganism',
+                    'SamplePackage',
+                    'Strain',
+                    'Origin',
+                    'Phenotype'
                 ]
             },
             {
@@ -203,6 +238,11 @@ class BiospecimensView(BikaListingView):
                     'Unit',
                     'state_title',
                     # 'Location'
+                    'HumanOrMicroOrganism',
+                    'SamplePackage',
+                    'Strain',
+                    'Origin',
+                    'Phenotype'
                 ]
             },
             {
@@ -227,16 +267,21 @@ class BiospecimensView(BikaListingView):
                     'Unit',
                     'state_title',
                     # 'Location'
+                    'HumanOrMicroOrganism',
+                    'SamplePackage',
+                    'Strain',
+                    'Origin',
+                    'Phenotype'
                 ]
             },
 
             {
                 'id': 'cancelled',
                 'title': _('Cancelled'),
-                'contentFilter':{
+                'contentFilter': {
                     'cancellation_state': 'cancelled',
                     'sort_order': 'reverse',
-                    'sort_on':'created'
+                    'sort_on': 'created'
                 },
                 'transitions': [
                     {'id': 'reinstate'},
@@ -252,6 +297,11 @@ class BiospecimensView(BikaListingView):
                     'Unit',
                     'state_title',
                     # 'Location'
+                    'HumanOrMicroOrganism',
+                    'SamplePackage',
+                    'Strain',
+                    'Origin',
+                    'Phenotype'
                 ]
             },
 
@@ -272,6 +322,11 @@ class BiospecimensView(BikaListingView):
                     'Volume',
                     'Unit',
                     # 'Location'
+                    'HumanOrMicroOrganism',
+                    'SamplePackage',
+                    'Strain',
+                    'Origin',
+                    'Phenotype'
                 ]
             },
         ]
@@ -291,9 +346,22 @@ class BiospecimensView(BikaListingView):
         pm = getToolByName(self.context, 'portal_membership')
         roles = pm.getAuthenticatedMember().getRoles()
 
-        #print roles
         if 'EMS' in roles:
             self.contentFilter['object_provides'] = ISharableSample.__identifier__
+        context = self.context
+        human_or_microorg = getattr(context, "HumanOrMicroOrganism", None)
+        if human_or_microorg == 'Human':
+            self.columns.pop('Strain', None)
+            self.columns.pop('Origin', None)
+            self.columns.pop('Phenotype', None)
+            for state in self.review_states:
+                state['columns'].remove('Strain')
+                state['columns'].remove('Origin')
+                state['columns'].remove('Phenotype')
+        elif human_or_microorg == 'Microorganism':
+            self.columns.pop('SamplePackage', None)
+            for state in self.review_states:
+                state['columns'].remove('SamplePackage')
 
         items = BikaListingView.folderitems(self)
         bsc = getToolByName(self.context, 'bika_setup_catalog')
@@ -351,5 +419,15 @@ class BiospecimensView(BikaListingView):
                 elif items[x]['review_state'] == "sample_shipped":
                     items[x]['allow_edit'] = ['SubjectID', 'Volume']
 
+            sample_package = obj.getField('SamplePackage').get(obj)
+            if sample_package:
+                items[x]['replace']['SamplePackage'] = \
+                    '<a href="%s">%s</a>' % (sample_package.absolute_url(),
+                                             sample_package.Title())
+            strain = obj.getField('Strain').get(obj)
+            if strain:
+                items[x]['replace']['Strain'] = \
+                    '<a href="%s">%s</a>' % (strain.absolute_url(),
+                                             strain.Title())
             ret.append(item)
         return ret

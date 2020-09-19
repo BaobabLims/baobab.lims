@@ -13,7 +13,7 @@ var _s = window.jarn.i18n.MessageFactory("baobab.lims");
  */
 window.baobab.lims.controllers =  {
     ".portaltype-samplebatch":
-        ['BaobabBiospecimensView', 'BaobabSampleBatchEditView'],
+        ['BaobabSampleBatchView'],
     ".portaltype-biospecimens":
         ['BaobabBiospecimensView'],
     ".template-ar_add #analysisrequest_edit_form":

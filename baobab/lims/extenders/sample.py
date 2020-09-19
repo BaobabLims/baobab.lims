@@ -3,16 +3,18 @@ from archetypes.schemaextender.interfaces import IOrderableSchemaExtender
 from archetypes.schemaextender.interfaces import ISchemaModifier
 from zope.component import adapts
 from Products.CMFCore import permissions
-from Products.CMFCore.utils import getToolByName
 
 from bika.lims.fields import *
 from bika.lims.interfaces import ISample
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from bika.lims.browser.widgets import DateTimeWidget
+from bika.lims.browser.widgets import SelectionWidget
 from bika.lims.content.sample import Sample as BaseSample
 from bika.lims.workflow import doActionFor
 
 from baobab.lims import bikaMessageFactory as _
+from baobab.lims.config import (
+        PHENOTYPES, SAMPLE_ORIGIN, HUMAN_OR_MICROORGANISM)
 from baobab.lims.interfaces import ISampleStorageLocation
 
 import sys
@@ -53,25 +55,6 @@ class SampleSchemaExtender(object):
                 description=_("Select the project of the sample."),
             )
         ),
-        # ExtReferenceField(
-        #     'Project',
-        #     # mode="rw",
-        #     required=True,
-        #     relationship='InvoiceProject',
-        #     referenceClass=HoldingReference,
-        #     allowed_types=('Project',),
-        #     read_permission=permissions.View,
-        #     write_permission=permissions.ModifyPortalContent,
-        #     # vocabulary='_getProjectsDisplayList',
-        #     widget=SelectionWidget(
-        #     # widget=bika_ReferenceWidget(
-        #         format='select',
-        #         label=_("Project"),
-        #         description=_("Select the project of the sample."),
-        #         visible={'edit': 'visible', 'view': 'visible'},
-        #         render_own_label=True,
-        #     )
-        # ),
         ExtReferenceField(
             'Conformity',
             allowed_types=('Conformity',),
@@ -443,6 +426,104 @@ class SampleSchemaExtender(object):
                          'expired': {'view': 'visible', 'edit': 'invisible'},
                          'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
+                render_own_label=True,
+            )
+        ),
+        ExtStringField(
+            'HumanOrMicroOrganism',
+            vocabulary=HUMAN_OR_MICROORGANISM,
+            widget=SelectionWidget(
+                format='radio',
+                label=_("Human Or Micro Organism"),
+                visible={'edit': 'visible',
+                         'view': 'visible',
+                         'header_table': 'visible',
+                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         'sample_due': {'view': 'visible', 'edit': 'visible'},
+                         'sampled': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'visible'},
+                         'expired': {'view': 'visible', 'edit': 'invisible'},
+                         'disposed': {'view': 'visible', 'edit': 'invisible'},
+                         },
+                description=_("Select human or micro organism."),
+                render_own_label=True,
+            )
+        ),
+        ExtReferenceField(
+            'SamplePackage',
+            allowed_types=('SamplePackage',),
+            relationship='SampleSamplePackage',
+            referenceClass=HoldingReference,
+            widget=bika_ReferenceWidget(
+                # catalog_name='bika_catalog',
+                visible={'edit': 'visible',
+                         'view': 'visible',
+                         'header_table': 'visible',
+                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         'sample_due': {'view': 'visible', 'edit': 'visible'},
+                         'sampled': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'visible'},
+                         'expired': {'view': 'visible', 'edit': 'invisible'},
+                         'disposed': {'view': 'visible', 'edit': 'invisible'},
+                         },
+                size=30,
+                showOn=True,
+                render_own_label=True,
+                # base_query={'review_state': 'finalised'},
+                description=_("Select the package of the sample."),
+            )
+        ),
+        ExtReferenceField(
+            'Strain',
+            allowed_types=('Strain',),
+            relationship='SampleStrain',
+            referenceClass=HoldingReference,
+            widget=bika_ReferenceWidget(
+                label=_("Strain"),
+                visible={'edit': 'visible',
+                         'view': 'visible',
+                         'header_table': 'visible',
+                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         'sample_due': {'view': 'visible', 'edit': 'visible'},
+                         'sampled': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'visible'},
+                         'expired': {'view': 'visible', 'edit': 'invisible'},
+                         'disposed': {'view': 'visible', 'edit': 'invisible'},
+                         },
+                size=30,
+                showOn=True,
+                render_own_label=True,
+                description=_("Select the strain of the sample."),
+            )
+        ),
+        ExtStringField(
+            'Origin',
+            vocabulary=SAMPLE_ORIGIN,
+            widget=SelectionWidget(
+                format='select',
+                label=_("Origin"),
+                description=_("Selection the origin of the sample"),
+                visible={'edit': 'visible',
+                         'view': 'visible',
+                         'header_table': 'visible',
+                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         'sample_due': {'view': 'visible', 'edit': 'visible'},
+                         'sampled': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'visible'},
+                         'expired': {'view': 'visible', 'edit': 'invisible'},
+                         'disposed': {'view': 'visible', 'edit': 'invisible'},
+                         },
+                render_own_label=False,
+            )
+        ),
+        ExtStringField(
+            'Phenotype',
+            vocabulary=PHENOTYPES,
+            widget=SelectionWidget(
+                format='radio',
+                label=_("Phenotype"),
+                description=_("Select the phenotype of the sample"),
+                visible={'edit': 'visible', 'view': 'visible'},
                 render_own_label=True,
             )
         ),

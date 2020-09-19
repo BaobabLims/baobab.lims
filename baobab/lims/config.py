@@ -36,3 +36,22 @@ INVOICE_SERVICES = DisplayList((
     ('Storage', _('Sample Storage')),
     ('AnalysisRequest', _('Analysis Request')),
 ))
+
+SAMPLE_ORIGIN = DisplayList((
+    ('', _('')),
+    ('Human', _('Human')),
+    ('Animal', _('Animal')),
+    ('Plant', _('Plant')),
+    ('Environmental', _('Environmental')),
+))
+
+PHENOTYPES = DisplayList((
+    ('Unknown', _('Unknown')),
+    ('WildType', _('WildType')),
+    ('Recombinant', _('Recombinant')),
+))
+
+HUMAN_OR_MICROORGANISM = DisplayList((
+    ('Human', _('Human')),
+    ('Microorganism', _('Micro Organism')),
+))

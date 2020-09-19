@@ -8,7 +8,8 @@ from bika.lims.content.bikaschema import BikaSchema
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from bika.lims.browser.widgets import DateTimeWidget
 
-from baobab.lims.config import PROJECTNAME
+from baobab.lims.config import (
+    PROJECTNAME, PHENOTYPES, SAMPLE_ORIGIN, HUMAN_OR_MICROORGANISM)
 from baobab.lims.interfaces import IBatch
 from baobab.lims import bikaMessageFactory as _
 from baobab.lims.interfaces import ISampleStorageLocation
@@ -146,6 +147,115 @@ DateCreation = DateTimeField(
         visible={'edit': 'visible', 'view': 'visible'}
     )
 )
+HumanOrMicroOrganism = StringField(
+    'HumanOrMicroOrganism',
+    read_permission=permissions.View,
+    write_permission=permissions.ModifyPortalContent,
+    vocabulary=HUMAN_OR_MICROORGANISM,
+    widget=SelectionWidget(
+        format='radio',
+        label=_("Human Or Micro Organism"),
+        visible={'edit': 'visible',
+                 'view': 'visible',
+                 'header_table': 'visible',
+                 'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                 'sample_due': {'view': 'visible', 'edit': 'visible'},
+                 'sampled': {'view': 'visible', 'edit': 'invisible'},
+                 'sample_received': {'view': 'visible', 'edit': 'visible'},
+                 'expired': {'view': 'visible', 'edit': 'invisible'},
+                 'disposed': {'view': 'visible', 'edit': 'invisible'},
+                 },
+        description=_("Select human or micro organism."),
+        render_own_label=True,
+    )
+)
+SamplePackage = ReferenceField(
+    'SamplePackage',
+    allowed_types=('SamplePackage',),
+    relationship='SampleSamplePackage',
+    referenceClass=HoldingReference,
+    widget=bika_ReferenceWidget(
+        visible={'edit': 'visible',
+                 'view': 'visible',
+                 'header_table': 'visible',
+                 'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                 'sample_due': {'view': 'visible', 'edit': 'visible'},
+                 'sampled': {'view': 'visible', 'edit': 'invisible'},
+                 'sample_received': {'view': 'visible', 'edit': 'visible'},
+                 'expired': {'view': 'visible', 'edit': 'invisible'},
+                 'disposed': {'view': 'visible', 'edit': 'invisible'},
+                 },
+        size=30,
+        showOn=True,
+        render_own_label=True,
+        description=_("Select the package of the sample."),
+    )
+)
+Strain = ReferenceField(
+    'Strain',
+    allowed_types=('Strain',),
+    relationship='SampleStrain',
+    referenceClass=HoldingReference,
+    widget=bika_ReferenceWidget(
+        label=_("Strain"),
+        visible={'edit': 'visible',
+                 'view': 'visible',
+                 'header_table': 'visible',
+                 'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                 'sample_due': {'view': 'visible', 'edit': 'visible'},
+                 'sampled': {'view': 'visible', 'edit': 'invisible'},
+                 'sample_received': {'view': 'visible', 'edit': 'visible'},
+                 'expired': {'view': 'visible', 'edit': 'invisible'},
+                 'disposed': {'view': 'visible', 'edit': 'invisible'},
+                 },
+        size=30,
+        showOn=True,
+        render_own_label=True,
+        description=_("Select the strain of the sample."),
+    )
+)
+Origin = StringField(
+    'Origin',
+    vocabulary=SAMPLE_ORIGIN,
+    widget=SelectionWidget(
+        format='select',
+        label=_("Origin"),
+        description=_("Selection the origin of the sample"),
+        visible={'edit': 'visible',
+                 'view': 'visible',
+                 'header_table': 'visible',
+                 'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                 'sample_due': {'view': 'visible', 'edit': 'visible'},
+                 'sampled': {'view': 'visible', 'edit': 'invisible'},
+                 'sample_received': {'view': 'visible', 'edit': 'visible'},
+                 'expired': {'view': 'visible', 'edit': 'invisible'},
+                 'disposed': {'view': 'visible', 'edit': 'invisible'},
+                 },
+        showOn=True,
+        render_own_label=False,
+    )
+)
+Phenotype = StringField(
+    'Phenotype',
+    vocabulary=PHENOTYPES,
+    widget=SelectionWidget(
+        format='radio',
+        label=_("Phenotype"),
+        visible={'edit': 'visible',
+                 'view': 'visible',
+                 'header_table': 'visible',
+                 'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                 'sample_due': {'view': 'visible', 'edit': 'visible'},
+                 'sampled': {'view': 'visible', 'edit': 'invisible'},
+                 'sample_received': {'view': 'visible', 'edit': 'visible'},
+                 'expired': {'view': 'visible', 'edit': 'invisible'},
+                 'disposed': {'view': 'visible', 'edit': 'invisible'},
+                 },
+        description=_("Select the phenotype of the sample"),
+        showOn=True,
+        render_own_label=True,
+    )
+)
 
 schema = BikaSchema.copy() + Schema((
     BatchId,
@@ -153,7 +263,12 @@ schema = BikaSchema.copy() + Schema((
     ParentBiospecimen,
     NumberBiospecimens,
     Location,
-    DateCreation
+    DateCreation,
+    HumanOrMicroOrganism,
+    SamplePackage,
+    Strain,
+    Origin,
+    Phenotype
 ))
 
 schema['title'].widget.visible = {'edit': 'visible', 'view': 'visible'}
