@@ -39,8 +39,8 @@ DateOfMaldiTof = DateTimeField(
     read_permission=permissions.View,
     write_permission=permissions.ModifyPortalContent,
     widget=DateTimeWidget(
-        label=_("Date of MaldiTof"),
-        description=_("Date of Maldi-TOF."),
+        label=_("Date of MALDI-TOF"),
+        description=_("Date of MALDI-TOF."),
         visible={'edit': 'visible', 'view': 'visible'},
     )
 )
