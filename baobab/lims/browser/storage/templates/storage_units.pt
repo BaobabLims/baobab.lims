@@ -13,10 +13,11 @@
          var jQuery_1_4_x = jQuery.noConflict();
          (function($) {
              $(document).ready(function(){
+                var _p = window.jarn.i18n.MessageFactory("plone");
                 $("#sidebarxx-jstree").jstree({
                     'core': {
-                        'multiple' : true,
-                        'data': {"url": 'http://localhost:8080/Plonerrr/storage/lungaxx',
+                        'multiple' : false,
+                        'data': {"url": window.location.href+'/lungaxx',
                                  "dataType": "json",
                                  "data": function(node){
                                     return {'id': node.id};
@@ -31,6 +32,60 @@
                     "plugins": ["types", "ui","html_data", "checkbox"], //contextmenu
 
                    });
+                   //
+                $('#sidebarxx-jstree').on("changed.jstree", function (e, data) {
+                      debugger;
+                      var to = e.pageY || window.event.pageY
+                      var i, j, r = [];
+                      for(i = 0, j = data.selected.length; i < j; i++) {
+                        r.push(data.instance.get_node(data.selected[i]).text);
+                      }
+                      console.log(data.selected.length)
+                      console.log(data.instance.get_node(data.selected[0]).text);
+                      console.log($(this).closest('li').text())
+                      console.log(to)
+                      if (data.selected.length> 0) {
+                          var firstchk = $('.jstree-clicked')
+                          var leftpos = $(firstchk).offset().left;
+                          $('.workflow_actions').css({
+                               top: to - 10,
+                               left: leftpos + 40
+                          });
+                          updateSelectedItems($(this).closest('jstree-anchor jstree-clicked'));
+                          // firstchk = firstchk.first();
+                          $('.workflow_actions').show();
+                      } else {
+                          $('.workflow_actions').hide();
+                      }
+
+
+                      function updateSelectedItems(table) {
+                          var numsels = data.selected.length
+                          if (numsels > 0) {
+                              if ($('.workflow_actions div.selection-summary').length == 0) {
+                                  $('.workflow_actions').prepend('<div class="selection-summary"><span class="num-selected">'+numsels+'</span> '+_p('Items selected')+'</div>');
+                              } else {
+                                  $('.workflow_actions div.selection-summary span.num-selected').html(numsels);
+                              }
+
+                              $('.gotourl').remove()
+                              if (data.node.original.url != undefined){
+                                  debugger;
+                                  $('.workflow_actions').append('<div class="gotourl"><a href="'+ data.node.original.url+'">Go to '+data.node.text+'</a></div>');
+                              }
+                              $('.workflow_actions').show();
+                          } else {
+                              $('.workflow_actions').hide();
+                          }
+                      }
+
+
+
+
+
+
+                    })
+                   //
 
              });
         })(jQuery_1_4_x);
@@ -70,8 +125,30 @@
             <form id="list" action="workflow_action" method="post" name="bika_listing_form">
                 <div id="sidebarxx-jstree">
                 </div>
+                <div class="workflow_actions">
+                  <span class="workflow_action_buttons"
+                        tal:define="actions view/get_workflow_actions">
+                    <span tal:omit-tag="python:True" tal:repeat="action actions"
+                          tal:condition="view/show_workflow_action_buttons">
+
+                      <input
+                          type="hidden"
+                          tal:attributes="name action/id;
+                                          value action/id;"/>
+                      <input
+                          class="context workflow_action_button action_button allowMultiSubmit"
+                          type="submit"
+                          name="workflow_action_button"
+                          i18n:attributes="value"
+                          i18n:domain="bika"
+                          tal:attributes="id python:action['id']+'_transition';
+                                          transition action/id;
+                                          value action/title;
+                                          url python:action.get('url', '');"/>
+                    </span>
+                  </span>
+                </div>
             </form>
-        <p> This is the mada</p>
          </div>
     </div>
 </metal:core>

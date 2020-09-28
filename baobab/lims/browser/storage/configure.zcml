@@ -46,7 +46,7 @@
 
 
    <browser:page
-            for="baobab.lims.interfaces.IStorageUnits"
+            for="*"
             name="lungaxx"
             class="baobab.lims.browser.storage.storageunits.StorageUnitsxView"
             permission="zope.Public"
