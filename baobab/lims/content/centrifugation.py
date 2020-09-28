@@ -60,7 +60,7 @@ Analyst = ReferenceField(
     )
 )
 
-Instrument = StringField(
+Instrument = ReferenceField(
     'Instrument',
     allowed_types=('Instrument'),
     referenceClass=HoldingReference,
@@ -134,8 +134,6 @@ class Centrifugation(BaseContent):
 
     def get_instrument(self):
         instrument = self.getField('Instrument').get(self)
-        print('-----------instrument')
-        print(instrument)
         if instrument:
             return instrument.Title()
         return ''

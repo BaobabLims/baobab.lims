@@ -47,7 +47,7 @@ class CentrifugationView(BrowserView):
         self.date_created = self.context.getDateCreated()
         self.selected_sample = self.context.get_selected_sample()
         self.analyst = self.context.get_analyst()
-        self.instrument = 'Test' # self.context.get_instrument()
+        self.instrument = self.context.get_instrument()
 
         self.centrifugation_rows = self.prepare_centrifugation_rows()
 
@@ -76,8 +76,10 @@ class CentrifugationView(BrowserView):
     def get_storage_location(self, sample):
         try:
             print('-------get storage')
-            print(sample.__dict__)
+            print(sample)
+            # print(sample.__dict__)
             storage_location = sample.getField('StorageLocation').get(sample)
+            # print(storage_location)
             # storage_location = sample.getStorageLocation()
             return storage_location.Title()
         except Exception as e:

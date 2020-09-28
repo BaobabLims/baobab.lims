@@ -382,7 +382,15 @@ class BiospecimensView(BikaListingView):
             if not ISample.providedBy(obj):
                 continue
             items[x]['Type'] = obj.getSampleType() and obj.getSampleType().Title() or ''
-            items[x]['Volume'] = obj.getField('Volume').get(obj)
+
+            pink_row, volume = self.is_pink_row(obj)
+            # volume = 0
+            if pink_row:
+                items[x]['replace']['Volume'] = volume
+            else:
+                items[x]['Volume'] = volume
+
+            # items[x]['Volume'] = obj.getField('Volume').get(obj)
             # items[x]['Unit'] = VOLUME_UNITS[0]['ResultText']
             items[x]['Unit'] = obj.getField('Unit').get(obj)
             items[x]['SubjectID'] = obj.getField('SubjectID').get(obj)
@@ -431,3 +439,26 @@ class BiospecimensView(BikaListingView):
                                              strain.Title())
             ret.append(item)
         return ret
+
+    def is_pink_row(self, obj):
+
+        try:
+            sample_volume = obj.getField('Volume').get(obj)
+            # if self.get_review_state(obj) != "sample_received":
+            #     return False, sample_volume
+
+            if self.get_review_state(obj) != "sample_received" and float(sample_volume) <= float('0.0'):
+                return True, '<span class="lightpinkrow" title="Volume is zero" style="color:red">%s</span>' % sample_volume
+
+            return False, sample_volume
+        except Exception as e:
+            return False, sample_volume
+
+    def get_review_state(self, obj):
+        workflow = getToolByName(self.context, 'portal_workflow')
+        state = workflow.getInfoFor(obj, 'review_state')
+        return state
+
+
+
+
