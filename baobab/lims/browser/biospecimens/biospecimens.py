@@ -446,12 +446,18 @@ class BiospecimensView(BikaListingView):
             sample_volume = obj.getField('Volume').get(obj)
             # if self.get_review_state(obj) != "sample_received":
             #     return False, sample_volume
+            # print('----------trying')
+            # print(self.get_review_state(obj))
+            # print(float(sample_volume))
 
-            if self.get_review_state(obj) != "sample_received" and float(sample_volume) <= float('0.0'):
-                return True, '<span class="lightpinkrow" title="Volume is zero" style="color:red">%s</span>' % sample_volume
+            if self.get_review_state(obj) == "sample_received" and float(sample_volume) <= float('0.0'):
+                print('----------trying')
+                return True, '<span class="lightpinkrow" title="Volume is zero" style="">%s</span>' % sample_volume
+                # return True, '<span class="lightpinkrow" title="Volume is zero" style="color:red">%s</span>' % sample_volume
 
             return False, sample_volume
         except Exception as e:
+            print('-------exception is %s' % str(e))
             return False, sample_volume
 
     def get_review_state(self, obj):

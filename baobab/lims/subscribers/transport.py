@@ -7,22 +7,18 @@ def ObjectInitializedEventHandler(instance, event):
     """called an object is created
     """
 
-    if instance.portal_type == 'Project':
-        audit_logger = AuditLogger(instance, 'Project')
-        audit_logger.perform_simple_audit(instance, 'New')
+    if instance.portal_type == 'Transport':
+        # audit_logger = AuditLogger(instance, 'Project')
+        # audit_logger.perform_simple_audit(instance, 'New')
 
         client = instance.getClient()
+        project = instance.getProject()
         sender = client.EmailAddress
         receiver = sender
 
-        if instance.getField('ProjectAccepted').get(instance) == "Accepted":
-            subject = 'Project \"%s\" has been accepted.' % instance.Title()
-            message = get_accepted_message()
-            send_email(instance, receiver, receiver, subject, message)
-
-        if instance.getField('ProjectAccepted').get(instance) == "Rejected":
-            subject = 'Project \"%s\" has been rejected.' % instance.Title()
-            message = get_rejected_message(instance)
+        if instance.getField('ArrivalDate').get(instance):    # == "Accepted":
+            subject = 'Project %s samples have arrived.' % project.Title()
+            message = get_transport_message()
 
             send_email(instance, receiver, receiver, subject, message)
 
@@ -30,20 +26,15 @@ def ObjectModifiedEventHandler(instance, event):
     """ Called if the object is modified
     """
 
-    if instance.portal_type == 'Project':
+    if instance.portal_type == 'Transport':
         client = instance.getClient()
+        project = instance.getProject()
         sender = client.EmailAddress
         receiver = sender
 
-        if instance.getField('ProjectAccepted').get(instance) == "Accepted":
-            subject = 'Project \"%s\" has been accepted.' % instance.Title()
-            message = get_accepted_message()
-
-            send_email(instance, receiver, receiver, subject, message)
-
-        if instance.getField('ProjectAccepted').get(instance) == "Rejected":
-            subject = 'Project \"%s\" has been rejected.' % instance.Title()
-            message = get_rejected_message(instance)
+        if instance.getField('ArrivalDate').get(instance):    # == "Accepted":
+            subject = 'Project %s samples have arrived.' % project.Title()
+            message = get_transport_message()
 
             send_email(instance, receiver, receiver, subject, message)
 

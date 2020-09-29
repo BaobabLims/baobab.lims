@@ -25,7 +25,19 @@
     <subscriber
         for="baobab.lims.interfaces.IProject
             Products.Archetypes.interfaces.IObjectEditedEvent"
-        handler=".project.ObjectInitializedEventHandler"
+        handler=".project.ObjectModifiedEventHandler"
+    />
+
+    <subscriber
+        for="baobab.lims.interfaces.ITransport
+        Products.Archetypes.interfaces.IObjectInitializedEvent"
+        handler=".transport.ObjectInitializedEventHandler"
+    />
+
+    <subscriber
+        for="baobab.lims.interfaces.ITransport
+            Products.Archetypes.interfaces.IObjectEditedEvent"
+        handler=".transport.ObjectModifiedEventHandler"
     />
 
 </configure>

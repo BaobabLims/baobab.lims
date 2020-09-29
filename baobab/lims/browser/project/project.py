@@ -147,8 +147,6 @@ class ProjectView(BrowserView):
         self.project_theme = context.getProjectTheme()
         self.project_accepted = context.getProjectAccepted()
         self.refuse_reason = context.getRefuseReason()
-        # self.age_interval = str(context.getAgeLow()) + ' - ' + str(
-        #     context.getAgeHigh())
         self.start_date = context.getStartDate()
         self.end_date = context.getEndDate()
 

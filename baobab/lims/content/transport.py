@@ -104,7 +104,7 @@ DepositorPhone = StringField(
 
 DepartureDate = DateTimeField(
     'DepartureDate',
-    schemata='Sample Deposit and Arrival',
+    schemata='Transport Information',
     mode="rw",
     read_permission=permissions.View,
     write_permission=permissions.ModifyPortalContent,
@@ -126,13 +126,19 @@ ArrivalDate = DateTimeField(
         label=_("Arrival Date"),
         description=_("When this package arrived at the biobank."),
         show_time=True,
-        visible={'edit': 'visible', 'view': 'visible'}
+        # visible={'edit': 'visible', 'view': 'visible'}
+        visible={'edit': 'visible',
+                 'view': 'visible',
+                 # 'header_table': 'visible',
+                 'load_up': {'view': 'visible', 'edit': 'invisible'},
+                 'arrived': {'view': 'visible', 'edit': 'visible'},
+                 },
     )
 )
 
 NumberOfPackages = StringField(
     'NumberOfPackages',
-    schemata='Sample Deposit and Arrival',
+    schemata='Transport Information',
     read_permission=permissions.View,
     write_permission=permissions.ModifyPortalContent,
     widget=StringWidget(
@@ -144,7 +150,7 @@ NumberOfPackages = StringField(
 
 DepartureTemperature = StringField(
     'DepartureTemperature',
-    schemata='Sample Deposit and Arrival',
+    schemata='Transport Information',
     read_permission=permissions.View,
     write_permission=permissions.ModifyPortalContent,
     widget=StringWidget(
@@ -162,13 +168,20 @@ ArrivalTemperature = StringField(
     widget=StringWidget(
         label=_("Arrival Temperature"),
         description=_("The Temperature of the package when the transport arrived at the biobank."),
-        visible={'edit': 'visible', 'view': 'visible'},
+        # visible={'edit': 'visible', 'view': 'visible'},
+        visible={
+                 # 'edit': 'visible',
+                 # 'view': 'visible',
+                 # 'header_table': 'visible',
+                 'load_up': {'view': 'visible', 'edit': 'invisible'},
+                 'arrived': {'view': 'visible', 'edit': 'visible'},
+                 },
     )
 )
 
 Conformance = StringField(
     'Conformance',
-    schemata='Non Conformance',
+    schemata='Sample Deposit and Arrival',
     read_permission=permissions.View,
     write_permission=permissions.ModifyPortalContent,
     vocabulary='getConformances',
@@ -176,13 +189,19 @@ Conformance = StringField(
         format='select',
         label=_("Conformances"),
         description=_("Select the conformance of the transport"),
-        visible={'edit': 'visible', 'view': 'visible'},
+        # visible={'edit': 'visible', 'view': 'visible'},
+        visible={'edit': 'visible',
+                 'view': 'visible',
+                 # 'header_table': 'visible',
+                 'load_up': {'view': 'visible', 'edit': 'invisible'},
+                 'arrived': {'view': 'visible', 'edit': 'visible'},
+                 },
     )
 )
 
 NonConformities = ReferenceField(
     'NonConformities',
-    schemata='Non Conformance',
+    schemata='Sample Deposit and Arrival',
     multiValued=1,
     allowed_types=('Conformity'),
     referenceClass=HoldingReference,
@@ -192,7 +211,13 @@ NonConformities = ReferenceField(
         label=_("Non Comformities"),
         description=_("Select non conformity"),
         size=40,
-        visible={'edit': 'visible', 'view': 'visible'},
+        # visible={'edit': 'visible', 'view': 'visible'},
+        visible={'edit': 'visible',
+                 'view': 'visible',
+                 # 'header_table': 'visible',
+                 'load_up': {'view': 'visible', 'edit': 'invisible'},
+                 'arrived': {'view': 'visible', 'edit': 'visible'},
+                 },
         catalog_name='portal_catalog',
     )
 )
