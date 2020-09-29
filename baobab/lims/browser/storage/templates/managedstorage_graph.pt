@@ -75,41 +75,28 @@
                                 break;
                         }
                     }
-                    var html = "<table class='box-info'>" +
-                            "<tbody>" +
-                            "<tr><td> Total Positions </td>" +
-                            "<td>" + data['positions'].length + "</td><tr>" +
-                            "<tr><td> Available </td>" +
-                            "<td>" + freePositions + "</td><tr>" +
-                            "<tr><td> Reserved </td>" +
-                            "<td>" + reservedPositions + "</td></tr>" +
-                            "<tr><td> Occupied </td>" +
-                            "<td>" + occupiedPositions + "</td></tr>" +
-                            "</tbody></table>";
+                    var html = "<div class='box-info' style='text-align: center'>" +
+                            "<b>Total Positions:</b> " + totalPositions +
+                            "<br /> <b>Available:</b> " + freePositions +
+                            "<br /><b>Reserved </b> " + reservedPositions + 
+                            "<br /><b>Occupied:</b> " + occupiedPositions + "</div>";
 
-                    $("#stats").append(html);
+                    //$("#stats").append(html);
+                    $(html).appendTo("#stats");
                 }
 
                 function createGraphic(data) {
                     tableStats(data);
                     var width = 900;
-                    // var height = 700;
+                    var height = 300;
                     var padding = 3;
                     var marginTop = 30;
-                    var height = marginTop + (data['y'] * 80)
-                    if (height < 700){
-                        height = 700
-                    }
+                    // var height = marginTop + (data['y'] * 80)
                     var marginLeft = 30;
                     var marginRight = 200;
                     var widthPos = width - marginRight - marginLeft;
                     var heightPos = height - marginTop;
                     var rowCol = data["x"] + data["y"];
-                    // var letters = ["A", "B", "C", "D", "E", "F", "G", "H",
-                    //     "I", "J", "K", "L", "M", "N", "O", "P",
-                    //     "Q", "R", "S", "T", "U", "V", "W", "X",
-                    //     "Y", "Z"];
-
                     var letters = recursive_letters(data["y"])
 
                     // Create SVG element
@@ -482,19 +469,13 @@
 
 <div class="table-info" tal:define="portal context/@@plone_portal_state/portal;">
 
-    <div id="stats">
+    <div id="stats" style="height:100px; text-align:centre">
         <img tal:attributes='src python:portal.absolute_url()+"/++resource++baobab.lims.images/graph_big.png"'/>
         <span class="head-text">Occupancy</span>
+        <p></p>
     </div>
 
-    <p ></p>
-    <div id="pos-info-div" class="hidden" style="border-top: 1px solid deepskyblue; padding-top: 5px;">
-        <img tal:attributes='src python:portal.absolute_url()+"/++resource++baobab.lims.images/item.png"'/>
-        <span class="head-text position-info"></span>
-    </div>
 
-    <div id="graph-content-core">
-    </div>
 
 </div>
 

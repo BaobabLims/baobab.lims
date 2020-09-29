@@ -44,6 +44,15 @@
             layer="bika.lims.interfaces.IBikaLIMS"
     />
 
+
+   <browser:page
+            for="*"
+            name="lungaxx"
+            class="baobab.lims.browser.storage.storageunits.StorageUnitsxView"
+            permission="zope.Public"
+            layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
     <browser:viewlet
             for="baobab.lims.interfaces.IStorageUnits"
             name="addstorage_viewlet"
@@ -116,6 +125,14 @@
             for="baobab.lims.interfaces.IManagedStorage"
             name="sample_info"
             class="baobab.lims.browser.storage.managedstorage.SampleInfo"
+            permission="zope.Public"
+            layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+            for="baobab.lims.interfaces.IManagedStorage"
+            name="jstree"
+            class="baobab.lims.browser.storage.managedstorage.StoragePositionsView"
             permission="zope.Public"
             layer="bika.lims.interfaces.IBikaLIMS"
     />

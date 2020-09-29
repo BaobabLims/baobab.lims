@@ -10,33 +10,17 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script type="text/javascript" src="++theme++graphite.theme/js/vakata-jstree-6dce227/dist/jstree.js"></script>
         <script type="text/javascript">
-         var jQuery_1_4_2 = jQuery.noConflict();
+         var jQuery_1_4_x = jQuery.noConflict();
          (function($) {
              $(document).ready(function(){
                 var _p = window.jarn.i18n.MessageFactory("plone");
-                // $.ajax({
-                //     dataType: "json",
-                //     contentType: 'application/json',
-                //     url: window.location.href +'/jstree',
-                //     success: function (data) {
-                //         return data
-
-                //     },
-                //     error: function(data){
-                //         debugger;
-                //         // $(sample_details).html();
-                //         // console.log('------An error here');
-                //         // console.log(data);
-
-                //     },
-                // });
-                $("#sidebar-jstree").jstree({
+                $("#sidebarxx-jstree").jstree({
                     'core': {
-                        //'data': data.data,
-                        'multiple' : true,
-                        'data': {"url": window.location.href +'/jstree',
+                        'multiple' : false,
+                        'data': {"url": window.location.href+'/lungaxx',
+                                 "dataType": "json",
                                  "data": function(node){
-                                    return {'id': node.id}
+                                    return {'id': node.id};
                                 }
                         },
                     },
@@ -45,44 +29,12 @@
                         "icon": false
                       },
                     },
-                    "plugins": ["types", "ui", "actions", "checkbox"], //contextmenu
-                    // "contextmenu":{
-                    //     "items": function($node) {
-                    //         var tree = $('#sidebar-jstree').jstree(true);
-                    //         /*
-                    //         $.each( obj, function( key, value ) {
-                    //             debugger;
-                    //           alert( key + ": " + value );
-                    //         });
-                    //         var workflow_actions = obj.actions */
-                    //         console.log(tree.get_selected())
-                    //         // call the workflow
-                    //         return {
-                    //             "reserve": {
-                    //                 "separator_before": false,
-                    //                 "separator_after": false,
-                    //                 "label": "Reserve",
-                    //                 "action": function (obj) {
-                    //                     // tree.edit($node);
-                    //                      window.location.href = $node['id']+"/content_status_modify?workflow_action=reserve";
-                    //                 }
-                    //             },
-                    //             "liberate": {
-                    //                 "separator_before": false,
-                    //                 "separator_after": false,
-                    //                 "label": "Liberate",
-                    //                 "action": function (obj) {
-                    //                     tree.edit($node);
-                    //                     window.location.href = $node['id']+"/content_status_modify?workflow_action=liberate";
-                    //                 }
-                    //             },
-                    //         };
-                    //     }
-                    // }// end of return
+                    "plugins": ["types", "ui","html_data", "checkbox"], //contextmenu
 
-                   })
-
-                $('#sidebar-jstree').on("changed.jstree", function (e, data) {
+                   });
+                   //
+                $('#sidebarxx-jstree').on("changed.jstree", function (e, data) {
+                      debugger;
                       var to = e.pageY || window.event.pageY
                       var i, j, r = [];
                       for(i = 0, j = data.selected.length; i < j; i++) {
@@ -97,7 +49,7 @@
                           var leftpos = $(firstchk).offset().left;
                           $('.workflow_actions').css({
                                top: to - 10,
-                               left: leftpos + 20
+                               left: leftpos + 40
                           });
                           updateSelectedItems($(this).closest('jstree-anchor jstree-clicked'));
                           // firstchk = firstchk.first();
@@ -115,6 +67,12 @@
                               } else {
                                   $('.workflow_actions div.selection-summary span.num-selected').html(numsels);
                               }
+
+                              $('.gotourl').remove()
+                              if (data.node.original.url != undefined){
+                                  debugger;
+                                  $('.workflow_actions').append('<div class="gotourl"><a href="'+ data.node.original.url+'">Go to '+data.node.text+'</a></div>');
+                              }
                               $('.workflow_actions').show();
                           } else {
                               $('.workflow_actions').hide();
@@ -127,9 +85,10 @@
 
 
                     })
-                //--
+                   //
+
              });
-        })(jQuery_1_4_2);
+        })(jQuery_1_4_x);
         </script>
 </metal:block>
 <metal:css fill-slot="style_slot">
@@ -164,7 +123,7 @@
     <div style="float:left; width:30%; margin:0">
         <div style="text-align: left; overflow:auto; height:500px">
             <form id="list" action="workflow_action" method="post" name="bika_listing_form">
-                <div id="sidebar-jstree">
+                <div id="sidebarxx-jstree">
                 </div>
                 <div class="workflow_actions">
                   <span class="workflow_action_buttons"
@@ -191,11 +150,6 @@
                 </div>
             </form>
          </div>
-    </div>
-    <div style="float:left; width:70%;">
-        <div style="text-align: center;  margin-left:5px">
-            <span tal:replace="structure view/graph"/>
-        </div>
     </div>
 </metal:core>
 
