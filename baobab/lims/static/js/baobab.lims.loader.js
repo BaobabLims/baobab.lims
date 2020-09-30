@@ -15,7 +15,7 @@ window.baobab.lims.controllers =  {
     ".portaltype-samplebatch":
         ['BaobabSampleBatchView'],
     ".portaltype-biospecimens":
-        ['BaobabBiospecimensView'],
+        ['BiospecimensView', 'BaobabBiospecimensView'],
     ".template-ar_add #analysisrequest_edit_form":
         ['CustomAnalysisRequestAddView'],
     "#kit-printview-wrapper":

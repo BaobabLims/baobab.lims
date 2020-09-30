@@ -383,14 +383,14 @@ class BiospecimensView(BikaListingView):
                 continue
             items[x]['Type'] = obj.getSampleType() and obj.getSampleType().Title() or ''
 
-            pink_row, volume = self.is_pink_row(obj)
-            # volume = 0
-            if pink_row:
-                items[x]['replace']['Volume'] = volume
-            else:
-                items[x]['Volume'] = volume
+            # pink_row, volume = self.is_pink_row(obj)
+            # # volume = 0
+            # if pink_row:
+            #     items[x]['replace']['Volume'] = volume
+            # else:
+            #     items[x]['Volume'] = volume  #obj.getField('Volume').get(obj)
 
-            # items[x]['Volume'] = obj.getField('Volume').get(obj)
+            items[x]['Volume'] = obj.getField('Volume').get(obj)
             # items[x]['Unit'] = VOLUME_UNITS[0]['ResultText']
             items[x]['Unit'] = obj.getField('Unit').get(obj)
             items[x]['SubjectID'] = obj.getField('SubjectID').get(obj)
@@ -452,8 +452,8 @@ class BiospecimensView(BikaListingView):
 
             if self.get_review_state(obj) == "sample_received" and float(sample_volume) <= float('0.0'):
                 print('----------trying')
-                return True, '<span class="lightpinkrow" title="Volume is zero" style="">%s</span>' % sample_volume
-                # return True, '<span class="lightpinkrow" title="Volume is zero" style="color:red">%s</span>' % sample_volume
+                return True, '<span class="lightpinkrow" title="Volume is zero" style="color: red;">%s</span>' % sample_volume
+                # return True, '<span class="state-sample_received lightpinkrow" style="color:red">%s</span>' % sample_volume
 
             return False, sample_volume
         except Exception as e:
