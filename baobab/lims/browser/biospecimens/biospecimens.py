@@ -383,12 +383,12 @@ class BiospecimensView(BikaListingView):
                 continue
             items[x]['Type'] = obj.getSampleType() and obj.getSampleType().Title() or ''
 
-            # pink_row, volume = self.is_pink_row(obj)
-            # # volume = 0
-            # if pink_row:
-            #     items[x]['replace']['Volume'] = volume
-            # else:
-            #     items[x]['Volume'] = volume  #obj.getField('Volume').get(obj)
+            pink_row, volume = self.is_pink_row(obj)
+            # volume = 0
+            if pink_row:
+                items[x]['replace']['Volume'] = volume
+            else:
+                items[x]['Volume'] = volume  #obj.getField('Volume').get(obj)
 
             items[x]['Volume'] = obj.getField('Volume').get(obj)
             # items[x]['Unit'] = VOLUME_UNITS[0]['ResultText']
@@ -444,15 +444,24 @@ class BiospecimensView(BikaListingView):
 
         try:
             sample_volume = obj.getField('Volume').get(obj)
-            # if self.get_review_state(obj) != "sample_received":
-            #     return False, sample_volume
-            # print('----------trying')
-            # print(self.get_review_state(obj))
-            # print(float(sample_volume))
+            print('------------------obj')
+            print(obj.__dict__)
 
             if self.get_review_state(obj) == "sample_received" and float(sample_volume) <= float('0.0'):
-                print('----------trying')
-                return True, '<span class="lightpinkrow" title="Volume is zero" style="color: red;">%s</span>' % sample_volume
+
+                new_volume = '''
+                <span class="lightpinkrow" title="Volume is zero" style="color: red;">%s</span>
+                <input type="hidden" selector="Volume_%s" size="7" uid="%s" field="Volume" 
+                name="Volume.%s:records" objectid="%s" value="%s">
+                ''' % (sample_volume,
+                       obj.getField('id').get(obj),
+                       obj.UID(),
+                       obj.UID(),
+                       obj.getField('id').get(obj),
+                       sample_volume)
+
+                return True, new_volume
+                # return True, '<span class="lightpinkrow" title="Volume is zero" style="color: red;">%s</span>' % sample_volume
                 # return True, '<span class="state-sample_received lightpinkrow" style="color:red">%s</span>' % sample_volume
 
             return False, sample_volume

@@ -15,17 +15,19 @@ function BiospecimensView() {
 
             var row = $(this);
             var volume = $(row).find('.Volume');
-            // console.log('---------------')
-            // console.log(volume);
+            console.log('---------------')
+            console.log(volume);
             var input = $(volume).find('input');
 
             if (parseFloat(input.val()) <= parseFloat('0.00')) {
                 // console.log('This is ten');
-                // alert('This is ten');
+                console.log('This is ten');
                 $(row).css('border-bottom-color', 'red');
                 $(row).css('border-width', 'medium');
                 // var span = $(volume).find('.state-sample_received');
                 // $(span).css('border-color', 'red');
+            }else{
+                console.log('Twenty');
             }
         })
     }
