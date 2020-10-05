@@ -84,5 +84,14 @@
         sortkey="8"
         profile="baobab.lims:default"/>
 
+  <genericsetup:upgradeStep
+        title="Add new roles"
+        description="Add roles Intern and Secretary with given permissions"
+        source="1601"
+        destination="1602"
+        handler="baobab.lims.upgrade.to1602.upgrade"
+        sortkey="10"
+        profile="baobab.lims:default"/>
+
 
 </configure>

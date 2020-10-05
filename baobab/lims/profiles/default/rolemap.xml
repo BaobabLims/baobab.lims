@@ -11,6 +11,8 @@
     <role name="Reviewer"/>
     <role name="Verifier"/>
     <role name="EMS"/>
+    <role name="Secretary"/>
+    <role name="Intern"/>
   </roles>
 
   <permissions>

@@ -5,7 +5,7 @@ from Products.CMFCore.utils import getToolByName
 
 from bika.lims import logger
 from baobab.lims.permissions import *
-from bika.lims.permissions import CancelAndReinstate
+from bika.lims.permissions import CancelAndReinstate, ManageClients, AddClient
 
 class Empty:
     pass
@@ -78,7 +78,13 @@ class BikaCustomGenerator:
                 portal_groups.removeGroup(group_id)
 
         if 'EMSystems' not in portal_groups.listGroupIds():
-            portal_groups.addGroup('EMSystems', title="EMSystems", roles = ['EMS'])
+            portal_groups.addGroup('EMSystems', title="EMSystems",
+                    roles=['EMS'])
+        if 'Secretary' not in portal_groups.listGroupIds():
+            portal_groups.addGroup('Secretary', title="Secretaries",
+                    roles=['Secretary'])
+        if 'Intern' not in portal_groups.listGroupIds():
+            portal_groups.addGroup('Intern', title="Interns", roles=['Intern'])
 
     def setupCatalogs(self, portal):
 
@@ -184,6 +190,30 @@ class BikaCustomGenerator:
         mp(ReceiveInventoryOrder, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(StoreInventoryOrder, ['Manager', 'LabManager', 'LabClerk'], 1)
 
+        # clients
+        mp = portal.clients.manage_permission
+
+        # Allow authenticated users to see the contents of the clients folder
+        mp(permissions.View, ['Authenticated'], 0)
+        mp(permissions.AccessContentsInformation, ['Authenticated'], 0)
+        mp(permissions.ListFolderContents, ['Authenticated'], 0)
+
+        mp(permissions.ListFolderContents, ['Manager', 'LabManager',
+            'LabClerk', 'Analyst', 'Owner', 'EMS', 'Secretary'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst',
+            'Owner', 'EMS', 'Secretary'], 0)
+        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager',
+            'Owner', 'Secretary'], 0)
+        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk',
+            'Analyst', 'Owner', 'EMS', 'Secretary'], 0)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager',
+            'Secretary'], 0)
+        mp(ManageClients, ['Manager', 'LabManager', 'LabClerk', 'Secretary',],
+                0)
+        mp(AddClient, ['Manager', 'LabManager', 'LabClerk', 'Secretary',],
+                0)
+        portal.clients.reindexObject()
+
         # strains
         mp = portal.strains.manage_permission
 
@@ -192,11 +222,16 @@ class BikaCustomGenerator:
         mp(permissions.AccessContentsInformation, ['Authenticated'], 0)
         mp(permissions.ListFolderContents, ['Authenticated'], 0)
 
-        mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
-        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
-        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
-        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
-        mp(permissions.AddPortalContent, ['Manager', 'LabManager'], 0)
+        mp(permissions.ListFolderContents, ['Manager', 'LabManager',
+            'LabClerk', 'Analyst', 'Owner', 'EMS', 'Secretary', 'Intern'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst',
+            'Owner', 'EMS', 'Secretary', 'Intern'], 0)
+        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager',
+            'Owner', 'Secretary', 'Intern'], 0)
+        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk',
+            'Analyst', 'Owner', 'EMS', 'Secretary', 'Intern'], 0)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager',
+            'Secretary', 'Intern'], 0)
         portal.strains.reindexObject()
 
         # sample packages
@@ -282,11 +317,16 @@ class BikaCustomGenerator:
         mp(permissions.AccessContentsInformation, ['Authenticated'], 0)
         mp(permissions.ListFolderContents, ['Authenticated'], 0)
 
-        mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
-        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
-        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
-        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
-        mp(permissions.AddPortalContent, ['Manager', 'LabManager'], 0)
+        mp(permissions.ListFolderContents, ['Manager', 'LabManager',
+            'LabClerk', 'Analyst', 'Owner', 'EMS', 'Secretary'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst',
+            'Owner', 'EMS', 'Secretary'], 0)
+        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner',
+            'Secretary'], 0)
+        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk',
+            'Analyst', 'Owner', 'EMS', 'Secretary'], 0)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager',
+            'Secretary'], 0)
         portal.transports.reindexObject()
 
         # microbe sample requests
@@ -342,11 +382,16 @@ class BikaCustomGenerator:
         mp(permissions.AccessContentsInformation, ['Authenticated'], 0)
         mp(permissions.ListFolderContents, ['Authenticated'], 0)
 
-        mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
-        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
-        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
-        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
-        mp(permissions.AddPortalContent, ['Manager', 'LabManager'], 0)
+        mp(permissions.ListFolderContents, ['Manager', 'LabManager',
+            'LabClerk', 'Analyst', 'Owner', 'EMS', 'Secretary', 'Intern'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst',
+            'Owner', 'EMS', 'Secretary', 'Intern'], 0)
+        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner',
+            'Secretary', 'Intern'], 0)
+        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk',
+            'Analyst', 'Owner', 'EMS', 'Secretary', 'Intern'], 0)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'Secretary',
+            'Intern'], 0)
         portal.sample_kingdoms.reindexObject()
 
         # conformities
@@ -357,10 +402,13 @@ class BikaCustomGenerator:
         mp(permissions.AccessContentsInformation, ['Authenticated'], 0)
         mp(permissions.ListFolderContents, ['Authenticated'], 0)
 
-        mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
-        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
+        mp(permissions.ListFolderContents, ['Manager', 'LabManager',
+            'LabClerk', 'Analyst', 'Owner', 'EMS', 'Intern'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst',
+            'Owner', 'EMS', 'Intern'], 0)
         mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
-        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
+        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk',
+            'Analyst', 'Owner', 'EMS', 'Intern'], 0)
         mp(permissions.AddPortalContent, ['Manager', 'LabManager'], 0)
         portal.conformities.reindexObject()
 
@@ -430,14 +478,40 @@ class BikaCustomGenerator:
         mp(permissions.AccessContentsInformation, ['Authenticated'], 0)
         mp(permissions.ListFolderContents, ['Authenticated'], 0)
 
-        mp(CancelAndReinstate, ['Manager', 'LabManager', 'LabClerk'], 0)
-        mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'LabClerk', 'Analyst'], 0)
-        mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'LabClerk', 'Analyst'], 0)
-        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'LabClerk', 'Analyst'], 0)
+        mp(CancelAndReinstate, ['Manager', 'LabManager', 'LabClerk',
+            'Secretary'], 0)
+        mp(permissions.ListFolderContents, ['Manager', 'LabManager',
+            'LabClerk', 'Analyst', 'Secretary'], 0)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'LabClerk',
+            'Analyst', 'Secretary'], 0)
+        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager',
+            'LabClerk', 'Analyst', 'Secretary'], 0)
         mp(permissions.DeleteObjects, ['Manager', 'LabManager'], 0)
-        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'EMS'], 0)
-        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'EMS'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk',
+            'Analyst', 'EMS', 'Secretary'], 0)
+        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk',
+            'Analyst', 'EMS', 'Secretary'], 0)
         portal.biospecimens.reindexObject()
+
+        # samplebatches
+        mp = portal.samplebatches.manage_permission
+
+        # Allow authenticated users to see the contents of the project folder
+        mp(permissions.View, ['Authenticated'], 0)
+        mp(permissions.AccessContentsInformation, ['Authenticated'], 0)
+        mp(permissions.ListFolderContents, ['Authenticated'], 0)
+
+        mp(permissions.ListFolderContents, ['Manager', 'LabManager',
+            'LabClerk', 'Analyst', 'Owner', 'EMS', 'Secretary'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst',
+            'Owner', 'EMS', 'Secretary'], 0)
+        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager',
+            'Owner', 'Secretary'], 0)
+        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk',
+            'Analyst', 'Owner', 'EMS', 'Secretary'], 0)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager',
+            'Secretary'], 0)
+        portal.samplebatches.reindexObject()
 
         # inventoryorders folder permissions
         mp = portal.inventoryorders.manage_permission
@@ -461,12 +535,17 @@ class BikaCustomGenerator:
         mp(permissions.AccessContentsInformation, ['Authenticated'], 0)
         mp(permissions.ListFolderContents, ['Authenticated'], 0)
 
-        mp(permissions.ListFolderContents, ['Manager', 'LabManager', 'LabClerk'], 0)
-        mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'LabClerk'], 0)
-        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'LabClerk'], 0)
+        mp(permissions.ListFolderContents, ['Manager', 'LabManager',
+            'LabClerk', 'Intern'], 0)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager', 'LabClerk',
+            'Intern'], 0)
+        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager',
+            'LabClerk', 'Intern'], 0)
         mp(permissions.DeleteObjects, ['Manager', 'LabManager'], 0)
-        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk'], 0)
-        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk'], 0)
+        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk',
+            'Intern'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Intern'],
+                0)
         portal.storage.reindexObject()
 
 
