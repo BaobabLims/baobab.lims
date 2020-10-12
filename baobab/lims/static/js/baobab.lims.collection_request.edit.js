@@ -91,7 +91,7 @@ function BaobabCollectionRequestEditView() {
 
     function get_collectionrequest_details(){
         var approval_data_details = {};
-        approval_data_details['collection_request_uid'] = $('#archetypes-fieldname-NumberRequested').attr('data-uid');
+        approval_data_details['collection_request_uid'] = $('#archetypes-fieldname-RequestNumber').attr('data-uid');
         approval_data_details['date_of_request'] = $("#DateOfRequest").val();
         approval_data_details['date_evaluated'] = $("#DateEvaluated").val();
         approval_data_details['result_of_evaluation'] = $("#ResultOfEvaluation").val();

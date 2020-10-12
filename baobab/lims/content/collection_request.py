@@ -179,7 +179,7 @@ ReasonForEvaluation = StringField(
 
 schema = BikaSchema.copy() + Schema((
     Client,
-    RequestNumber,
+    RequestNumber,    # Dont remove field.  It will break Javascript during approval.
     DateOfRequest,
     CollectMicrobeSamples,
     CollectHumanSamples,
