@@ -26,7 +26,8 @@ class BikaCustomGenerator:
                 'donors',
                 'disease_ontologies',
                 'sampleshipments',
-                'auditlogs'):
+                'auditlogs',
+                'virus_samples'):
             try:
                 obj = portal._getOb(obj_id)
                 obj.unmarkCreationFlag()
@@ -95,6 +96,7 @@ class BikaCustomGenerator:
         at.setCatalogsByType('DiseaseOntology', ['bika_catalog'])
         at.setCatalogsByType('SampleShipment', ['bika_catalog'])
         at.setCatalogsByType('AuditLog', ['bika_catalog', 'portal_catalog'])
+        at.setCatalogsByType('VirusSample', ['bika_catalog', 'portal_catalog'])
 
         addIndex(bc, 'getParentUID', 'FieldIndex')
         addIndex(bc, 'getProjectUID', 'FieldIndex')
@@ -146,6 +148,21 @@ class BikaCustomGenerator:
         mp(DispatchInventoryOrder, ['Manager', 'LabManager'], 1)
         mp(ReceiveInventoryOrder, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(StoreInventoryOrder, ['Manager', 'LabManager', 'LabClerk'], 1)
+
+        # virus samples
+        mp = portal.virus_samples.manage_permission
+
+        # Allow authenticated users to see the contents of the project folder
+        mp(permissions.View, ['Authenticated'], 0)
+        mp(permissions.AccessContentsInformation, ['Authenticated'], 0)
+        mp(permissions.ListFolderContents, ['Authenticated'], 0)
+
+        mp(permissions.ListFolderContents, ['Manager'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
+        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
+        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager'], 0)
+        portal.virus_samples.reindexObject()
 
         # audit logger
         mp = portal.auditlogs.manage_permission

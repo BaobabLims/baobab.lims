@@ -32,6 +32,7 @@
     <include package=".sampleshipments"/>
     <include package=".sampleshipment"/>
     <include package=".auditlogs"/>
+    <include package=".virus_samples"/>
 
     <!-- This registration allows additional sticker templates.
          To enable these, just copy one or more of the *.pt files

@@ -169,3 +169,11 @@ class IAuditLog(Interface):
 class IAuditLogs(Interface):
     """
     """
+
+class IVirusSample(Interface):
+    """
+    """
+
+class IVirusSamples(Interface):
+    """
+    """
