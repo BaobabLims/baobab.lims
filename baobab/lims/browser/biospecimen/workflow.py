@@ -39,11 +39,8 @@ class BiospecimenWorkflowAction(WorkflowAction):
                 obj = selected_biospecimens.get(uid, None)
                 obj.getField('Volume').set(obj, form['Volume'][0][uid])
                 obj.getField('SubjectID').set(obj, form['SubjectID'][0][uid])
-                unit = 'ml'
-                for u in VOLUME_UNITS:
-                    if u['ResultValue'] == form['Unit'][0][uid]:
-                        unit = u['ResultText']
-                obj.getField('Unit').set(obj, unit)
+                if 'Unit' in form and form['Unit'][0][uid]:
+                    obj.getField('Unit').set(obj, form['Unit'][0][uid])
                 location = obj.getStorageLocation()
                 if location:
                     doActionFor(location, 'occupy')
