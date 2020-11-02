@@ -14,31 +14,12 @@
          (function($) {
              $(document).ready(function(){
                 var _p = window.jarn.i18n.MessageFactory("plone");
-                // $.ajax({
-                //     dataType: "json",
-                //     contentType: 'application/json',
-                //     url: window.location.href +'/jstree',
-                //     success: function (data) {
-                //         return data
-
-                //     },
-                //     error: function(data){
-                //         debugger;
-                //         // $(sample_details).html();
-                //         // console.log('------An error here');
-                //         // console.log(data);
-
-                //     },
-                // });
                 $("#sidebar-jstree").jstree({
                     'core': {
-                        //'data': data.data,
                         'multiple' : true,
                         'data': {"url": window.location.href +'/jstree',
-                                 "data": function(node){
-                                    return {'id': node.id}
-                                }
-                        },
+                                 'dataType': 'json'
+                                },
                     },
                     "types": {
                       "default": {
@@ -46,52 +27,20 @@
                       },
                     },
                     "plugins": ["types", "ui", "actions", "checkbox"], //contextmenu
-                    // "contextmenu":{
-                    //     "items": function($node) {
-                    //         var tree = $('#sidebar-jstree').jstree(true);
-                    //         /*
-                    //         $.each( obj, function( key, value ) {
-                    //             debugger;
-                    //           alert( key + ": " + value );
-                    //         });
-                    //         var workflow_actions = obj.actions */
-                    //         console.log(tree.get_selected())
-                    //         // call the workflow
-                    //         return {
-                    //             "reserve": {
-                    //                 "separator_before": false,
-                    //                 "separator_after": false,
-                    //                 "label": "Reserve",
-                    //                 "action": function (obj) {
-                    //                     // tree.edit($node);
-                    //                      window.location.href = $node['id']+"/content_status_modify?workflow_action=reserve";
-                    //                 }
-                    //             },
-                    //             "liberate": {
-                    //                 "separator_before": false,
-                    //                 "separator_after": false,
-                    //                 "label": "Liberate",
-                    //                 "action": function (obj) {
-                    //                     tree.edit($node);
-                    //                     window.location.href = $node['id']+"/content_status_modify?workflow_action=liberate";
-                    //                 }
-                    //             },
-                    //         };
-                    //     }
-                    // }// end of return
 
                    })
 
                 $('#sidebar-jstree').on("changed.jstree", function (e, data) {
                       var to = e.pageY || window.event.pageY
                       var i, j, r = [];
+                      debugger;
                       for(i = 0, j = data.selected.length; i < j; i++) {
                         r.push(data.instance.get_node(data.selected[i]).text);
                       }
                       console.log(data.selected.length)
                       console.log(data.instance.get_node(data.selected[0]).text);
-                      console.log($(this).closest('li').text())
-                      console.log(to)
+                      // console.log($(this).closest('li').text())
+                      // console.log(to)
                       if (data.selected.length> 0) {
                           var firstchk = $('.jstree-clicked')
                           var leftpos = $(firstchk).offset().left;
@@ -165,29 +114,6 @@
         <div style="text-align: left; overflow:auto; height:500px">
             <form id="list" action="workflow_action" method="post" name="bika_listing_form">
                 <div id="sidebar-jstree">
-                </div>
-                <div class="workflow_actions">
-                  <span class="workflow_action_buttons"
-                        tal:define="actions view/get_workflow_actions">
-                    <span tal:omit-tag="python:True" tal:repeat="action actions"
-                          tal:condition="view/show_workflow_action_buttons">
-
-                      <input
-                          type="hidden"
-                          tal:attributes="name action/id;
-                                          value action/id;"/>
-                      <input
-                          class="context workflow_action_button action_button allowMultiSubmit"
-                          type="submit"
-                          name="workflow_action_button"
-                          i18n:attributes="value"
-                          i18n:domain="bika"
-                          tal:attributes="id python:action['id']+'_transition';
-                                          transition action/id;
-                                          value action/title;
-                                          url python:action.get('url', '');"/>
-                    </span>
-                  </span>
                 </div>
             </form>
          </div>

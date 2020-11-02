@@ -1,8 +1,10 @@
-from plone.app.content.browser.interfaces import IFolderContentsView
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 import json
+import plone
 from bika.lims import api
+from bika.lims.browser.bika_listing import WorkflowAction
+from plone.app.content.browser.interfaces import IFolderContentsView
 from plone.app.layout.globals.interfaces import IViewView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.interface.declarations import implements
 
 from baobab.lims import bikaMessageFactory as _
@@ -163,9 +165,18 @@ class StorageUnitsView(BikaListingView):
         ]
 
     def __call__(self):
-        self.items = BikaListingView.folderitems(self)
+        request = self.request
+        form = request.form
         self.show_workflow_action_buttons = True
-        self.actions = self.get_workflow_actions()
+        self.items = BikaListingView.folderitems(self)
+        if 'submitted' in request:
+            plone.protect.CheckAuthenticator(form)
+            # WorkflowAction.__call__(self)
+            # only transition children of the current folder - clean the uids
+            # 
+        # self.actions = self.get_workflow_actions()
+        # storage_graph = StorageGraphView(self.context, self.request)
+        # self.graph = storage_graph()
         return self.template()
 
 
@@ -195,19 +206,23 @@ class StorageUnitsxView(BikaListingView):
             image_url = self.portal_url + '/++resource++baobab.lims.images/'
             icon_man = image_url + i.portal_type.lower() + '.png'
             p_dict['icon'] = icon_man
-            print i.title
             if i.portal_type != 'StoragePosition' and \
                     i.portal_type != 'UnmanagedStorage':
                 p_dict['url'] = i.absolute_url()
+                p_dict['a_attr'] = {"href": i.absolute_url(), 'id': i.UID()}
+            if i.portal_type == 'ManagedStorage':
+                p_dict['free_positions'] = i.getFreePositions()
+            if i.portal_type == 'StorageUnit':
+                p_dict['boxes'] = len(i.getBoxes())
             p_dict['children'] = True
             if not i.objectValues():
                 p_dict['children'] = False
-
             self.positions_table.append(p_dict)
 
         uid = self.request.form.get("id", '#')
         if uid == '#':
             return json.dumps(self.positions_table)
+
         obj = api.get_object_by_uid(uid)
         self.positions_table = []
         for i in obj.contentValues():
@@ -216,9 +231,13 @@ class StorageUnitsxView(BikaListingView):
             image_url = self.portal_url + '/++resource++baobab.lims.images/'
             icon_man = '{}{}.png'.format(image_url, i.portal_type.lower())
             p_dict['icon'] = icon_man
+            if i.portal_type == 'StoragePosition':
+                p_dict['state'] = {'disabled': True}
+                p_dict['parent'] = i.aq_parent.UID()
             if i.portal_type != 'StoragePosition' and \
                     i.portal_type != 'UnmanagedStorage':
                 p_dict['url'] = i.absolute_url()
+                p_dict['a_attr'] = {"href": i.absolute_url(), 'id': i.UID()}
             p_dict['children'] = True
             if not i.objectValues():
                 p_dict['children'] = False
