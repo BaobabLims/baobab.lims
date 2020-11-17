@@ -177,3 +177,51 @@ class IVirusSample(Interface):
 class IVirusSamples(Interface):
     """
     """
+
+class IOrganism(Interface):
+    """
+    """
+
+class IOrganisms(Interface):
+    """
+    """
+
+class IAnatomicalMaterial(Interface):
+    """
+    """
+
+class IAnatomicalMaterials(Interface):
+    """
+    """
+
+class ICollectionDevice(Interface):
+    """
+    """
+
+class ICollectionDevices(Interface):
+    """
+    """
+
+class ILabHost(Interface):
+    """
+    """
+
+class ILabHosts(Interface):
+    """
+    """
+
+class IHost(Interface):
+    """
+    """
+
+class IHosts(Interface):
+    """
+    """
+
+class IHostDisease(Interface):
+    """
+    """
+
+class IHostDiseases(Interface):
+    """
+    """

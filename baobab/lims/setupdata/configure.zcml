@@ -88,4 +88,47 @@
       provides="bika.lims.interfaces.ISetupDataImporter"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
 
+    <adapter
+          name="AnatomicalMaterial"
+          factory="baobab.lims.setupdata.AnatomicalMaterial"
+          provides="bika.lims.interfaces.ISetupDataImporter"
+          for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
+
+    <adapter
+          name="CollectionDevice"
+          factory="baobab.lims.setupdata.CollectionDevice"
+          provides="bika.lims.interfaces.ISetupDataImporter"
+          for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
+
+    <adapter
+          name="Host"
+          factory="baobab.lims.setupdata.Host"
+          provides="bika.lims.interfaces.ISetupDataImporter"
+          for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
+
+    <adapter
+          name="HostDisease"
+          factory="baobab.lims.setupdata.HostDisease"
+          provides="bika.lims.interfaces.ISetupDataImporter"
+          for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
+
+    <adapter
+          name="LabHost"
+          factory="baobab.lims.setupdata.LabHost"
+          provides="bika.lims.interfaces.ISetupDataImporter"
+          for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
+
+    <adapter
+          name="Organism"
+          factory="baobab.lims.setupdata.Organism"
+          provides="bika.lims.interfaces.ISetupDataImporter"
+          for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
+
+
+    <adapter
+          name="VirusSample"
+          factory="baobab.lims.setupdata.VirusSample"
+          provides="bika.lims.interfaces.ISetupDataImporter"
+          for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
+
 </configure>

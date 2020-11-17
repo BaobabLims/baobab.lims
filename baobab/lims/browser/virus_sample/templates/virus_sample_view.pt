@@ -1,0 +1,284 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:tal="http://xml.zope.org/namespaces/tal"
+	xmlns:metal="http://xml.zope.org/namespaces/metal"
+	xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+	metal:use-macro="here/main_template/macros/master"
+	i18n:domain="baobab">
+
+<head>
+    <style>
+
+    </style>
+</head>
+
+<body>
+<metal:title fill-slot="content-title">
+    <h1>
+        <img tal:condition="view/icon | nothing"
+            src="" tal:attributes="src view/icon"/>
+        <span class="documentFirstHeading" tal:content="view/title" />
+    </h1>
+    <hr/>
+</metal:title>
+
+<metal:content-description fill-slot="content-description">
+</metal:content-description>
+
+<metal:content-core fill-slot="content-core" tal:define="portal context/@@plone_portal_state/portal;">
+    <h3 style="margin-top:1em;">
+        <tal:current_storage>
+            <img title="Project"
+                tal:attributes="src string:${view/portal_url}/++resource++baobab.lims.images/project.png">
+            <span i18n:translate="">Info Project</span>:
+        </tal:current_storage>
+    </h3><br/>
+
+    <input type="hidden" name="virus_sample_uid" id="virus_sample_uid" tal:attributes="value view/virus_sample_uid">
+
+    <table class="storage" style="border-collapse: collapse; width: 100%;">
+        <tbody>
+        <tr>
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Title </th>
+            <td tal:content="view/title" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;width:70%"></td>
+        </tr>
+
+        <tr tal:condition="view/project" style="background: #f0f0f2;">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Project</th>
+            <td tal:content="view/project" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/sample_type">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Sample Type</th>
+            <td tal:content="view/sample_type" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+        <tr tal:condition="view/volume">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Volume</th>
+            <td tal:content="view/volume" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+        <!--?<tr tal:condition="view/unit" style="background: #f0f0f2;">-->
+            <!--?<th i18n:translate="" style="border: 1px solid #cecfd5;-->
+                                         <!--?padding: 10px 15px;text-align: left;">Unit</th>-->
+            <!--?<td tal:content="view/unit" style="border: 1px solid #cecfd5;-->
+                                               <!--?padding: 10px 15px;"></td>-->
+        <!--?</tr>-->
+
+        <tr tal:condition="view/anatomical_material" style="background: #f0f0f2;">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Anatomical Material</th>
+            <td tal:content="view/anatomical_material" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/allow_sharing">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Allow Sharing</th>
+            <td tal:content="view/allow_sharing" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+        <tr tal:condition="view/will_return">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Will Return</th>
+            <td tal:content="view/will_return" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/bio_sample_accenssion">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Bio Sample Accenssion</th>
+            <td tal:content="view/bio_sample_accenssion" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/specimen_collector_sample_id">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Specimen Collector Sample ID</th>
+            <td tal:content="view/specimen_collector_sample_id" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/sample_collected_by">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Sample Collected By</th>
+            <td tal:content="view/sample_collected_by" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/sample_collection_date">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Sample Collection Date</th>
+            <td tal:content="view/sample_collection_date" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/sample_received_date">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Sample Received Date</th>
+            <td tal:content="view/sample_received_date" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/geo_loc_country">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Geo Loc Country</th>
+            <td tal:content="view/geo_loc_country" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/organism">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Organism</th>
+            <td tal:content="view/organism" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/geo_loc_state">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Geo Loc State</th>
+            <td tal:content="view/geo_loc_state" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/isolate">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Isolate</th>
+            <td tal:content="view/isolate" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/purpose_of_sampling">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Purpose of Sampling</th>
+            <td tal:content="view/purpose_of_sampling" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/collection_device">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Collection Device</th>
+            <td tal:content="view/collection_device" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/collection_protocol">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Collection Protocol</th>
+            <td tal:content="view/collection_protocol" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/specimen_processing">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Specimen Processing</th>
+            <td tal:content="view/specimen_processing" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/lab_host">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Lab Host</th>
+            <td tal:content="view/lab_host" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/passage_number">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Passage Number</th>
+            <td tal:content="view/passage_number" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/passage_method">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Passage Method</th>
+            <td tal:content="view/passage_method" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/host_subject_id">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Host Subject ID</th>
+            <td tal:content="view/host_subject_id" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/host">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Host</th>
+            <td tal:content="view/host" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/host_disease">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Host Disease</th>
+            <td tal:content="view/host_disease" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/host_gender">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Host Gender</th>
+            <td tal:content="view/host_gender" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/host_age">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Host Age</th>
+            <td tal:content="view/host_age" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/host_age_unit">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Host Age Unit</th>
+            <td tal:content="view/host_age_unit" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/exposure_country">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Exposure Country</th>
+            <td tal:content="view/exposure_country" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/exposure_event">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Exposure Event</th>
+            <td tal:content="view/exposure_event" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/library_id">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Library ID</th>
+            <td tal:content="view/library_id" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/sequencing_protocol_name">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Sequencing Protocol Name</th>
+            <td tal:content="view/sequencing_protocol_name" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        </tbody>
+    </table>
+
+
+
+
+</metal:content-core>
+
+</body>
+</html>

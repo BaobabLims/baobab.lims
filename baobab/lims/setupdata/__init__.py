@@ -512,3 +512,267 @@ class StockItems(WorksheetImporter):
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
 
+class SetupImporter(WorksheetImporter):
+    def isExistingTitle(self, obj_type, obj_title):
+
+        if obj_type == 'VirusSample':
+            print('---------obj type %s - %s' %(obj_type, obj_title))
+
+        pc = getToolByName(self.context, 'portal_catalog')
+        brains = pc(portal_type=obj_type, Title=obj_title)
+
+        if len(brains) > 0:
+            return True
+        return False
+
+class AnatomicalMaterial(SetupImporter):
+    """Add some dummy storage types
+    """
+    def Import(self):
+        folder = self.context.anatomical_materials
+        rows = self.get_rows(3)
+        for row in rows:
+            if self.isExistingTitle('AnatomicalMaterial', row.get('title')):
+                continue
+
+            title = row.get('title')
+            description = row.get('description', '')
+            obj = _createObjectByType('AnatomicalMaterial', folder, tmpID())
+            obj.edit(
+                title=title,
+                description=description,
+            )
+            obj.unmarkCreationFlag()
+            renameAfterCreation(obj)
+
+class CollectionDevice(SetupImporter):
+    """Add some dummy storage types
+    """
+    def Import(self):
+        folder = self.context.collection_devices
+        rows = self.get_rows(3)
+        for row in rows:
+            if self.isExistingTitle('CollectionDevice', row.get('title')):
+                continue
+
+            title = row.get('title')
+            description = row.get('description', '')
+            obj = _createObjectByType('CollectionDevice', folder, tmpID())
+            obj.edit(
+                title=title,
+                description=description,
+            )
+            obj.unmarkCreationFlag()
+            renameAfterCreation(obj)
+
+class Host(SetupImporter):
+    """Add some dummy storage types
+    """
+    def Import(self):
+        folder = self.context.hosts
+        rows = self.get_rows(3)
+        for row in rows:
+            if self.isExistingTitle('Host', row.get('title')):
+                continue
+
+            title = row.get('title')
+            description = row.get('description', '')
+            obj = _createObjectByType('Host', folder, tmpID())
+            obj.edit(
+                title=title,
+                description=description,
+            )
+            obj.unmarkCreationFlag()
+            renameAfterCreation(obj)
+
+class HostDisease(SetupImporter):
+    """Add some dummy storage types
+    """
+    def Import(self):
+        folder = self.context.host_diseases
+        rows = self.get_rows(3)
+        for row in rows:
+            if self.isExistingTitle('HostDisease', row.get('title')):
+                continue
+
+            title = row.get('title')
+            description = row.get('description', '')
+            obj = _createObjectByType('HostDisease', folder, tmpID())
+            obj.edit(
+                title=title,
+                description=description,
+            )
+            obj.unmarkCreationFlag()
+            renameAfterCreation(obj)
+
+class LabHost(SetupImporter):
+    """Add some dummy storage types
+    """
+    def Import(self):
+        folder = self.context.lab_hosts
+        rows = self.get_rows(3)
+        for row in rows:
+            if self.isExistingTitle('LabHost', row.get('title')):
+                continue
+
+            title = row.get('title')
+            description = row.get('description', '')
+            obj = _createObjectByType('LabHost', folder, tmpID())
+            obj.edit(
+                title=title,
+                description=description,
+            )
+            obj.unmarkCreationFlag()
+            renameAfterCreation(obj)
+
+class Organism(SetupImporter):
+    """Add some dummy storage types
+    """
+    def Import(self):
+        folder = self.context.organisms
+        rows = self.get_rows(3)
+        for row in rows:
+            if self.isExistingTitle('Organism', row.get('title')):
+                continue
+
+            title = row.get('title')
+            genus = row.get('genus', '')
+            species = row.get('species', '')
+            obj = _createObjectByType('Organism', folder, tmpID())
+            obj.edit(
+                title=title,
+                Genus=genus,
+                Species=species,
+            )
+            obj.unmarkCreationFlag()
+            renameAfterCreation(obj)
+
+class VirusSample(SetupImporter):
+    """ Import biospecimens
+    """
+
+    def Import(self):
+
+        rows = self.get_rows(3)
+        for row in rows:
+
+            print('------------Inside virus sample')
+            # print(row.get('title'))
+            print(row)
+
+            if self.isExistingTitle('VirusSample', row.get('title')):
+                continue
+
+            self.create_virus_sample(row)
+            # try:
+            #     if self.isExistingTitle('VirusSample', row.get('title')):
+            #         continue
+            #
+            #     self.create_virus_sample(row)
+            # except Exception as e:
+            #     print('------------------Exception')
+            #     print(str(e))
+            #     continue
+
+    def create_virus_sample(self, row):
+
+        folder = self.context.virus_samples
+
+        project = self.getObject('Project', row.get('Project'))
+        sample_type = self.getObject('SampleType', row.get('SampleType'))
+        storage_location = self.getObject('StoragePosition', row.get('StorageLocation'))
+        anatomical_material = self.getObject('AnatomicalMaterial', row.get('AnatomicalMaterial'))
+        organism = self.getObject('Organism', row.get('Organism'))
+        collection_device = self.getObject('CollectionDevice', row.get('CollectionDevice'))
+        host = self.getObject('Host', row.get('Host'))
+        host_disease = self.getObject('HostDisease', row.get('HostDisease'))
+        lab_host = self.getObject('LabHost', row.get('LabHost'))
+        instrument_type = self.getObject('InstrumentType', row.get('InstrumentType'))
+        instrument = self.getObject('Instrument', row.get('Instrument'))
+        # = self.getObject('', row.get(''))
+        host_age = row.get('HostAge', '')
+        print('--------------Host Age')
+        print(host_age)
+        # raise Exception('======The exception')
+
+
+        try:
+            volume = str(row.get('Volume'))
+            float_volume = str(float(volume))
+
+            print('--------------This is float volume')
+            print(float_volume)
+
+            if not float_volume:
+                raise Exception('Volume %s not found' % row.get('Volume'))
+        except Exception as e:
+            print('-----Exception in %s' % str(e))
+
+        obj = _createObjectByType('VirusSample', folder, tmpID())
+
+        # st_loc_list = pc(portal_type='StoragePosition', Title=row.get('StorageLocation'))
+        # storage_location = st_loc_list and st_loc_list[0].getObject() or None
+
+        obj.edit(
+            title=row.get('title'),
+            Project=project,
+            SampleType=sample_type,
+            StorageLocation=storage_location,
+            Volume=float_volume,
+            Unit=row.get('Unit'),
+            AnatomicalMaterial=anatomical_material,
+            AllowSharing=row.get('AllowSharing'),
+            WillReturnFromShipment=row.get('WillReturnFromShipment'),
+            # Repository Accession Numbers
+            BioSampleAccession=row.get('BioSampleAccession'),
+            # Sample Collector and Processing
+            SampleCollectedBy=row.get('SampleCollectedBy'),
+            SampleCollectionDate=row.get('SampleCollectionDate'),
+            SampleReceivedDate=row.get('SampleReceivedDate'),
+            GeoLocDate=row.get('GeoLocDate'),
+            GeoLocState=row.get('GeoLocState'),
+            Organism=organism,
+            Isolate=row.get('Isolate'),
+            PurposeOfSampling=row.get('PurposeOfSampling'),
+            CollectionDevice=collection_device,
+            # hhh
+            CollectionProtocol=row.get('CollectionProtocol'),
+            SpecimenProcessing=row.get('SpecimenProcessing'),
+            LabHost=lab_host,
+            PassageNumber=row.get('PassageNumber'),
+            PassageMethod=row.get('PassageMethod'),
+            # Host Information
+            HostSubjectID=row.get('HostSubjectID'),
+            Host=host,
+            HostDisease=host_disease,
+            HostGender=row.get('HostGender'),
+            HostAge=str(host_age),
+            HostAgeUnit=row.get('HostAgeUnit'),
+            # Host Exposure Information
+            ExposureCountry=row.get('ExposureCountry'),
+            ExposureEvent=row.get('ExposureEvent'),
+            # Sequencing Information
+            LibraryID=row.get('LibraryID'),
+            InstrumentType=instrument_type,
+            Instrument=instrument,
+            SequencingProtocolName=row.get('SequencingProtocolName'),
+        )
+
+        obj.unmarkCreationFlag()
+        renameAfterCreation(obj)
+
+        from baobab.lims.subscribers.sample import ObjectInitializedEventHandler
+        ObjectInitializedEventHandler(obj, None)
+
+    def getObject(self, obj_type, obj_title):
+        if not obj_title:
+            return None
+
+        pc = getToolByName(self.context, 'portal_catalog')
+
+        brains = pc(portal_type=obj_type, Title=obj_title)
+        object = brains and brains[0].getObject() or None
+        if not object:
+            raise Exception('%s %s not found' % (obj_type, obj_title))
+
+        return object

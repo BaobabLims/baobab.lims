@@ -22,6 +22,12 @@
         <type portal_type="SampleShipment"/>
         <type portal_type="AuditLog"/>
         <type portal_type="VirusSample"/>
+        <type portal_type="Organism"/>
+        <type portal_type="AnatomicalMaterial"/>
+        <type portal_type="CollectionDevice"/>
+        <type portal_type="LabHost"/>
+        <type portal_type="Host"/>
+        <type portal_type="HostDisease"/>
 
     </factorytypes>
 </object>

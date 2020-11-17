@@ -59,6 +59,18 @@ def initialize(context):
     from content.auditlogs import AuditLogs
     from content.virus_sample import VirusSample
     from content.virus_samples import VirusSamples
+    from content.organism import Organism
+    from content.organisms import Organisms
+    from content.anatomical_material import AnatomicalMaterial
+    from content.anatomical_materials import AnatomicalMaterials
+    from content.collection_device import CollectionDevice
+    from content.collection_devices import CollectionDevices
+    from content.lab_host import LabHost
+    from content.lab_hosts import LabHosts
+    from content.host import Host
+    from content.hosts import Hosts
+    from content.host_disease import HostDisease
+    from content.host_diseases import HostDiseases
 
     content_types, constructors, ftis = process_types(
         listTypes(PROJECTNAME),

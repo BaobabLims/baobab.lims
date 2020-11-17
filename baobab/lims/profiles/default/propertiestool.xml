@@ -30,6 +30,13 @@
         <element value="SampleShipment"/>
         <element value="AuditLog"/>
         <element value="VirusSample"/>
+        <element value="Organism"/>
+        <element value="AnatomicalMaterial"/>
+        <element value="CollectionDevice"/>
+        <element value="LabHost"/>
+        <element value="Host"/>
+        <element value="HostDisease"/>
+
   </property>
 </object>
 

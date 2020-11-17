@@ -47,18 +47,22 @@ class VirusSamplesView(BikaListingView):
                 'title': _('Project'),
                 'type': 'choices'
             },
-            # 'Sex': {
-            #     'title': _('Sex'),
-            #     'type': 'choices'
-            # },
-            # 'Age': {
-            #     'title': _('Age'),
-            #     'input_width': '10'
-            # },
-            # 'AgeUnit': {
-            #     'title': _('Age Unit'),
-            #     'type': 'choices'
-            # }
+            'Volume': {
+                'title': _('Volume'),
+                'input_width': '10'
+            },
+            'Unit': {
+                'title': _('Unit'),
+                'input_width': '4'
+            },
+            'SampleCollectionDate': {
+                'title': _('Collection Date'),
+                # 'input_width': '4'
+            },
+            'GeoLocCountry': {
+                'title': _('Country Collected'),
+                'type': 'choices'
+            }
         }
 
         self.review_states = [
@@ -74,6 +78,10 @@ class VirusSamplesView(BikaListingView):
                 'columns': [
                     'Title',
                     'Project',
+                    'Volume',
+                    'Unit',
+                    'SampleCollectionDate',
+                    'GeoLocCountry',
                     # 'Sex',
                     # 'Age',
                 ]
@@ -97,7 +105,9 @@ class VirusSamplesView(BikaListingView):
                 continue
             obj = items[x]['obj']
 
-            items[x]['Title'] = obj.getId()
+            # print(obj.__dict__)
+
+            items[x]['Title'] = obj.Title()
 
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                                    (items[x]['url'],
@@ -105,6 +115,8 @@ class VirusSamplesView(BikaListingView):
             project = obj.getProject()
             if project and hasattr(project, 'title'):
                 items[x]['Project'] = project.title
+
+            items[x]['Volume'] = obj.getField('Volume').get(obj)
 
             # items[x]['Age'] = ('%f' % float(obj.getAge())).rstrip('0').rstrip('.') + " " + obj.getAgeUnit()
 

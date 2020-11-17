@@ -33,6 +33,13 @@
     <include package=".sampleshipment"/>
     <include package=".auditlogs"/>
     <include package=".virus_samples"/>
+    <include package=".virus_sample"/>
+    <include package=".organisms"/>
+    <include package=".anatomical_materials"/>
+    <include package=".collection_devices"/>
+    <include package=".lab_hosts"/>
+    <include package=".hosts"/>
+    <include package=".host_diseases"/>
 
     <!-- This registration allows additional sticker templates.
          To enable these, just copy one or more of the *.pt files
