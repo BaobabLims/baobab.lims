@@ -1,0 +1,14 @@
+<configure
+        xmlns="http://namespaces.zope.org/zope"
+        xmlns:browser="http://namespaces.zope.org/browser"
+        i18n_domain="baobab.lims">
+
+    <browser:page
+        for="baobab.lims.interfaces.IHosts"
+        name="folder_view"
+        class=".hosts.HostsView"
+        permission="zope2.View"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+</configure>

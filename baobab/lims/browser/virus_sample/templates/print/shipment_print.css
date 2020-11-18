@@ -1,0 +1,66 @@
+.barcode-container {
+    width:100%;
+}
+div#header .barcode {
+    float: right;
+}
+div.shipement {
+    font-size: 0.8em;
+}
+div.shipment a {
+    color: #000;
+    text-decoration: none;
+}
+div.created-by a, div.prited-by a{
+    color: blue;
+}
+span.ktext{
+    font-weight: bold;
+}
+
+
+#textbar fieldset {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #329fd7;
+    border-image: none;
+    border-style: solid none none;
+    border-width: 0.1em;
+}
+fieldset {
+    margin-top: 5px;
+    padding: 0.5em;
+}
+
+#textbar legend {
+    font-size: 85%;
+    padding: 0.5em;
+}
+
+div.section-shipment table tbody th {
+    padding:4px 0;
+    text-align: left;
+}
+
+div.section-shipment table tbody td {
+    text-align: left;
+    border: 1px solid #cecfd5;
+    padding: 10px 15px;
+}
+
+@media print {
+    div.barcode-container {
+        margin-left:-0.2in;
+    }
+    div.section-items table thead th {
+        text-align:center;
+    }
+    div.section-items table tbody th {
+        white-space:normal;
+    }
+    div.content table div.barcode {
+        margin: 0 -10px;
+    }
+}

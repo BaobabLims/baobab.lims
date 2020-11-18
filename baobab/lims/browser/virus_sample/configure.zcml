@@ -1,0 +1,23 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    i18n_domain="baobab.lims">
+
+    <browser:page
+      for="baobab.lims.interfaces.IVirusSample"
+      name="base_view"
+      class=".virus_sample.VirusSampleView"
+      permission="cmf.ModifyPortalContent"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <!--<browser:page-->
+      <!--for="baobab.lims.interfaces.ISampleShipment"-->
+      <!--name="base_edit"-->
+      <!--class=".sampleshipment.SampleShipmentEdit"-->
+      <!--permission="cmf.ModifyPortalContent"-->
+      <!--layer="bika.lims.interfaces.IBikaLIMS"-->
+    <!--/>-->
+
+</configure>
