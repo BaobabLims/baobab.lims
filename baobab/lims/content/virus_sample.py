@@ -37,8 +37,6 @@ Project = ReferenceField(
 
 Kit = ReferenceField(
     'Kit',
-    # required=True,
-    # schemata='Baobab Data',
     allowed_types=('Kit',),
     relationship='VirusSampleKit',
     referenceClass=HoldingReference,
@@ -54,7 +52,6 @@ Kit = ReferenceField(
 SampleType = ReferenceField(
     'SampleType',
     required=True,
-    # schemata='Baobab Data',
     allowed_types=('SampleType',),
     relationship='VirusSampleSampleType',
     referenceClass=HoldingReference,
@@ -69,8 +66,6 @@ SampleType = ReferenceField(
 
 StorageLocation = ReferenceField(
     'StorageLocation',
-    # schemata='Baobab Data',
-    #required=True,
     allowed_types=('StoragePosition',),
     relationship='VirusSampleStorageLocation',
     widget=bika_ReferenceWidget(
@@ -79,20 +74,10 @@ StorageLocation = ReferenceField(
         size=40,
         visible={'edit': 'visible',
                  'view': 'visible',
-                 # 'header_table': 'visible',
-                 # 'sample_registered': {'view': 'visible', 'edit': 'visible'},
-                 # 'sample_due': {'view': 'visible', 'edit': 'visible'},
-                 # 'sampled': {'view': 'visible', 'edit': 'invisible'},
-                 # 'sample_received': {'view': 'visible', 'edit': 'visible'},
-                 # 'expired': {'view': 'visible', 'edit': 'invisible'},
-                 # 'disposed': {'view': 'visible', 'edit': 'invisible'},
                  },
         catalog_name='portal_catalog',
-        # showOn=True,
-        # render_own_label=True,
         base_query={'inactive_state': 'active',
                     'review_state': 'available',
-                    # 'object_provides': ISampleStorageLocation.__identifier__
                     },
         colModel=[{'columnName': 'UID', 'hidden': True},
                   {'columnName': 'Title', 'width': '50', 'label': _('Title')}
@@ -102,7 +87,6 @@ StorageLocation = ReferenceField(
 
 Volume = FixedPointField(
     'Volume',
-    # schemata='Baobab Data',
     required=1,
     default="0.00",
     widget=StringWidget(
@@ -111,15 +95,7 @@ Volume = FixedPointField(
         description=_("The volume of the biospecimen taken from the subject."),
         visible={'edit': 'visible',
                  'view': 'visible',
-                 # 'header_table': 'visible',
-                 # 'sample_registered': {'view': 'visible', 'edit': 'visible'},
-                 # 'sample_due': {'view': 'visible', 'edit': 'visible'},
-                 # 'sampled': {'view': 'visible', 'edit': 'invisible'},
-                 # 'sample_received': {'view': 'visible', 'edit': 'visible'},
-                 # 'expired': {'view': 'visible', 'edit': 'invisible'},
-                 # 'disposed': {'view': 'visible', 'edit': 'invisible'},
                  },
-        # render_own_label=True,
     )
 )
 
@@ -131,15 +107,7 @@ Unit = StringField(
         label=_("Unit"),
         visible={'edit': 'visible',
                  'view': 'visible',
-                 # 'header_table': 'visible',
-                 # 'sample_registered': {'view': 'visible', 'edit': 'visible'},
-                 # 'sample_due': {'view': 'visible', 'edit': 'visible'},
-                 # 'sampled': {'view': 'visible', 'edit': 'invisible'},
-                 # 'sample_received': {'view': 'visible', 'edit': 'visible'},
-                 # 'expired': {'view': 'visible', 'edit': 'invisible'},
-                 # 'disposed': {'view': 'visible', 'edit': 'invisible'},
                  },
-        # render_own_label=True,
     )
 )
 
@@ -169,28 +137,19 @@ AllowSharing = BooleanField(
         visible={'edit': 'visible',
                  'view': 'visible',
                  'header_table': 'visible',
-                 # 'sample_registered': {'view': 'visible', 'edit': 'visible'},
-                 # 'sample_due': {'view': 'visible', 'edit': 'visible'},
-                 # 'sample_received': {'view': 'visible', 'edit': 'visible'},
                  },
-        # render_own_label=True,
     ),
 )
 
 WillReturnFromShipment = BooleanField(
     'WillReturnFromShipment',
-    # schemata='Baobab Data',
     default=False,
-    # write_permission = ManageClients,
     widget=BooleanWidget(
         label=_("Will Return From Shipment"),
         description=_("Indicates if sample will return if shipped."),
         visible={'edit': 'visible',
                  'view': 'visible',
-                 # 'header_table': 'visible',
-                 # 'sample_registered': {'view': 'visible', 'edit': 'visible'},
                  },
-        # render_own_label=True,
     ),
 )
 
@@ -198,12 +157,10 @@ WillReturnFromShipment = BooleanField(
 BioSampleAccession = StringField(
     'BioSampleAccession',
     schemata='Repository Accession Numbers',
-    # default="ml",
     widget=StringWidget(
         label=_("Biosample Accession"),
         description="The identifier assigned to a BioSample in INSDC archives",
         visible={'edit': 'visible', 'view': 'visible'},
-        # render_own_label=True,
     )
 )
 
@@ -212,12 +169,10 @@ SpecimenCollectorSampleID = StringField(
     'SpecimenCollectorSampleID',
     required=True,
     schemata='Sample Collection and Processing',
-    # default="ml",
     widget=StringWidget(
         label=_("Specimen Collector Sample ID"),
         description="The user-defined name for the sample",
         visible={'edit': 'visible', 'view': 'visible'},
-        # render_own_label=True,
     )
 )
 
@@ -225,25 +180,12 @@ SampleCollectedBy = StringField(
     'SampleCollectedBy',
     required=True,
     schemata='Sample Collection and Processing',
-    # default="ml",
     widget=StringWidget(
         label=_("Sample Collected By"),
         description="The name of the agency that collected the original sample",
         visible={'edit': 'visible', 'view': 'visible'},
-        # render_own_label=True,
     )
 )
-
-# SequenceSubmittedBy = StringField(
-#     'SequenceSubmittedBy',
-#     schemata='Sample Collection and Processing',
-#     # default="ml",
-#     widget=StringWidget(
-#         label=_("Sequence Submitted By"),
-#         visible={'edit': 'visible', 'view': 'visible'},
-#         # render_own_label=True,
-#     )
-# )
 
 SampleCollectionDate = DateTimeField(
     'SampleCollectionDate',
@@ -255,7 +197,6 @@ SampleCollectionDate = DateTimeField(
     widget=DateTimeWidget(
         label=_("Sample Collection Date"),
         description=_("The date on which the sample was collection."),
-        # show_time=True,
         visible={'edit': 'visible', 'view': 'visible'}
     )
 )
@@ -541,7 +482,6 @@ HostAgeUnit = StringField(
 )
 
 # Host Exposure Information
-# todo:  missing fields - location of exposure geo-loc name(country)
 ExposureCountry = StringField(
     'ExposureCountry',
     schemata='Host Exposure Information',
@@ -671,7 +611,6 @@ schema = BikaSchema.copy() + Schema((
     SequencingProtocolName,
 ))
 
-# schema['title'].widget.visible = {'view': 'invisible', 'edit': 'invisible'}
 schema['title'].widget.label=_('Barcode')
 schema['title'].widget.schemata='Baobab Data'
 schema['description'].widget.visible = {'view': 'invisible', 'edit': 'invisible'}

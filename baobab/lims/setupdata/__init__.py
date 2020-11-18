@@ -515,9 +515,6 @@ class StockItems(WorksheetImporter):
 class SetupImporter(WorksheetImporter):
     def isExistingTitle(self, obj_type, obj_title):
 
-        if obj_type == 'VirusSample':
-            print('---------obj type %s - %s' %(obj_type, obj_title))
-
         pc = getToolByName(self.context, 'portal_catalog')
         brains = pc(portal_type=obj_type, Title=obj_title)
 
@@ -656,23 +653,17 @@ class VirusSample(SetupImporter):
         rows = self.get_rows(3)
         for row in rows:
 
-            print('------------Inside virus sample')
-            # print(row.get('title'))
-            print(row)
-
-            if self.isExistingTitle('VirusSample', row.get('title')):
-                continue
+            # if self.isExistingTitle('VirusSample', row.get('title')):
+            #     continue
 
             self.create_virus_sample(row)
-            # try:
-            #     if self.isExistingTitle('VirusSample', row.get('title')):
-            #         continue
-            #
-            #     self.create_virus_sample(row)
-            # except Exception as e:
-            #     print('------------------Exception')
-            #     print(str(e))
-            #     continue
+            try:
+                if self.isExistingTitle('VirusSample', row.get('title')):
+                    continue
+
+                self.create_virus_sample(row)
+            except Exception as e:
+                continue
 
     def create_virus_sample(self, row):
 
@@ -689,19 +680,12 @@ class VirusSample(SetupImporter):
         lab_host = self.getObject('LabHost', row.get('LabHost'))
         instrument_type = self.getObject('InstrumentType', row.get('InstrumentType'))
         instrument = self.getObject('Instrument', row.get('Instrument'))
-        # = self.getObject('', row.get(''))
         host_age = row.get('HostAge', '')
-        print('--------------Host Age')
-        print(host_age)
-        # raise Exception('======The exception')
 
 
         try:
             volume = str(row.get('Volume'))
             float_volume = str(float(volume))
-
-            print('--------------This is float volume')
-            print(float_volume)
 
             if not float_volume:
                 raise Exception('Volume %s not found' % row.get('Volume'))

@@ -105,8 +105,6 @@ class VirusSamplesView(BikaListingView):
                 continue
             obj = items[x]['obj']
 
-            # print(obj.__dict__)
-
             items[x]['Title'] = obj.Title()
 
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
@@ -117,8 +115,6 @@ class VirusSamplesView(BikaListingView):
                 items[x]['Project'] = project.title
 
             items[x]['Volume'] = obj.getField('Volume').get(obj)
-
-            # items[x]['Age'] = ('%f' % float(obj.getAge())).rstrip('0').rstrip('.') + " " + obj.getAgeUnit()
 
         return items
 

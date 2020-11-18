@@ -3,24 +3,6 @@ from Products.CMFCore.utils import getToolByName
 from bika.lims.browser import BrowserView
 from bika.lims.locales import COUNTRIES,STATES,DISTRICTS
 import json
-# from plone import api
-# from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-# from plone.app.layout.viewlets import ViewletBase
-# from zope.schema import ValidationError
-# from DateTime import DateTime
-#
-# from Products.CMFPlone.utils import _createObjectByType
-# from baobab.lims.idserver import renameAfterCreation
-#
-# from bika.lims.utils import tmpID
-# from bika.lims.workflow import doActionFor
-
-# import plone
-#
-# from operator import itemgetter
-#
-# from baobab.lims.interfaces import IUnmanagedStorage, IStoragePosition, \
-#     IManagedStorage
 
 class ajaxGetStates(BrowserView):
     """ Drug vocabulary source for jquery combo dropdown box
@@ -75,9 +57,6 @@ class ajaxGetInstruments(BrowserView):
             except Exception as e:
                 pass
 
-        print('----------instruments')
-        print(rows)
-
         return json.dumps(rows)
 
     def get_content_type(self, content_type_uid, catalog="portal_catalog"):
@@ -94,18 +73,3 @@ class ajaxGetInstruments(BrowserView):
 
         if catalog == 'portal_catalog':
             return getToolByName(self.context, 'portal_catalog')
-
-
-
-
-        # pc = getToolByName(self.context, 'portal_catalog')
-        # brains = pc(portal_type="StorageUnit")
-        #
-        # for storage_unit in brains:
-        #     storage_unit = storage_unit.getObject()
-        #
-        #     rows.append({
-        #         storage_unit.UID(): storage_unit.getHierarchy()
-        #     })
-        #
-        # return json.dumps(rows)
