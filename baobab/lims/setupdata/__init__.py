@@ -10,7 +10,7 @@ from baobab.lims.browser.project import *
 
 from baobab.lims.utils.audit_logger import AuditLogger
 from baobab.lims.utils.local_server_time import getLocalServerTime
-
+from plone.app.search.browser import quote_chars
 
 def get_project_multi_items(context, string_elements, portal_type, portal_catalog):
 
@@ -515,11 +515,33 @@ class StockItems(WorksheetImporter):
 class SetupImporter(WorksheetImporter):
     def isExistingTitle(self, obj_type, obj_title):
 
+        if self.isNotInTitle(obj_title):
+            return self.isExistingNotTitle(obj_type, obj_title)
+
         pc = getToolByName(self.context, 'portal_catalog')
         brains = pc(portal_type=obj_type, Title=obj_title)
 
         if len(brains) > 0:
             return True
+        return False
+
+    def isNotInTitle(self, string):
+        tokens = string.split()
+        if 'Not' in tokens:
+            return True
+
+        return False
+
+    def isExistingNotTitle(self, obj_type, obj_title):
+
+        pc = getToolByName(self.context, 'portal_catalog')
+        brains = pc(portal_type=obj_type, inactive_state='active')
+
+        for brain in brains:
+            obj = brain.getObject()
+            if obj.Title() == obj_title:
+                return True
+
         return False
 
 class AnatomicalMaterial(SetupImporter):
@@ -653,10 +675,6 @@ class VirusSample(SetupImporter):
         rows = self.get_rows(3)
         for row in rows:
 
-            # if self.isExistingTitle('VirusSample', row.get('title')):
-            #     continue
-
-            self.create_virus_sample(row)
             try:
                 if self.isExistingTitle('VirusSample', row.get('title')):
                     continue
@@ -757,6 +775,7 @@ class VirusSample(SetupImporter):
         brains = pc(portal_type=obj_type, Title=obj_title)
         object = brains and brains[0].getObject() or None
         if not object:
-            raise Exception('%s %s not found' % (obj_type, obj_title))
+            # raise Exception('%s %s not found' % (obj_type, obj_title))
+            return None
 
         return object
