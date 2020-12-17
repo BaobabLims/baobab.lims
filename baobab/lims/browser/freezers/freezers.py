@@ -47,18 +47,10 @@ class FreezersView(BikaListingView):
                 'title': _('Description'),
                 # 'type': 'choices'
             },
-            # 'Sex': {
-            #     'title': _('Sex'),
-            #     'type': 'choices'
-            # },
-            # 'Age': {
-            #     'title': _('Age'),
-            #     'input_width': '10'
-            # },
-            # 'AgeUnit': {
-            #     'title': _('Age Unit'),
-            #     'type': 'choices'
-            # }
+            'StorageUnit': {
+                'title': _('StorageUnit'),
+                # 'type': 'choices'
+            },
         }
 
         self.review_states = [
@@ -74,8 +66,7 @@ class FreezersView(BikaListingView):
                 'columns': [
                     'Title',
                     'Description',
-                    # 'Sex',
-                    # 'Age',
+                    'StorageUnit',
                 ]
             }
         ]
@@ -97,16 +88,16 @@ class FreezersView(BikaListingView):
                 continue
             obj = items[x]['obj']
 
-            items[x]['Title'] = obj.getId()
+            items[x]['Title'] = obj.Title()
 
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                                    (items[x]['url'],
                                                     items[x]['Title'])
-            # project = obj.getSelectedProject()
-            # if project and hasattr(project, 'title'):
-            #     items[x]['SelectedProject'] = project.title
-
-            # items[x]['Age'] = ('%f' % float(obj.getAge())).rstrip('0').rstrip('.') + " " + obj.getAgeUnit()
+            storage_unit = obj.getStorageUnit()
+            try:
+                items[x]['StorageUnit'] = storage_unit.Title()
+            except:
+                items[x]['StorageUnit'] = ''
 
         return items
 

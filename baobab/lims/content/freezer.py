@@ -4,7 +4,9 @@
 #
 # Copyright 2011-2017 by it's authors.
 # Some rights reserved. See LICENSE.txt, AUTHORS.txt.
-
+from baobab.lims import bikaMessageFactory as _
+from Products.Archetypes.public import *
+from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from Products.Archetypes.public import Schema
 from Products.Archetypes.public import registerType
@@ -15,8 +17,29 @@ from Products.CMFPlone.interfaces import IConstrainTypes
 from baobab.lims.interfaces import IFreezer
 from Products.Archetypes.public import BaseContent
 
-schema = BikaSchema.copy() + Schema((
+StorageUnit = ReferenceField(
+    'StorageUnit',
+    allowed_types=('StorageUnit',),
+    relationship='FreezerStorageUnit',
+    widget=bika_ReferenceWidget(
+        label=_("Storage Unit"),
+        description=_("The storage unit associated with this freezer"),
+        size=40,
+        visible={'edit': 'visible',
+                 'view': 'visible',
+                 },
+        catalog_name='portal_catalog',
+        # base_query={'inactive_state': 'active',
+        #             'review_state': 'available',
+        #             },
+        # colModel=[{'columnName': 'UID', 'hidden': True},
+        #           {'columnName': 'Title', 'width': '50', 'label': _('Title')}
+        #           ],
+    )
+)
 
+schema = BikaSchema.copy() + Schema((
+    StorageUnit,
 ))
 
 schema['description'].schemata = 'default'
