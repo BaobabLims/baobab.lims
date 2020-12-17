@@ -73,6 +73,8 @@ def initialize(context):
     from content.host_diseases import HostDiseases
     from content.freezer import Freezer
     from content.freezers import Freezers
+    from content.monitoring_device import MonitoringDevice
+    from content.monitoring_devices import MonitoringDevices
 
     content_types, constructors, ftis = process_types(
         listTypes(PROJECTNAME),

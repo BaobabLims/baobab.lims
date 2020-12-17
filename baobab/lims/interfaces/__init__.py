@@ -233,3 +233,11 @@ class IFreezer(Interface):
 class IFreezers(Interface):
     """
     """
+
+class IMonitoringDevice(Interface):
+    """
+    """
+
+class IMonitoringDevices(Interface):
+    """
+    """
