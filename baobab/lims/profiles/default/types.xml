@@ -65,6 +65,8 @@
     <object name="HostDiseases" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="HostDisease" meta_type="Factory-based Type Information with dynamic views"/>
 
+    <object name="Freezers" meta_type="Factory-based Type Information with dynamic views"/>
+    <object name="Freezer" meta_type="Factory-based Type Information with dynamic views"/>
     <!-- Override values from bika.lims -->
     <object name="Client" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Supplier" meta_type="Factory-based Type Information with dynamic views"/>

@@ -225,3 +225,11 @@ class IHostDisease(Interface):
 class IHostDiseases(Interface):
     """
     """
+
+class IFreezer(Interface):
+    """
+    """
+
+class IFreezers(Interface):
+    """
+    """
