@@ -16,35 +16,58 @@ from baobab.lims import config
 from Products.CMFPlone.interfaces import IConstrainTypes
 from baobab.lims.interfaces import IFreezer
 from Products.Archetypes.public import BaseContent
+from Products.Archetypes.references import HoldingReference
+
+# StorageUnit = ReferenceField(
+#     'StorageUnit',
+#     allowed_types=('StorageUnit',),
+#     relationship='FreezerStorageUnit',
+#     widget=bika_ReferenceWidget(
+#         label=_("Storage Unit"),
+#         description=_("The storage unit associated with this freezer"),
+#         size=30,
+#         visible={'edit': 'visible',
+#                  'view': 'visible',
+#                  },
+#         catalog_name='portal_catalog',
+#     )
+# )
 
 StorageUnit = ReferenceField(
     'StorageUnit',
     allowed_types=('StorageUnit',),
     relationship='FreezerStorageUnit',
+    referenceClass=HoldingReference,
     widget=bika_ReferenceWidget(
-        label=_("Storage Unit"),
-        description=_("The storage unit associated with this freezer"),
-        size=40,
-        visible={'edit': 'visible',
-                 'view': 'visible',
-                 },
-        catalog_name='portal_catalog',
-        # base_query={'inactive_state': 'active',
-        #             'review_state': 'available',
-        #             },
-        # colModel=[{'columnName': 'UID', 'hidden': True},
-        #           {'columnName': 'Title', 'width': '50', 'label': _('Title')}
-        #           ],
+        label=_("Select Storage Unit"),
+        visible={'edit': 'visible', 'view': 'visible'},
+        size=30,
+        showOn=True,
+        description=_("Select storage unit associated this freezer."),
+    )
+)
+
+MonitoringDevice = ReferenceField(
+    'MonitoringDevice',
+    allowed_types=('MonitoringDevice',),
+    relationship='FreezerMonitoringDevice',
+    referenceClass=HoldingReference,
+    widget=bika_ReferenceWidget(
+        label=_("Select Monitoring Device"),
+        visible={'edit': 'visible', 'view': 'visible'},
+        size=30,
+        showOn=True,
+        description=_("Select monitoring device for this freezer."),
     )
 )
 
 schema = BikaSchema.copy() + Schema((
     StorageUnit,
+    MonitoringDevice,
 ))
 
 schema['description'].schemata = 'default'
 schema['description'].widget.visible = True
-
 
 
 class Freezer(BaseContent):

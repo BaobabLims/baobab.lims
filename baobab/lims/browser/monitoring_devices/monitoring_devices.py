@@ -93,11 +93,6 @@ class MonitoringDevicesView(BikaListingView):
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                                    (items[x]['url'],
                                                     items[x]['Title'])
-            # storage_unit = obj.getStorageUnit()
-            # try:
-            #     items[x]['StorageUnit'] = storage_unit.Title()
-            # except:
-            #     items[x]['StorageUnit'] = ''
 
         return items
 

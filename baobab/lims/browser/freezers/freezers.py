@@ -51,6 +51,10 @@ class FreezersView(BikaListingView):
                 'title': _('StorageUnit'),
                 # 'type': 'choices'
             },
+            'MonitoringDevice': {
+                'title': _('Monitoring Device'),
+                # 'type': 'choices'
+            },
         }
 
         self.review_states = [
@@ -67,6 +71,7 @@ class FreezersView(BikaListingView):
                     'Title',
                     'Description',
                     'StorageUnit',
+                    'MonitoringDevice',
                 ]
             }
         ]
@@ -93,13 +98,17 @@ class FreezersView(BikaListingView):
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                                    (items[x]['url'],
                                                     items[x]['Title'])
-            storage_unit = obj.getStorageUnit()
-            try:
-                items[x]['StorageUnit'] = storage_unit.Title()
-            except:
-                items[x]['StorageUnit'] = ''
+
+            items[x]['StorageUnit'] = self.getObjectTitle(obj.getStorageUnit())
+            items[x]['MonitoringDevice'] = self.getObjectTitle(obj.getMonitoringDevice())
 
         return items
+
+    def getObjectTitle(self, obj):
+        try:
+            return obj.Title()
+        except:
+            return ''
 
     def getStringified(self, elements):
         if not elements:
