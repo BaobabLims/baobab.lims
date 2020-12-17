@@ -37,6 +37,7 @@
         <element value="Host"/>
         <element value="HostDisease"/>
         <element value="Freezer"/>
+        <element value="MonitoringDevice"/>
 
   </property>
 </object>

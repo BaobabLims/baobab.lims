@@ -41,6 +41,7 @@
     <include package=".hosts"/>
     <include package=".host_diseases"/>
     <include package=".freezers"/>
+    <include package=".monitoring_devices"/>
     <include package=".freezer_monitoring"/>
 
     <!-- This registration allows additional sticker templates.
