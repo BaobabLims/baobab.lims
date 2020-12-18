@@ -1,0 +1,84 @@
+from AccessControl import ClassSecurityInfo
+from Products.Archetypes.public import (
+            BaseContent, DateTimeField, IntegerField, IntegerWidget, Schema,
+            StringField, StringWidget, registerType)
+from Products.CMFPlone.interfaces import IConstrainTypes
+from zope.interface import implements
+from DateTime import DateTime
+
+from bika.lims.browser.widgets import DateTimeWidget
+from bika.lims.content.bikaschema import BikaSchema
+from baobab.lims.interfaces import IDeviceReading
+from baobab.lims import bikaMessageFactory as _
+from baobab.lims.config import PROJECTNAME
+
+
+schema = BikaSchema.copy() + Schema((
+    StringField(
+        'CurrentReading',
+        searchable=True,
+        widget=StringWidget(
+            label=_("Current Reading"),
+            description=_(""),
+            visible={'edit': 'visible', 'view': 'visible'}
+        )),
+
+    StringField(
+        'Label',
+        default="Temperature",
+        searchable=True,
+        widget=StringWidget(
+            label=_("Label"),
+            description=_(""),
+            visible={'edit': 'visible', 'view': 'visible'}
+        )),
+
+    IntegerField(
+        'DecimalPlaces',
+        required=1,
+        default="0",
+        widget=IntegerWidget(
+            label=_("Decimal Places"),
+            size=15,
+            description=_(""),
+            visible={'edit': 'visible', 'view': 'visible'}
+        )),
+
+    StringField(
+        'Unit',
+        widget=StringWidget(
+            label=_("Unit"),
+            visible={'edit': 'visible', 'view': 'visible'}
+        )),
+
+    DateTimeField(
+        'DatetimeRecorded',
+        default_method=DateTime,
+        widget=DateTimeWidget(
+            label='Date and Time Recorded',
+            description='',
+            ampm=1,
+            visible={'edit': 'visible', 'view': 'visible'}
+        )
+    ),
+))
+
+schema['title'].widget.visible = {'edit': 'visible', 'view': 'visible'}
+schema['description'].widget.visible = {'edit': 'visible', 'view': 'visible'}
+schema['description'].schemata = 'default'
+
+
+class DeviceReading(BaseContent):
+    implements(IDeviceReading, IConstrainTypes)
+    security = ClassSecurityInfo()
+    displayContentsTab = False
+    schema = schema
+
+    _at_rename_after_creation = True
+
+    def _renameAfterCreation(self, check_auto_id=False):
+        from bika.lims.idserver import renameAfterCreation
+        renameAfterCreation(self)
+
+
+registerType(DeviceReading, PROJECTNAME)

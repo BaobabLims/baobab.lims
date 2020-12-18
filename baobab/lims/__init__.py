@@ -75,6 +75,7 @@ def initialize(context):
     from content.freezers import Freezers
     from content.monitoring_device import MonitoringDevice
     from content.monitoring_devices import MonitoringDevices
+    from content.devicereading import DeviceReading
 
     content_types, constructors, ftis = process_types(
         listTypes(PROJECTNAME),
