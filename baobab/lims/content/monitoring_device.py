@@ -7,16 +7,17 @@
 
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from Products.Archetypes.public import Schema
+from Products.ATContentTypes.content import schemata
 from Products.Archetypes.public import registerType
-from bika.lims.content.bikaschema import BikaSchema
+from Products.CMFPlone.interfaces import IConstrainTypes
+from plone.app.folder.folder import ATFolder
 from zope.interface import implements
+
+from bika.lims.content.bikaschema import BikaFolderSchema
+from baobab.lims.interfaces import IMonitoringDevice
 from baobab.lims import config
 
-from Products.CMFPlone.interfaces import IConstrainTypes
-from baobab.lims.interfaces import IMonitoringDevice
-from Products.Archetypes.public import BaseContent
-
-schema = BikaSchema.copy() + Schema((
+schema = BikaFolderSchema.copy() + Schema((
 
 ))
 
@@ -24,8 +25,7 @@ schema['description'].schemata = 'default'
 schema['description'].widget.visible = True
 
 
-
-class MonitoringDevice(BaseContent):
+class MonitoringDevice(ATFolder):
     security = ClassSecurityInfo()
     implements(IMonitoringDevice, IConstrainTypes)
     displayContentsTab = False
@@ -35,17 +35,7 @@ class MonitoringDevice(BaseContent):
     def _renameAfterCreation(self, check_auto_id=False):
         from bika.lims.idserver import renameAfterCreation
         renameAfterCreation(self)
-    #
-    # def Title(self):
-    #     return safe_unicode(self.getField('SampleDonorID').get(self)).encode('utf-8')
-    #
-    # def Description(self):
-    #     return "Gender %s : Age %s %s" % (self.getSex(), self.getAge(), self.getAgeUnit())
-    #
-    # def getSexes(self):
-    #     return ['Male', 'Female', 'Unknown', 'Undifferentiated']
-    #
-    # def getAgeUnits(self):
-    #     return ['Years', 'Months', 'Weeks', 'Days', 'Hours', 'Minutes']
 
+
+schemata.finalizeATCTSchema(schema, folderish=True, moveDiscussion=False)
 registerType(MonitoringDevice, config.PROJECTNAME)

@@ -1,4 +1,5 @@
 from AccessControl import ClassSecurityInfo
+from Products.Archetypes.atapi import CalendarWidget
 from Products.Archetypes.public import (
             BaseContent, DateTimeField, IntegerField, IntegerWidget, Schema,
             StringField, StringWidget, registerType)
@@ -6,7 +7,6 @@ from Products.CMFPlone.interfaces import IConstrainTypes
 from zope.interface import implements
 from DateTime import DateTime
 
-from bika.lims.browser.widgets import DateTimeWidget
 from bika.lims.content.bikaschema import BikaSchema
 from baobab.lims.interfaces import IDeviceReading
 from baobab.lims import bikaMessageFactory as _
@@ -54,7 +54,7 @@ schema = BikaSchema.copy() + Schema((
     DateTimeField(
         'DatetimeRecorded',
         default_method=DateTime,
-        widget=DateTimeWidget(
+        widget=CalendarWidget(
             label='Date and Time Recorded',
             description='',
             ampm=1,
@@ -63,8 +63,8 @@ schema = BikaSchema.copy() + Schema((
     ),
 ))
 
-schema['title'].widget.visible = {'edit': 'visible', 'view': 'visible'}
-schema['description'].widget.visible = {'edit': 'visible', 'view': 'visible'}
+schema['title'].required = False
+schema['title'].widget.visible = False
 schema['description'].schemata = 'default'
 
 
@@ -73,12 +73,6 @@ class DeviceReading(BaseContent):
     security = ClassSecurityInfo()
     displayContentsTab = False
     schema = schema
-
-    _at_rename_after_creation = True
-
-    def _renameAfterCreation(self, check_auto_id=False):
-        from bika.lims.idserver import renameAfterCreation
-        renameAfterCreation(self)
 
 
 registerType(DeviceReading, PROJECTNAME)

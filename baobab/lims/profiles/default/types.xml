@@ -73,6 +73,8 @@
 
     <object name="DeviceReading" meta_type="Factory-based Type Information with dynamic views"/>
 
+    <object name="DeviceHistory" meta_type="Factory-based Type Information with dynamic views"/>
+
     <!-- Override values from bika.lims -->
     <object name="Client" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="Supplier" meta_type="Factory-based Type Information with dynamic views"/>

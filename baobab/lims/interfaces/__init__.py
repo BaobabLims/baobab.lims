@@ -245,3 +245,7 @@ class IMonitoringDevices(Interface):
 class IDeviceReading(Interface):
     """
     """
+
+class IDeviceHistory(Interface):
+    """
+    """

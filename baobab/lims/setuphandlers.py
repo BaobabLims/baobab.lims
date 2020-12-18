@@ -115,6 +115,7 @@ class BikaCustomGenerator:
         at.setCatalogsByType('Freezer', ['bika_catalog', 'portal_catalog'])
         at.setCatalogsByType('MonitoringDevice', ['bika_catalog', 'portal_catalog'])
         at.setCatalogsByType('DeviceReading', ['bika_catalog', 'portal_catalog'])
+        at.setCatalogsByType('DeviceHistory', ['bika_catalog', 'portal_catalog'])
 
         addIndex(bc, 'getParentUID', 'FieldIndex')
         addIndex(bc, 'getProjectUID', 'FieldIndex')
