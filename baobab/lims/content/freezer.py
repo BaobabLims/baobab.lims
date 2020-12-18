@@ -4,34 +4,22 @@
 #
 # Copyright 2011-2017 by it's authors.
 # Some rights reserved. See LICENSE.txt, AUTHORS.txt.
-from baobab.lims import bikaMessageFactory as _
-from Products.Archetypes.public import *
-from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
-from AccessControl.SecurityInfo import ClassSecurityInfo
-from Products.Archetypes.public import Schema
-from Products.Archetypes.public import registerType
-from bika.lims.content.bikaschema import BikaSchema
-from zope.interface import implements
-from baobab.lims import config
-from Products.CMFPlone.interfaces import IConstrainTypes
-from baobab.lims.interfaces import IFreezer
-from Products.Archetypes.public import BaseContent
-from Products.Archetypes.references import HoldingReference
 
-# StorageUnit = ReferenceField(
-#     'StorageUnit',
-#     allowed_types=('StorageUnit',),
-#     relationship='FreezerStorageUnit',
-#     widget=bika_ReferenceWidget(
-#         label=_("Storage Unit"),
-#         description=_("The storage unit associated with this freezer"),
-#         size=30,
-#         visible={'edit': 'visible',
-#                  'view': 'visible',
-#                  },
-#         catalog_name='portal_catalog',
-#     )
-# )
+from AccessControl.SecurityInfo import ClassSecurityInfo
+from Products.ATContentTypes.content import schemata
+from Products.Archetypes.public import ReferenceField, registerType
+from plone.app.folder.folder import ATFolder
+from Products.Archetypes.references import HoldingReference
+from Products.Archetypes.public import Schema
+from Products.CMFPlone.interfaces import IConstrainTypes
+from zope.interface import implements
+
+from baobab.lims import bikaMessageFactory as _
+from baobab.lims import config
+from baobab.lims.interfaces import IFreezer
+from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
+from bika.lims.content.bikaschema import BikaFolderSchema
+
 
 StorageUnit = ReferenceField(
     'StorageUnit',
@@ -53,15 +41,15 @@ MonitoringDevice = ReferenceField(
     relationship='FreezerMonitoringDevice',
     referenceClass=HoldingReference,
     widget=bika_ReferenceWidget(
-        label=_("Select Monitoring Device"),
+        label=_("Current Monitoring Device"),
         visible={'edit': 'visible', 'view': 'visible'},
         size=30,
         showOn=True,
-        description=_("Select monitoring device for this freezer."),
+        description=_("Select current monitoring device for this freezer."),
     )
 )
 
-schema = BikaSchema.copy() + Schema((
+schema = BikaFolderSchema.copy() + Schema((
     StorageUnit,
     MonitoringDevice,
 ))
@@ -70,7 +58,7 @@ schema['description'].schemata = 'default'
 schema['description'].widget.visible = True
 
 
-class Freezer(BaseContent):
+class Freezer(ATFolder):
     security = ClassSecurityInfo()
     implements(IFreezer, IConstrainTypes)
     displayContentsTab = False
@@ -80,17 +68,7 @@ class Freezer(BaseContent):
     def _renameAfterCreation(self, check_auto_id=False):
         from bika.lims.idserver import renameAfterCreation
         renameAfterCreation(self)
-    #
-    # def Title(self):
-    #     return safe_unicode(self.getField('SampleDonorID').get(self)).encode('utf-8')
-    #
-    # def Description(self):
-    #     return "Gender %s : Age %s %s" % (self.getSex(), self.getAge(), self.getAgeUnit())
-    #
-    # def getSexes(self):
-    #     return ['Male', 'Female', 'Unknown', 'Undifferentiated']
-    #
-    # def getAgeUnits(self):
-    #     return ['Years', 'Months', 'Weeks', 'Days', 'Hours', 'Minutes']
 
+
+schemata.finalizeATCTSchema(schema, folderish=True, moveDiscussion=False)
 registerType(Freezer, config.PROJECTNAME)
