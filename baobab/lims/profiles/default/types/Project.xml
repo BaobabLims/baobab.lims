@@ -18,6 +18,7 @@
    <element value="Shipment"/>
    <element value="AnalysisRequest"/>
    <element value="Sample"/>
+   <element value="VirusSample"/>
    <element value="Attachment"/>
  </property>
  <property name="allow_discussion">False</property>

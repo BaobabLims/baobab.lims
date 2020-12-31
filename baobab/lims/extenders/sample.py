@@ -1,3 +1,4 @@
+from AccessControl import ClassSecurityInfo
 from Products.Archetypes.references import HoldingReference
 from archetypes.schemaextender.interfaces import IOrderableSchemaExtender
 from archetypes.schemaextender.interfaces import ISchemaModifier
@@ -431,11 +432,16 @@ class SampleSchemaModifier(object):
 class Sample(BaseSample):
     """ Inherits from bika.lims.content.sample
     """
+    security = ClassSecurityInfo()
     _at_rename_after_creation = True
 
     def _renameAfterCreation(self, check_auto_id=False):
         from baobab.lims.idserver import renameAfterCreation
         renameAfterCreation(self)
+
+    security.declareProtected(permissions.View, 'getSchema')
+    def getSchema(self):
+        return self.schema
 
     def getProjectUID(self):
         if self.aq_parent.Title() == 'Biospecimens':
@@ -482,9 +488,9 @@ class Sample(BaseSample):
 
         self.getField('WillReturnFromShipment').set(self, False)
         location = self.getField('ReservedLocation').get(self)
-        review_state = self.portal_workflow.getInfoFor(location, 'review_state')
 
         if location is not None:
+            review_state = self.portal_workflow.getInfoFor(location, 'review_state')
             if review_state in ('reserved', 'available'):
                 self.setStorageLocation(location)
                 doActionFor(location, 'occupy')

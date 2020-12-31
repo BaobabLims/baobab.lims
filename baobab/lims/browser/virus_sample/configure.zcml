@@ -12,12 +12,12 @@
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
-    <!--<browser:page-->
-      <!--for="baobab.lims.interfaces.ISampleShipment"-->
-      <!--name="base_edit"-->
-      <!--class=".sampleshipment.SampleShipmentEdit"-->
-      <!--permission="cmf.ModifyPortalContent"-->
-      <!--layer="bika.lims.interfaces.IBikaLIMS"-->
-    <!--/>-->
+    <browser:page
+      for="baobab.lims.interfaces.IVirusSample"
+      name="base_edit"
+      class=".virus_sample.VirusSampleEditView"
+      permission="cmf.ModifyPortalContent"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
 
 </configure>

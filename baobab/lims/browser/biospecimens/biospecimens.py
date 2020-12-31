@@ -27,7 +27,7 @@ class BiospecimensView(BikaListingView):
         self.catalog = 'portal_catalog'
         request.set('disable_plone.rightcolumn', 1)
         self.contentFilter = {
-            'portal_type': 'Sample',
+            'object_provides':ISample.__identifier__,
             'sort_on': 'sortable_title',
             'sort_order': 'ascending'
         }
@@ -280,9 +280,14 @@ class BiospecimensView(BikaListingView):
         if getSecurityManager().checkPermission(AddPortalContent, self.context):
             self.show_select_row = True
             self.show_select_column = True
-            self.context_actions = {_('Add'):
-                                    {'url': 'createObject?type_name=Sample',
-                                     'icon': '++resource++bika.lims.images/add.png'}}
+            self.context_actions = {
+                _('Add Human Sample'):
+                    {'url': 'createObject?type_name=Sample',
+                     'icon': '++resource++bika.lims.images/add.png'},
+                _('Add Virus Sample'):
+                    {'url': 'createObject?type_name=VirusSample',
+                     'icon': '++resource++bika.lims.images/add.png'},
+                }
 
         return BikaListingView.__call__(self)
 
@@ -313,6 +318,7 @@ class BiospecimensView(BikaListingView):
 
             if not ISample.providedBy(obj):
                 continue
+
             items[x]['Type'] = obj.getSampleType() and obj.getSampleType().Title() or ''
             items[x]['Volume'] = obj.getField('Volume').get(obj)
             # items[x]['Unit'] = VOLUME_UNITS[0]['ResultText']
