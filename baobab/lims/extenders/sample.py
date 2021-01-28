@@ -426,6 +426,16 @@ class SampleSchemaModifier(object):
         self.context = context
 
     def fiddle(self, schema):
+        if self.context.portal_type == 'VirusSample':
+            hide_fields = ('DiseaseOntology', 'Donor', 'SamplingDate',
+                    'SampleCondition', 'SubjectID')
+            for fn in hide_fields:
+                if fn in schema:
+                    schema[fn].widget.visible = {
+                    'add': 'invisible',
+                    'edit': 'invisible',
+                    'view': 'invisible'}
+                    schema[fn].required = False
         return schema
 
 
