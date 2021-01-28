@@ -22,4 +22,10 @@
         handler=".project.ObjectInitializedEventHandler"
     />
 
+    <subscriber
+        for="baobab.lims.interfaces.IFreezer
+        Products.Archetypes.interfaces.IObjectInitializedEvent"
+        handler=".freezer.ObjectInitializedEventHandler"
+    />
+
 </configure>
