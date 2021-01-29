@@ -141,7 +141,7 @@ class VirusSampleEditView(BEV):
             sample.getField('AllowSharing').set(sample, form['AllowSharing'])
             sample.getField('Kit').set(sample, form['Kit_uid'])
             sample.getField('StorageLocation').set(sample, form['StorageLocation_uid'])
-            sample.getField('SubjectID').set(sample, form['SubjectID'])
+            # sample.getField('SubjectID').set(sample, form['SubjectID'])
             sample.getField('Barcode').set(sample, form['Barcode'])
             sample.getField('Volume').set(sample, form['Volume'])
             sample.getField('Unit').set(sample, form['Unit'])
