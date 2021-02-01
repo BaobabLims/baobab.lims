@@ -9,7 +9,7 @@ import transaction
 def generateUniqueId(context):
     """Id generation specific to Baoabab lims (overriding Bika lims)
     """
-    if context.portal_type == "Sample":
+    if context.portal_type in ["Sample", "VirusSample"]:
         barcode = context.getField('Barcode')
         barcode_value = barcode.get(context)
         if barcode_value:
@@ -24,9 +24,12 @@ def generateUniqueId(context):
         return generate(context)
 
 def renameAfterCreation(obj):
+    print('-------rename')
     # Can't rename without a subtransaction commit when using portal_factory
     transaction.savepoint(optimistic=True)
     # The id returned should be normalized already
     new_id = generateUniqueId(obj)
+    print('------rename --2')
     obj.aq_inner.aq_parent.manage_renameObject(obj.id, new_id)
+    print('------rename --- 1')
     return new_id
