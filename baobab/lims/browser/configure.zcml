@@ -40,6 +40,7 @@
     <include package=".lab_hosts"/>
     <include package=".hosts"/>
     <include package=".host_diseases"/>
+    <include package=".viral_genomic_analyses"/>
 
     <!-- This registration allows additional sticker templates.
          To enable these, just copy one or more of the *.pt files

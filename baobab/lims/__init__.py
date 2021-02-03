@@ -71,6 +71,8 @@ def initialize(context):
     from content.hosts import Hosts
     from content.host_disease import HostDisease
     from content.host_diseases import HostDiseases
+    from content.viral_genomic_analysis import ViralGenomicAnalysis
+    from content.viral_genomic_analyses import ViralGenomicAnalyses
 
     content_types, constructors, ftis = process_types(
         listTypes(PROJECTNAME),

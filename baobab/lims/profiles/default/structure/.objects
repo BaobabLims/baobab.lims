@@ -17,3 +17,4 @@ anatomical_materials,AnatomicalMaterials
 lab_hosts,LabHosts
 hosts,Hosts
 host_diseases,HostDiseases
+viral_genomic_analyses,ViralGenomicAnalyses

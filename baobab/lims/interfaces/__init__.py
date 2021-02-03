@@ -225,3 +225,11 @@ class IHostDisease(Interface):
 class IHostDiseases(Interface):
     """
     """
+
+class IViralGenomicAnalysis(Interface):
+    """
+    """
+
+class IViralGenomicAnalyses(Interface):
+    """
+    """

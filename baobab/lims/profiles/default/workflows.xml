@@ -173,5 +173,11 @@
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>
 
+    <type type_id="ViralGenomicAnalyses"/>
+    <type type_id="ViralGenomicAnalysis">
+        <bound-workflow workflow_id="bika_one_state_workflow"/>
+        <bound-workflow workflow_id="bika_inactive_workflow"/>
+    </type>
+
 </bindings>
 </object>
