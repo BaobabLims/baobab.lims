@@ -418,26 +418,6 @@ class SampleSchemaExtender(object):
     def getFields(self):
         return self.fields
 
-class SampleSchemaModifier(object):
-    adapts(ISample)
-    implements(ISchemaModifier)
-
-    def __init__(self, context):
-        self.context = context
-
-    def fiddle(self, schema):
-        if self.context.portal_type == 'VirusSample':
-            hide_fields = ('DiseaseOntology', 'Donor', 'SamplingDate',
-                    'SampleCondition', 'SubjectID')
-            for fn in hide_fields:
-                if fn in schema:
-                    schema[fn].widget.visible = {
-                    'add': 'invisible',
-                    'edit': 'invisible',
-                    'view': 'invisible'}
-                    schema[fn].required = False
-        return schema
-
 
 class Sample(BaseSample):
     """ Inherits from bika.lims.content.sample

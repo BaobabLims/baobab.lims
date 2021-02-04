@@ -90,20 +90,6 @@ class VirusSampleView(BrowserView):
         except:
             return ''
 
-    def get_fields_with_visibility(self, visibility, schemata, mode=None):
-        mode = mode if mode else 'edit'
-        schema = self.context.Schema()
-        fields = []
-        for field in schema.fields():
-
-            isVisible = field.widget.isVisible
-            v = isVisible(self.context, mode, default='invisible', field=field)
-            if v == visibility:
-
-                if field.schemata == schemata:
-                    fields.append(field)
-
-        return fields
 
 
 class VirusSampleEditView(BEV):
@@ -194,4 +180,28 @@ class VirusSampleEditView(BEV):
 
         return self.template()
 
-
+    def get_fields_with_visibility(self, visibility, mode=None):
+        mode = mode if mode else 'edit'
+        schema = self.context.Schema()
+        hide_fields = ('DiseaseOntology', 'Donor', 'SamplingDate',
+                'SampleCondition', 'SubjectID')
+        for fn in hide_fields:
+            if fn in schema:
+                schema[fn].widget.render_own_label = False,
+                schema[fn].widget.visible={'edit': 'invisible',
+                         'view': 'invisible',
+                         'header_table': 'invisible',
+                         'sample_registered': {'view': 'invisible', 'edit': 'invisible'},
+                         'sample_due': {'view': 'invisible', 'edit': 'invisible'},
+                         'sampled': {'view': 'invisible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'invisible', 'edit': 'invisible'},
+                         'expired': {'view': 'invisible', 'edit': 'invisible'},
+                         'disposed': {'view': 'invisible', 'edit': 'invisible'},
+                         }
+        fields = []
+        for field in schema.fields():
+            isVisible = field.widget.isVisible
+            v = isVisible(self.context, mode, default='invisible', field=field)
+            if v == visibility:
+                fields.append(field)
+        return fields

@@ -204,15 +204,21 @@ class EditView(BrowserView):
     def get_fields_with_visibility(self, visibility, mode=None):
         mode = mode if mode else 'edit'
         schema = self.context.Schema()
-        # bring back fields that were hidden for VirusSample on
-        # extenders/sample.py fiddle, fiddle seems to be called even on the 
-        # listing and the fields that are suppose to be hidden for VirusSample
-        # are also hidden for the normal Sample
-        schema['DiseaseOntology'].widget.visible['edit'] = 'visible'
-        schema['Donor'].widget.visible['edit'] = 'visible'
-        schema['SamplingDate'].widget.visible['edit'] = 'visible'
-        schema['SampleCondition'].widget.visible['edit'] = 'visible'
-        schema['SubjectID'].widget.visible['edit'] = 'visible'
+        hide_fields = ('DiseaseOntology', 'Donor', 'SamplingDate',
+                'SampleCondition', 'SubjectID')
+        for fn in hide_fields:
+            if fn in schema:
+                schema[fn].widget.render_own_label = False,
+                schema[fn].widget.visible={'edit': 'visible',
+                         'view': 'visible',
+                         'header_table': 'visible',
+                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         'sample_due': {'view': 'visible', 'edit': 'visible'},
+                         'sampled': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'visible'},
+                         'expired': {'view': 'visible', 'edit': 'invisible'},
+                         'disposed': {'view': 'visible', 'edit': 'invisible'},
+                         }
         fields = []
         for field in schema.fields():
             isVisible = field.widget.isVisible
