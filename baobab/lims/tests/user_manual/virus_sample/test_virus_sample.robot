@@ -25,9 +25,9 @@ Baobab LIMS Setup Manual
     Load Setup Data
     Add Analysis to Project
     Add AnalysisRequest with Human Sample
-    # Add Organism
-    # Add VirusSample
-    # Add AnalysisRequest with VirusSample Sample
+    Add Organism
+    Add VirusSample
+    Add AnalysisRequest with VirusSample Sample
     
 *** Keywords ***
 Load Setup Data
@@ -74,7 +74,7 @@ Add AnalysisRequest with Human Sample
     # Click element  css=#analysisrequest_edit_form > div:nth-child(12) > span > div > input
     Click element  css=.context:nth-child(13)
     Sleep  5
-    Wait until page contains  created
+    Wait until page contains  R04 were successfully created.
     
 
 Add Organism
@@ -125,14 +125,14 @@ Add AnalysisRequest with VirusSample Sample
     Click element  xpath=//div[6]/div
     Click element  css=tr:nth-child(5) .copybutton
 
-    Sleep  10
     # select analysis
     Click element  css=tr:nth-child(1) > .cat_header
     Sleep  4
     Select checkbox  name=uids:list
+    Wait until element contains  xpath=//*[@id="analysisrequest_edit_form"]/div[1]/table/tfoot/tr[1]/td[2]/span  10.00
     # Click element  css=#analysisrequest_edit_form > div:nth-child(12) > span > div > input
-    Click Button  Save
-    Sleep  4
+    Click element  css=.context:nth-child(13)
+    Sleep  5
     Wait until page contains  R04 were successfully created.
     
 
