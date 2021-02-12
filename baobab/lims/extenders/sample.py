@@ -303,7 +303,7 @@ class SampleSchemaExtender(object):
             'LinkedSample',
             vocabulary_display_path_bound=sys.maxsize,
             multiValue=1,
-            allowed_types=('Sample',),
+            allowed_types=('Sample','VirusSample'),
             relationship='SampleSample',
             referenceClass=HoldingReference,
             mode="rw",
