@@ -75,8 +75,9 @@ BiospecimenType = StringField(
     vocabulary='getBiospecimenTypes',
     widget=SelectionWidget(
         format='select',
-        label=_("Biospecimen Type"),
-        description=_("Origin of specimen"),
+        label=_("Human or Virus"),
+        description=_("""Indicate whether you are collecting a sample for human
+             process or for virus process."""),
         render_own_label=True,
     )
 )
