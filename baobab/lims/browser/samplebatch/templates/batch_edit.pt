@@ -51,7 +51,6 @@
                                         <div class="field">
                                             <tal:ifLabel tal:condition="widget/render_own_label | nothing">
                                                 <tal:ifNotSelectionWidget tal:condition="python: widget.macro != 'widgets/selection'">
-                                                <p tal:content="python: widget.macro"></p>
                                                     <label class="formQuestion"
                                                            tal:attributes="for python:fieldName">
                                                         <span tal:replace="python:widget.Label(here)"
