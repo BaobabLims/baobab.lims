@@ -28,6 +28,8 @@ Baobab LIMS Setup Manual
     Add Organism
     Add VirusSample
     Add AnalysisRequest with VirusSample Sample
+    Add SampleBatch with Human Samples
+    Add SampleBatch with VirusSample Samples
     
 *** Keywords ***
 Load Setup Data
@@ -134,6 +136,42 @@ Add AnalysisRequest with VirusSample Sample
     Click element  css=.context:nth-child(13)
     Sleep  5
     Wait until page contains  R04 were successfully created.
+
+
+Add SampleBatch with Human Samples
+    Go To  ${PLONEURL}/samplebatches
+    Click Link  Add
+    Input Text  title  Human Samples Batch
+    Click element  id=Project
+    Click element  css=.cg-DivItem:nth-child(1)
+    Select From List By Label  id=BiospecimenType  Human Sample
+    Input Text  id=Quantity  2
+    Click element  id=StorageLocation
+    Click element  css=.cg-DivItem:nth-child(3)
+    Click element  id=DateCreated
+    Click element  css=.ui-datepicker-current
+    Click element  css=.ui-datepicker-close
+    Click element  name=save_button
+    Go To  ${PLONEURL}/samplebatches/samplebatch-1
+    Go To  ${PLONEURL}/samplebatches/samplebatch-1/biospecimens
+
+
+Add SampleBatch with VirusSample Samples
+    Go To  ${PLONEURL}/samplebatches
+    Click Link  Add
+    Input Text  title  Virus Samples Batch
+    Click element  id=Project
+    Click element  css=.cg-DivItem:nth-child(1)
+    Select From List By Label  id=BiospecimenType  Virus Sample
+    Input Text  id=Quantity  2
+    Click element  id=StorageLocation
+    Click element  css=.cg-DivItem:nth-child(3)
+    Click element  id=DateCreated
+    Click element  css=.ui-datepicker-current
+    Click element  css=.ui-datepicker-close
+    Click element  name=save_button
+    Go To  ${PLONEURL}/samplebatches/samplebatch-2
+    Go To  ${PLONEURL}/samplebatches/samplebatch-2/biospecimens
     
 
 Start browser
