@@ -7,22 +7,6 @@ function VirusSampleAddView(){
 
     function init() {
         // applyStyles();
-        $( "#archetypes-fieldname-GeoLocCountry > label" ).css("padding-right","10px")
-        $( "#archetypes-fieldname-GeoLocCountry > select" ).css("vertical-align", "baseline")
-        $( "#archetypes-fieldname-GeoLocState > label" ).css("padding-right","10px")
-        $( "#archetypes-fieldname-GeoLocState > select" ).css("vertical-align", "baseline")
-        $( "#archetypes-fieldname-PurposeOfSampling > label" ).css("padding-right","10px")
-        $( "#archetypes-fieldname-PurposeOfSampling > select" ).css("vertical-align", "baseline")
-        $( "#archetypes-fieldname-SpecimenProcessing > label" ).css("padding-right","10px")
-        $( "#archetypes-fieldname-SpecimenProcessing > select" ).css("vertical-align", "baseline")
-        $( "#archetypes-fieldname-HostGender > label" ).css("padding-right","10px")
-        $( "#archetypes-fieldname-HostGender > select" ).css("vertical-align", "baseline")
-        $( "#archetypes-fieldname-HostAgeUnit > label" ).css("padding-right","10px")
-        $( "#archetypes-fieldname-HostAgeUnit > select" ).css("vertical-align", "baseline")
-        $( "#archetypes-fieldname-ExposureCountry > label" ).css("padding-right","10px")
-        $( "#archetypes-fieldname-ExposureCountry > select" ).css("vertical-align", "baseline")
-        $( "#archetypes-fieldname-ExposureEvent > label" ).css("padding-right","10px")
-        $( "#archetypes-fieldname-ExposureEvent > select" ).css("vertical-align", "baseline")
 
         $('#archetypes-fieldname-LabHost').hide();
         $('#archetypes-fieldname-PassageNumber').hide();
