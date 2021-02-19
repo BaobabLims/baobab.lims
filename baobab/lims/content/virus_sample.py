@@ -486,9 +486,9 @@ schema = Sample.schema.copy() + Schema((
     SequencingProtocolName,
 ))
 
-schema['title'].widget.label=_('Barcode')
-schema['title'].widget.schemata='Baobab Data'
+schema['title'].widget.visible = False
 schema['description'].widget.visible = {'view': 'invisible', 'edit': 'invisible'}
+schema['SampleType'].widget.render_own_label = False
 
 
 class VirusSample(Sample):

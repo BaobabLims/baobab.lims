@@ -6,38 +6,47 @@
         i18n:domain="plone"
         purge="True">
 
+ <property name="title" i18n:translate="">Virus Sample</property>
  <property name="description"></property>
  <property name="content_icon">++resource++baobab.lims.images/biospecimen.png</property>
  <property name="content_meta_type">VirusSample</property>
  <property name="product">baobab.lims</property>
  <property name="factory">addVirusSample</property>
+ <property name="add_view_expr"></property>
+ <property name="link_target"></property>
  <property name="global_allow">False</property>
  <property name="filter_content_types">True</property>
-<alias from="edit" to="@@base_edit"/>
-<alias from="(Default)" to="@@base_view"/>
+ <property name="allow_discussion">False</property>
+ <property name="default_view_fallback">False</property>
 
-
-<action title="Edit"
-     action_id="edit"
-     category="object"
-     icon_expr=""
-     link_target=""
-     url_expr="string:${object_url}/edit"
-     i18n:attributes="title"
-     i18n:domain="plone"
-     visible="True">
-    <permission value="BIKA: Edit Sample"/>
- </action>
+ <alias from="(Default)" to="base_view"/>
+ <alias from="view" to="base_view"/>
+ <alias from="edit" to="base_edit"/>
 
  <action title="View"
          action_id="view"
          category="object"
          condition_expr=""
-         url_expr="string:${object_url}"
+         icon_expr=""
+         link_target=""
+         url_expr="string:${object_url}/"
          i18n:attributes="title"
          i18n:domain="plone"
-         visible="False">
+         visible="True">
   <permission value="View"/>
+ </action>
+
+ <action title="Edit"
+         action_id="edit"
+         category="object"
+         condition_expr=""
+         icon_expr=""
+         link_target=""
+         url_expr="string:${object_url}/edit"
+         i18n:attributes="title"
+         i18n:domain="plone"
+         visible="True">
+  <permission value="BIKA: Edit Sample"/>
  </action>
 
 <action title="Aliquots"

@@ -92,16 +92,19 @@ Add Organism
 Add VirusSample
     Go To  ${PLONEURL}/biospecimens
     Click Link  Add Virus Sample 
+    Page should not contain  Sampling Date
+    Page should not contain  Sample Condition
     Click element  id=Project
     Click element  css=.cg-DivItem:nth-child(1)
     Click element  id=SampleType
     Click element  css=.cg-DivItem:nth-child(1)
+    Click element  css=#fieldsetlegend-sample-collection-and-processing > span
     Click element  id=SpecimenCollectorSampleID
     Input Text  id=SpecimenCollectorSampleID  John Doe
     Input Text  id=SampleCollectedBy  Clint East Wood
+    Input Text  id=SampleCollectionDate  2021-02-10
     Input Text  id=SampleReceivedDate  2021-02-10
     Select from list by index  Organism:list  0
-    Input Text  id=SampleReceivedDate  2021-02-10
     Input Text  id=Isolate  Isolate
     Click Button  Save
     Click element  css=.state-sample_registered:nth-child(2)
@@ -110,6 +113,11 @@ Add VirusSample
     Click element  css=.state-sample_due:nth-child(2)
     Sleep  1
     Click element  css=#workflow-transition-receive > .subMenuTitle
+    Sleep  1
+    Go To  ${PLONEURL}/biospecimens
+    Click Link  Add Human Sample
+    Page should contain  Sampling Date
+    Page should contain  Sample Condition
 
 
 Add AnalysisRequest with VirusSample Sample
