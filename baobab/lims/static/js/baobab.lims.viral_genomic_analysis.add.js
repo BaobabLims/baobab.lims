@@ -2,153 +2,292 @@ function ViralGenomicAnalysisAddView(){
     this.load = function(){
         // disable browser auto-complete
         $('input[type=text]').prop('autocomplete', 'off');
-        init();
+        setUpUI();
     }
 
-    function init() {
-        console.log('------------The viral genomic analysis')
+    function setUpUI() {
+        console.log('------------The viral genomic analysis');
+        removeExtraControls();
+        buildExtractGenomicMaterial();
+        // extractGenomicMaterial();
+        // extractGenomicMaterial().buildExtractGenomicMaterial();
 
-        // applyStyles();
-        // biospecSelection();
+        addSaveAndCancelButtons();
     }
 
-    function biospecSelection(){
-        $(biospecSel).on('change', function(){
-            var biospecUIDs = $(biospecSel).val();
-            if(biospecUIDs){
-                analysis_cb_uncheck();
-                biospecSet(biospecUIDs);
+    function removeExtraControls(){
+        //Remove the buttons and input and result textboxes
+        $('#viralgenomicanalysis-base-edit').find(':submit').remove();
+
+        $('#archetypes-fieldname-ExtractGenomicMaterial').remove();
+    }
+
+    function addSaveAndCancelButtons(){
+        var div = $('.formControls');
+        var buttons = '\
+            <div class="savecancel_centrifugations_buttons">\
+                <button type="button" class="save-viral-genomic-analysis">New Save Button</button>\
+                <button class="cancel-centrifugation" name="form.button.cancel">New Cancel TODO:  Only remove save leave plone cancel button</button>\
+            </div>\
+        ';
+        $(div).append(buttons);
+
+        $('.save-viral-genomic-analysis').click(function(event){
+            event.preventDefault();
+            var viral_genomic_analysis_data = get_viral_genomic_analysis_data()
+            save_viral_genomic_analysis(viral_genomic_analysis_data);
+        });
+
+    }
+
+    function get_viral_genomic_analysis_data(){
+        console.log('----------inside get data');
+        var viral_genomic_analysis = {};
+
+        viral_genomic_analysis['title'] = $('#title').val();
+        viral_genomic_analysis['description'] = $('#description').val();
+        viral_genomic_analysis['project'] = $('#Project_uid').val();
+        viral_genomic_analysis['date_created'] = $('#DateCreated').val();
+        viral_genomic_analysis['will_extract'] = $('#WillExtract').checked;
+        viral_genomic_analysis['will_aliquot'] = $('#WillAliquot').checked;
+        viral_genomic_analysis['will_quantify'] = $('#WillQuantify').checked;
+        viral_genomic_analysis['will_viral_load_determine'] = $('#WillViralLoadDetermine').checked;
+        viral_genomic_analysis['will_library_prep'] = $('#WillLibraryPrep').val();
+        // viral_genomic_analysis[''] = $('#').val();
+
+        return viral_genomic_analysis;
+    }
+
+    function save_viral_genomic_analysis(viral_genomic_analysis_data){
+        var final_data = JSON.stringify(viral_genomic_analysis_data);
+        var path = window.location.href.split('/viral_genomic_analyses')[0];
+
+        $.ajax({
+            dataType: "json",
+            contentType: 'application/json',
+            url: path + '/ajax_save_viral_genomic_analysis',
+            data: {'viral_genomic_analysis': final_data},
+            success: function (data) {
+                console.log('--------------Successful.');
+                console.log(data);
+                console.log(data.url);
+                // window.location.href = data.url;
+            },
+            error: function (data) {
+                var error_response = JSON.parse(data.responseText);
+
+                $("#error_message").css("display", "block");
+                $("#error_message").find('.response_header').css("display", "block");
+                $(".response_li").remove();
+                $("#error_list").append('<li class="response_li" style="color: red;">' + error_response.error_message + '</li>');
+                alert(error_response.error_message);
+            },
+        });
+    }
+
+    // function extractGenomicMaterial() {
+        function buildExtractGenomicMaterial(){
+            var EGM = $('#fieldset-extract-genomic-material');
+            addExtractGenomicMaterialTable(EGM);
+            addExtractGenomicMaterialSaveAndCancelButtons(EGM);
+
+        }
+
+        function addExtractGenomicMaterialTable(EGM){
+            $(EGM).append('<div class="div-extract-genomic-material" style="border: solid; border-width: thin; margin: 10px; padding: 5px;"></div>');
+
+            // addTableStorageFilterDropdowns($('.div-centrifugation-samples'));
+            $('.div-extract-genomic-material').append('<table class="tbl-extract-genomic-material"><thead class="head-extract-genomic-material"></thead><tbody class="body-extract-genomic-material"></tbody></table>');
+
+            addTableHeader($('.head-extract-genomic-material'));
+            appendTableRow($('.body-extract-genomic-material'));
+            addTableRowManageButtons($('.div-extract-genomic-material'));
+        }
+
+        function addExtractGenomicMaterialSaveAndCancelButtons(){
+            var div = $('.formControls');
+            var buttons = '\
+                <div class="savecancel_extract_genomic_material_buttons">\
+                    <button type="button" class="save-extract-genomic-material">Save Extract</button>\
+                    <button class="cancel-centrifugation" name="form.button.cancel">Cancel Extract TODO:  Only remove save leave plone cancel button</button>\
+                </div>\
+            ';
+            $(div).append(buttons);
+
+            $('.save-extract-genomic-material').click(function(event){
+                event.preventDefault();
+                var extract_genomic_material_data = get_extract_genomic_material_data();
+                save_extract_genomic_material(extract_genomic_material_data);
+            });
+        }
+
+        function addTableHeader(table_header){
+            var extract_table_header_row = '\
+                <tr>\
+                    <th>Select Sample</th>\
+                    <th>Heat Inactivated</th>\
+                    <th>Method</th>\
+                    <th>New Sample Barcode</th>\
+                    <th>New Sample Volume</th>\
+                    <th>New Sample Unit</th>\
+                    <th>Kit Used</th>\
+                    <th>Kit Number</th>\
+                    <th>Notes</th>\
+                </tr>\
+            ';
+
+            $(table_header).append(extract_table_header_row);
+        }
+
+        function appendTableRow(table_body){
+            var extract_rows = $('.extract-rows');
+            var row_count = extract_rows.length + 1;
+            const first_row = 1;
+
+            var table_row = '\
+              <tr class="extract-rows" id="extract_row_' + row_count + '">\
+                <td><select class="extract-row-sample" id="extract_row_sample_' + row_count + '">\
+                    <option value=0>-- Select Sample --</option>\
+                </select></td>\
+                <td><input type="checkbox" class="extract-row-heat-inactivated" id="extract_row_heat_inactivated_' + row_count + '" ></td>\
+                <td><select class="extract-row-method" id="extract_row_method_' + row_count + '">\
+                    <option value=0>-- Select Method --</option>\
+                </select></td>\
+                <td><input type="text" class="extract-row-newsamplebarcode" id="extract_row_newsamplebarcode' + row_count + '" ></td>\
+                <td><input type="text" class="extract-row-newsamplevolume" id="extract_row_newsamplevolume_' + row_count + '" ></td>\
+                <td><input type="text" class="extract-row-newsampleunit" id="extract_row_newsampleunit_' + row_count + '" ></td>\
+                <td><input type="checkbox" class="extract-row-kitused" id="extract_row_kitused_' + row_count + '" ></td>\
+                <td><input type="text" class="extract-row-kitnumber" id="extract_row_kitnumber_' + row_count + '" ></td>\
+                <td><input type="text" class="extract-row-notes" id="extract_row_notes_' + row_count + '" ></td>\
+              </tr>\
+            ';
+
+
+            if (row_count == first_row) {
+                $(table_body).append(table_row);
+            } else {
+                $('.' + 'body-extract-genomic-material' + ' tr:last').after(table_row);
             }
-        })
-    }
 
-    function biospecSet(uid){
-        var d = $.Deferred();
-        var requestData = {
-            catalog_name: "bika_setup_catalog",
-            portal_type: "SampleType",
-            UID: uid
-        };
-        bika.lims.jsonapi_read(requestData, function (data) {
-            $.each(data["objects"], function(i, biospec_objects){
-                var defs = [];
-                var serviceData = biospec_objects["service_data"];
-                if(serviceData.length != 0){
-                    defs.push(expandServiceBikaListing(serviceData));
-                }
+            populate_dropdowns('extract_row_sample_' + row_count, 'virus_samples');
+            populate_dropdowns('extract_row_method_' + row_count, 'methods');
+
+        }
+
+        function addTableRowManageButtons(div){
+
+            var buttons = '\
+                <div class="extract_table_buttons">\
+                    <button class="extra-extract-row">Add Centrifuge Row</button>\
+                    <button class="remove-last-extract-row">Remove Last Row</button>\
+                </div>\
+            ';
+            $(div).append(buttons);
+
+            $('.extra-extract-row').click(function(event){
+                event.preventDefault();
+                var table_body = $('.body-extract-genomic-material');
+                appendTableRow(table_body);
             });
 
-        });
-    }
-
-    function expandServiceBikaListing(serviceData){
-        var d = $.Deferred();
-        var services = [];
-        var defs = [];
-        var expanded_categories = [];
-        for(var si = 0; si < serviceData.length; si++){
-            var service = serviceData[si];
-            services.push(service);
-            var th = $("table[form_id='" + service['PointOfCapture'] + "'] " +
-                       "th[cat='" + service['CategoryTitle'] + "']");
-            if(expanded_categories.indexOf(th) < 0) {
-                expanded_categories.push(th);
-                var def = $.Deferred();
-                def = category_header_expand_handler(th);
-                defs.push(def);
-            }
-        }
-        // Call $.when with all deferreds
-        $.when.apply(null, defs).then(function () {
-            // select services
-            for (var si = 0; si < services.length; si++) {
-                analysis_cb_check(services[si]['UID'])
-            }
-            d.resolve();
-        });
-        return d.promise();
-    }
-
-    function analysis_cb_check(uid) {
-        /* Called to un-check an Analysis' checkbox as though it were clicked.
-         */
-        var cb = $("tr[uid='" + uid + "'] " +
-                   "input[type='checkbox']");
-        $(cb).attr("checked", true);
-    }
-
-    function analysis_cb_uncheck() {
-        /* Called to un-check an Analysis' checkbox as though it were clicked.
-         */
-        var cb = $("tr input[type='checkbox']");
-        $(cb).removeAttr("checked");
-    }
-
-    function category_header_expand_handler(element) {
-        /* Deferred function to expand the category with ajax (or not!!)
-         on first expansion. duplicated from bika.lims.bikalisting.js, this code
-         fires when categories are expanded automatically (eg, when profiles or templates require
-         that the category contents are visible for selection)
-
-         Also, this code returns deferred objects, not their promises.
-
-         :param: element - The category header TH element which normally receives 'click' event
-         */
-        var def = $.Deferred();
-        // with form_id allow multiple ajax-categorised tables in a page
-        var form_id = $(element).parents("[form_id]").attr("form_id");
-        var cat_title = $(element).attr('cat');
-        var ar_count = parseInt($("#ar_count").val(), 10);
-        // URL can be provided by bika_listing classes, with ajax_category_url attribute.
-        var url = $("input[name='ajax_categories_url']").length > 0
-          ? $("input[name='ajax_categories_url']").val()
-          : window.location.href.split('?')[0];
-        // We will replace this element with downloaded items:
-        var placeholder = $("tr[data-ajax_category='" + cat_title + "']");
-
-        // If it's already been expanded, ignore
-        if ($(element).hasClass("expanded")) {
-            def.resolve();
-            return def;
+            $('.remove-last-extract-row').click(function(event){
+                event.preventDefault();
+                $('.' + 'body-extract-genomic-material' + ' tr:last').remove();
+            });
         }
 
-        // If ajax_categories are enabled, we need to go request items now.
-        var ajax_categories_enabled = $("input[name='ajax_categories']");
-        if (ajax_categories_enabled.length > 0 && placeholder.length > 0) {
-            var options = {}
-            // this parameter allows the receiving view to know for sure what's expected
-            options['ajax_category_expand'] = 1;
-            options['cat'] = cat_title;
-            options['ar_count'] = ar_count;
-            options['form_id'] = form_id;
-            if ($('.review_state_selector a.selected').length > 0) {
-                // review_state must be kept the same after items are loaded
-                // (TODO does this work?)
-                options['review_state'] = $('.review_state_selector a.selected')[0].id;
-            }
-            console.log(url);
-            $.ajax({url: url, data: options})
-              .done(function (data) {
-                    var rows = $("<table>"+data+"</table>").find("tr");
-                    $("[form_id='" + form_id + "'] tr[data-ajax_category='" + cat_title + "']").replaceWith(rows);
-                    $(element).removeClass("collapsed").addClass("expanded");
-                    def.resolve();
-                })
-        }
-        else {
-            // When ajax_categories are disabled, all cat items exist as TR elements:
-            $(element).parent().nextAll("tr[cat='" + cat_title + "']").toggle(true);
-            $(element).removeClass("collapsed").addClass("expanded");
-            def.resolve();
-        }
-        return def;
-    }
+        function populate_dropdowns(dropdown_id, populate_type){
+            var path = window.location.href.split('/viral_genomic_analyses')[0];
+            var extract_data = {};
+            extract_data['project_uid'] = $('#Project_uid').val()
+            // var final_data = JSON.stringify(extract_data);
+            // console.log(final_data);
 
-    function applyStyles() {
-        $(biospecFd)
-            .css('border', '1px solid #cfcfcf')
-            .css('background-color', '#efefef')
-            .css('padding', '10px')
-            .css('margin-bottom', '20px');
-    }
+             $.ajax({
+                 dataType: "json",
+                 contentType: 'application/json',
+                 url: path + '/ajax_get_' + populate_type,
+                 data: extract_data,
+                 success: function (data) {
+                     $.each(data, function() {
+                        $.each(this, function(key, value){
+                            $('#' + dropdown_id).append($('<option>').val(key).text(value));
+                        });
+                    });
+                 },
+                 error: function (data) {
+                    var error_response = JSON.parse(data.responseText);
+
+                    $("#error_message").css("display", "block");
+                    $("#error_message").find('.response_header').css("display", "block");
+                    $(".response_li").remove();
+                    $("#error_list").append('<li class="response_li" style="color: red;">' + error_response.error_message + '</li>');
+                },
+             });
+        }
+
+        function get_extract_genomic_material_data(){
+            var extract_genomic_material_data = {};
+            extract_genomic_material_data['viral_genomic_analysis_uid'] = $('#archetypes-fieldname-title').attr('data-uid');
+            extract_genomic_material_data['extract_genomic_material_rows'] = get_extract_genomic_material_rows_data();
+            return extract_genomic_material_data;
+        }
+
+        function save_extract_genomic_material(extract_genomic_material_data){
+            var final_data = JSON.stringify(extract_genomic_material_data);
+            var path = window.location.href.split('/viral_genomic_analyses')[0];
+
+            $.ajax({
+                dataType: "json",
+                contentType: 'application/json',
+                url: path + '/ajax_save_extract_genomic_material',
+                data: {'extract_genomic_material': final_data},
+                success: function (data) {
+                    // window.location.href = data.url;
+                },
+                error: function (data) {
+                    var error_response = JSON.parse(data.responseText);
+
+                    $("#error_message").css("display", "block");
+                    $("#error_message").find('.response_header').css("display", "block");
+                    $(".response_li").remove();
+                    $("#error_list").append('<li class="response_li" style="color: red;">' + error_response.error_message + '</li>');
+                    alert(error_response.error_message);
+                },
+            });
+        }
+
+        function get_extract_genomic_material_rows_data(){
+            var extracts = [];
+            $('.extract-rows').each(function(alqt_index, extract_row){
+                var virus_sample = $(extract_row).find('.extract-row-sample').val();
+                var heat_inactivated = $(extract_row).find('.extract-row-heat-inactivated').val();
+                var method = $(extract_row).find('.extract-row-method').val();
+                var new_sample_barcode = $(extract_row).find('.extract-row-newsamplebarcode').val();
+                var new_sample_volume = $(extract_row).find('.extract-row-newsamplevolume').val();
+                var new_sample_unit = $(extract_row).find('.extract-row-newsampleunit').val();
+                var kit_used = $(extract_row).find('.extract-row-kitused').val();
+                var kit_number = $(extract_row).find('.extract-row-kitnumber').val();
+                var notes = $(extract_row).find('.extract-row-notes').val();
+
+                extracts.push(
+                    {
+                      'virus_sample': virus_sample,
+                      'heat_inactivated': heat_inactivated,
+                      'method': method,
+                      'new_sample_barcode': new_sample_barcode,
+                      'new_sample_volume': new_sample_volume,
+                      'new_sample_unit': new_sample_unit,
+                      'kit_used': kit_used,
+                      'kit_number': kit_number,
+                      'notes': notes,
+                    }
+                );
+            });
+            return extracts;
+        }
+
+        // extractGenomicMaterial.buildExtractGenomicMaterial();
+    // }
 }
+

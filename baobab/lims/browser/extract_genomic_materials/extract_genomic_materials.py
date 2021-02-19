@@ -10,7 +10,7 @@ from bika.lims.browser.bika_listing import BikaListingView
 from baobab.lims import bikaMessageFactory as _
 
 
-class ViralGenomicAnalysesView(BikaListingView):
+class ExtractGenomicMaterialsView(BikaListingView):
     implements(IFolderContentsView, IViewView)
 
     def __init__(self, context, request):
@@ -20,12 +20,12 @@ class ViralGenomicAnalysesView(BikaListingView):
         self.catalog = 'portal_catalog'
         request.set('disable_plone.rightcolumn', 1)
         self.contentFilter = {
-            'portal_type': 'ViralGenomicAnalysis',
+            'portal_type': 'ExtractGenomicMaterial',
         }
         self.context_actions = {_('Add'):
-                                    {'url': 'createObject?type_name=ViralGenomicAnalysis',
+                                    {'url': 'createObject?type_name=ExtractGenomicMaterial',
                                      'icon': '++resource++bika.lims.images/add.png'}}
-        self.title = self.context.translate(_("Viral Genomic Analyses"))
+        self.title = self.context.translate(_("Extract Genomic Materials"))
         self.icon = self.portal_url + \
                     "/++resource++baobab.lims.images/patient_big.png"
         self.description = ''
@@ -35,22 +35,22 @@ class ViralGenomicAnalysesView(BikaListingView):
         self.pagesize = 25
         self.allow_edit = True
 
-        if self.context.portal_type == 'ViralGenomicAnalyses':
+        if self.context.portal_type == 'ExtractGenomicMaterials':
             self.request.set('disable_border', 1)
 
         self.columns = {
-            'Title': {
+            'ExtractionBarcode': {
                 'title': _('Title'),
                 'input_width': '15'
             },
-            'Project': {
-                'title': _('Project'),
-                'input_width': '15'
-            },
-            'DateCreated': {
-                'title': _('Date Created'),
-                'input_width': '15'
-            },
+            # 'Project': {
+            #     'title': _('Project'),
+            #     'input_width': '15'
+            # },
+            # 'DateCreated': {
+            #     'title': _('Date Created'),
+            #     'input_width': '15'
+            # },
         }
 
         self.review_states = [
@@ -64,9 +64,9 @@ class ViralGenomicAnalysesView(BikaListingView):
                 },
                 'transitions': [{'id': 'deactivate'}],
                 'columns': [
-                    'Title',
-                    'Project',
-                    'DateCreated',
+                    'ExtractionBarcode',
+                    # 'Project',
+                    # 'DateCreated',
                 ]
             }
         ]
@@ -95,7 +95,7 @@ class ViralGenomicAnalysesView(BikaListingView):
                                                     items[x]['Title'])
             project = obj.getProject()
             if project and hasattr(project, 'title'):
-                items[x]['Project'] = project.title
+                items[x]['SelectedProject'] = project.title
 
             items[x]['DateCreated'] = obj.getField('DateCreated').get(obj)
 

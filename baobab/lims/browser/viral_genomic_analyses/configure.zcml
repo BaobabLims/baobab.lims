@@ -11,4 +11,38 @@
         layer="bika.lims.interfaces.IBikaLIMS"
     />
 
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="ajax_save_viral_genomic_analysis"
+      class=".ajax.viral_genomic_analysis.AjaxCreateViralGenomicAnalysis"
+      permission="zope.Public"
+    />
+
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="ajax_save_extract_genomic_material"
+      class=".ajax.extract_genomic_material.AjaxCreateExtractGenomicMaterial"
+      permission="zope.Public"
+    />
+
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="ajax_get_virus_samples"
+      class=".ajax.get_content_types.AjaxGetVirusSamples"
+      permission="zope.Public"
+    />
+
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="ajax_get_methods"
+      class=".ajax.get_content_types.AjaxGetMethods"
+      permission="zope.Public"
+    />
+    <!--<browser:page-->
+      <!--for="...interfaces.IViralGenomicAnalysis"-->
+      <!--name="ajax_save_viral_genomic_analysis"-->
+      <!--class=".ajax.viral_genomic_analysis.AjaxCreateViralGenomicAnalysis"-->
+      <!--permission="zope.Public"-->
+    <!--/>-->
+
 </configure>

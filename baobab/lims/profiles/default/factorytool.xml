@@ -29,6 +29,7 @@
         <type portal_type="Host"/>
         <type portal_type="HostDisease"/>
         <type portal_type="ViralGenomicAnalysis"/>
+        <type portal_type="ExtractGenomicMaterial"/>
 
     </factorytypes>
 </object>

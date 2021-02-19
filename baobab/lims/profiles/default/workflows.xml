@@ -179,5 +179,11 @@
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>
 
+    <type type_id="ExtractGenomicMaterials"/>
+    <type type_id="ExtractGenomicMaterial">
+        <bound-workflow workflow_id="bika_one_state_workflow"/>
+        <bound-workflow workflow_id="bika_inactive_workflow"/>
+    </type>
+
 </bindings>
 </object>

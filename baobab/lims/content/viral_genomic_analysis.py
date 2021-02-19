@@ -102,19 +102,38 @@ WillLibraryPrep = BooleanField(
     )
 )
 
-Genus = StringField(
-    'Genus',
+ExtractGenomicMaterial = ReferenceField(
+    'ExtractGenomicMaterial',
     schemata='Extract Genomic Material',
+    multiValued=1,
+    allowed_types=('ExtractGenomicMaterial',),
+    relationship='ViralGenomicAnalysisExtractGenomicMaterial',
+    referenceClass=HoldingReference,
     mode="rw",
     read_permission=permissions.View,
     write_permission=permissions.ModifyPortalContent,
-    widget=StringWidget(
-        label=_("Genus"),
-        description=_("The genus of the organism"),
+    widget=bika_ReferenceWidget(
+        label=_("Select Extract Genomic Material"),
         visible={'edit': 'visible', 'view': 'visible'},
+        size=30,
+        showOn=True,
+        description=_("Select the Extract Genomic Material for the viral genomic analysis."),
     )
 )
 
+# Genus = StringField(
+#     'Genus',
+#     schemata='Extract Genomic Material',
+#     mode="rw",
+#     read_permission=permissions.View,
+#     write_permission=permissions.ModifyPortalContent,
+#     widget=StringWidget(
+#         label=_("Genus"),
+#         description=_("The genus of the organism"),
+#         visible={'edit': 'visible', 'view': 'visible'},
+#     )
+# )
+#
 # ExtractGenomicMaterial = ReferenceField(
 #     'ExtractGenomicMaterial',
 #     multiValued=1,
@@ -128,7 +147,9 @@ Genus = StringField(
 #         visible={'edit': 'invisible', 'view': 'invisible'},
 #     )
 # )
-#
+
+
+
 # # Aliquoting
 # # ExtractGenomicMaterial = ReferenceField(
 # #     'ExtractGenomicMaterial',
@@ -223,7 +244,7 @@ schema = BikaSchema.copy() + Schema((
     WillQuantify,
     WillViralLoadDetermine,
     WillLibraryPrep,
-    Genus,
+    ExtractGenomicMaterial,
 ))
 
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}

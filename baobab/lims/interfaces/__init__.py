@@ -233,3 +233,11 @@ class IViralGenomicAnalysis(Interface):
 class IViralGenomicAnalyses(Interface):
     """
     """
+
+class IExtractGenomicMaterial(Interface):
+    """
+    """
+
+class IExtractGenomicMaterials(Interface):
+    """
+    """
