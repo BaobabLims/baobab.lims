@@ -24,11 +24,6 @@ class AjaxCreateExtractGenomicMaterial(BrowserView):
 
     def __call__(self):
 
-
-        print('----------------Extract genomic material')
-        print(self.request.form)
-        # return
-
         try:
             if 'extract_genomic_material' not in self.request.form:
                 raise Exception('No valid extract genomic material data found')
@@ -36,10 +31,6 @@ class AjaxCreateExtractGenomicMaterial(BrowserView):
             extract_genomic_material_data = json.loads(self.request.form['extract_genomic_material'])
             viral_genomic_analysis_uid = extract_genomic_material_data.get('viral_genomic_analysis_uid', None)
             extract_rows = extract_genomic_material_data.get('extract_genomic_material_rows', None)
-
-            print('-------------The viral genomic analysis uid')
-            print(viral_genomic_analysis_uid)
-            print(self.request.form)
 
             viral_genomic_analysis_obj = self.get_content_type(viral_genomic_analysis_uid)
             extract_genomic_material_objs = self.process_extract_genomic_materials(extract_rows)
@@ -72,8 +63,6 @@ class AjaxCreateExtractGenomicMaterial(BrowserView):
             obj = self.create_extract_genomic_material_object(row)
             extract_objs.append(obj)
 
-        print('------------Extract List')
-        print(extract_objs)
         return extract_objs
 
     def create_extract_genomic_material_object(self, extract_item_data):
@@ -103,14 +92,10 @@ class AjaxCreateExtractGenomicMaterial(BrowserView):
 
     def get_content_type(self, content_type_uid, catalog="portal_catalog"):
         try:
-            print('-------------content type uid')
-            print(content_type_uid)
             catalog = self.get_catalog(catalog)
             brains = catalog(UID=content_type_uid)
             return brains[0].getObject()
         except Exception as e:
-            print('--------------Exception content type')
-            print(str(e))
             return None
 
     def get_catalog(self, catalog="portal_catalog"):

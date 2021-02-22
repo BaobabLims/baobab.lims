@@ -1,0 +1,132 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:tal="http://xml.zope.org/namespaces/tal"
+	xmlns:metal="http://xml.zope.org/namespaces/metal"
+	xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+	metal:use-macro="here/main_template/macros/master"
+	i18n:domain="baobab">
+
+<head>
+    <style>
+
+    </style>
+</head>
+
+<body>
+<metal:title fill-slot="content-title">
+    <h1>
+        <img tal:condition="view/icon | nothing"
+            src="" tal:attributes="src view/icon"/>
+        <span class="documentFirstHeading" tal:content="view/title" />
+    </h1>
+    <hr/>
+</metal:title>
+
+<metal:content-description fill-slot="content-description">
+</metal:content-description>
+
+<metal:content-core fill-slot="content-core" tal:define="portal context/@@plone_portal_state/portal;">
+    <h3 style="margin-top:1em;">
+        <tal:current_storage>
+            <img title="Project"
+                tal:attributes="src string:${view/portal_url}/++resource++baobab.lims.images/project.png">
+            <span i18n:translate="">Info Project</span>:
+        </tal:current_storage>
+    </h3><br/>
+
+    <input type="hidden" name="viral_genomic_analysis_uid" id="viral_genomic_analysis_uid" tal:attributes="value view/viral_genomic_analysis_uid">
+
+    <table class="storage" style="border-collapse: collapse; width: 100%;">
+        <tbody>
+        <tr>
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Title </th>
+            <td tal:content="view/title" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;width:70%"></td>
+        </tr>
+        <tr tal:condition="view/description">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Description</th>
+            <td tal:content="view/description" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/project" style="background: #f0f0f2;">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Project</th>
+            <td tal:content="view/project" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+        <tr tal:condition="view/date_created">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Date Created</th>
+            <td tal:content="view/date_created" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+        <tr tal:condition="view/will_extract">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Will Extract</th>
+            <td tal:content="view/will_extract" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+        <tr tal:condition="view/will_aliquot" style="background: #f0f0f2;">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Will Aliquot</th>
+            <td tal:content="view/will_aliquot" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+        <tr tal:condition="view/will_quantify">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Will Quantify</th>
+            <td tal:content="view/will_quantify" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+        <tr tal:condition="view/will_viral_load_determine">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Will Viral Load Determine</th>
+            <td tal:content="view/will_viral_load_determine" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+        <tr tal:condition="view/will_library_prep">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Will Library Prep</th>
+            <td tal:content="view/will_library_prep" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        </tbody>
+    </table>
+
+
+     <table class="invoice-items items">
+        <tr>
+          <th style='text-align:left;' i18n:translate=''>Title</th>
+          <th style='text-align:left;' i18n:translate=''>Virus Sample</th>
+          <th style='text-align:left;' i18n:translate=''>Heat Inactivated</th>
+          <th style='text-align:left;' i18n:translate=''>Method</th>
+          <th style='text-align:left;' i18n:translate=''>New Barcode</th>
+          <th style='text-align:left;' i18n:translate=''>New Volume</th>
+          <th style='text-align:left;' i18n:translate=''>New Unit</th>
+          <th style='text-align:left;' i18n:translate=''>Was Kit Used</th>
+          <th style='text-align:left;' i18n:translate=''>Kit Number</th>
+          <th style='text-align:left;' i18n:translate=''>Notes</th>
+        </tr>
+        <tr tal:repeat="extract view/extract_genomic_material">
+
+            <td  style='text-align:left;' tal:content="python:extract['title']">title</td>
+            <td  style='text-align:left;' tal:content="python:extract['virus_sample']">virus_sample</td>
+            <td  style='text-align:left;' tal:content="python:extract['heat_inactivated']">heat_inactivated</td>
+            <td  style='text-align:left;' tal:content="python:extract['method']">method</td>
+            <td  style='text-align:left;' tal:content="python:extract['extraction_barcode']">extraction_barcode</td>
+            <td  style='text-align:left;' tal:content="python:extract['volume']">volume</td>
+            <td  style='text-align:left;' tal:content="python:extract['unit']">unit</td>
+            <td  style='text-align:left;' tal:content="python:extract['was_kit_used']">was_kit_used</td>
+            <td  style='text-align:left;' tal:content="python:extract['kit_number']">kit_number</td>
+            <td  style='text-align:left;' tal:content="python:extract['notes']">notes</td>
+
+        </tr>
+      </table>
+
+</metal:content-core>
+
+</body>
+</html>

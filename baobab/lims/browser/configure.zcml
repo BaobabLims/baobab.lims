@@ -41,6 +41,7 @@
     <include package=".hosts"/>
     <include package=".host_diseases"/>
     <include package=".viral_genomic_analyses"/>
+    <include package=".viral_genomic_analysis"/>
     <include package=".extract_genomic_materials"/>
 
     <!-- This registration allows additional sticker templates.
