@@ -8,7 +8,7 @@ from zope.container.contained import ContainerModifiedEvent
 
 from bika.lims.fields import *
 from bika.lims.browser.widgets import ReferenceWidget as bikaReferenceWidget
-from bika.lims.interfaces import IAnalysisRequest
+from bika.lims.interfaces import IAnalysisRequest, ISample
 from bika.lims.workflow import doActionFor
 from bika.lims.content.analysisrequest import AnalysisRequest as BaseAR
 
@@ -52,6 +52,44 @@ class AnalysisRequestSchemaExtender(object):
                          'rejected': {'view': 'visible', 'edit': 'invisible'},
                          },
                 catalog_name='bika_catalog',
+            ),
+        ),
+        ExtReferenceField(
+            'Sample',
+            allowed_types=('VirusSample', 'Sample'),
+            referenceClass=HoldingReference,
+            relationship='AnalysisRequestSample',
+            mode="rw",
+            read_permission=permissions.View,
+            write_permission=permissions.ModifyPortalContent,
+            widget=bikaReferenceWidget(
+                label=_("Sample"),
+                description=_("Select a sample to create a secondary AR"),
+                size=20,
+                render_own_label=True,
+                visible={
+                    'edit': 'visible',
+                    'view': 'visible',
+                    'add': 'edit',
+                    'header_table': 'visible',
+                    'sample_registered': {'view': 'visible', 'edit': 'visible', 'add': 'edit'},
+                    'to_be_sampled': {'view': 'visible', 'edit': 'invisible'},
+                    'scheduled_sampling': {'view': 'visible', 'edit': 'invisible'},
+                    'sampled': {'view': 'visible', 'edit': 'invisible'},
+                    'to_be_preserved': {'view': 'visible', 'edit': 'invisible'},
+                    'sample_due': {'view': 'visible', 'edit': 'invisible'},
+                    'sample_prep': {'view': 'visible', 'edit': 'invisible'},
+                    'sample_received': {'view': 'visible', 'edit': 'invisible'},
+                    'attachment_due': {'view': 'visible', 'edit': 'invisible'},
+                    'to_be_verified': {'view': 'visible', 'edit': 'invisible'},
+                    'verified': {'view': 'visible', 'edit': 'invisible'},
+                    'published': {'view': 'visible', 'edit': 'invisible'},
+                    'invalid': {'view': 'visible', 'edit': 'invisible'},
+                    'rejected': {'view': 'visible', 'edit': 'invisible'},
+                },
+                showOn=True,
+                catalog_name='portal_catalog',
+                base_query={'object_provides': ISample.__identifier__},
             ),
         ),
         ExtFixedPointField(
@@ -99,6 +137,7 @@ class AnalysisRequestSchemaModifier(object):
         self.context = context
 
     def fiddle(self, schema):
+        # schema['Sample'].allowed_types = ('Sample', 'VirusSample')
         return schema
 
 

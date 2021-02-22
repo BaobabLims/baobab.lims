@@ -10,12 +10,13 @@
     <include package="archetypes.schemaextender" />
 
     <adapter name='baobab.lims' factory=".analysisrequest.AnalysisRequestSchemaExtender" />
-    <!-- <adapter name='baobab.lims' factory=".analysisrequest.AnalysisRequestSchemaModifier" /> -->
+    <adapter name='baobab.lims' factory=".analysisrequest.AnalysisRequestSchemaModifier" /> -->
     <adapter name='baobab.lims' factory=".bikasetup.BikaSetupSchemaExtender" />
     <adapter name='baobab.lims' factory=".pricelist.PricelistSchemaExtender" />
     <adapter name='baobab.lims' factory=".invoicebatch.InvoiceBatchSchemaExtender" />
     <adapter name='baobab.lims' factory=".sampletype.SampleTypeSchemaExtender" />
     <adapter name='baobab.lims' factory=".sample.SampleSchemaExtender" />
+    <adapter name='baobab.lims' factory=".sample.SampleSchemaModifier" />
     <adapter name='baobab.lims' factory=".instrument.InstrumentSchemaExtender" />
 
     <browser:page

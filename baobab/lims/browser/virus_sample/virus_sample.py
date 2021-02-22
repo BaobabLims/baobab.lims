@@ -1,24 +1,7 @@
-# import os
-# import traceback
-
-from DateTime import DateTime
-from Products.ATContentTypes.lib import constraintypes
-# from Products.Archetypes.public import BaseFolder
 from Products.CMFCore.utils import getToolByName
-# from Products.CMFPlone.utils import _createObjectByType
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-# from plone.app.content.browser.interfaces import IFolderContentsView
-# from plone.app.layout.globals.interfaces import IViewView
-# from zope.interface import implements
 
-#from Products.Five.browser import BrowserView
 from bika.lims.browser import BrowserView
-# from bika.lims.browser.bika_listing import BikaListingView
-# from bika.lims.browser.multifile import MultifileView
-# from bika.lims.utils import to_utf8
-# from baobab.lims import bikaMessageFactory as _
-from baobab.lims.utils.audit_logger import AuditLogger
-from baobab.lims.utils.local_server_time import getLocalServerTime
 
 
 class VirusSampleView(BrowserView):
@@ -40,13 +23,13 @@ class VirusSampleView(BrowserView):
         self.id = self.context.getId()
         self.virus_sample_uid = self.context.UID()
         self.title = self.context.Title()
-        self.project = self.context.getProject().Title()
+        self.project = self.context.aq_parent.Title()
         self.sample_type = self.context.getSampleType().Title()
-        self.volume = "%s %s" % (self.context.getVolume(), self.context.getUnit())
+        self.volume = "%s %s" % (self.context.Volume, self.context.Unit)
         self.anatomical_material = self.getObjectTitle(self.context.getAnatomicalMaterial())
-        self.allow_sharing = self.context.getAllowSharing()
-        self.will_return = self.context.getWillReturnFromShipment()
-        self.bio_sample_accenssion = self.context.getBioSampleAccession()
+        self.allow_sharing = self.context.AllowSharing
+        self.will_return = self.context.WillReturnFromShipment
+        self.bio_sample_accenssion = self.context.BioSampleAccession
         self.specimen_collector_sample_id = self.context.getSpecimenCollectorSampleID()
         self.sample_collected_by = self.context.getSampleCollectedBy()
 
@@ -88,18 +71,3 @@ class VirusSampleView(BrowserView):
             return obj.Title()
         except:
             return ''
-
-    def get_fields_with_visibility(self, visibility, schemata, mode=None):
-        mode = mode if mode else 'edit'
-        schema = self.context.Schema()
-        fields = []
-        for field in schema.fields():
-
-            isVisible = field.widget.isVisible
-            v = isVisible(self.context, mode, default='invisible', field=field)
-            if v == visibility:
-
-                if field.schemata == schemata:
-                    fields.append(field)
-
-        return fields

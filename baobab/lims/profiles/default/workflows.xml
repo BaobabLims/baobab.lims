@@ -133,8 +133,8 @@
 
     <type type_id="VirusSamples"/>
     <type type_id="VirusSample">
-        <bound-workflow workflow_id="bika_one_state_workflow"/>
-        <bound-workflow workflow_id="bika_inactive_workflow"/>
+        <bound-workflow workflow_id="bika_sample_workflow"/>
+        <bound-workflow workflow_id="bika_cancellation_workflow"/>
     </type>
 
     <type type_id="Organisms"/>
