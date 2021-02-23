@@ -14,6 +14,7 @@ from bika.lims.utils import tmpID
 class AjaxCreateViralGenomicAnalysis(BrowserView):
 
     def __init__(self, context, request):
+        print('--------------init')
         super(AjaxCreateViralGenomicAnalysis, self).__init__(context, request)
         self.context = context
         self.request = request
@@ -25,6 +26,7 @@ class AjaxCreateViralGenomicAnalysis(BrowserView):
     def __call__(self):
 
         try:
+            print('---------------The Second viral genomic analysis')
             if 'viral_genomic_analysis' not in self.request.form:
                 raise Exception('No valid viral genomic analysis data found')
 

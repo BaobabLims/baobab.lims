@@ -261,16 +261,4 @@ class ViralGenomicAnalysis(BaseContent):
         from bika.lims.idserver import renameAfterCreation
         renameAfterCreation(self)
 
-    # def Title(self):
-    #     return safe_unicode(self.getField('SampleDonorID').get(self)).encode('utf-8')
-    #
-    # def Description(self):
-    #     return "Gender %s : Age %s %s" % (self.getSex(), self.getAge(), self.getAgeUnit())
-    #
-    # def getSexes(self):
-    #     return ['Male', 'Female', 'Unknown', 'Undifferentiated']
-    #
-    # def getAgeUnits(self):
-    #     return ['Years', 'Months', 'Weeks', 'Days', 'Hours', 'Minutes']
-
 registerType(ViralGenomicAnalysis, config.PROJECTNAME)
