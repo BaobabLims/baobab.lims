@@ -241,3 +241,11 @@ class IExtractGenomicMaterial(Interface):
 class IExtractGenomicMaterials(Interface):
     """
     """
+
+class IVirusAliquot(Interface):
+    """
+    """
+
+class IVirusAliquots(Interface):
+    """
+    """

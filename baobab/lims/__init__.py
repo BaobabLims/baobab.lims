@@ -75,6 +75,8 @@ def initialize(context):
     from content.viral_genomic_analyses import ViralGenomicAnalyses
     from content.extract_genomic_material import ExtractGenomicMaterial
     from content.extract_genomic_materials import ExtractGenomicMaterials
+    from content.virus_aliquot import VirusAliquot
+    from content.virus_aliquots import VirusAliquots
 
     content_types, constructors, ftis = process_types(
         listTypes(PROJECTNAME),

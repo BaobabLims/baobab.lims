@@ -38,6 +38,7 @@
         <element value="HostDisease"/>
         <element value="ViralGenomicAnalysis"/>
         <element value="ExtractGenomicMaterial"/>
+        <element value="VirusAliquot"/>
 
   </property>
 </object>

@@ -19,3 +19,4 @@ hosts,Hosts
 host_diseases,HostDiseases
 viral_genomic_analyses,ViralGenomicAnalyses
 extract_genomic_materials,ExtractGenomicMaterials
+virus_aliquots,VirusAliquots

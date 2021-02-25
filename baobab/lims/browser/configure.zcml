@@ -43,6 +43,7 @@
     <include package=".viral_genomic_analyses"/>
     <include package=".viral_genomic_analysis"/>
     <include package=".extract_genomic_materials"/>
+    <include package=".virus_aliquots"/>
 
     <!-- This registration allows additional sticker templates.
          To enable these, just copy one or more of the *.pt files

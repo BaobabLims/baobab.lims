@@ -121,120 +121,25 @@ ExtractGenomicMaterial = ReferenceField(
     )
 )
 
-# Genus = StringField(
-#     'Genus',
-#     schemata='Extract Genomic Material',
-#     mode="rw",
-#     read_permission=permissions.View,
-#     write_permission=permissions.ModifyPortalContent,
-#     widget=StringWidget(
-#         label=_("Genus"),
-#         description=_("The genus of the organism"),
-#         visible={'edit': 'visible', 'view': 'visible'},
-#     )
-# )
-#
-# ExtractGenomicMaterial = ReferenceField(
-#     'ExtractGenomicMaterial',
-#     multiValued=1,
-#     allowed_types=('ExtractGenomicMaterial',),
-#     referenceClass=HoldingReference,
-#     relationship='ExtractGenomicMaterialViralGenomicAnalysis',
-#     mode="rw",
-#     read_permission=permissions.View,
-#     write_permission=permissions.ModifyPortalContent,
-#     widget=ComputedWidget(
-#         visible={'edit': 'invisible', 'view': 'invisible'},
-#     )
-# )
+VirusAliquot = ReferenceField(
+    'VirusAliquot',
+    schemata='Virus Sample Aliquot',
+    multiValued=1,
+    allowed_types=('VirusAliquot',),
+    relationship='ViralGenomicAnalysisExtractGenomicMaterial',
+    referenceClass=HoldingReference,
+    mode="rw",
+    read_permission=permissions.View,
+    write_permission=permissions.ModifyPortalContent,
+    widget=bika_ReferenceWidget(
+        label=_("Select Virus Aliquot"),
+        visible={'edit': 'visible', 'view': 'visible'},
+        size=30,
+        showOn=True,
+        description=_("Select the Virus Aliquot for the viral genomic analysis."),
+    )
+)
 
-
-
-# # Aliquoting
-# # ExtractGenomicMaterial = ReferenceField(
-# #     'ExtractGenomicMaterial',
-# #     required=True,
-# #     allowed_types=('ExtractGenomicMaterial',),
-# #     relationship='ExtractGenomicMaterialViralGenomicAnalysis',
-# #     referenceClass=HoldingReference,
-# #     widget=bika_ReferenceWidget(
-# #         label=_("Extract Genomic Material"),
-# #         # catalog_name='bika_catalog',
-# #         visible={'edit': 'visible', 'view': 'visible'},
-# #         size=30,
-# #         showOn=True,
-# #         render_own_label=True,
-# #         description=_("Select the ExtractGenomic MaterialViral GenomicAnalysis."),
-# #     )
-# # )
-#
-# GenomicQuantification = ReferenceField(
-#     'GenomicQuantification',
-#     required=True,
-#     allowed_types=('GenomicQuantification',),
-#     relationship='GenomicQuantificationViralGenomicAnalysis',
-#     referenceClass=HoldingReference,
-#     widget=bika_ReferenceWidget(
-#         label=_("Genomic Quantification"),
-#         # catalog_name='bika_catalog',
-#         visible={'edit': 'visible', 'view': 'visible'},
-#         size=30,
-#         showOn=True,
-#         render_own_label=True,
-#         description=_("The Genomic Quantification."),
-#     )
-# )
-#
-# ViralLoadDetermination = ReferenceField(
-#     'ViralLoadDetermination',
-#     required=True,
-#     allowed_types=('ViralLoadDetermination',),
-#     relationship='ViralLoadDeterminationViralGenomicAnalysis',
-#     referenceClass=HoldingReference,
-#     widget=bika_ReferenceWidget(
-#         label=_("Determination Viral Load"),
-#         # catalog_name='bika_catalog',
-#         visible={'edit': 'visible', 'view': 'visible'},
-#         size=30,
-#         showOn=True,
-#         render_own_label=True,
-#         description=_("Specify viral load determination."),
-#     )
-# )
-#
-# SequenceLibraryPrep = ReferenceField(
-#     'SequenceLibraryPrep',
-#     required=True,
-#     allowed_types=('SequenceLibraryPrep',),
-#     relationship='SequenceLibraryPrepViralGenomicAnalysis',
-#     referenceClass=HoldingReference,
-#     widget=bika_ReferenceWidget(
-#         label=_("Sequence Library Prep"),
-#         # catalog_name='bika_catalog',
-#         visible={'edit': 'visible', 'view': 'visible'},
-#         size=30,
-#         showOn=True,
-#         render_own_label=True,
-#         description=_("Sequencing the library preparation."),
-#     )
-# )
-
-# ExtractGenomicMaterial = ReferenceField(
-#     'ExtractGenomicMaterial',
-#     required=True,
-#     allowed_types=('ExtractGenomicMaterial',),
-#     relationship='ExtractGenomicMaterialViralGenomicAnalysis',
-#     referenceClass=HoldingReference,
-#     widget=bika_ReferenceWidget(
-#         label=_("Extract Genomic Material"),
-#         # catalog_name='bika_catalog',
-#         visible={'edit': 'visible', 'view': 'visible'},
-#         size=30,
-#         showOn=True,
-#         render_own_label=True,
-#         description=_("Select the ExtractGenomic MaterialViral GenomicAnalysis."),
-#     )
-# )
 
 schema = BikaSchema.copy() + Schema((
     Project,
@@ -245,6 +150,7 @@ schema = BikaSchema.copy() + Schema((
     WillViralLoadDetermine,
     WillLibraryPrep,
     ExtractGenomicMaterial,
+    VirusAliquot,
 ))
 
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}

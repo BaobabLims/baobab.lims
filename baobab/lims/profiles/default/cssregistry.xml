@@ -37,4 +37,11 @@
     rendering="link"
     insert-before="*"/>
 
+<stylesheet
+    id="++resource++baobab.lims.css/virus_sample_aliquot.css"
+    media="screen"
+    rel="stylesheet"
+    rendering="link"
+    insert-before="*"/>
+
 </object>
