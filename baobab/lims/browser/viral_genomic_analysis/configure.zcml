@@ -4,6 +4,7 @@
     xmlns:i18n="http://namespaces.zope.org/i18n"
     i18n_domain="baobab.lims">
 
+    <!--
     <browser:page
       for="baobab.lims.interfaces.IViralGenomicAnalysis"
       name="base_view"
@@ -11,6 +12,7 @@
       permission="cmf.ModifyPortalContent"
       layer="bika.lims.interfaces.IBikaLIMS"
     />
+    -->
 
     <!--<browser:page-->
       <!--for="baobab.lims.interfaces.ISampleShipment"-->

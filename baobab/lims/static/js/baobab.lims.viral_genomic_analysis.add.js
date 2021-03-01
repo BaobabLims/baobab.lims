@@ -2,16 +2,20 @@ function ViralGenomicAnalysisAddView(){
     this.load = function(){
         // disable browser auto-complete
         $('input[type=text]').prop('autocomplete', 'off');
-        setUpUI();
+        hideOtherTabs()
+        // setUpUI();
     }
 
     function setUpUI() {
         removeExtraControls();
-        // buildExtractGenomicMaterial();
-        // extractGenomicMaterial();
-        // extractGenomicMaterial().buildExtractGenomicMaterial();
-
         addSaveAndCancelButtons();
+    }
+    function hideOtherTabs() {
+        if ($('#WillQuantify').prop("checked")){
+            $('#fieldsetlegend-genome-quantification').show();
+        }else{
+            $('#fieldsetlegend-genome-quantification').hide();
+        }
     }
 
     function removeExtraControls(){

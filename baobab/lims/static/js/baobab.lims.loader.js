@@ -37,9 +37,9 @@ window.baobab.lims.controllers =  {
     ".portaltype-sample":
         ['BaobabSampleView'],
     ".portaltype-viralgenomicanalysis":
-        ['ViralGenomicAnalysisAddView'],
-    "#fieldset-extract-genomic-material":
-        ['ExtractGenomicMaterialAddView'],
+         ['ViralGenomicAnalysisAddView'],
+    // "#fieldset-extract-genomic-material":
+    //     ['ExtractGenomicMaterialAddView'],
 };
 
 /**
