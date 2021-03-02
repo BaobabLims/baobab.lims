@@ -11,11 +11,18 @@ function ViralGenomicAnalysisAddView(){
         addSaveAndCancelButtons();
     }
     function hideOtherTabs() {
-        if ($('#WillQuantify').prop("checked")){
-            $('#fieldsetlegend-genome-quantification').show();
-        }else{
-            $('#fieldsetlegend-genome-quantification').hide();
-        }
+        var processes = {'WillQuantify': 'genome-quantification',
+                         'WillExtract': 'extract-genomic-material',
+                         'WillAliquot': 'virus-sample-aliquot',
+                         'WillViralLoadDetermine': 'viral-load-quantification',
+                         'WillLibraryPrep': 'sequencing-library-prep'}
+        $.each(processes, function( key, value ) {
+            if ($('#'+key).prop("checked")){
+                $('#fieldsetlegend-'+value).show();
+            }else{
+                $('#fieldsetlegend-'+value).hide();
+            }
+        });
     }
 
     function removeExtraControls(){

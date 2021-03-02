@@ -1,24 +1,8 @@
-# import os
-# import traceback
-
-from DateTime import DateTime
-from Products.ATContentTypes.lib import constraintypes
-# from Products.Archetypes.public import BaseFolder
+from plone import api as ploneapi
 from Products.CMFCore.utils import getToolByName
-# from Products.CMFPlone.utils import _createObjectByType
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-# from plone.app.content.browser.interfaces import IFolderContentsView
-# from plone.app.layout.globals.interfaces import IViewView
-# from zope.interface import implements
 
-#from Products.Five.browser import BrowserView
 from bika.lims.browser import BrowserView
-# from bika.lims.browser.bika_listing import BikaListingView
-# from bika.lims.browser.multifile import MultifileView
-# from bika.lims.utils import to_utf8
-# from baobab.lims import bikaMessageFactory as _
-from baobab.lims.utils.audit_logger import AuditLogger
-from baobab.lims.utils.local_server_time import getLocalServerTime
 
 
 class ViralGenomicAnalysisView(BrowserView):
@@ -59,20 +43,24 @@ class ViralGenomicAnalysisView(BrowserView):
     def prepare_extract_genomic_material(self):
 
         extract_genomic_material_rows = self.context.getExtractGenomicMaterial()
-        prepared_extracts = []
+        if not extract_genomic_material_rows:
+            return {}
 
+        prepared_extracts = []
         for extract in extract_genomic_material_rows:
+            sample = ploneapi.content.get(UID=extract['VirusSample'])
+            method = ploneapi.content.get(UID=extract['Method'])
             prepared_extract = {
-                'title': extract.Title(),
-                'virus_sample': self.get_virus_sample(extract),
-                'heat_inactivated': extract.getField('HeatInactivated').get(extract),
-                'method': self.get_method(extract),
-                'extraction_barcode': extract.getField('ExtractionBarcode').get(extract),
-                'volume': extract.getField('Volume').get(extract),
-                'unit': extract.getField('Unit').get(extract),
-                'was_kit_used': extract.getField('WasKitUsed').get(extract),
-                'kit_number': extract.getField('KitNumber').get(extract),
-                'notes': extract.getField('Notes').get(extract),
+                'title': extract['ExtractionBarcode'],
+                'virus_sample': sample.Title() if sample else '',
+                'heat_inactivated': extract['HeatInactivated'],
+                'method': method.Title() if method else '',
+                'extraction_barcode': extract['ExtractionBarcode'],
+                'volume': extract['Volume'],
+                'unit': extract['Unit'],
+                'was_kit_used': extract['WasKitUsed'],
+                'kit_number': extract['KitNumber'],
+                'notes': extract['Notes'],
             }
             prepared_extracts.append(prepared_extract)
 
@@ -81,19 +69,5 @@ class ViralGenomicAnalysisView(BrowserView):
     def get_project(self):
         try:
             return self.context.getProject().Title()
-        except:
-            return ''
-
-    def get_virus_sample(self, extract):
-        try:
-            virus_sample = extract.getField('VirusSample').get(extract)
-            return virus_sample.Title()
-        except:
-            return ''
-
-    def get_method(self, extract):
-        try:
-            method = extract.getField('Method').get(extract)
-            return method.Title()
         except:
             return ''

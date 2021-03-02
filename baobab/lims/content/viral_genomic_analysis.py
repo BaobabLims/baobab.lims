@@ -3,6 +3,7 @@ from AccessControl import ClassSecurityInfo
 from Products.Archetypes.public import *
 from Products.CMFCore import permissions
 from Products.CMFPlone.interfaces import IConstrainTypes
+from Products.CMFCore.utils import getToolByName
 from zope.interface import implements
 from bika.lims.browser.widgets import DateTimeWidget
 
@@ -11,23 +12,17 @@ from baobab.lims import bikaMessageFactory as _
 from baobab.lims import config
 from baobab.lims.interfaces import IViralGenomicAnalysis
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
-from Products.CMFPlone.utils import safe_unicode
-from Products.CMFCore.utils import getToolByName
 
 from Products.DataGridField import CheckboxColumn
 from Products.DataGridField import Column
 from Products.DataGridField import DataGridField
 from Products.DataGridField import DataGridWidget
-from Products.DataGridField import DateColumn
-from Products.DataGridField import DatetimeColumn
 from Products.DataGridField import LinesColumn
 from Products.DataGridField import SelectColumn
-from Products.DataGridField import TimeColumn
-from bika.lims.vocabularies import CatalogVocabulary, BikaContentVocabulary
+from bika.lims.vocabularies import CatalogVocabulary
 
 Project = ReferenceField(
     'Project',
-    # schemata='General Info',
     allowed_types=('Project',),
     relationship='ViralGenomicAnalysisProjects',
     referenceClass=HoldingReference,
@@ -43,7 +38,6 @@ Project = ReferenceField(
 DateCreated = DateTimeField(
     'DateCreated',
     mode="rw",
-    # schemata='General Info',
     read_permission=permissions.View,
     write_permission=permissions.ModifyPortalContent,
     widget=DateTimeWidget(
@@ -56,8 +50,6 @@ DateCreated = DateTimeField(
 
 WillExtract = BooleanField(
     'WillExtract',
-    # required=1,
-    # schemata='General Info',
     default=False,
     widget=BooleanWidget(
         label="Will Extract",
@@ -68,8 +60,6 @@ WillExtract = BooleanField(
 
 WillAliquot = BooleanField(
     'WillAliquot',
-    # required=1,
-    # schemata='General Info',
     default=False,
     widget=BooleanWidget(
         label="Aliquoting",
@@ -80,8 +70,6 @@ WillAliquot = BooleanField(
 
 WillQuantify = BooleanField(
     'WillQuantify',
-    # required=1,
-    # schemata='General Info',
     default=False,
     widget=BooleanWidget(
         label="Will Quantify",
@@ -92,8 +80,6 @@ WillQuantify = BooleanField(
 
 WillViralLoadDetermine = BooleanField(
     'WillViralLoadDetermine',
-    # required=1,
-    # schemata='General Info',
     default=False,
     widget=BooleanWidget(
         label="Confirm Viral Load Determine",
@@ -104,8 +90,6 @@ WillViralLoadDetermine = BooleanField(
 
 WillLibraryPrep = BooleanField(
     'WillLibraryPrep',
-    # schemata='General Info',
-    # required=1,
     default=False,
     widget=BooleanWidget(
         label="Confirm Sequence Library Prep",
@@ -113,25 +97,6 @@ WillLibraryPrep = BooleanField(
         visible={'edit': 'visible', 'view': 'visible'}
     )
 )
-
-# ExtractGenomicMaterial = ReferenceField(
-#     'ExtractGenomicMaterial',
-#     schemata='Extract Genomic Material',
-#     multiValued=1,
-#     allowed_types=('ExtractGenomicMaterial',),
-#     relationship='ViralGenomicAnalysisExtractGenomicMaterial',
-#     referenceClass=HoldingReference,
-#     mode="rw",
-#     read_permission=permissions.View,
-#     write_permission=permissions.ModifyPortalContent,
-#     widget=bika_ReferenceWidget(
-#         label=_("Select Extract Genomic Material"),
-#         visible={'edit': 'visible', 'view': 'visible'},
-#         size=30,
-#         showOn=True,
-#         description=_("Select the Extract Genomic Material for the viral genomic analysis."),
-#     )
-# )
 
 ExtractGenomicMaterial = DataGridField(
     'ExtractGenomicMaterial',
@@ -155,8 +120,8 @@ ExtractGenomicMaterial = DataGridField(
         label=_('Extract Genomic Materials'),
         columns={
             'VirusSample': SelectColumn(
-                'VirusSample', vocabulary='Vocabulary_Sample'),
-            'HeatInactivated': Column('Hide Inactivated'),
+                'Virus Sample', vocabulary='Vocabulary_Sample'),
+            'HeatInactivated': CheckboxColumn('Hide Inactivated'),
             'Method': SelectColumn('Method', vocabulary='Vocabulary_Method'),
             'ExtractionBarcode': Column('Extraction Barcode'),
             'Volume': Column('Volume'),
@@ -168,29 +133,26 @@ ExtractGenomicMaterial = DataGridField(
     )
 )
 
-Fluorimeter = DataGridField(
-    'Fluorimeter',
+GenomeQuantification = DataGridField(
+    'GenomeQuantification',
     schemata='Genome Quantification',
     allow_insert=True,
     allow_delete=True,
     allow_reorder=False,
     allow_empty_rows=False,
     allow_oddeven=True,
-    columns=('FlurometerSample',
-             'FlurometerConc',
-             'NanometerSample',
+    columns=('VirusSample',
+             'FluorimeterConc',
              'NanometerQuantity',
-             'NanometerRation',
+             'NanometerRatio',
              ),
     widget=DataGridWidget(
         label=_('Fluorimeter/Nanometer'),
         columns={
-            'FluorimeterSample': SelectColumn(
-                'Sample', vocabulary='Vocabulary_Sample'),
-            'CFluorimeteronc': Column('Conc (ng/ul)'),
-            'NanometerSample': SelectColumn('Sample', vocabulary='Vocabulary_Sample'),
-            'NanometerQuantity': Column('Conc (ng/ul)'),
-            'NanometerRatio': Column('260/280'),
+            'VirusSample': SelectColumn('Virus Sample', vocabulary='Vocabulary_Sample'),
+            'FluorimeterConc': Column('Fluorimeter Conc (ng/ul)'),
+            'NanometerQuantity': Column('Nanometer Conc (ng/ul)'),
+            'NanometerRatio': Column('Nanometer Ratio (260/280)')
         }
     )
 )
@@ -214,6 +176,54 @@ VirusAliquot = ReferenceField(
     )
 )
 
+ViralLoadQuantification = DataGridField(
+    'ViralLoadQuantification',
+    schemata='Viral Load Quantification',
+    allow_insert=True,
+    allow_delete=True,
+    allow_reorder=False,
+    allow_empty_rows=False,
+    allow_oddeven=True,
+    columns=('PCR',
+             'ctValue',
+             'Result',
+             'Pass',
+             'Fail',
+             ),
+    widget=DataGridWidget(
+        label=_('Viral Load Quantification'),
+        columns={
+            'PCR': Column('PCR'),
+            'ctValue': Column('ct Value'),
+            'Result': Column('Result'),
+            'Pass': CheckboxColumn('Pass'),
+            'Fail': CheckboxColumn('Fail'),
+        }
+    )
+)
+
+SequencingLibraryPrep = DataGridField(
+    'SequencingLibraryPrep',
+    schemata='Sequencing Library Prep',
+    allow_insert=True,
+    allow_delete=True,
+    allow_reorder=False,
+    allow_empty_rows=False,
+    allow_oddeven=True,
+    columns=('VirusSample',
+             'Method',
+             'LibraryID',
+             ),
+    widget=DataGridWidget(
+        label=_('Sequencing Library Prep'),
+        columns={
+            'VirusSample': SelectColumn(
+                'Virus Sample', vocabulary='Vocabulary_Sample'),
+            'Method': SelectColumn('Method', vocabulary='Vocabulary_Method'),
+            'LibraryID': Column('Library ID'),
+        }
+    )
+)
 schema = BikaSchema.copy() + Schema((
     Project,
     DateCreated,
@@ -222,9 +232,11 @@ schema = BikaSchema.copy() + Schema((
     WillQuantify,
     WillViralLoadDetermine,
     WillLibraryPrep,
-    VirusAliquot,
     ExtractGenomicMaterial,
-    Fluorimeter,
+    VirusAliquot,
+    GenomeQuantification,
+    ViralLoadQuantification,
+    SequencingLibraryPrep,
 ))
 
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
@@ -244,7 +256,7 @@ class ViralGenomicAnalysis(BaseContent):
     def Vocabulary_Sample(self):
         vocabulary = CatalogVocabulary(self)
         vocabulary.catalog = 'bika_catalog'
-        return vocabulary(allow_blank=True, portal_type='Sample')
+        return vocabulary(allow_blank=True, portal_type='VirusSample')
 
     def Vocabulary_Method(self):
         vocabulary = CatalogVocabulary(self)
