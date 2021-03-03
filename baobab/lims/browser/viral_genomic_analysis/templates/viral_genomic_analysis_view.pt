@@ -97,7 +97,8 @@
     </table>
 
 
-     <table class="invoice-items items">
+     <table class="invoice-items items"
+            tal:condition="view/extract_genomic_material">
         <tr>
           <th style='text-align:left;' i18n:translate=''>Title</th>
           <th style='text-align:left;' i18n:translate=''>Virus Sample</th>
@@ -125,6 +126,44 @@
 
         </tr>
       </table>
+          <div class="field ArchetypesField-DataGridField"
+              tal:condition="python: context.getGenomeQuantification()">
+              <label class="formQuestion"><span>Fluorimeter/Nanometer</span>:</label>
+              <br />
+        <table class="datagridwidget-table-view listing">
+            <thead>
+                <tr>
+                    <th class="">Virus Sample</th
+                     ><th class="">Fluorimeter Conc (ng/ul)</th
+                     ><th class="">Nanometer Conc (ng/ul)</th
+                     ><th class="">Nanometer Ratio (260/280)</th
+                     >
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="even" tal:repeat="genome python: context.getGenomeQuantification()">
+
+                     <td class="col-1">
+                         <span>
+                             <div tal:content="python: context.Vocabulary_Sample().getValue(genome['VirusSample'])">
+                                 Virus Sample Title
+                             </div>
+                         </span>
+                    </td>
+
+                     <td class="col-2">
+                         <span><div tal:content="genome/FluorimeterConc">Fluorimeter Conc</div></span>
+                    </td>
+                     <td class="col-3">
+                         <span><div tal:content="genome/NanometerQuantity">NanometerQuantity</div></span>
+                    </td>
+                     <td class="col-4">
+                         <span><div tal:content="genome/NanometerRatio">NanometerRatio</div></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
 </metal:content-core>
 
