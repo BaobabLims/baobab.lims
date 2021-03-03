@@ -26,6 +26,7 @@ Project = ReferenceField(
     allowed_types=('Project',),
     relationship='ViralGenomicAnalysisProjects',
     referenceClass=HoldingReference,
+    required=True,
     widget=bika_ReferenceWidget(
         label=_("Select Project"),
         visible={'edit': 'visible', 'view': 'visible'},
@@ -121,13 +122,13 @@ ExtractGenomicMaterial = DataGridField(
         columns={
             'VirusSample': SelectColumn(
                 'Virus Sample', vocabulary='Vocabulary_Sample'),
-            'HeatInactivated': CheckboxColumn('Hide Inactivated'),
             'Method': SelectColumn('Method', vocabulary='Vocabulary_Method'),
             'ExtractionBarcode': Column('Extraction Barcode'),
             'Volume': Column('Volume'),
             'Unit': Column('Unit'),
+            'HeatInactivated': CheckboxColumn('Hide Inactivated'),
             'WasKitUsed': CheckboxColumn('Was Kit Used'),
-            'KitNumber': Column('Kit Number'),
+            'KitNumber': Column('Kit Lot #'),
             'Notes': LinesColumn('Notes'),
         }
     )
@@ -176,9 +177,53 @@ VirusAliquot = ReferenceField(
     )
 )
 
-ViralLoadQuantification = DataGridField(
-    'ViralLoadQuantification',
-    schemata='Viral Load Quantification',
+ViralLoadDeterminationTitle = StringField(
+    'ViralLoadDeterminationTitle',
+    schemata='Viral Load Determination',
+    widget=StringWidget(
+        label=_("Title"),
+        size=30,
+    )
+)
+
+ViralLoadDeterminationDescription = TextField(
+    'ViralLoadDeterminationDescription',
+    schemata='Viral Load Determination',
+    widget=TextAreaWidget(
+        label=_("Description"),
+    )
+)
+
+ViralLoadDeterminationGeneName = StringField(
+    'ViralLoadDeterminationGeneName',
+    schemata='Viral Load Determination',
+    widget=StringWidget(
+        label=_("Gene name"),
+    )
+)
+ViralLoadDeterminationDate = DateTimeField(
+    'ViralLoadDeterminationDate',
+    widget=DateTimeWidget(
+        label=_("Date"),
+    )
+)
+ViralLoadDeterminationDate = DateTimeField(
+    'ViralLoadDeterminationDate',
+    schemata='Viral Load Determination',
+    mode="rw",
+    read_permission=permissions.View,
+    write_permission=permissions.ModifyPortalContent,
+    widget=DateTimeWidget(
+        label=_("Date"),
+        description=_("Viral Load Determination date."),
+        show_time=False,
+        visible={'edit': 'visible', 'view': 'visible'}
+    )
+)
+
+ViralLoadDetermination = DataGridField(
+    'ViralLoadDetermination',
+    schemata='Viral Load Determination',
     allow_insert=True,
     allow_delete=True,
     allow_reorder=False,
@@ -186,22 +231,23 @@ ViralLoadQuantification = DataGridField(
     allow_oddeven=True,
     columns=('PCR',
              'ctValue',
+             'KitNumber',
              'Result',
-             'Pass',
-             'Fail',
+             'AddToReport',
+             'Notes',
              ),
     widget=DataGridWidget(
-        label=_('Viral Load Quantification'),
+        label=_('Viral Load Determination(RT-PCR)'),
         columns={
             'PCR': Column('PCR'),
             'ctValue': Column('ct Value'),
-            'Result': Column('Result'),
-            'Pass': CheckboxColumn('Pass'),
-            'Fail': CheckboxColumn('Fail'),
+            'KitNumber': Column('Kit Lot #'),
+            'Result': CheckboxColumn('Result'),
+            'AddToReport': CheckboxColumn('Add to report'),
+            'Notes': LinesColumn('Notes'),
         }
     )
 )
-
 SequencingLibraryPrep = DataGridField(
     'SequencingLibraryPrep',
     schemata='Sequencing Library Prep',
@@ -213,6 +259,8 @@ SequencingLibraryPrep = DataGridField(
     columns=('VirusSample',
              'Method',
              'LibraryID',
+             'KitNumber',
+             'Notes',
              ),
     widget=DataGridWidget(
         label=_('Sequencing Library Prep'),
@@ -221,6 +269,8 @@ SequencingLibraryPrep = DataGridField(
                 'Virus Sample', vocabulary='Vocabulary_Sample'),
             'Method': SelectColumn('Method', vocabulary='Vocabulary_Method'),
             'LibraryID': Column('Library ID'),
+            'KitNumber': Column('Kit Lot #'),
+            'Notes': LinesColumn('Notes'),
         }
     )
 )
@@ -235,7 +285,11 @@ schema = BikaSchema.copy() + Schema((
     ExtractGenomicMaterial,
     VirusAliquot,
     GenomeQuantification,
-    ViralLoadQuantification,
+    ViralLoadDeterminationTitle,
+    ViralLoadDeterminationDescription,
+    ViralLoadDeterminationGeneName,
+    ViralLoadDeterminationDate,
+    ViralLoadDetermination,
     SequencingLibraryPrep,
 ))
 
@@ -265,5 +319,6 @@ class ViralGenomicAnalysis(BaseContent):
         brains = pc(portal_type="Method")
         items = [('', '')] + [(c.UID, c.Title) for c in brains]
         return DisplayList(items)
+
 
 registerType(ViralGenomicAnalysis, config.PROJECTNAME)

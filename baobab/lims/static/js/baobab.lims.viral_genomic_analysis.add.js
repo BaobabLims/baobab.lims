@@ -14,7 +14,7 @@ function ViralGenomicAnalysisAddView(){
         var processes = {'WillQuantify': 'genome-quantification',
                          'WillExtract': 'extract-genomic-material',
                          'WillAliquot': 'virus-sample-aliquot',
-                         'WillViralLoadDetermine': 'viral-load-quantification',
+                         'WillViralLoadDetermine': 'viral-load-determination',
                          'WillLibraryPrep': 'sequencing-library-prep'}
         $.each(processes, function( key, value ) {
             if ($('#'+key).prop("checked")){

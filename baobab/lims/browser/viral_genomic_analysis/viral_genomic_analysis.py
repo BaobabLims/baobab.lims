@@ -48,13 +48,13 @@ class ViralGenomicAnalysisView(BrowserView):
 
         prepared_extracts = []
         for extract in extract_genomic_material_rows:
-            sample = ploneapi.content.get(UID=extract['VirusSample'])
-            method = ploneapi.content.get(UID=extract['Method'])
+            sample = self.context.Vocabulary_Sample().getValue(extract['VirusSample'])
+            method = self.context.Vocabulary_Method().getValue(extract['Method'])
             prepared_extract = {
                 'title': extract['ExtractionBarcode'],
-                'virus_sample': sample.Title() if sample else '',
+                'virus_sample': sample if sample else '',
                 'heat_inactivated': extract['HeatInactivated'],
-                'method': method.Title() if method else '',
+                'method': method if method else '',
                 'extraction_barcode': extract['ExtractionBarcode'],
                 'volume': extract['Volume'],
                 'unit': extract['Unit'],
