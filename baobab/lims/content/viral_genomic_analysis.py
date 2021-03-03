@@ -108,11 +108,11 @@ ExtractGenomicMaterial = DataGridField(
     allow_empty_rows=False,
     allow_oddeven=True,
     columns=('VirusSample',
-             'HeatInactivated',
              'Method',
              'ExtractionBarcode',
              'Volume',
              'Unit',
+             'HeatInactivated',
              'WasKitUsed',
              'KitNumber',
              'Notes',
@@ -126,7 +126,7 @@ ExtractGenomicMaterial = DataGridField(
             'ExtractionBarcode': Column('Extraction Barcode'),
             'Volume': Column('Volume'),
             'Unit': Column('Unit'),
-            'HeatInactivated': CheckboxColumn('Hide Inactivated'),
+            'HeatInactivated': CheckboxColumn('Heat Inactivated'),
             'WasKitUsed': CheckboxColumn('Was Kit Used'),
             'KitNumber': Column('Kit Lot #'),
             'Notes': LinesColumn('Notes'),
@@ -203,12 +203,6 @@ ViralLoadDeterminationGeneName = StringField(
 )
 ViralLoadDeterminationDate = DateTimeField(
     'ViralLoadDeterminationDate',
-    widget=DateTimeWidget(
-        label=_("Date"),
-    )
-)
-ViralLoadDeterminationDate = DateTimeField(
-    'ViralLoadDeterminationDate',
     schemata='Viral Load Determination',
     mode="rw",
     read_permission=permissions.View,
@@ -244,7 +238,7 @@ ViralLoadDetermination = DataGridField(
             'KitNumber': Column('Kit Lot #'),
             'Result': CheckboxColumn('Result'),
             'AddToReport': CheckboxColumn('Add to report'),
-            'Notes': LinesColumn('Notes'),
+            'Notes': LinesColumn('Notes')
         }
     )
 )
