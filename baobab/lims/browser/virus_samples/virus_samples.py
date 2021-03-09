@@ -110,7 +110,7 @@ class VirusSamplesView(BikaListingView):
             items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
                                                    (items[x]['url'],
                                                     items[x]['Title'])
-            project = obj.getProject()
+            project = obj.getField('Project').get(obj)
             if project and hasattr(project, 'title'):
                 items[x]['Project'] = project.title
 

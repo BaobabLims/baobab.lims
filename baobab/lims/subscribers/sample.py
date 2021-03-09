@@ -8,7 +8,7 @@ from baobab.lims.browser.project import create_samplepartition
 def ObjectInitializedEventHandler(instance, event):
     """called an object is created
     """
-    if instance.portal_type == 'Sample':
+    if instance.portal_type in ['Sample', 'VirusSample']:
 
         if instance.getField('AllowSharing').get(instance):
             alsoProvides(instance, ISharableSample)
@@ -40,7 +40,7 @@ def ObjectInitializedEventHandler(instance, event):
 def ObjectModifiedEventHandler(instance, event):
     """ Called if the object is modified
     """
-    if instance.portal_type == 'Sample':
+    if instance.portal_type in ['Sample', 'VirusSample']:
 
         if not ISharableSample.providedBy(instance) and \
                 instance.getField('AllowSharing').get(instance):

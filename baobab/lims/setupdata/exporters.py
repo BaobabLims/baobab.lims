@@ -157,6 +157,138 @@ class SamplesExporter(object):
             samples.append(row)
         return samples
 
+
+class VirusSamplesExporter(object):
+    """ This class packages all the samples info into a list of dictionaries and then returns it.
+        Returns all the samples except Aliquots (Samples with Parent Samples/LinkedSample)
+    """
+    def __init__(self, context):
+        self.context = context
+
+    def export(self):
+        virus_samples = []
+        pc = getToolByName(self.context, 'portal_catalog')
+        brains = pc(portal_type="VirusSample")
+
+        if brains:
+            virus_samples.append(['Title', 'Project', 'Sample_Type',
+                            'Storage_Location', 'Subject_ID', 'Barcode', 'Volume', 'Unit',
+                            'Anatomical_Material', 'Bio_Sample_Accession','Specimen_Collector_Sample_ID',
+                            'Sample_Collected_By', 'Sample_Collection_Date', 'Sample_Received_Date', 'Geo_Loc_Country',
+                            'Geo_Loc_State', 'Organism', 'Isolate', 'Purpose_Of_Sampling', 'Collection_Device',
+                            'Collection_Protocol', 'Exposure_Event', 'Specimen_Processing', 'Lab_Host', 'Passage_Number',
+                            'Passage_Method', 'Host_Subject_ID', 'Host', 'Host_Disease', 'Host_Gender', 'Host_Age',
+                            'Host_Age_Unit', 'Exposure_Country', 'Exposure_Event',
+                            'Library_ID', 'Instrument_Type', 'Instrument', 'Sequencing_Protocol_Name',
+                            'Date_Created', 'Sample_ID', 'UID', 'Parent_UID', 'URL_path'])
+        for brain in brains:
+            virus_sample = brain.getObject()
+
+            row = []
+            row.append(virus_sample.Title())
+            project = virus_sample.aq_parent
+            row.append(project.Title())
+            row.append(virus_sample.getSampleType().Title())
+            # disease_ontology = virus_sample.getField('DiseaseOntology').get(virus_sample)
+            # if disease_ontology:
+            #     row.append(disease_ontology.Title())
+            # else:
+            #     row.append('')
+            #
+            # donor = virus_sample.getField('Donor').get(virus_sample)
+            # if donor:
+            #     row.append(donor.Title())
+            # else:
+            #     row.append('')
+
+            storage = virus_sample.getField('StorageLocation').get(virus_sample)
+            if storage:
+                row.append(storage.getHierarchy())
+            else:
+                row.append('')
+            row.append(virus_sample.getField('SubjectID').get(virus_sample))
+            row.append(virus_sample.getField('Barcode').get(virus_sample))
+            row.append(virus_sample.getField('Volume').get(virus_sample))
+            row.append(virus_sample.getField('Unit').get(virus_sample))
+            anatomical_material = virus_sample.getAnatomicalMaterial()
+            if anatomical_material:
+                row.append(anatomical_material.Title())
+            else:
+                row.append('')
+
+            row.append(virus_sample.getField('BioSampleAccession').get(virus_sample))
+            row.append(virus_sample.getField('SpecimenCollectorSampleID').get(virus_sample))
+            row.append(virus_sample.getField('SampleCollectedBy').get(virus_sample))
+            row.append(virus_sample.getField('SampleCollectionDate').get(virus_sample))
+            row.append(virus_sample.getField('SampleReceivedDate').get(virus_sample))
+            row.append(virus_sample.getField('GeoLocCountry').get(virus_sample))
+            row.append(virus_sample.getField('GeoLocState').get(virus_sample))
+
+            organism = virus_sample.getOrganism()
+            if organism:
+                row.append(organism.Title())
+            else:
+                row.append('')
+
+            row.append(virus_sample.getField('Isolate').get(virus_sample))
+            row.append(virus_sample.getField('PurposeOfSampling').get(virus_sample))
+            collection_device = virus_sample.getCollectionDevice()
+            if collection_device:
+                row.append(collection_device.Title())
+            else:
+                row.append('')
+            row.append(virus_sample.getField('CollectionProtocol').get(virus_sample))
+            row.append(virus_sample.getField('ExposureEvent').get(virus_sample))
+            row.append(virus_sample.getField('SpecimenProcessing').get(virus_sample))
+            lab_host = virus_sample.getLabHost()
+            if lab_host:
+                row.append(lab_host.Title())
+            else:
+                row.append('')
+            row.append(virus_sample.getField('PassageNumber').get(virus_sample))
+            row.append(virus_sample.getField('PassageMethod').get(virus_sample))
+            row.append(virus_sample.getField('HostSubjectID').get(virus_sample))
+            host = virus_sample.getHost()
+            if host:
+                row.append(host.Title())
+            else:
+                row.append('')
+            host_disease = virus_sample.getHostDisease()
+            if host_disease:
+                row.append(host_disease.Title())
+            else:
+                row.append('')
+            row.append(virus_sample.getField('HostGender').get(virus_sample))
+            row.append(virus_sample.getField('HostAge').get(virus_sample))
+            row.append(virus_sample.getField('HostAgeUnit').get(virus_sample))
+            row.append(virus_sample.getField('ExposureCountry').get(virus_sample))
+            row.append(virus_sample.getField('ExposureEvent').get(virus_sample))
+            row.append(virus_sample.getField('LibraryID').get(virus_sample))
+            instrument_type = virus_sample.getInstrumentType()
+            if instrument_type:
+                row.append(instrument_type.Title())
+            else:
+                row.append('')
+            instrument = virus_sample.getInstrument()
+            if instrument:
+                row.append(instrument.Title())
+            else:
+                row.append('')
+            row.append(virus_sample.getField('SequencingProtocolName').get(virus_sample))
+
+            # row.append(sample.getSampleState())
+            # row.append(sample.getSamplingDate().strftime("%Y-%m-%d %H:%M") if sample.getSamplingDate() else '')
+            row.append(virus_sample.getField('DateCreated').get(virus_sample).strftime("%Y-%m-%d %H:%M") if virus_sample.getField('DateCreated').get(virus_sample) else '')
+
+            row.append(virus_sample.getId() if virus_sample.getId() else '')
+            row.append(virus_sample.UID())
+            row.append(virus_sample.aq_parent.UID() if virus_sample.aq_parent.UID() else '')
+            row.append(brain.getPath() if brain.getPath() else '')
+
+            virus_samples.append(row)
+        return virus_samples
+
+
 # class SamplesAliquotExporter(object):
 #     """ This class packages all the samples info into a list of dictionaries and then returns it.
 #         Returns all the samples except Aliquots (Samples with Parent Samples/LinkedSample)

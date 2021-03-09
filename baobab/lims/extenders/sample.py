@@ -1,3 +1,4 @@
+from AccessControl import ClassSecurityInfo
 from Products.Archetypes.references import HoldingReference
 from archetypes.schemaextender.interfaces import IOrderableSchemaExtender
 from archetypes.schemaextender.interfaces import ISchemaModifier
@@ -12,7 +13,7 @@ from bika.lims.content.sample import Sample as BaseSample
 from bika.lims.workflow import doActionFor
 
 from baobab.lims import bikaMessageFactory as _
-from baobab.lims.interfaces import ISampleStorageLocation
+from baobab.lims.interfaces import ISampleStorageLocation, IVirusSample
 
 import sys
 
@@ -47,7 +48,7 @@ class SampleSchemaExtender(object):
                          },
                 size=30,
                 showOn=True,
-                render_own_label=True,
+                render_own_label=False,
                 description=_("Select the project of the sample."),
             )
         ),
@@ -89,7 +90,7 @@ class SampleSchemaExtender(object):
                          'sample_due': {'view': 'visible', 'edit': 'visible'},
                          'sample_received': {'view': 'visible', 'edit': 'visible'},
                          },
-                render_own_label=True,
+                render_own_label=False,
             ),
         ),
         ExtBooleanField(
@@ -104,7 +105,7 @@ class SampleSchemaExtender(object):
                          'header_table': 'visible',
                          'sample_registered': {'view': 'visible', 'edit': 'visible'},
                          },
-                render_own_label=True,
+                render_own_label=False,
             ),
         ),
         ExtReferenceField(
@@ -151,7 +152,7 @@ class SampleSchemaExtender(object):
                          'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
                 showOn=True,
-                render_own_label = True,
+                render_own_label=False,
                 description=_("Select the kit of the sample if exists."),
             ),
         ),
@@ -172,7 +173,7 @@ class SampleSchemaExtender(object):
                          'sample_received': {'view': 'invisible', 'edit': 'invisible'},
                          },
                 showOn=True,
-                render_own_label=True,
+                render_own_label=False,
                 description=_("Batch."),
             ),
         ),
@@ -197,7 +198,7 @@ class SampleSchemaExtender(object):
                          },
                 catalog_name='portal_catalog',
                 showOn=True,
-                render_own_label=True,
+                render_own_label=False,
                 base_query={'inactive_state': 'active',
                             'review_state': 'available',
                             'object_provides': ISampleStorageLocation.__identifier__},
@@ -218,6 +219,7 @@ class SampleSchemaExtender(object):
                 visible={'edit': 'invisible',
                          'view': 'invisible'},
                 catalog_name='portal_catalog',
+                render_own_label=False,
             )
         ),
         ExtStringField(
@@ -256,7 +258,7 @@ class SampleSchemaExtender(object):
                          'expired': {'view': 'visible', 'edit': 'invisible'},
                          'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
-                render_own_label=True,
+                render_own_label=False,
             )
         ),
         ExtFixedPointField(
@@ -277,7 +279,7 @@ class SampleSchemaExtender(object):
                          'expired': {'view': 'visible', 'edit': 'invisible'},
                          'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
-                render_own_label=True,
+                render_own_label=False,
             )
         ),
         ExtStringField(
@@ -295,14 +297,14 @@ class SampleSchemaExtender(object):
                          'expired': {'view': 'visible', 'edit': 'invisible'},
                          'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
-                render_own_label=True,
+                render_own_label=False,
             )
         ),
         ExtReferenceField(
             'LinkedSample',
             vocabulary_display_path_bound=sys.maxsize,
             multiValue=1,
-            allowed_types=('Sample',),
+            allowed_types=('Sample','VirusSample'),
             relationship='SampleSample',
             referenceClass=HoldingReference,
             mode="rw",
@@ -322,7 +324,7 @@ class SampleSchemaExtender(object):
                          'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
                 showOn=True,
-                render_own_label=True,
+                render_own_label=False,
                 base_query={
                     'cancellation_state': 'active',
                     'review_state': 'sample_received'
@@ -352,7 +354,7 @@ class SampleSchemaExtender(object):
                          'expired': {'view': 'visible', 'edit': 'invisible'},
                          'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
-                render_own_label=True,
+                render_own_label=False,
             ),
         ),
         ExtComputedField(
@@ -380,7 +382,7 @@ class SampleSchemaExtender(object):
                          'expired': {'view': 'visible', 'edit': 'invisible'},
                          'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
-                render_own_label=True,
+                render_own_label=False,
             )
         ),
         ExtStringField(
@@ -398,7 +400,7 @@ class SampleSchemaExtender(object):
                          'expired': {'view': 'visible', 'edit': 'invisible'},
                          'disposed': {'view': 'visible', 'edit': 'invisible'},
                          },
-                render_own_label=True,
+                render_own_label=False,
             )
         ),
     ]
@@ -417,6 +419,7 @@ class SampleSchemaExtender(object):
     def getFields(self):
         return self.fields
 
+
 class SampleSchemaModifier(object):
     adapts(ISample)
     implements(ISchemaModifier)
@@ -425,17 +428,38 @@ class SampleSchemaModifier(object):
         self.context = context
 
     def fiddle(self, schema):
+        if IVirusSample.providedBy(self.context):
+            hide_fields = ('DiseaseOntology', 'Donor', 'SamplingDate',
+                    'SampleCondition', 'SubjectID')
+            for fn in hide_fields:
+                if fn in schema:
+                    schema[fn].widget.render_own_label = False,
+                    schema[fn].widget.visible={'edit': 'invisible',
+                             'view': 'invisible',
+                             'header_table': 'invisible',
+                             'sample_registered': {'view': 'invisible', 'edit': 'invisible'},
+                             'sample_due': {'view': 'invisible', 'edit': 'invisible'},
+                             'sampled': {'view': 'invisible', 'edit': 'invisible'},
+                             'sample_received': {'view': 'invisible', 'edit': 'invisible'},
+                             'expired': {'view': 'invisible', 'edit': 'invisible'},
+                             'disposed': {'view': 'invisible', 'edit': 'invisible'},
+                             }
         return schema
 
 
 class Sample(BaseSample):
     """ Inherits from bika.lims.content.sample
     """
+    security = ClassSecurityInfo()
     _at_rename_after_creation = True
 
     def _renameAfterCreation(self, check_auto_id=False):
         from baobab.lims.idserver import renameAfterCreation
         renameAfterCreation(self)
+
+    security.declareProtected(permissions.View, 'getSchema')
+    def getSchema(self):
+        return self.schema
 
     def getProjectUID(self):
         if self.aq_parent.Title() == 'Biospecimens':
@@ -482,9 +506,9 @@ class Sample(BaseSample):
 
         self.getField('WillReturnFromShipment').set(self, False)
         location = self.getField('ReservedLocation').get(self)
-        review_state = self.portal_workflow.getInfoFor(location, 'review_state')
 
         if location is not None:
+            review_state = self.portal_workflow.getInfoFor(location, 'review_state')
             if review_state in ('reserved', 'available'):
                 self.setStorageLocation(location)
                 doActionFor(location, 'occupy')

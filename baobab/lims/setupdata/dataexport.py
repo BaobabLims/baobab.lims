@@ -94,6 +94,9 @@ class ExportView(IV):
         exporter = SamplesExporter(self.context)
         export_dict['Samples'] = exporter.export()
 
+        exporter = VirusSamplesExporter(self.context)
+        export_dict['VirusSamples'] = exporter.export()
+
         exporter = SampleShipmentExporter(self.context)
         export_dict['Sample Shipment'] = exporter.export()
 
