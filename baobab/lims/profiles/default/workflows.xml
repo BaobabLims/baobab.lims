@@ -13,6 +13,7 @@
 <object name="bika_storage_workflow" meta_type="Workflow"/>
 <object name="bika_storageposition_workflow" meta_type="Workflow"/>
 <object name="bika_sample_workflow" meta_type="Workflow"/>
+<object name="bika_viral_genomic_analysis" meta_type="Workflow"/>
 
 <bindings>
     <type type_id="KitTemplates"/>
@@ -173,9 +174,13 @@
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>
 
-    <type type_id="ViralGenomicAnalyses"/>
-    <type type_id="ViralGenomicAnalysis">
+    <type type_id="ViralGenomicAnalyses">
         <bound-workflow workflow_id="bika_one_state_workflow"/>
+        <bound-workflow workflow_id="bika_inactive_workflow"/>
+    </type>
+
+    <type type_id="ViralGenomicAnalysis">
+        <bound-workflow workflow_id="bika_viral_genomic_analysis"/>
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>
 
