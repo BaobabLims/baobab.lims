@@ -37,7 +37,7 @@
 
     <table class="storage" style="border-collapse: collapse; width: 100%;">
         <tbody>
-        <tr>
+        <tr style="background: #f0f0f2;">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Title </th>
             <td tal:content="view/title" style="border: 1px solid #cecfd5;
@@ -50,13 +50,13 @@
                                                padding: 10px 15px;"></td>
         </tr>
 
-        <tr tal:condition="view/project" style="background: #f0f0f2;">
+        <tr tal:condition="here/getProject">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Project</th>
-            <td tal:content="view/project" style="border: 1px solid #cecfd5;
+            <td tal:content="python: context.getProject().Title()" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
-        <tr tal:condition="view/date_created">
+        <tr tal:condition="view/date_created" style="background: #f0f0f2;">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Date Created</th>
             <td tal:content="view/date_created" style="border: 1px solid #cecfd5;
@@ -68,13 +68,13 @@
             <td tal:content="view/will_extract" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
-        <tr tal:condition="view/will_aliquot" style="background: #f0f0f2;">
+        <tr tal:condition="view/will_aliquot">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Will Aliquot</th>
             <td tal:content="view/will_aliquot" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
-        <tr tal:condition="view/will_quantify">
+        <tr tal:condition="view/will_quantify" style="background: #f0f0f2;">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Will Quantify</th>
             <td tal:content="view/will_quantify" style="border: 1px solid #cecfd5;
@@ -86,7 +86,7 @@
             <td tal:content="view/will_viral_load_determine" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
-        <tr tal:condition="view/will_library_prep">
+        <tr tal:condition="view/will_library_prep" style="background: #f0f0f2;">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Will Library Prep</th>
             <td tal:content="view/will_library_prep" style="border: 1px solid #cecfd5;
@@ -96,35 +96,102 @@
         </tbody>
     </table>
 
+      <div class="field ArchetypesField-DataGridField"
+           tal:condition="python: context.getExtractGenomicMaterial()">
+          <label class="formQuestion"><span>Extract Genomic Material</span>:</label>
+          <br />
 
-     <table class="invoice-items items">
-        <tr>
-          <th style='text-align:left;' i18n:translate=''>Title</th>
-          <th style='text-align:left;' i18n:translate=''>Virus Sample</th>
-          <th style='text-align:left;' i18n:translate=''>Heat Inactivated</th>
-          <th style='text-align:left;' i18n:translate=''>Method</th>
-          <th style='text-align:left;' i18n:translate=''>New Barcode</th>
-          <th style='text-align:left;' i18n:translate=''>New Volume</th>
-          <th style='text-align:left;' i18n:translate=''>New Unit</th>
-          <th style='text-align:left;' i18n:translate=''>Was Kit Used</th>
-          <th style='text-align:left;' i18n:translate=''>Kit Number</th>
-          <th style='text-align:left;' i18n:translate=''>Notes</th>
-        </tr>
-        <tr tal:repeat="extract view/extract_genomic_material">
-
-            <td  style='text-align:left;' tal:content="python:extract['title']">title</td>
-            <td  style='text-align:left;' tal:content="python:extract['virus_sample']">virus_sample</td>
-            <td  style='text-align:left;' tal:content="python:extract['heat_inactivated']">heat_inactivated</td>
-            <td  style='text-align:left;' tal:content="python:extract['method']">method</td>
-            <td  style='text-align:left;' tal:content="python:extract['extraction_barcode']">extraction_barcode</td>
-            <td  style='text-align:left;' tal:content="python:extract['volume']">volume</td>
-            <td  style='text-align:left;' tal:content="python:extract['unit']">unit</td>
-            <td  style='text-align:left;' tal:content="python:extract['was_kit_used']">was_kit_used</td>
-            <td  style='text-align:left;' tal:content="python:extract['kit_number']">kit_number</td>
-            <td  style='text-align:left;' tal:content="python:extract['notes']">notes</td>
-
-        </tr>
-     </table>
+        <table class="datagridwidget-table-view listing">
+            <thead>
+                <tr>
+                  <th i18n:translate=''>Title</th>
+                  <th i18n:translate=''>Virus Sample</th>
+                  <th i18n:translate=''>Heat Inactivated</th>
+                  <th i18n:translate=''>Method</th>
+                  <th i18n:translate=''>New Barcode</th>
+                  <th i18n:translate=''>New Volume</th>
+                  <th i18n:translate=''>New Unit</th>
+                  <th i18n:translate=''>Was Kit Used</th>
+                  <th i18n:translate=''>Kit Number</th>
+                  <th i18n:translate=''>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr tal:repeat="extract python:context.getExtractGenomicMaterial()">
+                     <td class="col-1">
+                         <span>
+                             <div tal:content="extract/ExtractionBarcode">
+                                 Title
+                             </div>
+                         </span>
+                    </td>
+                     <td class="col-2">
+                         <span>
+                             <div tal:content="python: context.Vocabulary_Sample().getValue(extract['VirusSample'])">
+                                 Virus Sample Title
+                             </div>
+                         </span>
+                    </td>
+                     <td class="col-3">
+                         <span>
+                             <div tal:content="extract/HeatInactivated">
+                                 HeatInactivated
+                             </div>
+                         </span>
+                    </td>
+                     <td class="col-4">
+                         <span>
+                             <div tal:content="python: context.Vocabulary_Method().getValue(extract['Method'])">
+                                 Method
+                             </div>
+                         </span>
+                    </td>
+                     <td class="col-5">
+                         <span>
+                             <div tal:content="extract/ExtractionBarcode">
+                                 HeatInactivated
+                             </div>
+                         </span>
+                    </td>
+                     <td class="col-6">
+                         <span>
+                             <div tal:content="extract/Volume">
+                                 Volume
+                             </div>
+                         </span>
+                    </td>
+                     <td class="col-7">
+                         <span>
+                             <div tal:content="extract/Unit">
+                                 Unit
+                             </div>
+                         </span>
+                    </td>
+                     <td class="col-8">
+                         <span>
+                             <div tal:content="extract/WasKitUsed">
+                                 WasKitUsed
+                             </div>
+                         </span>
+                    </td>
+                     <td class="col-9">
+                         <span>
+                             <div tal:content="extract/KitNumber">
+                                 KitNumber
+                             </div>
+                         </span>
+                    </td>
+                     <td class="col-10">
+                         <span>
+                             <div tal:content="extract/Notes">
+                                 Notes
+                             </div>
+                         </span>
+                    </td>
+                </tr>
+            </tbody>
+          </table>
+      </div>
 
 
     <div id="div-virus-sample-aliquots" tal:define="sdict view/virus_aliquots">
@@ -154,7 +221,150 @@
         </table>
     </div>
 
+      <div class="field ArchetypesField-DataGridField"
+           tal:condition="python: context.getGenomeQuantification()">
+          <label class="formQuestion"><span>Genome Quantification</span>:</label>
+          <br />
+        <table class="datagridwidget-table-view listing">
+            <thead>
+                <tr>
+                    <th class="">Virus Sample</th>
+                    <th class="">Fluorimeter Conc (ng/ul)</th>
+                    <th class="">Nanometer Conc (ng/ul)</th>
+                    <th class="">Nanometer Ratio (260/280)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="even" tal:repeat="genome python: context.getGenomeQuantification()">
+                     <td class="col-1">
+                         <span>
+                             <div tal:content="python: context.Vocabulary_Sample().getValue(genome['VirusSample'])">
+                                 Virus Sample Title
+                             </div>
+                         </span>
+                    </td>
+                                         <td class="col-2">
+                         <span><div tal:content="genome/FluorimeterConc">Fluorimeter Conc</div></span>
+                    </td>
+                     <td class="col-3">
+                         <span><div tal:content="genome/NanometerQuantity">NanometerQuantity</div></span>
+                    </td>
+                     <td class="col-4">
+                         <span><div tal:content="genome/NanometerRatio">NanometerRatio</div></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
+
+    <div class="field ArchetypesField-DataGridField"
+         tal:condition="python: context.getViralLoadDetermination()">
+        <label class="formQuestion"><span>Viral Load Determination</span>:</label>
+        <br />
+      <label class="formQuestion">
+          <span>Title</span>:
+          <span tal:content="here/getViralLoadDeterminationTitle">Title</span>
+      </label>
+        <br />
+      <label class="formQuestion">
+          <span>Description</span>:
+          <span tal:content="here/getViralLoadDeterminationDescription">Description</span>
+      </label>
+        <br />
+      <label class="formQuestion">
+          <span>Gene Name</span>:
+          <span tal:content="here/getViralLoadDeterminationGeneName">Gene Name</span>
+      </label>
+        <br />
+      <label class="formQuestion">
+          <span>Date</span>:
+          <span tal:content="here/getViralLoadDeterminationDate">Date</span>
+      </label>
+        <br />
+      <table class="datagridwidget-table-view listing">
+          <thead>
+              <tr>
+                  <th class="">PCR</th>
+                  <th class="">ct Value</th>
+                  <th class="">Kit Lot #</th>
+                  <th class="">Result</th>
+                  <th class="">Add to Report</th>
+                  <th class="">Notes</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr class="even" tal:repeat="vload python: context.getViralLoadDetermination()">
+                   <td class="col-1">
+                       <span><div tal:content="vload/PCR">PCR</div></span>
+                  </td>
+                   <td class="col-2">
+                       <span><div tal:content="vload/ctValue">ctValue</div></span>
+                  </td>
+                   <td class="col-3">
+                       <span><div tal:content="vload/KitNumber">KitNumber</div></span>
+                  </td>
+                   <td class="col-4">
+                       <span><div tal:content="vload/Result">Result</div></span>
+                  </td>
+                   <td class="col-5">
+                       <span><div tal:content="vload/AddToReport">AddToReport</div></span>
+                  </td>
+                   <td class="col-6">
+                       <span><div tal:content="vload/Notes">Notes</div></span>
+                  </td>
+              </tr>
+          </tbody>
+      </table>
+    </div>
+      <div class="field ArchetypesField-DataGridField"
+           tal:condition="python: context.getSequencingLibraryPrep()">
+          <label class="formQuestion"><span>Sequencing Library Prep</span>:</label>
+          <br />
+
+        <table class="datagridwidget-table-view listing">
+            <thead>
+                <tr>
+                  <th i18n:translate=''>Virus Sample</th>
+                  <th i18n:translate=''>Method</th>
+                  <th i18n:translate=''>Kit Number</th>
+                  <th i18n:translate=''>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr tal:repeat="extract python:context.getSequencingLibraryPrep()">
+                     <td class="col-1">
+                         <span>
+                             <div tal:content="python: context.Vocabulary_Sample().getValue(extract['VirusSample'])">
+                                 Virus Sample Title
+                             </div>
+                         </span>
+                    </td>
+                     <td class="col-2">
+                         <span>
+                             <div tal:content="python: context.Vocabulary_Method().getValue(extract['Method'])">
+                                 Method
+                             </div>
+                         </span>
+                    </td>
+                     <td class="col-3">
+                         <span>
+                             <div tal:content="extract/KitNumber">
+                                 KitNumber
+                             </div>
+                         </span>
+                    </td>
+                     <td class="col-4">
+                         <span>
+                             <div tal:content="extract/Notes">
+                                 Notes
+                             </div>
+                         </span>
+                    </td>
+                </tr>
+            </tbody>
+          </table>
+      </div>
 
 </metal:content-core>
 

@@ -2,16 +2,27 @@ function ViralGenomicAnalysisAddView(){
     this.load = function(){
         // disable browser auto-complete
         $('input[type=text]').prop('autocomplete', 'off');
-        setUpUI();
+        hideOtherTabs()
+        // setUpUI();
     }
 
     function setUpUI() {
         removeExtraControls();
-        // buildExtractGenomicMaterial();
-        // extractGenomicMaterial();
-        // extractGenomicMaterial().buildExtractGenomicMaterial();
-
         addSaveAndCancelButtons();
+    }
+    function hideOtherTabs() {
+        var processes = {'WillQuantify': 'genome-quantification',
+                         'WillExtract': 'extract-genomic-material',
+                         'WillAliquot': 'virus-sample-aliquot',
+                         'WillViralLoadDetermine': 'viral-load-determination',
+                         'WillLibraryPrep': 'sequencing-library-prep'}
+        $.each(processes, function( key, value ) {
+            if ($('#'+key).prop("checked")){
+                $('#fieldsetlegend-'+value).show();
+            }else{
+                $('#fieldsetlegend-'+value).hide();
+            }
+        });
     }
 
     function removeExtraControls(){
