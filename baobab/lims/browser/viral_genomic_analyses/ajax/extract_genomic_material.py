@@ -48,7 +48,7 @@ class AjaxCreateExtractGenomicMaterial(BrowserView):
             self.request.RESPONSE.setStatus(500)
             self.request.RESPONSE.write(error_message)
         else:
-            output = json.dumps ({
+            output = json.dumps({
                 'url': viral_genomic_analysis_obj.absolute_url()
             })
 

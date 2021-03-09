@@ -124,7 +124,37 @@
             <td  style='text-align:left;' tal:content="python:extract['notes']">notes</td>
 
         </tr>
-      </table>
+     </table>
+
+
+    <div id="div-virus-sample-aliquots" tal:define="sdict view/virus_aliquots">
+
+        <h3>Virus Sample Aliquots</h3>
+        <table class="invoice-items items" tal:repeat="key sdict">
+            <caption tal:content="key"></caption>
+            <thead>
+                <tr>
+                    <th style='text-align:left;' i18n:translate=''>Barcode</th>
+                    <th style='text-align:left;' i18n:translate=''>Volume</th>
+                    <th style='text-align:left;' i18n:translate=''>Unit</th>
+                    <th style='text-align:left;' i18n:translate=''>Sample Type</th>
+                    <th style='text-align:left;' i18n:translate=''>Date Created</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr tal:repeat="row python:sdict[key]">
+                    <td  style='text-align:left;' tal:content="row/barcode"></td>
+                    <td  style='text-align:left;' tal:content="row/volume"></td>
+                    <td  style='text-align:left;' tal:content="row/unit"></td>
+                    <td  style='text-align:left;' tal:content="row/sample_type"></td>
+                    <td  style='text-align:left;' tal:content="row/date_created"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
 
 </metal:content-core>
 

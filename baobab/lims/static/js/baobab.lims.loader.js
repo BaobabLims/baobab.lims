@@ -40,6 +40,8 @@ window.baobab.lims.controllers =  {
         ['ViralGenomicAnalysisAddView'],
     "#fieldset-extract-genomic-material":
         ['ExtractGenomicMaterialAddView'],
+    "#fieldset-virus-sample-aliquot":
+        ['VirusSampleAliquotAddView'],
 };
 
 /**

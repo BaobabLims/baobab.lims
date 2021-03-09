@@ -22,8 +22,6 @@ class AjaxGetMethods(BrowserView):
         catalog = 'portal_catalog'
         portal_catalog = getToolByName(self.context, catalog)
         brains = portal_catalog(portal_type='Method')
-        print('---------------Methods')
-        print(brains)
 
         for brain in brains:
             method = brain.getObject()

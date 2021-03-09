@@ -38,11 +38,19 @@
       class=".ajax.get_content_types.AjaxGetMethods"
       permission="zope.Public"
     />
-    <!--<browser:page-->
-      <!--for="...interfaces.IViralGenomicAnalysis"-->
-      <!--name="ajax_save_viral_genomic_analysis"-->
-      <!--class=".ajax.viral_genomic_analysis.AjaxCreateViralGenomicAnalysis"-->
-      <!--permission="zope.Public"-->
-    <!--/>-->
+
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="ajax_create_virus_aliquots"
+      class=".ajax.create_aliquots.AjaxCreateVirusSampleAliquots"
+      permission="zope.Public"
+    />
+
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="ajax_retrieve_saved_aliquots"
+      class=".ajax.retrieve_aliquots.AjaxRetrieveSavedAliquots"
+      permission="zope.Public"
+    />
 
 </configure>

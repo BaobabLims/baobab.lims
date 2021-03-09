@@ -19,16 +19,17 @@ ParentSample = ReferenceField(
     relationship='VirusAliquotVirusSample',
     referenceClass=HoldingReference,
     widget=bika_ReferenceWidget(
-        label=_("Select Project"),
+        label=_("Select Parent sample"),
         visible={'edit': 'visible', 'view': 'visible'},
         size=30,
         showOn=True,
-        description=_("Select the project of the sample donor."),
+        description=_("Select the parent sample of this aliquoting."),
     )
 )
 
 AliquotSample = ReferenceField(
     'AliquotSample',
+    multiValued=1,
     allowed_types=('Sample',),
     relationship='VirusAliquotAliquotSample',
     referenceClass=HoldingReference,
