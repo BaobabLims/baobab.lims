@@ -499,7 +499,7 @@ class VirusSample(Sample):
     _at_rename_after_creation = True
 
     def _renameAfterCreation(self, check_auto_id=False):
-        from bika.lims.idserver import renameAfterCreation
+        from baobab.lims.idserver import renameAfterCreation
         renameAfterCreation(self)
 
     def getInstruments(self):
