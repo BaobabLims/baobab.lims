@@ -121,7 +121,7 @@ ExtractGenomicMaterial = DataGridField(
         label=_('Extract Genomic Materials'),
         columns={
             'VirusSample': SelectColumn(
-                'Virus Sample', vocabulary='Vocabulary_Sample'),
+                'Virus Sample', vocabulary='Vocabulary_VirusSample_by_ProjectUID'),
             'Method': SelectColumn('Method', vocabulary='Vocabulary_Method'),
             'ExtractionBarcode': Column('Extraction Barcode'),
             'Volume': Column('Volume'),
@@ -142,7 +142,7 @@ GenomeQuantification = DataGridField(
     allow_reorder=False,
     allow_empty_rows=False,
     allow_oddeven=True,
-    columns=('VirusSample',
+    columns=('VirusSampleRNAorDNA',
              'FluorimeterConc',
              'NanometerQuantity',
              'NanometerRatio',
@@ -150,7 +150,9 @@ GenomeQuantification = DataGridField(
     widget=DataGridWidget(
         label=_('Fluorimeter/Nanometer'),
         columns={
-            'VirusSample': SelectColumn('Virus Sample', vocabulary='Vocabulary_Sample'),
+            'VirusSampleRNAorDNA': SelectColumn(
+                'Virus Sample by RNA/DNA',
+                vocabulary='Vocabulary_Sample_RNA_or_DNA'),
             'FluorimeterConc': Column('Fluorimeter Conc (ng/ul)'),
             'NanometerQuantity': Column('Nanometer Conc (ng/ul)'),
             'NanometerRatio': Column('Nanometer Ratio (260/280)')
@@ -223,7 +225,7 @@ ViralLoadDetermination = DataGridField(
     allow_reorder=False,
     allow_empty_rows=False,
     allow_oddeven=True,
-    columns=('PCR',
+    columns=('VirusSampleRNAorDNA',
              'ctValue',
              'KitNumber',
              'Result',
@@ -233,7 +235,9 @@ ViralLoadDetermination = DataGridField(
     widget=DataGridWidget(
         label=_('Viral Load Determination(RT-PCR)'),
         columns={
-            'PCR': Column('PCR'),
+            'VirusSampleRNAorDNA': SelectColumn(
+                'Virus Sample by RNA/DNA',
+                vocabulary='Vocabulary_Sample_RNA_or_DNA'),
             'ctValue': Column('ct Value'),
             'KitNumber': Column('Kit Lot #'),
             'Result': CheckboxColumn('Result'),
@@ -250,20 +254,18 @@ SequencingLibraryPrep = DataGridField(
     allow_reorder=False,
     allow_empty_rows=False,
     allow_oddeven=True,
-    columns=('VirusSample',
+    columns=('VirusSampleRNAorDNA',
              'Method',
              'LibraryID',
-             'KitNumber',
              'Notes',
              ),
     widget=DataGridWidget(
         label=_('Sequencing Library Prep'),
         columns={
-            'VirusSample': SelectColumn(
-                'Virus Sample', vocabulary='Vocabulary_Sample'),
+            'VirusSampleRNAorDNA': SelectColumn(
+                'Virus Sample by RNA/DNA', vocabulary='Vocabulary_Sample_RNA_or_DNA'),
             'Method': SelectColumn('Method', vocabulary='Vocabulary_Method'),
             'LibraryID': Column('Library ID'),
-            'KitNumber': Column('Kit Lot #'),
             'Notes': LinesColumn('Notes'),
         }
     )
@@ -300,6 +302,9 @@ class ViralGenomicAnalysis(BaseContent):
     def _renameAfterCreation(self, check_auto_id=False):
         from bika.lims.idserver import renameAfterCreation
         renameAfterCreation(self)
+
+    def getProjectUID(self):
+        return self.getProject().UID() if self.getProject() else None
 
     # def prepare_extract_genomic_material(self):
     #
@@ -383,6 +388,43 @@ class ViralGenomicAnalysis(BaseContent):
         vocabulary = CatalogVocabulary(self)
         vocabulary.catalog = 'bika_catalog'
         return vocabulary(allow_blank=True, portal_type='VirusSample')
+
+    def getVirusSamplesByProjectUID(self, project_uid=None):
+        # TODO: which catalog?
+        pc = getToolByName(self, 'bika_catalog')
+        # TODO: Add getProjectUID index or column instead,
+        # so that self.getProjectUID will be available
+        items = [('','')]
+        if not project_uid:
+            project_uid = self.getProjectUID()
+        if not project_uid:
+            return items
+
+        brains = pc(portal_type="VirusSample", getProjectUID=project_uid)
+        if not brains:
+            return DisplayList(items)
+        return [('', '')] + [(c.UID, c.Title) for c in brains]
+
+    def Vocabulary_VirusSample_by_ProjectUID(self, project_uid=None):
+        return DisplayList(self.getVirusSamplesByProjectUID())
+
+    def Vocabulary_Sample_RNA_or_DNA(self):
+        pc = getToolByName(self, 'bika_catalog')
+        # TODO: Add getProjectUID index or column instead,
+        # so that self.getProjectUID will be available
+        project_uid = self.getProjectUID()
+        if not project_uid:
+            items = [('','')]
+            return DisplayList(items)
+
+        # TODO:
+        # filter by prefix or title
+        # add prefix/title index or column
+        brains = pc(portal_type="VirusSample", getProjectUID=project_uid)
+        if not brains:
+            brians = []
+        items = [('', '')] + [(c.UID, c.Title) for c in brains]
+        return DisplayList(items)
 
     def Vocabulary_Method(self):
         vocabulary = CatalogVocabulary(self)
