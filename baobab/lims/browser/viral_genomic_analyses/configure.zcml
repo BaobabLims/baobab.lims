@@ -53,4 +53,11 @@
       permission="zope.Public"
     />
 
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="ajax_retrieve_tab_display_info"
+      class=".ajax.retrieve_tab_display_info.AjaxRetrieveTabDisplayInfo"
+      permission="zope.Public"
+    />
+
 </configure>

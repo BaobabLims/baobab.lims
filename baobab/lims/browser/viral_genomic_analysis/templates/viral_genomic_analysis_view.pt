@@ -206,6 +206,7 @@
                     <th style='text-align:left;' i18n:translate=''>Unit</th>
                     <th style='text-align:left;' i18n:translate=''>Sample Type</th>
                     <th style='text-align:left;' i18n:translate=''>Date Created</th>
+                    <!--?<th style='text-align:left;' i18n:translate=''>Time Created</th>-->
                 </tr>
             </thead>
 
@@ -216,6 +217,7 @@
                     <td  style='text-align:left;' tal:content="row/unit"></td>
                     <td  style='text-align:left;' tal:content="row/sample_type"></td>
                     <td  style='text-align:left;' tal:content="row/date_created"></td>
+                    <!--?<td  style='text-align:left;' tal:content="row/time_created"></td>-->
                 </tr>
             </tbody>
         </table>

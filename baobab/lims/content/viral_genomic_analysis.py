@@ -343,8 +343,8 @@ class ViralGenomicAnalysis(BaseContent):
                 "volume": aliquot.getField('Volume').get(aliquot),
                 "unit": aliquot.getField('Unit').get(aliquot),
                 "sample_type": self.get_sample_type(aliquot),
-                'date_created': aliquot.getField('DateCreated').get(aliquot).strftime("%Y-%m-%d"),
-                'time_created': aliquot.getField('DateCreated').get(aliquot).strftime("%H:%M:%S"),
+                'date_created': aliquot.getField('DateCreated').get(aliquot).strftime("%Y-%m-%d %H:%M"),
+                # 'time_created': aliquot.getField('DateCreated').get(aliquot).strftime("%H:%M:%S"),
                 # 'date_created': aliquot.getField('DateCreated').get(aliquot),
             }
             prepared_aliquots.append(prepared_extract)

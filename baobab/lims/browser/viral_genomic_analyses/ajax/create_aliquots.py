@@ -152,32 +152,40 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
     def create_aliquot(self, parent_sample,  aliquot):
 
         try:
-            parent = parent_sample.aq_parent
+            parent_project = parent_sample.aq_parent
             unit = parent_sample.getField('Unit').get(parent_sample)
             sample_type = parent_sample.getField('SampleType').get(parent_sample)
 
-            obj = _createObjectByType('Sample', parent, tmpID())
+            print('------------Print project and sample type')
+            print(parent_project)
+            print(sample_type.__dict__)
+
+            obj = _createObjectByType('Sample', parent_project, tmpID())
 
             # Only change date created if a valid date created was send from client
             # If date created is there and time create is there as well create a date time object
             date_created = aliquot.get('datecreated', None)
             time_created = aliquot.get('timecreated', None)
             if date_created and time_created:
-                date_created = date_created + ' ' + time_created
-            if date_created:
-                obj.edit(
-                    DateCreated=date_created,
-                )
+                date_time_created = date_created + ' ' + time_created
+            else:
+                date_time_created = ''
+
+            print('------------date amd time created')
+            print(date_created)
+            print(time_created)
+            print(date_time_created)
 
             obj.edit(
                 title=aliquot['barcode'],
                 description='',
-                Project=parent,
+                Project=parent_project,
                 DiseaseOntology=parent_sample.getField('DiseaseOntology').get(parent_sample),
                 Donor=parent_sample.getField('Donor').get(parent_sample),
                 SampleType=sample_type,
                 SubjectID=parent_sample.getField('SubjectID').get(parent_sample),
                 Barcode=aliquot['barcode'],
+                DateCreated=date_time_created,
                 Volume=aliquot['volume'],
                 Unit=unit,
                 SamplingDate=parent_sample.getField('SamplingDate').get(parent_sample),
@@ -186,6 +194,9 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
 
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
+
+            from baobab.lims.subscribers.sample import ObjectInitializedEventHandler
+            ObjectInitializedEventHandler(obj, None)
             return obj
 
         except Exception as e:

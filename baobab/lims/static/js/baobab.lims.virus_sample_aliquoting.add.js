@@ -9,22 +9,14 @@ function VirusSampleAliquotAddView(){
     function buildVirusSampleAliquot(){
         var VSA = $('#fieldset-virus-sample-aliquot');
 
-        $('#archetypes-fieldname-VirusAliquot').remove();
-        displaySavedAliquots(VSA);
+        $('#archetypes-fieldname-VirusAliquot').hide();
         addAliquotsFromSamplesGroupStructure(VSA);
         addVirusSampleAliquotSaveAndCancelButtons(VSA);
-
-        // if ($('.portaltype-viralgenomicanalysis').hasClass('template-base_view')) {
-        //     addAliquotsFromSamplesGroupStructure(VSA);
-        //     addVirusSampleAliquotSaveAndCancelButtons(VSA);
-        // } else {
-        //     displaySavedAliquots(VSA);
-        // }
-
+        displaySavedAliquots(VSA);
     }
 
     function displaySavedAliquots(VSA){
-        $(VSA).append('<div class="div-saved-aliquots" style="border: solid; border-width: thin; margin: 10px; padding: 5px;"></div>');
+        $(VSA).prepend('<div class="div-saved-aliquots" style="border: solid; border-width: thin; margin: 10px; padding: 5px;"></div>');
         var vga_data = get_viral_genomic_analysis_uid();
         buildSavedAliquotsDisplay(vga_data);
     }
@@ -55,7 +47,7 @@ function VirusSampleAliquotAddView(){
                     sample_count = sample_count + 1;
                     var sample_table_id = 'body-aliquoted-sample-' + sample_count;
                     var aliquoted_sample_div_id = 'div-aliquoted-sample-' + sample_count;
-                    $(".div-saved-aliquots").append('\
+                    $(".div-saved-aliquots").prepend('\
                         <div class="aliquoted_sample" style="border: solid; border-width: thin; margin: 10px; padding: 5px;">\
                             <h2>' + sample + '</h2>\
                             <table class="storage" style="border-collapse: collapse; width: 100%;">\
@@ -65,6 +57,7 @@ function VirusSampleAliquotAddView(){
                                         <th>Volume</th>\
                                         <th>Unit</th>\
                                         <th>Sample Type</th>\
+                                        <th>Date Created</th>\
                                     </tr>\
                                 </thead>\
                                 <tbody id=' + sample_table_id + '>\
@@ -80,11 +73,17 @@ function VirusSampleAliquotAddView(){
                                     <td>' + aliquot.volume + '</td>\
                                     <td>' + aliquot.unit + '</td>\
                                     <td>' + aliquot.sample_type + '</td>\
+                                    <td>' + aliquot.date_created + '</td>\
                                 </td>\
                             ';
                         $("#" + sample_table_id).append(displayed_row);
                     })
                 });
+
+                if (sample_count > 0){
+                    $('.div-aliquot-from-sample').remove()
+                    $('.savecancel_virus_sample_aliquot_buttons').remove()
+                }
             },
             error: function (data) {
                 $("#error_message").css("display", "block");
@@ -528,28 +527,6 @@ function VirusSampleAliquotAddView(){
         populate_dropdowns('extract_row_method_' + row_count, 'methods');
 
     }
-
-    // function addTableRowManageButtons(div){
-    //
-    //     var buttons = '\
-    //         <div class="extract_table_buttons">\
-    //             <button class="extra-extract-row">Add Centrifuge Row</button>\
-    //             <button class="remove-last-extract-row">Remove Last Row</button>\
-    //         </div>\
-    //     ';
-    //     $(div).append(buttons);
-    //
-    //     $('.extra-extract-row').click(function(event){
-    //         event.preventDefault();
-    //         var table_body = $('.body-extract-genomic-material');
-    //         appendTableRow(table_body);
-    //     });
-    //
-    //     $('.remove-last-extract-row').click(function(event){
-    //         event.preventDefault();
-    //         $('.' + 'body-extract-genomic-material' + ' tr:last').remove();
-    //     });
-    // }
 
     function populate_dropdowns(dropdown_id, populate_type){
         var path = window.location.href.split('/viral_genomic_analyses')[0];
