@@ -166,6 +166,7 @@ WillLibraryPrep = BooleanField(
 ExtractGenomicMaterial = DataGridField(
     'ExtractGenomicMaterial',
     schemata='Extract Genomic Material',
+    validators=('extractgenomicmaterialvalidator'),
     allow_insert=True,
     allow_delete=True,
     allow_reorder=False,
