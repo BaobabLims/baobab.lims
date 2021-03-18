@@ -21,6 +21,7 @@ from Products.DataGridField import LinesColumn
 from Products.DataGridField import SelectColumn
 from bika.lims.vocabularies import CatalogVocabulary
 
+
 Project = ReferenceField(
     'Project',
     allowed_types=('Project',),
@@ -29,10 +30,19 @@ Project = ReferenceField(
     required=True,
     widget=bika_ReferenceWidget(
         label=_("Select Project"),
-        visible={'edit': 'visible', 'view': 'visible'},
         size=30,
         showOn=True,
         description=_("Select the project for the viral genomic analysis."),
+        visible={
+         'edit': 'visible',
+         'view': 'visible',
+         'created': {'view': 'visible', 'edit': 'visible'},
+         'extracted_genomic_material': {'view': 'invisible', 'edit': 'invisible'},
+         'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
+         'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
+         'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
+         'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
+     },
     )
 )
 
@@ -45,7 +55,16 @@ DateCreated = DateTimeField(
         label=_("Date Created"),
         description=_("Define when the Viral Genomic Analysis has been created."),
         show_time=True,
-        visible={'edit': 'visible', 'view': 'visible'}
+        visible={
+         'edit': 'visible',
+         'view': 'visible',
+         'created': {'view': 'visible', 'edit': 'visible'},
+         'extracted_genomic_material': {'view': 'invisible', 'edit': 'invisible'},
+         'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
+         'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
+         'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
+         'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
+     },
     )
 )
 
@@ -55,7 +74,16 @@ WillExtract = BooleanField(
     widget=BooleanWidget(
         label="Will Extract",
         description="Whether or not to Extract Genomic Material",
-        visible={'edit': 'visible', 'view': 'visible'}
+        visible={
+         'edit': 'visible',
+         'view': 'visible',
+         'created': {'view': 'visible', 'edit': 'visible'},
+         'extracted_genomic_material': {'view': 'invisible', 'edit': 'invisible'},
+         'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
+         'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
+         'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
+         'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
+     },
     )
 )
 
@@ -65,7 +93,16 @@ WillAliquot = BooleanField(
     widget=BooleanWidget(
         label="Aliquoting",
         description="Whether new Aliquots will be created",
-        visible={'edit': 'visible', 'view': 'visible'}
+        visible={
+         'edit': 'visible',
+         'view': 'visible',
+         'created': {'view': 'visible', 'edit': 'visible'},
+         'extracted_genomic_material': {'view': 'invisible', 'edit': 'invisible'},
+         'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
+         'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
+         'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
+         'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
+     },
     )
 )
 
@@ -75,7 +112,16 @@ WillQuantify = BooleanField(
     widget=BooleanWidget(
         label="Will Quantify",
         description="Whether Quantifying will occur",
-        visible={'edit': 'visible', 'view': 'visible'}
+        visible={
+         'edit': 'visible',
+         'view': 'visible',
+         'created': {'view': 'visible', 'edit': 'visible'},
+         'extracted_genomic_material': {'view': 'invisible', 'edit': 'invisible'},
+         'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
+         'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
+         'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
+         'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
+     },
     )
 )
 
@@ -85,7 +131,16 @@ WillViralLoadDetermine = BooleanField(
     widget=BooleanWidget(
         label="Confirm Viral Load Determine",
         description="Whether viral load will be determined",
-        visible={'edit': 'visible', 'view': 'visible'}
+        visible={
+         'edit': 'visible',
+         'view': 'visible',
+         'created': {'view': 'visible', 'edit': 'visible'},
+         'extracted_genomic_material': {'view': 'invisible', 'edit': 'invisible'},
+         'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
+         'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
+         'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
+         'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
+     },
     )
 )
 
@@ -95,7 +150,16 @@ WillLibraryPrep = BooleanField(
     widget=BooleanWidget(
         label="Confirm Sequence Library Prep",
         description="Confirm if there will be Sequence Library Prep",
-        visible={'edit': 'visible', 'view': 'visible'}
+        visible={
+         'edit': 'visible',
+         'view': 'visible',
+         'created': {'view': 'visible', 'edit': 'visible'},
+         'extracted_genomic_material': {'view': 'invisible', 'edit': 'invisible'},
+         'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
+         'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
+         'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
+         'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
+     },
     )
 )
 
@@ -121,16 +185,117 @@ ExtractGenomicMaterial = DataGridField(
         label=_('Extract Genomic Materials'),
         columns={
             'VirusSample': SelectColumn(
-                'Virus Sample', vocabulary='Vocabulary_VirusSample_by_ProjectUID'),
-            'Method': SelectColumn('Method', vocabulary='Vocabulary_Method'),
-            'ExtractionBarcode': Column('Extraction Barcode'),
-            'Volume': Column('Volume'),
-            'Unit': Column('Unit'),
-            'HeatInactivated': CheckboxColumn('Heat Inactivated'),
-            'WasKitUsed': CheckboxColumn('Was Kit Used'),
-            'KitNumber': Column('Kit Lot #'),
-            'Notes': LinesColumn('Notes'),
-        }
+                'Virus Sample', 
+                vocabulary='Vocabulary_VirusSample_by_ProjectUID',
+                visible={
+                 'edit': 'visible',
+                 'view': 'visible',
+                 'created': {'view': 'visible', 'edit': 'visible'},
+                 'extracted_genomic_material': {'view': 'visible', 'edit': 'visible'},
+                 'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
+                 'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
+                 'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
+                 'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
+             },
+                ),
+            'Method': SelectColumn('Method', 
+                vocabulary='Vocabulary_Method',
+                visible={
+                 'edit': 'visible',
+                 'view': 'visible',
+                 'created': {'view': 'visible', 'edit': 'visible'},
+                 'extracted_genomic_material': {'view': 'visible', 'edit': 'visible'},
+                 'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
+                 'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
+                 'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
+                 'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
+             },
+                ),
+            'ExtractionBarcode': Column('Extraction Barcode',
+                visible={
+                 'edit': 'visible',
+                 'view': 'visible',
+                 'created': {'view': 'visible', 'edit': 'visible'},
+                 'extracted_genomic_material': {'view': 'visible', 'edit': 'visible'},
+                 'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
+                 'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
+                 'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
+                 'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
+             },
+                ),
+            'Volume': Column('Volume',
+                visible={
+                 'edit': 'visible',
+                 'view': 'visible',
+                 'created': {'view': 'visible', 'edit': 'visible'},
+                 'extracted_genomic_material': {'view': 'visible', 'edit': 'visible'},
+                 'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
+                 'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
+                 'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
+                 'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
+             },
+                ),
+            'Unit': Column('Unit',
+                visible={
+                 'edit': 'visible',
+                 'view': 'visible',
+                 'created': {'view': 'visible', 'edit': 'visible'},
+                 'extracted_genomic_material': {'view': 'visible', 'edit': 'visible'},
+                 'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
+                 'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
+                 'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
+                 'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
+             },
+                    ),
+            'HeatInactivated': CheckboxColumn('Heat Inactivated',
+                visible={
+                 'edit': 'visible',
+                 'view': 'visible',
+                 'created': {'view': 'visible', 'edit': 'visible'},
+                 'extracted_genomic_material': {'view': 'visible', 'edit': 'visible'},
+                 'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
+                 'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
+                 'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
+                 'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
+             },
+                    ),
+            'WasKitUsed': CheckboxColumn('Was Kit Used',
+                visible={
+                 'edit': 'visible',
+                 'view': 'visible',
+                 'created': {'view': 'visible', 'edit': 'visible'},
+                 'extracted_genomic_material': {'view': 'visible', 'edit': 'visible'},
+                 'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
+                 'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
+                 'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
+                 'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
+             },
+                    ),
+            'KitNumber': Column('Kit Lot #',
+                visible={
+                 'edit': 'visible',
+                 'view': 'visible',
+                 'created': {'view': 'visible', 'edit': 'visible'},
+                 'extracted_genomic_material': {'view': 'visible', 'edit': 'visible'},
+                 'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
+                 'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
+                 'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
+                 'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
+             },
+                    ),
+            'Notes': LinesColumn('Notes',
+                visible={
+                 'edit': 'visible',
+                 'view': 'visible',
+                 'created': {'view': 'visible', 'edit': 'visible'},
+                 'extracted_genomic_material': {'view': 'visible', 'edit': 'visible'},
+                 'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
+                 'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
+                 'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
+                 'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
+             },
+                    ),
+        },
     )
 )
 
@@ -152,10 +317,34 @@ GenomeQuantification = DataGridField(
         columns={
             'VirusSampleRNAorDNA': SelectColumn(
                 'Virus Sample by RNA/DNA',
-                vocabulary='Vocabulary_Sample_RNA_or_DNA'),
-            'FluorimeterConc': Column('Fluorimeter Conc (ng/ul)'),
-            'NanometerQuantity': Column('Nanometer Conc (ng/ul)'),
-            'NanometerRatio': Column('Nanometer Ratio (260/280)')
+                vocabulary='Vocabulary_Sample_RNA_or_DNA',
+                visible={
+                 'edit': 'visible',
+                 'view': 'visible',
+                 'created': {'view': 'visible', 'edit': 'visible'},
+             },
+                ),
+            'FluorimeterConc': Column('Fluorimeter Conc (ng/ul)',
+                visible={
+                 'edit': 'visible',
+                 'view': 'visible',
+                 'created': {'view': 'visible', 'edit': 'visible'},
+             },
+                ),
+            'NanometerQuantity': Column('Nanometer Conc (ng/ul)',
+                visible={
+                 'edit': 'visible',
+                 'view': 'visible',
+                 'created': {'view': 'visible', 'edit': 'visible'},
+             },
+                ),
+            'NanometerRatio': Column('Nanometer Ratio (260/280)',
+                visible={
+                 'edit': 'visible',
+                 'view': 'visible',
+                 'created': {'view': 'visible', 'edit': 'visible'},
+             },
+                )
         }
     )
 )
@@ -172,7 +361,11 @@ VirusAliquot = ReferenceField(
     write_permission=permissions.ModifyPortalContent,
     widget=bika_ReferenceWidget(
         label=_("Select Virus Aliquot"),
-        visible={'edit': 'visible', 'view': 'visible'},
+        visible={
+         'edit': 'visible',
+         'view': 'visible',
+         'created': {'view': 'visible', 'edit': 'visible'},
+     },
         size=30,
         showOn=True,
         description=_("Select the Virus Aliquot for the viral genomic analysis."),
@@ -213,7 +406,6 @@ ViralLoadDeterminationDate = DateTimeField(
         label=_("Date"),
         description=_("Viral Load Determination date."),
         show_time=False,
-        visible={'edit': 'visible', 'view': 'visible'}
     )
 )
 
@@ -229,6 +421,7 @@ ViralLoadDetermination = DataGridField(
              'ctValue',
              'KitNumber',
              'Result',
+             'PassOrFail',
              'AddToReport',
              'Notes',
              ),
@@ -240,7 +433,9 @@ ViralLoadDetermination = DataGridField(
                 vocabulary='Vocabulary_Sample_RNA_or_DNA'),
             'ctValue': Column('ct Value'),
             'KitNumber': Column('Kit Lot #'),
-            'Result': CheckboxColumn('Result'),
+            'Result': Column('Result'),
+            'PassOrFail': SelectColumn('Pass/Fail', vocabulary="Vocabulary_PassFail"
+                ),
             'AddToReport': CheckboxColumn('Add to report'),
             'Notes': LinesColumn('Notes')
         }
@@ -263,7 +458,9 @@ SequencingLibraryPrep = DataGridField(
         label=_('Sequencing Library Prep'),
         columns={
             'VirusSampleRNAorDNA': SelectColumn(
-                'Virus Sample by RNA/DNA', vocabulary='Vocabulary_Sample_RNA_or_DNA'),
+                'Virus Sample by RNA/DNA',
+                vocabulary='Vocabulary_Sample_RNA_or_DNA',
+                ),
             'Method': SelectColumn('Method', vocabulary='Vocabulary_Method'),
             'LibraryID': Column('Library ID'),
             'Notes': LinesColumn('Notes'),
@@ -384,6 +581,9 @@ class ViralGenomicAnalysis(BaseContent):
         except:
             return ''
 
+    def Vocabulary_PassFail(self):
+        return DisplayList([('Pass', 'Pass'),('Fail', 'Fail')])
+
     def Vocabulary_Sample(self):
         vocabulary = CatalogVocabulary(self)
         vocabulary.catalog = 'bika_catalog'
@@ -402,10 +602,10 @@ class ViralGenomicAnalysis(BaseContent):
 
         brains = pc(portal_type="VirusSample", getProjectUID=project_uid)
         if not brains:
-            return DisplayList(items)
+            return items
         return [('', '')] + [(c.UID, c.Title) for c in brains]
 
-    def Vocabulary_VirusSample_by_ProjectUID(self, project_uid=None):
+    def Vocabulary_VirusSample_by_ProjectUID(self):
         return DisplayList(self.getVirusSamplesByProjectUID())
 
     def Vocabulary_Sample_RNA_or_DNA(self):
