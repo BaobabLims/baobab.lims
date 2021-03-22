@@ -167,9 +167,6 @@ class ViralGenomicAnalysisWidgetVisibility(object):
         field_name = field.getName()
         wftool = self.context.portal_workflow
         review_state = wftool.getInfoFor(self.context, 'review_state')
-        schemata_tabs = ['Extract Genomic Material','Virus Sample Aliquot',
-                'Genome Quantification', 'Viral Load Determination',
-                'Sequencing Library Prep' ]
 
         if field_name == 'ViralLoadDetermination':
             if self.user_can_verify_vld():
@@ -184,9 +181,7 @@ class ViralGenomicAnalysisWidgetVisibility(object):
         allowed_roles = ['LabManager', 'Manager']
 
         for role in user.getRoles():
-            print(role)
             if role in allowed_roles:
                 return True
 
         return False
-

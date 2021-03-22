@@ -167,6 +167,7 @@ ExtractGenomicMaterial = DataGridField(
     'ExtractGenomicMaterial',
     schemata='Extract Genomic Material',
     validators=('extractgenomicmaterialvalidator'),
+    mutator='notifiedSetExtractGenomicMaterial',
     allow_insert=True,
     allow_delete=True,
     allow_reorder=False,
@@ -187,7 +188,9 @@ ExtractGenomicMaterial = DataGridField(
         columns={
             'VirusSample': SelectColumn(
                 'Virus Sample', 
+                col_description='Virus Sample(s) of the selected Project',
                 vocabulary='Vocabulary_VirusSample_by_ProjectUID',
+                required=True,
                 visible={
                  'edit': 'visible',
                  'view': 'visible',
@@ -213,6 +216,7 @@ ExtractGenomicMaterial = DataGridField(
              },
                 ),
             'ExtractionBarcode': Column('Extraction Barcode',
+                required=True,
                 visible={
                  'edit': 'visible',
                  'view': 'visible',
@@ -521,6 +525,7 @@ schema = BikaSchema.copy() + Schema((
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 schema['description'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 
+
 class ViralGenomicAnalysis(BaseContent):
     security = ClassSecurityInfo()
     implements(IViralGenomicAnalysis, IConstrainTypes)
@@ -535,27 +540,15 @@ class ViralGenomicAnalysis(BaseContent):
     def getProjectUID(self):
         return self.getProject().UID() if self.getProject() else None
 
-    # def prepare_extract_genomic_material(self):
-    #
-    #     extract_genomic_material_rows = self.getExtractGenomicMaterial()
-    #     prepared_extracts = []
-    #
-    #     for extract in extract_genomic_material_rows:
-    #         prepared_extract = {
-    #             'title': extract.Title(),
-    #             'virus_sample': self.get_virus_sample(extract),
-    #             'heat_inactivated': extract.getField('HeatInactivated').get(extract),
-    #             'method': self.get_method(extract),
-    #             'extraction_barcode': extract.getField('ExtractionBarcode').get(extract),
-    #             'volume': extract.getField('Volume').get(extract),
-    #             'unit': extract.getField('Unit').get(extract),
-    #             'was_kit_used': extract.getField('WasKitUsed').get(extract),
-    #             'kit_number': extract.getField('KitNumber').get(extract),
-    #             'notes': extract.getField('Notes').get(extract),
-    #         }
-    #         prepared_extracts.append(prepared_extract)
-    #
-    #     return prepared_extracts
+    security.declareProtected('Modify portal content', 'notifiedSetExtractGenomicMaterial')
+    def notifiedSetExtractGenomicMaterial(self, value, **kwargs):
+        old_value = self.getField('ExtractGenomicMaterial').get(self)
+        if old_value != value:
+            # TODO: Check and delete existig Biospecimans related to this
+            # extraction recreate from the new value
+            # maybe change state here aswell if we will be using the workflow
+            self.getField('ExtractGenomicMaterial').set(self, value)
+
 
     def prepare_virus_aliquots(self):
         virus_aliquots = self.getVirusAliquot()
