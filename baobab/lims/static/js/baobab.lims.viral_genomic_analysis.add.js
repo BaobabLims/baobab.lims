@@ -5,7 +5,7 @@ function ViralGenomicAnalysisAddView(){
         // hideOtherTabs()
         // setUpUI();
 
-        displayTabs();
+        // displayTabs();
     }
 
     function setUpUI() {
