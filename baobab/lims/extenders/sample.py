@@ -285,6 +285,8 @@ class SampleSchemaExtender(object):
         ExtStringField(
             'Unit',
             default="ml",
+            read_permission=permissions.View,
+            write_permission=permissions.ModifyPortalContent,
             widget=StringWidget(
                 label=_("Unit"),
                 visible={'edit': 'visible',

@@ -229,6 +229,7 @@ ViralLoadDetermination = DataGridField(
              'ctValue',
              'KitNumber',
              'Result',
+             'Verification',
              'AddToReport',
              'Notes',
              ),
@@ -237,10 +238,16 @@ ViralLoadDetermination = DataGridField(
         columns={
             'VirusSampleRNAorDNA': SelectColumn(
                 'Virus Sample by RNA/DNA',
-                vocabulary='Vocabulary_Sample_RNA_or_DNA'),
+                # vocabulary='Vocabulary_Sample_RNA_or_DNA'),
+                vocabulary='Vocabulary_VLD_Sample_RNA_or_DNA'),
             'ctValue': Column('ct Value'),
             'KitNumber': Column('Kit Lot #'),
-            'Result': CheckboxColumn('Result'),
+            'Result': SelectColumn(
+                'Result',
+                vocabulary='Vocabulary_VLD_Result'),
+            'Verification': SelectColumn(
+                'Verification',
+                vocabulary='Vocabulary_VLD_Verification'),
             'AddToReport': CheckboxColumn('Add to report'),
             'Notes': LinesColumn('Notes')
         }
@@ -406,7 +413,8 @@ class ViralGenomicAnalysis(BaseContent):
         return [('', '')] + [(c.UID, c.Title) for c in brains]
 
     def Vocabulary_VirusSample_by_ProjectUID(self, project_uid=None):
-        return DisplayList(self.getVirusSamplesByProjectUID())
+        return self.getVirusSamplesByProjectUID()
+        # return DisplayList(self.getVirusSamplesByProjectUID())
 
     def Vocabulary_Sample_RNA_or_DNA(self):
         pc = getToolByName(self, 'bika_catalog')
@@ -426,6 +434,37 @@ class ViralGenomicAnalysis(BaseContent):
         items = [('', '')] + [(c.UID, c.Title) for c in brains]
         return DisplayList(items)
 
+    def Vocabulary_VLD_Sample_RNA_or_DNA(self):
+        pc = getToolByName(self, 'portal_catalog')
+
+        # TODO: Add getProjectUID index or column instead,
+        project_uid = self.getProjectUID()
+        if not project_uid:
+            items = [('','')]
+            return DisplayList(items)
+
+        rna_dna_sample_types = self.getRNAorDNASampleTypes()
+        items = [('', '')]
+        brains = pc(portal_type="Sample", getProjectUID=project_uid)
+        for brain in brains:
+            obj = brain.getObject()
+            if obj.getField('SampleType').get(obj) in rna_dna_sample_types:
+                items.append((obj.UID(), obj.Title()))
+
+        return DisplayList(items)
+
+    def getRNAorDNASampleTypes(self):
+        bsc = getToolByName(self, 'bika_setup_catalog')
+        brains = bsc(portal_type='SampleType', inactive_state='active')
+        dna_rna_sample_types = []
+
+        for brain in brains:
+            obj = brain.getObject()
+            if obj.getField('Prefix').get(obj).lower() in ('rna', 'dna'):
+                dna_rna_sample_types.append(obj)
+
+        return dna_rna_sample_types
+
     def Vocabulary_Method(self):
         vocabulary = CatalogVocabulary(self)
         vocabulary.catalog = 'portal_catalog'
@@ -433,5 +472,11 @@ class ViralGenomicAnalysis(BaseContent):
         brains = pc(portal_type="Method")
         items = [('', '')] + [(c.UID, c.Title) for c in brains]
         return DisplayList(items)
+
+    def Vocabulary_VLD_Result(self):
+        return DisplayList([('', ''), ('Positive', 'Positive'), ('Negative', 'Negative'), ('Not determined', 'Not determined')])
+
+    def Vocabulary_VLD_Verification(self):
+        return DisplayList([('', ''), ('Verified', 'Verified'), ('Retracted', 'Retracted')])
 
 registerType(ViralGenomicAnalysis, config.PROJECTNAME)

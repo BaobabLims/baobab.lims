@@ -287,7 +287,7 @@
       <table class="datagridwidget-table-view listing">
           <thead>
               <tr>
-                  <th class="">PCR</th>
+                  <th class="">Virus Sample</th>
                   <th class="">ct Value</th>
                   <th class="">Kit Lot #</th>
                   <th class="">Result</th>
@@ -298,7 +298,7 @@
           <tbody>
               <tr class="even" tal:repeat="vload python: context.getViralLoadDetermination()">
                    <td class="col-1">
-                       <span><div tal:content="vload/PCR">PCR</div></span>
+                       <span><div tal:content="python: context.Vocabulary_VLD_Sample_RNA_or_DNA().getValue(vload['VirusSampleRNAorDNA'])">Virus Sample</div></span>
                   </td>
                    <td class="col-2">
                        <span><div tal:content="vload/ctValue">ctValue</div></span>
