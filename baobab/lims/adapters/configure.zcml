@@ -36,5 +36,12 @@
       for="baobab.lims.interfaces.IProduct"
       name="ProductFieldWV"
     />
+
+    <adapter
+      factory="bika.lims.adapters.widgetvisibility.WorkflowAwareWidgetVisibility"
+      provides="bika.lims.interfaces.IATWidgetVisibility"
+      for="baobab.lims.interfaces.IViralGenomicAnalysis"
+      name="WorkflowAwareWV"
+    />
     
 </configure>
