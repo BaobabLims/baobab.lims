@@ -171,15 +171,22 @@ class ViralGenomicAnalysisWidgetVisibility(object):
                 'Genome Quantification', 'Viral Load Determination',
                 'Sequencing Library Prep' ]
 
-        user = api.user.get_current()
-
-
         if field_name == 'ViralLoadDetermination':
-            print('--------------The adapter is working')
-            print(field_name)
-            print(field)
-
-            print(field.widget.columns['Verification'])
-            field.widget.columns['Verification'].editable = False
+            if self.user_can_verify_vld():
+                field.widget.columns['Verification'].visible = True
+            else:
+                field.widget.columns['Verification'].visible = False
 
         return state
+
+    def user_can_verify_vld(self):
+        user = api.user.get_current()
+        allowed_roles = ['LabManager', 'Manager']
+
+        for role in user.getRoles():
+            print(role)
+            if role in allowed_roles:
+                return True
+
+        return False
+

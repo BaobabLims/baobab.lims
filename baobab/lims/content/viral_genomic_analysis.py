@@ -533,8 +533,6 @@ class ViralGenomicAnalysis(BaseContent):
 
     def prepare_virus_aliquots(self):
         virus_aliquots = self.getVirusAliquot()
-        print('---------------Virus Aliquot')
-        print(virus_aliquots[0].__dict__)
         virus_aliquots_dict = {}
 
         for virus_aliquot in virus_aliquots:
