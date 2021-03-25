@@ -26,7 +26,6 @@ class AjaxCreateViralGenomicAnalysis(BrowserView):
     def __call__(self):
 
         try:
-            print('---------------The Second viral genomic analysis')
             if 'viral_genomic_analysis' not in self.request.form:
                 raise Exception('No valid viral genomic analysis data found')
 

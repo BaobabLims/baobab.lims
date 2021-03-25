@@ -17,6 +17,7 @@ where the widget.visible flag is used to control adapters in bika.lims.
 from zope.interface import implements
 
 from bika.lims.interfaces import IATWidgetVisibility
+from plone import api
 
 class ARFieldWidgetVisibility(object):
     """Forces a set of AnalysisRequest fields to be invisible depending on
@@ -148,5 +149,37 @@ class ProductWidgetVisibility(object):
         if fieldName in self.hidden_fields:
             field.required = False
             return 'invisible'
+
+        return state
+
+
+class ViralGenomicAnalysisWidgetVisibility(object):
+    """Forces a set of ViralGenomicAnalysis fields to be invisible depending on
+    if context implement IBiospecimen or IAliquot
+    """
+    implements(IATWidgetVisibility)
+
+    def __init__(self, context):
+        self.context = context
+
+    def __call__(self, context, mode, field, default):
+        state = default if default else 'hidden'
+        field_name = field.getName()
+        wftool = self.context.portal_workflow
+        review_state = wftool.getInfoFor(self.context, 'review_state')
+        schemata_tabs = ['Extract Genomic Material','Virus Sample Aliquot',
+                'Genome Quantification', 'Viral Load Determination',
+                'Sequencing Library Prep' ]
+
+        user = api.user.get_current()
+
+
+        if field_name == 'ViralLoadDetermination':
+            print('--------------The adapter is working')
+            print(field_name)
+            print(field)
+
+            print(field.widget.columns['Verification'])
+            field.widget.columns['Verification'].editable = False
 
         return state

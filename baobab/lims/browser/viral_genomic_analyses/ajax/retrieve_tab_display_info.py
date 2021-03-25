@@ -45,9 +45,6 @@ class AjaxRetrieveTabDisplayInfo(BrowserView):
                 tab_display_info
             )
 
-            print('---------------tab_display_info')
-            print(output)
-
             self.request.RESPONSE.setHeader('Content-Type', 'application/json')
             self.request.RESPONSE.setStatus(200)
             self.request.RESPONSE.write(output)

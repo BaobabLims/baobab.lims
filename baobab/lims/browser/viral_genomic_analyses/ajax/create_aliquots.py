@@ -22,7 +22,7 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
 
     def __call__(self):
 
-        print(self.request.form)
+        # print(self.request.form)
 
         try:
             # print('--------------Aliquot process')
@@ -42,7 +42,6 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
 
             viral_genomic_analysis_obj.getField('VirusAliquot').set(viral_genomic_analysis_obj, viral_aliquots)
             viral_genomic_analysis_obj.reindexObject()
-            print(viral_genomic_analysis_obj.__dict__)
 
         except Exception as e:
             error_message = json.dumps({'error_message': str(e)})
@@ -146,7 +145,6 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
             return obj
 
         except Exception as e:
-            print(str(e))
             pass
 
     def create_aliquot(self, parent_sample,  aliquot):
@@ -155,10 +153,6 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
             parent_project = parent_sample.aq_parent
             unit = parent_sample.getField('Unit').get(parent_sample)
             sample_type = parent_sample.getField('SampleType').get(parent_sample)
-
-            print('------------Print project and sample type')
-            print(parent_project)
-            print(sample_type.__dict__)
 
             obj = _createObjectByType('Sample', parent_project, tmpID())
 
@@ -170,11 +164,6 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
                 date_time_created = date_created + ' ' + time_created
             else:
                 date_time_created = ''
-
-            print('------------date amd time created')
-            print(date_created)
-            print(time_created)
-            print(date_time_created)
 
             obj.edit(
                 title=aliquot['barcode'],

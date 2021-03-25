@@ -318,7 +318,8 @@ GenomeQuantification = DataGridField(
         columns={
             'VirusSampleRNAorDNA': SelectColumn(
                 'Virus Sample by RNA/DNA',
-                vocabulary='Vocabulary_Sample_RNA_or_DNA',
+                # vocabulary='Vocabulary_Sample_RNA_or_DNA',
+                vocabulary='Vocabulary_VLD_Sample_RNA_or_DNA',
                 visible={
                  'edit': 'visible',
                  'view': 'visible',
@@ -464,7 +465,7 @@ SequencingLibraryPrep = DataGridField(
         columns={
             'VirusSampleRNAorDNA': SelectColumn(
                 'Virus Sample by RNA/DNA',
-                vocabulary='Vocabulary_Sample_RNA_or_DNA',
+                vocabulary='Vocabulary_VLD_Sample_RNA_or_DNA',
                 ),
             'Method': SelectColumn('Method', vocabulary='Vocabulary_Method'),
             'LibraryID': Column('Library ID'),
@@ -532,6 +533,8 @@ class ViralGenomicAnalysis(BaseContent):
 
     def prepare_virus_aliquots(self):
         virus_aliquots = self.getVirusAliquot()
+        print('---------------Virus Aliquot')
+        print(virus_aliquots[0].__dict__)
         virus_aliquots_dict = {}
 
         for virus_aliquot in virus_aliquots:
@@ -539,6 +542,7 @@ class ViralGenomicAnalysis(BaseContent):
             prepared_aliquot_list = self.get_prepared_aliquots(virus_aliquot.getAliquotSample())
             virus_aliquots_dict[parent_sample] = prepared_aliquot_list
 
+        print(virus_aliquots_dict)
         return virus_aliquots_dict
 
     def get_prepared_aliquots(self, aliquot_rows):
@@ -596,7 +600,7 @@ class ViralGenomicAnalysis(BaseContent):
 
     def getVirusSamplesByProjectUID(self, project_uid=None):
         # TODO: which catalog?
-        pc = getToolByName(self, 'bika_catalog')
+        pc = getToolByName(self, 'portal_catalog')
         # TODO: Add getProjectUID index or column instead,
         # so that self.getProjectUID will be available
         items = [('','')]

@@ -38,6 +38,13 @@
     />
 
     <adapter
+      factory=".widgetvisibility.ViralGenomicAnalysisWidgetVisibility"
+      provides="bika.lims.interfaces.IATWidgetVisibility"
+      for="baobab.lims.interfaces.IViralGenomicAnalysis"
+      name="ViralGenomicAnalysisFieldWV"
+    />
+
+    <adapter
       factory="bika.lims.adapters.widgetvisibility.WorkflowAwareWidgetVisibility"
       provides="bika.lims.interfaces.IATWidgetVisibility"
       for="baobab.lims.interfaces.IViralGenomicAnalysis"
