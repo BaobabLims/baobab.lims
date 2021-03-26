@@ -20,11 +20,9 @@ class ExtractGenomicMaterialValidator:
 
     def __call__(self, value, *args, **kwargs):
         instance = kwargs['instance']
-        wftool = instance.portal_workflow
         translate = getToolByName(instance, 'translation_service').translate
-        review_state = wftool.getInfoFor(instance, 'review_state')
-        if review_state != 'created' and instance.getWillExtract() is True:
-            msg = _("Validation failed: Must be on state Created to submitted")
+        if instance.getWillExtract() is False:
+            msg = _("Validation failed: Extraction not part of the process")
             return to_utf8(translate(msg))
         return True
 

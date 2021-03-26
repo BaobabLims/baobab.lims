@@ -162,11 +162,73 @@ WillLibraryPrep = BooleanField(
      },
     )
 )
+# TODO: Could be computed field
+ExtractedTab = BooleanField(
+    'ExtractedTab',
+    default=False,
+    widget=BooleanWidget(
+        label="Is extracted",
+        description="Has extraction happened",
+        visible={
+         'edit': 'invisible',
+         'view': 'invisible',
+     },
+    )
+)
+AliquoteTab = BooleanField(
+    'AliquoteTab',
+    default=False,
+    widget=BooleanWidget(
+        label="Is aliquoted",
+        description="Has aliquoted happened",
+        visible={
+         'edit': 'invisible',
+         'view': 'invisible',
+     },
+    )
+)
+GenomeQuantificationTab = BooleanField(
+    'GenomeQuantificationTab',
+    default=False,
+    widget=BooleanWidget(
+        label="Is aliquoted",
+        description="Has aliquoted happened",
+        visible={
+         'edit': 'invisible',
+         'view': 'invisible',
+     },
+    )
+)
+ViralLoadDeterminationTab = BooleanField(
+    'ViralLoadDeterminationTab',
+    default=False,
+    widget=BooleanWidget(
+        label="Is Viral Load",
+        description="Has viral happened",
+        visible={
+         'edit': 'invisible',
+         'view': 'invisible',
+     },
+    )
+)
+SequencingLibraryPrepTab = BooleanField(
+    'SequencingLibraryPrepTab',
+    default=False,
+    widget=BooleanWidget(
+        label="Is Sequencing",
+        description="Has Sequencing happened",
+        visible={
+         'edit': 'invisible',
+         'view': 'invisible',
+     },
+    )
+)
 
 ExtractGenomicMaterial = DataGridField(
     'ExtractGenomicMaterial',
     schemata='Extract Genomic Material',
     validators=('extractgenomicmaterialvalidator'),
+    mutator='notifiedSetExtractGenomicMaterial',
     allow_insert=True,
     allow_delete=True,
     allow_reorder=False,
@@ -187,7 +249,9 @@ ExtractGenomicMaterial = DataGridField(
         columns={
             'VirusSample': SelectColumn(
                 'Virus Sample', 
+                col_description='Virus Sample(s) of the selected Project',
                 vocabulary='Vocabulary_VirusSample_by_ProjectUID',
+                required=True,
                 visible={
                  'edit': 'visible',
                  'view': 'visible',
@@ -213,6 +277,7 @@ ExtractGenomicMaterial = DataGridField(
              },
                 ),
             'ExtractionBarcode': Column('Extraction Barcode',
+                required=True,
                 visible={
                  'edit': 'visible',
                  'view': 'visible',
@@ -490,10 +555,16 @@ schema = BikaSchema.copy() + Schema((
     ViralLoadDeterminationDate,
     ViralLoadDetermination,
     SequencingLibraryPrep,
+    ExtractedTab,
+    AliquoteTab,
+    GenomeQuantificationTab,
+    ViralLoadDeterminationTab,
+    SequencingLibraryPrepTab
 ))
 
 schema['title'].widget.visible = {'view': 'visible', 'edit': 'visible'}
 schema['description'].widget.visible = {'view': 'visible', 'edit': 'visible'}
+
 
 class ViralGenomicAnalysis(BaseContent):
     security = ClassSecurityInfo()
@@ -508,6 +579,26 @@ class ViralGenomicAnalysis(BaseContent):
 
     def getProjectUID(self):
         return self.getProject().UID() if self.getProject() else None
+
+    security.declareProtected('Modify portal content', 'notifiedSetExtractGenomicMaterial')
+    def notifiedSetExtractGenomicMaterial(self, value, **kwargs):
+        old_value = self.getField('ExtractGenomicMaterial').get(self)
+        if old_value != value:
+            # TODO: Check and delete existig Biospecimans related to this
+            # extraction recreate from the new value
+            # maybe change state here aswell if we will be using the workflow
+            self.getField('ExtractGenomicMaterial').set(self, value)
+        self.getField('ExtractedTab').set(self, True)
+
+    security.declareProtected('Modify portal content', 'notifiedSetAliquoting')
+    def notifiedSetAliquoting(self, value, **kwargs):
+        old_value = self.getField('VirusAliquot').get(self)
+        if old_value != value:
+            # TODO: Ask Quinton to set AliquoteTab, when creation Aliquots
+            # and not use this mutator function, now just using it for setting
+            # AliquoteTab
+            self.getField('VirusAliquot').set(self, value)
+        self.getField('AliquoteTab').set(self, True)
 
     # def prepare_extract_genomic_material(self):
     #

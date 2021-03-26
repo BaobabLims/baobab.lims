@@ -171,11 +171,111 @@ class ViralGenomicAnalysisWidgetVisibility(object):
                 'Genome Quantification', 'Viral Load Determination',
                 'Sequencing Library Prep' ]
 
-        if field_name == 'ViralLoadDetermination':
-            if self.user_can_verify_vld():
-                field.widget.columns['Verification'].visible = True
-            else:
-                field.widget.columns['Verification'].visible = False
+        # First time edit hide all the other tabs
+        if review_state == "created" and mode == 'edit' and not context.title:
+            if field.schemata in schemata_tabs:
+                field.required = False
+                return 'invisible'
+
+        if review_state == "created" and mode == 'edit' and context.title:
+            # Extra Genomic Material Tab
+            if field.schemata == schemata_tabs[0]:
+                if not context.getWillExtract():
+                    return 'invisible'
+                if context.getExtractedTab():
+                    return 'invisible'
+                if context.getWillExtract() and context.getExtractedTab():
+                    return 'invisible'
+
+                if context.getWillExtract() and not context.getExtractedTab():
+                    return 'visible'
+
+            # Virus Sample Aliquot Tab
+            if field.schemata == schemata_tabs[1]:
+                # Other tabs in relation with  the active tab
+                ###############################################################
+                if context.getWillExtract() and not context.getExtractedTab():
+                    return 'invisible'
+                ###############################################################
+
+                if not context.getWillAliquot():
+                    return 'invisible'
+                if context.getAliquoteTab():
+                    return 'invisible'
+                if context.getWillAliquot() and context.getAliquoteTab():
+                    return 'invisible'
+                if context.getWillAliquot() and not context.getAliquoteTab():
+                    return 'visible'
+
+            # Genome Quantification Tab
+            if field.schemata == schemata_tabs[2]:
+                # Other tabs in relation with  the active tab
+                ###############################################################
+                if context.getWillExtract() and not context.getExtractedTab():
+                    return 'invisible'
+                if context.getWillAliquot() and not context.getAliquoteTab():
+                    return 'invisible'
+                ###############################################################
+
+                if not context.getWillQuantify():
+                    return 'invisible'
+                if context.getGenomeQuantificationTab():
+                    return 'invisible'
+                if context.getWillQuantify() and context.getGenomeQuantificationTab():
+                    return 'invisible'
+                if context.getWillQuantify() and not context.getGenomeQuantificationTab():
+                    return 'visible'
+
+            # Viral Load Determination
+            if field.schemata == schemata_tabs[3]:
+                if field_name == 'ViralLoadDetermination':
+                    if self.user_can_verify_vld():
+                        field.widget.columns['Verification'].visible = True
+                    else:
+                        field.widget.columns['Verification'].visible = False
+
+                # Want to hide  on previous steps aswell - hard coding for now
+                ###############################################################
+                if context.getWillExtract() and not context.getExtractedTab():
+                    return 'invisible'
+                if context.getWillAliquot() and not context.getAliquoteTab():
+                        return 'invisible'
+                if context.getWillQuantify() and not context.getGenomeQuantificationTab():
+                        return 'invisible'
+                ###############################################################
+
+                if not context.getWillViralLoadDetermine():
+                    return 'invisible'
+                if context.getGenomeQuantificationTab():
+                    return 'invisible'
+                if context.getWillViralLoadDetermine() and context.getViralLoadDeterminationTab():
+                    return 'invisible'
+                if context.getWillViralLoadDetermine() and not context.getViralLoadDeterminationTab():
+                    return 'visible'
+
+            # Sequencing Library Prep
+            if field.schemata == schemata_tabs[4]:
+
+                # Want to hide  on previous steps aswell - hard coding for now
+                ###############################################################
+                if context.getWillExtract() and not context.getExtractedTab():
+                    return 'invisible'
+                if context.getWillAliquot() and not context.getAliquoteTab():
+                    return 'invisible'
+                if context.getWillQuantify() and not context.getGenomeQuantificationTab():
+                    return 'invisible'
+                if context.getWillViralLoadDetermine() and not context.getViralLoadDeterminationTab():
+                    return 'invisible'
+                ###############################################################
+
+                if not context.getWillSe():
+                    return 'invisible'
+                if context.getGenomeQuantificationTab():
+                    return 'invisible'
+                if context.getWillViralLoadDetermine() and context.getViralLoadDeterminationTab():
+                    return 'invisible'
+                if context.getWillViralLoadDetermine() and not context.getViralLoadDeterminationTab():
+                    return 'visible'
 
         return state
 
@@ -189,4 +289,3 @@ class ViralGenomicAnalysisWidgetVisibility(object):
                 return True
 
         return False
-
