@@ -368,6 +368,7 @@ ExtractGenomicMaterial = DataGridField(
 GenomeQuantification = DataGridField(
     'GenomeQuantification',
     schemata='Genome Quantification',
+    mutator='notifiedSetGenomeQuantification',
     allow_insert=True,
     allow_delete=True,
     allow_reorder=False,
@@ -419,6 +420,7 @@ GenomeQuantification = DataGridField(
 VirusAliquot = ReferenceField(
     'VirusAliquot',
     schemata='Virus Sample Aliquot',
+    mutator='notifiedSetAliquoting',
     multiValued=1,
     allowed_types=('VirusAliquot',),
     relationship='ViralGenomicAnalysisVirusAliquot',
@@ -431,7 +433,6 @@ VirusAliquot = ReferenceField(
         visible={
          'edit': 'visible',
          'view': 'visible',
-         'created': {'view': 'visible', 'edit': 'visible'},
      },
         size=30,
         showOn=True,
@@ -479,6 +480,7 @@ ViralLoadDeterminationDate = DateTimeField(
 ViralLoadDetermination = DataGridField(
     'ViralLoadDetermination',
     schemata='Viral Load Determination',
+    mutator='notifiedSetViralLoadDetermination',
     allow_insert=True,
     allow_delete=True,
     allow_reorder=False,
@@ -588,39 +590,31 @@ class ViralGenomicAnalysis(BaseContent):
             # extraction recreate from the new value
             # maybe change state here aswell if we will be using the workflow
             self.getField('ExtractGenomicMaterial').set(self, value)
-        self.getField('ExtractedTab').set(self, True)
+            self.getField('ExtractedTab').set(self, True)
 
     security.declareProtected('Modify portal content', 'notifiedSetAliquoting')
     def notifiedSetAliquoting(self, value, **kwargs):
         old_value = self.getField('VirusAliquot').get(self)
-        if old_value != value:
-            # TODO: Ask Quinton to set AliquoteTab, when creation Aliquots
-            # and not use this mutator function, now just using it for setting
-            # AliquoteTab
+        if not value and not old_value:
+            return
+        if old_value != value and value:
             self.getField('VirusAliquot').set(self, value)
-        self.getField('AliquoteTab').set(self, True)
+            self.getField('AliquoteTab').set(self, True)
 
-    # def prepare_extract_genomic_material(self):
-    #
-    #     extract_genomic_material_rows = self.getExtractGenomicMaterial()
-    #     prepared_extracts = []
-    #
-    #     for extract in extract_genomic_material_rows:
-    #         prepared_extract = {
-    #             'title': extract.Title(),
-    #             'virus_sample': self.get_virus_sample(extract),
-    #             'heat_inactivated': extract.getField('HeatInactivated').get(extract),
-    #             'method': self.get_method(extract),
-    #             'extraction_barcode': extract.getField('ExtractionBarcode').get(extract),
-    #             'volume': extract.getField('Volume').get(extract),
-    #             'unit': extract.getField('Unit').get(extract),
-    #             'was_kit_used': extract.getField('WasKitUsed').get(extract),
-    #             'kit_number': extract.getField('KitNumber').get(extract),
-    #             'notes': extract.getField('Notes').get(extract),
-    #         }
-    #         prepared_extracts.append(prepared_extract)
-    #
-    #     return prepared_extracts
+    security.declareProtected('Modify portal content', 'notifiedSetGenomeQuantification')
+    def notifiedSetGenomeQuantification(self, value, **kwargs):
+        old_value = self.getField('GenomeQuantification').get(self)
+        if old_value != value:
+            self.getField('GenomeQuantification').set(self, value)
+            self.getField('GenomeQuantificationTab').set(self, True)
+
+    security.declareProtected('Modify portal content', 'notifiedSetViralLoadDetermination')
+    def notifiedSetViralLoadDetermination(self, value, **kwargs):
+        old_value = self.getField('ViralLoadDetermination').get(self)
+        if old_value != value:
+            self.getField('ViralLoadDetermination').set(self, value)
+            self.getField('ViralLoadDeterminationTab').set(self, True)
+
 
     def prepare_virus_aliquots(self):
         virus_aliquots = self.getVirusAliquot()
@@ -631,7 +625,6 @@ class ViralGenomicAnalysis(BaseContent):
             prepared_aliquot_list = self.get_prepared_aliquots(virus_aliquot.getAliquotSample())
             virus_aliquots_dict[parent_sample] = prepared_aliquot_list
 
-        print(virus_aliquots_dict)
         return virus_aliquots_dict
 
     def get_prepared_aliquots(self, aliquot_rows):

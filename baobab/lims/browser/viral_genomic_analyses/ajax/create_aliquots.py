@@ -22,11 +22,7 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
 
     def __call__(self):
 
-        # print(self.request.form)
-
         try:
-            # print('--------------Aliquot process')
-
             if 'sample_aliquots' not in self.request.form:
                 raise Exception('No valid extract genomic material data found')
 
@@ -37,10 +33,8 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
             viral_genomic_analysis_obj = self.get_content_type(viral_genomic_analysis_uid)
             viral_aliquots = self.create_virus_aliquots(sample_aliquot_rows)
 
-            # print(viral_genomic_analysis_obj)
-            # print(viral_aliquots)
-
             viral_genomic_analysis_obj.getField('VirusAliquot').set(viral_genomic_analysis_obj, viral_aliquots)
+            viral_genomic_analysis_obj.getField('AliquoteTab').set(viral_genomic_analysis_obj, True)
             viral_genomic_analysis_obj.reindexObject()
 
         except Exception as e:
@@ -61,6 +55,7 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
         aliquots_data = aliquot_rows
         viral_aliquots = []
 
+        import pdb; pdb.set_trace()
         for sample_uid, new_aliquots_data in aliquots_data.iteritems():
             aliquots = []
 

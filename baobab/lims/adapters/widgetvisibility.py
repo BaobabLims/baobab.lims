@@ -193,10 +193,12 @@ class ViralGenomicAnalysisWidgetVisibility(object):
             # Virus Sample Aliquot Tab
             if field.schemata == schemata_tabs[1]:
                 # Other tabs in relation with  the active tab
-                ###############################################################
+                #############################################################
+                if not context.getWillExtract():
+                    return 'invisible'
                 if context.getWillExtract() and not context.getExtractedTab():
                     return 'invisible'
-                ###############################################################
+                #############################################################
 
                 if not context.getWillAliquot():
                     return 'invisible'
@@ -246,7 +248,7 @@ class ViralGenomicAnalysisWidgetVisibility(object):
 
                 if not context.getWillViralLoadDetermine():
                     return 'invisible'
-                if context.getGenomeQuantificationTab():
+                if context.getViralLoadDeterminationTab():
                     return 'invisible'
                 if context.getWillViralLoadDetermine() and context.getViralLoadDeterminationTab():
                     return 'invisible'
@@ -268,13 +270,13 @@ class ViralGenomicAnalysisWidgetVisibility(object):
                     return 'invisible'
                 ###############################################################
 
-                if not context.getWillSe():
+                if not context.getWillLibraryPrep():
                     return 'invisible'
-                if context.getGenomeQuantificationTab():
+                if context.getSequencingLibraryPrepTab():
                     return 'invisible'
-                if context.getWillViralLoadDetermine() and context.getViralLoadDeterminationTab():
+                if context.getWillLibraryPrep() and context.getSequencingLibraryPrepTab():
                     return 'invisible'
-                if context.getWillViralLoadDetermine() and not context.getViralLoadDeterminationTab():
+                if context.getWillLibraryPrep() and not context.getSequencingLibraryPrepTab():
                     return 'visible'
 
         return state
