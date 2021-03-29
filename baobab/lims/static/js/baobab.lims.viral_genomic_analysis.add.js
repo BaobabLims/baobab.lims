@@ -6,6 +6,14 @@ function ViralGenomicAnalysisAddView(){
         // setUpUI();
 
         displayTabs();
+        $('#ReferenceSampleControlResult').change(function(e) {
+            if ($(this).val() == "Fail"){
+                $('#archetypes-fieldname-ViralLoadDetermination').hide();
+
+            }else{
+                $('#archetypes-fieldname-ViralLoadDetermination').show();
+            }
+        });
     }
 
     function setUpUI() {

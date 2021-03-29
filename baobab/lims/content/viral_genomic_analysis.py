@@ -411,6 +411,30 @@ ViralLoadDeterminationDate = DateTimeField(
     )
 )
 
+ReferenceSampleControl = StringField(
+    'ReferenceSampleControl',
+    schemata='Viral Load Determination',
+    default="",
+    vocabulary='Vocabulary_Control',
+    widget=SelectionWidget(
+        format='select',
+        label=_("Reference Sample Control Options"),
+        description=_("Reference Sample Control options(Positive or Negetive control)"),
+    )
+)
+
+ReferenceSampleControlResult = StringField(
+    'ReferenceSampleControlResult',
+    schemata='Viral Load Determination',
+    default="",
+    vocabulary='Vocabulary_PassFail',
+    widget=SelectionWidget(
+        format='select',
+        label=_("Reference Sample Control Result"),
+        description=_("Reference Sample Control Result(Positive or Negetive control)"),
+    )
+)
+
 ViralLoadDetermination = DataGridField(
     'ViralLoadDetermination',
     schemata='Viral Load Determination',
@@ -488,6 +512,8 @@ schema = BikaSchema.copy() + Schema((
     ViralLoadDeterminationDescription,
     ViralLoadDeterminationGeneName,
     ViralLoadDeterminationDate,
+    ReferenceSampleControl,
+    ReferenceSampleControlResult,
     ViralLoadDetermination,
     SequencingLibraryPrep,
 ))
@@ -589,7 +615,13 @@ class ViralGenomicAnalysis(BaseContent):
             return ''
 
     def Vocabulary_PassFail(self):
-        return DisplayList([('Pass', 'Pass'),('Fail', 'Fail')])
+        return DisplayList([('',''), ('Pass', 'Pass'), ('Fail', 'Fail')])
+
+    def Vocabulary_Control(self):
+        return DisplayList([
+            ('',''),
+            ('PositiveControl', 'Positive Control'),
+            ('NegativeControl', 'Negative Control')])
 
     def Vocabulary_Sample(self):
         vocabulary = CatalogVocabulary(self)
