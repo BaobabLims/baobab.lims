@@ -1,24 +1,26 @@
-from Products.Archetypes.references import HoldingReference
+from plone import api
 from AccessControl import ClassSecurityInfo
+from DateTime import DateTime
 from Products.Archetypes.public import *
+from Products.Archetypes.references import HoldingReference
 from Products.CMFCore import permissions
 from Products.CMFPlone.interfaces import IConstrainTypes
 from Products.CMFCore.utils import getToolByName
-from zope.interface import implements
-from bika.lims.browser.widgets import DateTimeWidget
-
-from bika.lims.content.bikaschema import BikaSchema
-from baobab.lims import bikaMessageFactory as _
-from baobab.lims import config
-from baobab.lims.interfaces import IViralGenomicAnalysis
-from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
-
 from Products.DataGridField import CheckboxColumn
 from Products.DataGridField import Column
 from Products.DataGridField import DataGridField
 from Products.DataGridField import DataGridWidget
 from Products.DataGridField import LinesColumn
 from Products.DataGridField import SelectColumn
+from zope.interface import implements
+
+from baobab.lims import bikaMessageFactory as _
+from baobab.lims import config
+from baobab.lims.interfaces import IViralGenomicAnalysis
+from baobab.lims.utils.create_biospecimen import create_sample as create_smp
+from bika.lims.content.bikaschema import BikaSchema
+from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
+from bika.lims.browser.widgets import DateTimeWidget
 from bika.lims.vocabularies import CatalogVocabulary
 
 
@@ -37,11 +39,6 @@ Project = ReferenceField(
          'edit': 'visible',
          'view': 'visible',
          'created': {'view': 'visible', 'edit': 'visible'},
-         'extracted_genomic_material': {'view': 'invisible', 'edit': 'invisible'},
-         'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
-         'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
-         'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
-         'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
      },
     )
 )
@@ -167,7 +164,6 @@ ExtractGenomicMaterial = DataGridField(
     'ExtractGenomicMaterial',
     schemata='Extract Genomic Material',
     validators=('extractgenomicmaterialvalidator'),
-    mutator='notifiedSetExtractGenomicMaterial',
     allow_insert=True,
     allow_delete=True,
     allow_reorder=False,
@@ -190,116 +186,15 @@ ExtractGenomicMaterial = DataGridField(
                 'Virus Sample', 
                 col_description='Virus Sample(s) of the selected Project',
                 vocabulary='Vocabulary_VirusSample_by_ProjectUID',
-                required=True,
-                visible={
-                 'edit': 'visible',
-                 'view': 'visible',
-                 'created': {'view': 'visible', 'edit': 'visible'},
-                 'extracted_genomic_material': {'view': 'visible', 'edit': 'visible'},
-                 'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
-                 'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
-                 'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
-                 'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
-             },
                 ),
-            'Method': SelectColumn('Method', 
-                vocabulary='Vocabulary_Method',
-                visible={
-                 'edit': 'visible',
-                 'view': 'visible',
-                 'created': {'view': 'visible', 'edit': 'visible'},
-                 'extracted_genomic_material': {'view': 'visible', 'edit': 'visible'},
-                 'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
-                 'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
-                 'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
-                 'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
-             },
-                ),
-            'ExtractionBarcode': Column('Extraction Barcode',
-                required=True,
-                visible={
-                 'edit': 'visible',
-                 'view': 'visible',
-                 'created': {'view': 'visible', 'edit': 'visible'},
-                 'extracted_genomic_material': {'view': 'visible', 'edit': 'visible'},
-                 'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
-                 'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
-                 'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
-                 'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
-             },
-                ),
-            'Volume': Column('Volume',
-                visible={
-                 'edit': 'visible',
-                 'view': 'visible',
-                 'created': {'view': 'visible', 'edit': 'visible'},
-                 'extracted_genomic_material': {'view': 'visible', 'edit': 'visible'},
-                 'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
-                 'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
-                 'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
-                 'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
-             },
-                ),
-            'Unit': Column('Unit',
-                visible={
-                 'edit': 'visible',
-                 'view': 'visible',
-                 'created': {'view': 'visible', 'edit': 'visible'},
-                 'extracted_genomic_material': {'view': 'visible', 'edit': 'visible'},
-                 'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
-                 'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
-                 'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
-                 'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
-             },
-                    ),
-            'HeatInactivated': CheckboxColumn('Heat Inactivated',
-                visible={
-                 'edit': 'visible',
-                 'view': 'visible',
-                 'created': {'view': 'visible', 'edit': 'visible'},
-                 'extracted_genomic_material': {'view': 'visible', 'edit': 'visible'},
-                 'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
-                 'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
-                 'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
-                 'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
-             },
-                    ),
-            'WasKitUsed': CheckboxColumn('Was Kit Used',
-                visible={
-                 'edit': 'visible',
-                 'view': 'visible',
-                 'created': {'view': 'visible', 'edit': 'visible'},
-                 'extracted_genomic_material': {'view': 'visible', 'edit': 'visible'},
-                 'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
-                 'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
-                 'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
-                 'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
-             },
-                    ),
-            'KitNumber': Column('Kit Lot #',
-                visible={
-                 'edit': 'visible',
-                 'view': 'visible',
-                 'created': {'view': 'visible', 'edit': 'visible'},
-                 'extracted_genomic_material': {'view': 'visible', 'edit': 'visible'},
-                 'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
-                 'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
-                 'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
-                 'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
-             },
-                    ),
-            'Notes': LinesColumn('Notes',
-                visible={
-                 'edit': 'visible',
-                 'view': 'visible',
-                 'created': {'view': 'visible', 'edit': 'visible'},
-                 'extracted_genomic_material': {'view': 'visible', 'edit': 'visible'},
-                 'aliquoted': {'view': 'invisible', 'edit': 'invisible'},
-                 'genome_quantified': {'view': 'invisible', 'edit': 'invisible'},
-                 'viral_load_determined': {'view': 'invisible', 'edit': 'invisible'},
-                 'sequencing_library_preped': {'view': 'invisible', 'edit': 'invisible'},
-             },
-                    ),
+            'Method': SelectColumn('Method', vocabulary='Vocabulary_Method'),
+            'ExtractionBarcode': Column('Extraction Barcode'),
+            'Volume': Column('Volume'),
+            'Unit': Column('Unit'),
+            'HeatInactivated': CheckboxColumn('Heat Inactivated'),
+            'WasKitUsed': CheckboxColumn('Was Kit Used'),
+            'KitNumber': Column('Kit Lot #'),
+            'Notes': LinesColumn('Notes'),
         },
     )
 )
@@ -540,14 +435,58 @@ class ViralGenomicAnalysis(BaseContent):
     def getProjectUID(self):
         return self.getProject().UID() if self.getProject() else None
 
-    security.declareProtected('Modify portal content', 'notifiedSetExtractGenomicMaterial')
-    def notifiedSetExtractGenomicMaterial(self, value, **kwargs):
-        old_value = self.getField('ExtractGenomicMaterial').get(self)
-        if old_value != value:
+    def setExtractGenomicMaterial(self, value, **kwargs):
+        empty_line = [{'ExtractionBarcode': '',
+            'orderindex_': 'template_row_marker',
+            'HeatInactivated': '', 'VirusSample': '', 'WasKitUsed': '',
+            'Notes': [], 'Volume': '', 'Unit': '', 'Method': '',
+            'KitNumber': ''}]
+        if value == empty_line or value == ({},):
+            return 
+        if empty_line[0] in value:
+            value.pop(value.index(empty_line[0]))
+
+
+        # TODO: do visible on the field and hide on extracted_genomic_material
+        # then delete next 3 lines from the 3rd line
+        workflow = getToolByName(self, 'portal_workflow')
+        review_state = workflow.getInfoFor(self, 'review_state')
+        if review_state == 'extracted_genomic_material':
+            old_value = self.getField('ExtractGenomicMaterial').get(self)
+            self.getField('ExtractGenomicMaterial').set(self, old_value)
+        aline = False
+        if review_state != 'extracted_genomic_material':
             # TODO: Check and delete existig Biospecimans related to this
             # extraction recreate from the new value
             # maybe change state here aswell if we will be using the workflow
-            self.getField('ExtractGenomicMaterial').set(self, value)
+            # set the values and call the create function
+            for row in value:
+                virus_sample = api.content.get(UID=row['VirusSample'])
+                if virus_sample is None:
+                    continue
+                aline = True
+                sample_type = virus_sample.getSampleType()
+                values = {
+                }
+                values = {
+                    "title": '',
+                    "description": None,
+                    "Project": self.getProject(),
+                    "AllowSharing": 0,
+                    "StorageLocation": None,
+                    "SampleType": sample_type,
+                    "SubjectID": None,
+                    "Barcode": row['ExtractionBarcode'],
+                    "Volume": row['Volume'],
+                    "Unit": row['Unit'],
+                    "LinkedSample": virus_sample,
+                    "DateCreated": DateTime,
+                }
+                create_smp(self.getProject(), None, values)
+            if aline:
+                # atlease 1 sample was created
+                self.getField('ExtractGenomicMaterial').set(self, value)
+                workflow.doActionFor(self, 'extract_genomic_material')
 
 
     def prepare_virus_aliquots(self):
