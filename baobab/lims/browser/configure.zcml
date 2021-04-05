@@ -41,6 +41,7 @@
     <include package=".hosts"/>
     <include package=".host_diseases"/>
     <include package=".freezers"/>
+    <include package=".freezer"/>
     <include package=".monitoring_devices"/>
     <include package=".freezer_monitoring"/>
 
