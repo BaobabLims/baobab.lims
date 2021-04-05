@@ -12,4 +12,12 @@
         layer="bika.lims.interfaces.IBikaLIMS"
     />
 
+    <browser:page
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        name="freezer_monitoring_cron"
+        class="baobab.lims.browser.freezer_monitoring.freezer_monitorings.FreezerMonitoringCron"
+        permission="bika.lims.ImportInstrumentResults"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
 </configure>

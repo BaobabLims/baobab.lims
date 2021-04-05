@@ -8,6 +8,7 @@ from Products.CMFCore.utils import ContentInit, ToolInit, getToolByName
 from baobab.lims.config import *
 from baobab.lims.permissions import ADD_CONTENT_PERMISSION, ADD_CONTENT_PERMISSIONS
 import logging
+import requests
 logger = logging.getLogger('BAOBAB')
 import pkg_resources
 
