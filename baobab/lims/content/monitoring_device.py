@@ -10,6 +10,7 @@ from Products.Archetypes.public import Schema
 from Products.ATContentTypes.content import schemata
 from Products.Archetypes.public import registerType
 from Products.CMFPlone.interfaces import IConstrainTypes
+from Products.CMFCore.utils import getToolByName
 from plone.app.folder.folder import ATFolder
 from zope.interface import implements
 
@@ -35,6 +36,37 @@ class MonitoringDevice(ATFolder):
     def _renameAfterCreation(self, check_auto_id=False):
         from bika.lims.idserver import renameAfterCreation
         renameAfterCreation(self)
+
+    def guard_occupy_transition(self):
+        """Use transition cannot proceed until is added to a Freezer.
+
+        If this monitoring device is available and is on freezer,
+        then we will prevent the use transition from becoming available.
+        """
+
+        wftool = self.portal_workflow
+        review_state = wftool.getInfoFor(self, 'review_state')
+        pc = getToolByName(self, 'portal_catalog')
+
+        on_freezer = pc(portal_type='Freezer', MonitoringDevice=self)
+
+        if (review_state == 'available') and on_freezer:
+            return True
+        return False
+
+    def guard_liberate_transition(self):
+        """Liberate transition cannot proceed unless Freezer is cleared.
+
+        If this monitoring device is used and Freezer still has a value,
+        then we will prevent the liberate transition from becoming available.
+        """
+        wftool = self.portal_workflow
+        review_state = wftool.getInfoFor(self, 'review_state')
+        pc = getToolByName(self, 'portal_catalog')
+        on_freezer = pc(portal_type='Freezer', MonitoringDevice=self)
+        if review_state in ('used') and not on_freezer:
+            return True
+        return False
 
 
 schemata.finalizeATCTSchema(schema, folderish=True, moveDiscussion=False)

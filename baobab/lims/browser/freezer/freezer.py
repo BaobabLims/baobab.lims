@@ -36,6 +36,4 @@ class FreezerTemperatures():
         self.request = request
 
     def __call__(self):
-        # protect.CheckAuthenticator(self.request)
-        import pdb; pdb.set_trace()
         return json.dumps([[1167609600000, 0.7537],[1167696000000, 0.7537],[1167782400000, 0.7559],[1167868800000, 0.7631],[1167955200000, 0.7644]])

@@ -28,7 +28,7 @@ Modify portal content,N,N,Y,N,N,N,N,N,N,Y
 Id:,use,,,,,,,,,
 Title:,Use,,,,,,,,,
 Description:,Use,,,,,,,,,
-Target state:,used,,,,,,,,,
+Target state:,in_use,,,,,,,,,
 Trigger:,User,,,,,,,,,
 Guard expression:,python:here.guard_occupy_transition()==True,,,,,,,,,
 ,,,,,,,,,,

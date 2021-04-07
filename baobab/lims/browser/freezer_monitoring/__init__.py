@@ -1,11 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import _createObjectByType
 from DateTime import DateTime
 
 
-def add_device_to_freezer(context):
+def add_device_to_freezer(context, review_state='available'):
     """ Create devicehistory object for freezer(context)
     """
 
@@ -17,3 +18,8 @@ def add_device_to_freezer(context):
     devicehistory.setMonitoringDevice(context.getMonitoringDevice())
     devicehistory.setFreezer(context)
     devicehistory.reindexObject()
+    wf_tool = getToolByName(context.getMonitoringDevice(), 'portal_workflow')
+    review_state = wf_tool.getInfoFor(context.getMonitoringDevice(), 'review_state')
+    if review_state == 'available':
+        wf_tool.doActionFor(context.getMonitoringDevice(), 'use')
+        context.getMonitoringDevice().reindexObject(idxs=["review_state", ])
