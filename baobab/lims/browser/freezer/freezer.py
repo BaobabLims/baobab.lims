@@ -36,4 +36,18 @@ class FreezerTemperatures():
         self.request = request
 
     def __call__(self):
-        return json.dumps([[1167609600000, 0.7537],[1167696000000, 0.7537],[1167782400000, 0.7559],[1167868800000, 0.7631],[1167955200000, 0.7644]])
+        context = self.context
+        data = api.content.find(context=context, portal_type='DeviceReading')
+        readings = []
+
+        # TODO: add columns
+        for reading in data:
+            obj = reading.getObject()
+            temperature = obj.getCurrentReading()
+            datetimestamp = obj.getDatetimeRecorded()
+            if datetimestamp is None or temperature is None:
+                continue
+            int_date = int(datetimestamp.strftime('%s'))
+            readings.append([int_date, float(temperature)])
+
+        return json.dumps(readings)

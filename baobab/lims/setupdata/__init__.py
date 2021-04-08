@@ -854,7 +854,7 @@ class Device_Readings(WorksheetImporter):
             fr_reading.setCurrentReading(row['CurrentReading'])
             fr_reading.setDatetimeRecorded(row['DatetimeRecorded'])
             fr_reading.setLabel(row['Label'])
-            fr_reading.setUnit(['Unit'])
+            fr_reading.setUnit(row['Unit'])
             fr_reading.unmarkCreationFlag()
             fr_reading.unmarkCreationFlag()
             renameAfterCreation(fr_reading)
