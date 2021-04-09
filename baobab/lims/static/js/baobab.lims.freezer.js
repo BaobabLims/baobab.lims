@@ -15,7 +15,7 @@ function BaobabFreezerView() {
 
     function temperatureGraph(){
         Highcharts.getJSON(
-            window.location.href+'getGraphData',
+            window.location.href+'/getGraphData',
             data => {
                 let detailChart;
 
