@@ -106,6 +106,7 @@
                 <tr>
                   <th i18n:translate=''>Title</th>
                   <th i18n:translate=''>Virus Sample</th>
+                  <th i18n:translate=''>Storage Location</th>
                   <th i18n:translate=''>Heat Inactivated</th>
                   <th i18n:translate=''>Method</th>
                   <th i18n:translate=''>New Barcode</th>
@@ -129,6 +130,13 @@
                          <span>
                              <div tal:content="python: context.Vocabulary_Sample().getValue(extract['VirusSample'])">
                                  Virus Sample Title
+                             </div>
+                         </span>
+                    </td>
+                     <td class="col-2">
+                         <span>
+                             <div tal:content="python: context.getSampleStorageLocationTitle(extract['VirusSample'])">
+                                 Location
                              </div>
                          </span>
                     </td>
