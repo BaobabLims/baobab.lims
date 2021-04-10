@@ -436,13 +436,6 @@ class ViralGenomicAnalysis(BaseContent):
     def getProjectUID(self):
         return self.getProject().UID() if self.getProject() else None
 
-    def getSampleStorageLocationTitle(self, sample_uid):
-        sample = api.content.get(UID=sample_uid)
-        storage = sample.getStorageLocation()
-        if not storage:
-            return
-        return storage.title
-
     def setExtractGenomicMaterial(self, value, **kwargs):
         empty_line = [{'ExtractionBarcode': '',
             'orderindex_': 'template_row_marker',
