@@ -108,6 +108,7 @@
                   <th i18n:translate=''>Virus Sample</th>
                   <th i18n:translate=''>Heat Inactivated</th>
                   <th i18n:translate=''>Method</th>
+                  <th i18n:translate=''>New Sample Type</th>
                   <th i18n:translate=''>New Barcode</th>
                   <th i18n:translate=''>New Volume</th>
                   <th i18n:translate=''>New Unit</th>
@@ -143,6 +144,13 @@
                          <span>
                              <div tal:content="python: context.Vocabulary_Method().getValue(extract['Method'])">
                                  Method
+                             </div>
+                         </span>
+                    </td>
+                     <td class="">
+                         <span>
+                             <div tal:content="python: context.Vocabulary_RNAorDNA_SampleTypes().getValue(extract['SampleType'])">
+                                 Sample Type
                              </div>
                          </span>
                     </td>
