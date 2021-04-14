@@ -8,6 +8,7 @@
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from Products.ATContentTypes.content import schemata
 from Products.Archetypes.public import ReferenceField, registerType
+from plone import api
 from plone.app.folder.folder import ATFolder
 from Products.Archetypes.references import HoldingReference
 from Products.Archetypes.public import Schema
@@ -68,6 +69,17 @@ class Freezer(ATFolder):
     def _renameAfterCreation(self, check_auto_id=False):
         from bika.lims.idserver import renameAfterCreation
         renameAfterCreation(self)
+
+    def getCurrentTemperature(self):
+        brains = api.content.find(self, sort_on='modified',
+                portal_type='DeviceReading', sort_order='descending')
+        if brains:
+            obj = brains[-1].getObject()
+            current_reading = obj.getCurrentReading()
+            unit = obj.getUnit()
+            record_date = obj.getDatetimeRecorded()
+            return '{} {} at {}'.format(current_reading, unit, record_date)
+        return ''
 
 
 schemata.finalizeATCTSchema(schema, folderish=True, moveDiscussion=False)

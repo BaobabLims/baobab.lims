@@ -58,15 +58,15 @@ function BaobabFreezerView() {
                         },
                         yAxis: {
                             title: {
-                                text: null
+                                text: '°C'
                             },
                             maxZoom: 0.1
                         },
                         tooltip: {
                             formatter: function () {
                                 var point = this.points[0];
-                                return '<b>' + point.series.name + '</b><br/>' + Highcharts.dateFormat('%A %B %e %Y', this.x) + ':<br/>' +
-                                    '1 USD = ' + Highcharts.numberFormat(point.y, 2) + ' EUR';
+                                return '<b>' + point.series.name + '</b><br/>' + Highcharts.dateFormat('%A %B %e %Y', this.x) + ':<br/>'
+                                    + Highcharts.numberFormat(point.y, 2) + ' °C';
                             },
                             shared: true
                         },
@@ -87,14 +87,14 @@ function BaobabFreezerView() {
                             }
                         },
                         series: [{
-                            name: 'USD to EUR',
+                            name: 'Temperature',
                             pointStart: detailStart,
                             pointInterval: 24 * 3600 * 1000,
                             data: detailData
                         }],
 
                         exporting: {
-                            enabled: false
+                            enabled: true
                         }
 
                     }); // return chart
@@ -173,7 +173,8 @@ function BaobabFreezerView() {
                             }
                         },
                         yAxis: {
-                            gridLineWidth: 0,
+                            gridLineWidth: 1,
+                            crosshair: true,
                             labels: {
                                 enabled: false
                             },
@@ -219,7 +220,7 @@ function BaobabFreezerView() {
 
                         series: [{
                             type: 'area',
-                            name: 'USD to EUR',
+                            name: 'Temperature',
                             pointInterval: 24 * 3600 * 1000,
                             pointStart: data[0][0],
                             data: data

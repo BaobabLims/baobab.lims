@@ -18,14 +18,13 @@ class FreezerView(BrowserView):
 
     def __call__(self):
 
-        self.storage_unit =  1# self.context.getStorageUnit().title or 1
-        self.monitoring_device =  2# self.context.getMonitoringDevice().title or 1
-        self.temperature = 'Coming soon'
-
-        brains = api.content.find(context=self.context,
-                sort_on='id',
-                portal_type='DeviceReading')
-
+        self.location =self.context.getStorageUnit()
+        self.location = self.location and "<a href='%s'>%s</a>" % (
+                self.location.absolute_url(), self.location.Title()) or None
+        self.device = self.context.getMonitoringDevice()
+        self.device = self.device and "<a href='%s'>%s</a>" % (
+                self.device.absolute_url(), self.device.Title()) or None
+        self.temperature = self.context.getCurrentTemperature()
 
         return self.template()
 
