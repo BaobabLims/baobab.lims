@@ -6,7 +6,7 @@
 # Some rights reserved. See LICENSE.txt, AUTHORS.txt.
 
 from AccessControl.SecurityInfo import ClassSecurityInfo
-from Products.Archetypes.public import Schema
+from Products.Archetypes.public import Schema, StringField, StringWidget
 from Products.ATContentTypes.content import schemata
 from Products.Archetypes.public import registerType
 from Products.CMFPlone.interfaces import IConstrainTypes
@@ -16,9 +16,18 @@ from zope.interface import implements
 
 from bika.lims.content.bikaschema import BikaFolderSchema
 from baobab.lims.interfaces import IMonitoringDevice
+from baobab.lims import bikaMessageFactory as _
 from baobab.lims import config
 
 schema = BikaFolderSchema.copy() + Schema((
+    StringField(
+        'MACAddress',
+        searchable=True,
+        widget=StringWidget(
+            label=_("MAC Address"),
+            description=_("Monitoring Device MAC Address"),
+            visible={'edit': 'visible', 'view': 'visible'}
+        )),
 
 ))
 
