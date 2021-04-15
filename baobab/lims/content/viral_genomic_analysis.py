@@ -171,6 +171,7 @@ ExtractGenomicMaterial = DataGridField(
     allow_oddeven=True,
     columns=('VirusSample',
              'Method',
+             'SampleType',
              'ExtractionBarcode',
              'Volume',
              'Unit',
@@ -188,6 +189,8 @@ ExtractGenomicMaterial = DataGridField(
                 vocabulary='Vocabulary_VirusSample_by_ProjectUID',
                 ),
             'Method': SelectColumn('Method', vocabulary='Vocabulary_Method'),
+            'SampleType': SelectColumn('SampleType',
+                vocabulary='Vocabulary_RNAorDNA_SampleTypes'),
             'ExtractionBarcode': Column('Extraction Barcode'),
             'Volume': Column('Volume'),
             'Unit': Column('Unit'),
@@ -217,7 +220,6 @@ GenomeQuantification = DataGridField(
         columns={
             'VirusSampleRNAorDNA': SelectColumn(
                 'Virus Sample by RNA/DNA',
-                # vocabulary='Vocabulary_Sample_RNA_or_DNA',
                 vocabulary='Vocabulary_VLD_Sample_RNA_or_DNA',
                 visible={
                  'edit': 'visible',
@@ -355,7 +357,6 @@ ViralLoadDetermination = DataGridField(
         columns={
             'VirusSampleRNAorDNA': SelectColumn(
                 'Virus Sample by RNA/DNA',
-                # vocabulary='Vocabulary_Sample_RNA_or_DNA'),
                 vocabulary='Vocabulary_VLD_Sample_RNA_or_DNA'),
             'ctValue': Column('ct Value'),
             'KitNumber': Column('Kit Lot #'),
@@ -465,7 +466,7 @@ class ViralGenomicAnalysis(BaseContent):
                 if virus_sample is None:
                     continue
                 aline = True
-                sample_type = virus_sample.getSampleType()
+                sample_type = api.content.get(UID=row['SampleType'])
                 values = {
                 }
                 values = {
@@ -609,23 +610,6 @@ class ViralGenomicAnalysis(BaseContent):
     def Vocabulary_VirusSample_by_ProjectUID(self, project_uid=None):
         return DisplayList(self.getVirusSamplesByProjectUID())
 
-    def Vocabulary_Sample_RNA_or_DNA(self):
-        pc = getToolByName(self, 'bika_catalog')
-        # TODO: Add getProjectUID index or column instead,
-        # so that self.getProjectUID will be available
-        project_uid = self.getProjectUID()
-        if not project_uid:
-            items = [('','')]
-            return DisplayList(items)
-
-        # TODO:
-        # filter by prefix or title
-        # add prefix/title index or column
-        brains = pc(portal_type="VirusSample", getProjectUID=project_uid)
-        if not brains:
-            brians = []
-        items = [('', '')] + [(c.UID, c.Title) for c in brains]
-        return DisplayList(items)
 
     def Vocabulary_VLD_Sample_RNA_or_DNA(self):
         pc = getToolByName(self, 'portal_catalog')
@@ -644,6 +628,11 @@ class ViralGenomicAnalysis(BaseContent):
             if obj.getField('SampleType').get(obj) in rna_dna_sample_types:
                 items.append((obj.UID(), obj.Title()))
 
+        return DisplayList(items)
+
+    def Vocabulary_RNAorDNA_SampleTypes(self):
+        rna_dna_sample_types = self.getRNAorDNASampleTypes()
+        items = [('', '')] + [(c.UID(), c.title) for c in rna_dna_sample_types]
         return DisplayList(items)
 
     def getRNAorDNASampleTypes(self):
