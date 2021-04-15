@@ -12,4 +12,12 @@
       layer="bika.lims.interfaces.IBikaLIMS"
     />
 
+    <browser:page
+      for="baobab.lims.interfaces.IViralGenomicAnalysis"
+      name="download_report"
+      class=".download_report.DownloadVGAReport"
+      permission="zope2.View"
+      layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
 </configure>

@@ -518,11 +518,41 @@ class ViralGenomicAnalysis(BaseContent):
 
         return prepared_aliquots
 
+    def prepare_viral_load_data(self):
+        viral_loads = self.getViralLoadDetermination()
+        viral_loads_list = []
+        for viral_load in viral_loads:
+            if viral_load['AddToReport']:
+                individual_viral_load = self.prepare_individual_viral_load(viral_load)
+                viral_loads_list.append(individual_viral_load)
+        return viral_loads_list
+
+    def prepare_individual_viral_load(self, viral_load):
+        return {
+            'sample': self.getObjectTitleFromUID(viral_load['VirusSampleRNAorDNA']),
+            'ct_value': viral_load['ctValue'],
+            'kit_number': viral_load['KitNumber'],
+            'result': viral_load['Result'],
+            'verification': viral_load['Verification'],
+            'notes': viral_load['Notes'],
+        }
+
     def get_virus_sample(self, extract):
         try:
             virus_sample = extract.getField('VirusSample').get(extract)
             return virus_sample.Title()
         except:
+            return ''
+
+    def getObjectTitleFromUID(self, object_uid):
+
+        try:
+            pc = getToolByName(self, 'portal_catalog')
+
+            brains = pc(UID=object_uid)
+            return brains[0].getObject().Title()
+        except Exception as e:
+            # raise Exception('%s %s not found' % (obj_type, obj_title))
             return ''
 
     def get_parent_sample(self, virus_aliquot):

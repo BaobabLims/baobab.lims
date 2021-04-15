@@ -100,4 +100,19 @@ class ExportView(IV):
         exporter = SampleShipmentExporter(self.context)
         export_dict['Sample Shipment'] = exporter.export()
 
+        exporter = ViralGenomicAnalysisExporter(self.context)
+        export_dict['Viral Genomic Analysis'] = exporter.export()
+
+        exporter = ExtractGenomicMaterialExporter(self.context)
+        export_dict['Extract Genomic Material'] = exporter.export()
+
+        exporter = GenomeQuantificationExporter(self.context)
+        export_dict['Genome Quantification'] = exporter.export()
+
+        exporter = ViralLoadDeterminationExporter(self.context)
+        export_dict['Viral Load Determination'] = exporter.export()
+
+        exporter = SequenceLibraryPrepExporter(self.context)
+        export_dict['Sequence Library Prep'] = exporter.export()
+
         self.excel_writer.write_output(export_dict)
