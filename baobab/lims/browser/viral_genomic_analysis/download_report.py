@@ -30,27 +30,14 @@ class DownloadVGAReport(BrowserView):
         self.pc = getToolByName(self.context, 'portal_catalog')
 
     def __call__(self):
-        print('--------------------')
-        print('The download report code section has been reached.')
-        print(self.context)
-        # print(self.request)
-        # html_test = '<html><head></head><body><h1>This is a test for H1 header</h1><p>This is a long example of a paragraph that is to be generated</p></body</html>'
-
-
-
-        # self.prepare_viral_load_data()
         self.prepare_overhead_data()
         self.prepare_report()
         self.now = datetime.datetime.now()
         pdf_data = createPdf(htmlreport=self.template())
 
-
-
         date = datetime.datetime.now().strftime("%Y%m%d%H%M")
         setheader = self.request.RESPONSE.setHeader
         setheader("Content-type", "application/pdf")
-        # setheader("Content-Disposition", "inline")
-        # setheader("filename", "temp.pdf")
         setheader("Content-Disposition",
                   "attachment;filename=\"viral_genomic_analysis_%s.pdf\"" % date)
 
@@ -66,22 +53,14 @@ class DownloadVGAReport(BrowserView):
 
         pc = self.portal_catalog
         self.checkPermission = self.context.portal_membership.checkPermission
-        # self.now = DateTime()
         self.SamplingWorkflowEnabled = self.context.bika_setup.getSamplingWorkflowEnabled()
 
         # Client details (if client is associated)
         project = self.context.getProject()
         client = project.getClient()
 
-
-        # self.client = None
-        # client_uid = hasattr(self.context, 'getClientUID') and self.context.getClientUID()
-        # if client_uid:
-        #     proxies = pc(portal_type='Client', UID=client_uid)
-        # if proxies:
         if client:
             self.client = client
-            # self.client = proxies[0].getObject()
             client_address = self.client.getPostalAddress()
             if not client_address:
                 client_address = self.contact.getBillingAddress()
@@ -127,15 +106,6 @@ class DownloadVGAReport(BrowserView):
             #     self.lab_address = self.lab_address[:-5]
         else:
             self.lab_address = None
-
-    # def prepare_viral_load_data(self):
-    #
-    #     data = self.context.getViralLoadDetermination()
-    #     print(data)
-
-    # def ulocalized_time(self, time, long_format=None, time_only=None):
-    #     return ulocalized_time(time, long_format, time_only,
-    #                            context=self.context, request=self.request)
 
 
 
