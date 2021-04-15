@@ -63,8 +63,8 @@ class VirusSampleView(BrowserView):
         self.sequencing_protocol_name = self.context.getSequencingProtocolName()
         self.location = context.getField('StorageLocation').get(context)
         self.location = self.location and "<a href='%s'>%s</a>" % (
-                                 location.absolute_url(),
-                                 location.Title()) or None
+                                 self.location.absolute_url(),
+                                 self.location.Title()) or None
 
         self.icon = self.portal_url + \
                     "/++resource++baobab.lims.images/shipment_big.png"
