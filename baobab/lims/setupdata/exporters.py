@@ -1,6 +1,7 @@
 from Products.CMFCore.utils import getToolByName
 from bika.lims.utils import to_utf8
 from baobab.lims.utils.retrieve_objects import *
+from baobab.lims.extenders.sample import Sample
 
 class LabDataExporter(object):
     """ This class packages all the samples info into a list of dictionaries and then returns it.
@@ -68,6 +69,8 @@ class ProjectsExporter(object):
 
         pc = getToolByName(self.context, 'portal_catalog')
         project_brains = pc(portal_type="Project")
+        print('----------------projects')
+        print(project_brains)
         if project_brains:
             list_of_projects.append(['Title', 'Description', 'StudyType', 'EthicsFormLink', 'AgeHigh', 'AgeLow',
                                      'NumParticipants', 'Biospecimen_Types', 'Client', 'Client_ID',
@@ -190,7 +193,7 @@ class VirusSamplesExporter(object):
 
             row = []
             row.append(virus_sample.Title())
-            project = virus_sample.aq_parent
+            project = virus_sample.getField('Project').get(virus_sample)
             row.append(project.Title())
             row.append(virus_sample.getSampleType().Title())
             # disease_ontology = virus_sample.getField('DiseaseOntology').get(virus_sample)

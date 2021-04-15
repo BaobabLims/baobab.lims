@@ -717,7 +717,7 @@ class VirusSample(SetupImporter):
 
         obj.edit(
             title=row.get('title'),
-            Barcode=row.get('barcode'),
+            Barcode=row.get('Barcode'),
             Project=project,
             SampleType=sample_type,
             StorageLocation=storage_location,
