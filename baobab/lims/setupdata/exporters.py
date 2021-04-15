@@ -128,34 +128,37 @@ class SamplesExporter(object):
                             'Date_Created', 'SampleID_field',
                             'Sample_ID', 'UID', 'Parent_UID', 'URL_path'])
         for brain in brains:
-            sample = brain.getObject()
+            try:
+                sample = brain.getObject()
 
-            row = []
-            row.append(sample.Title())
-            project = sample.aq_parent
-            row.append(project.Title())
-            row.append(sample.getSampleType().Title())
-            storage = sample.getField('StorageLocation').get(sample)
-            if storage:
-                row.append(storage.getHierarchy())
-            else:
-                row.append('')
-            row.append(sample.getSamplingDate().strftime("%Y-%m-%d %H:%M") if sample.getSamplingDate() else '')
-            row.append(sample.getField('SubjectID').get(sample))
-            row.append(sample.getField('Barcode').get(sample))
-            row.append(sample.getField('Volume').get(sample))
-            row.append(sample.getField('Unit').get(sample))
+                row = []
+                row.append(sample.Title())
+                project = sample.aq_parent
+                row.append(project.Title())
+                row.append(sample.getSampleType().Title())
+                storage = sample.getField('StorageLocation').get(sample)
+                if storage:
+                    row.append(storage.getHierarchy())
+                else:
+                    row.append('')
+                row.append(sample.getSamplingDate().strftime("%Y-%m-%d %H:%M") if sample.getSamplingDate() else '')
+                row.append(sample.getField('SubjectID').get(sample))
+                row.append(sample.getField('Barcode').get(sample))
+                row.append(sample.getField('Volume').get(sample))
+                row.append(sample.getField('Unit').get(sample))
 
-            row.append(sample.getSampleState())
-            row.append(sample.getField('DateCreated').get(sample).strftime("%Y-%m-%d %H:%M") if sample.getField('DateCreated').get(sample) else '')
-            row.append(sample.getField('SampleID').get(sample))
+                row.append(sample.getSampleState())
+                row.append(sample.getField('DateCreated').get(sample).strftime("%Y-%m-%d %H:%M") if sample.getField('DateCreated').get(sample) else '')
+                row.append(sample.getField('SampleID').get(sample))
 
-            row.append(sample.getId() if sample.getId() else '')
-            row.append(sample.UID())
-            row.append(sample.aq_parent.UID() if sample.aq_parent.UID() else '')
-            row.append(brain.getPath() if brain.getPath() else '')
+                row.append(sample.getId() if sample.getId() else '')
+                row.append(sample.UID())
+                row.append(sample.aq_parent.UID() if sample.aq_parent.UID() else '')
+                row.append(brain.getPath() if brain.getPath() else '')
 
-            samples.append(row)
+                samples.append(row)
+            except:
+                pass
         return samples
 
 
@@ -475,8 +478,6 @@ class ExtractGenomicMaterialExporter(object):
             for egm in extract_genomic_materials:
 
                 if egm:
-                    # print('-----------------EGM')
-                    # print(egm)
                     row = []
                     row.append(vga.Title())
                     row.append(str(egm['ExtractionBarcode'] if 'ExtractionBarcode' in egm else ''))
@@ -530,11 +531,8 @@ class GenomeQuantificationExporter(object):
             for gq in genome_quantifications:
 
                 if gq:
-                    # print('-----------------')
-                    # print(gq)
                     row = []
-                    # row.append(vga.Title())
-                    # virus_sample = get_object_from_uid(self.context, gq['VirusSample'])
+                    row.append(vga.Title())
                     virus_sample = get_object_from_uid(self.context, gq['VirusSampleRNAorDNA'])
                     try:
                         row.append(virus_sample.Title())
@@ -578,7 +576,7 @@ class ViralLoadDeterminationExporter(object):
                 if vld:
 
                     row = []
-                    # virus_sample = get_object_from_uid(self.context, vld['VirusSample'])
+                    row.append(vga.Title())
                     virus_sample = get_object_from_uid(self.context, vld['VirusSampleRNAorDNA'])
                     try:
                         row.append(virus_sample.Title())
@@ -623,7 +621,9 @@ class SequenceLibraryPrepExporter(object):
 
                 if slp:
                     row = []
-                    virus_sample = get_object_from_uid(self.context, slp['VirusSample'])
+                    row.append(vga.Title())
+
+                    virus_sample = get_object_from_uid(self.context, slp['VirusSampleRNAorDNA'])
                     try:
                         row.append(virus_sample.Title())
                     except:
