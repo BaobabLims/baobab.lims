@@ -44,7 +44,6 @@
     <object name="AuditLogs" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="AuditLog" meta_type="Factory-based Type Information with dynamic views"/>
 
-    <object name="VirusSamples" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="VirusSample" meta_type="Factory-based Type Information with dynamic views"/>
 
     <object name="Organisms" meta_type="Factory-based Type Information with dynamic views"/>
@@ -68,10 +67,6 @@
     <object name="ViralGenomicAnalyses" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="ViralGenomicAnalysis" meta_type="Factory-based Type Information with dynamic views"/>
 
-    <object name="ExtractGenomicMaterials" meta_type="Factory-based Type Information with dynamic views"/>
-    <object name="ExtractGenomicMaterial" meta_type="Factory-based Type Information with dynamic views"/>
-
-    <object name="VirusAliquots" meta_type="Factory-based Type Information with dynamic views"/>
     <object name="VirusAliquot" meta_type="Factory-based Type Information with dynamic views"/>
 
     <!-- Override values from bika.lims -->

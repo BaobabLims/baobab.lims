@@ -32,7 +32,6 @@
     <include package=".sampleshipments"/>
     <include package=".sampleshipment"/>
     <include package=".auditlogs"/>
-    <include package=".virus_samples"/>
     <include package=".virus_sample"/>
     <include package=".organisms"/>
     <include package=".anatomical_materials"/>
@@ -42,8 +41,6 @@
     <include package=".host_diseases"/>
     <include package=".viral_genomic_analyses"/>
     <include package=".viral_genomic_analysis"/>
-    <include package=".extract_genomic_materials"/>
-    <include package=".virus_aliquots"/>
 
     <!-- This registration allows additional sticker templates.
          To enable these, just copy one or more of the *.pt files

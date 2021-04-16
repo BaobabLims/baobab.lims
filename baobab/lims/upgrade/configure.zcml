@@ -93,6 +93,15 @@
         sortkey="8"
         profile="baobab.lims:default"/>
 
+  <genericsetup:upgradeStep
+        title="Delete unused links"
+        description="Deletes VirusSamples, ExtractGenomicMaterials and VirusAliquots"
+        source="1700"
+        destination="1.7.0.1"
+        handler="baobab.lims.upgrade.to1701.upgrade"
+        sortkey="8"
+        profile="baobab.lims:default"/>
+
 
 
 </configure>

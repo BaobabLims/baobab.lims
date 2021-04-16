@@ -10,7 +10,6 @@ donors,SampleDonors
 disease_ontologies,DiseaseOntologies
 sampleshipments,SampleShipments
 auditlogs,AuditLogs
-virus_samples,VirusSamples
 organisms,Organisms
 collection_devices,CollectionDevices
 anatomical_materials,AnatomicalMaterials
@@ -18,5 +17,3 @@ lab_hosts,LabHosts
 hosts,Hosts
 host_diseases,HostDiseases
 viral_genomic_analyses,ViralGenomicAnalyses
-extract_genomic_materials,ExtractGenomicMaterials
-virus_aliquots,VirusAliquots
