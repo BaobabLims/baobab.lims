@@ -111,6 +111,8 @@ class BikaCustomGenerator:
         at.setCatalogsByType('Host', ['bika_catalog', 'portal_catalog'])
         at.setCatalogsByType('HostDisease', ['bika_catalog', 'portal_catalog'])
         at.setCatalogsByType('ViralGenomicAnalyses', ['bika_catalog', 'portal_catalog'])
+        at.setCatalogsByType('ExtractGenomicMaterials', ['bika_catalog', 'portal_catalog'])
+        at.setCatalogsByType('VirusAliquots', ['bika_catalog', 'portal_catalog'])
 
         addIndex(bc, 'getParentUID', 'FieldIndex')
         addIndex(bc, 'getProjectUID', 'FieldIndex')
