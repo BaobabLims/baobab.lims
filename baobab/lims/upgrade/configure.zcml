@@ -94,15 +94,6 @@
         profile="baobab.lims:default"/>
 
   <genericsetup:upgradeStep
-        title="Add Virus Sample"
-        description="Add content type VirusSample"
-        source="1601"
-        destination="1700"
-        handler="baobab.lims.upgrade.to1700.upgrade"
-        sortkey="8"
-        profile="baobab.lims:default"/>
-
-  <genericsetup:upgradeStep
         title="Virus Samples folder"
         description="Remove VirusSample from allowed types"
         source="1700"
