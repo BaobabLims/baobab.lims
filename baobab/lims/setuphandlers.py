@@ -27,6 +27,7 @@ class BikaCustomGenerator:
                 'disease_ontologies',
                 'sampleshipments',
                 'auditlogs',
+                'virus_samples',
                 'organisms',
                 'collection_devices',
                 'anatomical_materials',
@@ -34,6 +35,8 @@ class BikaCustomGenerator:
                 'hosts',
                 'host_diseases',
                 'viral_genomic_analyses',
+                'extract_genomic_materials',
+                'virus_aliquots',
         ):
             try:
                 obj = portal._getOb(obj_id)
@@ -165,6 +168,36 @@ class BikaCustomGenerator:
         mp(ReceiveInventoryOrder, ['Manager', 'LabManager', 'LabClerk'], 1)
         mp(StoreInventoryOrder, ['Manager', 'LabManager', 'LabClerk'], 1)
 
+        # extract_genomic_materials
+        mp = portal.extract_genomic_materials.manage_permission
+
+        # Allow authenticated users to see the contents of the project folder
+        mp(permissions.View, ['Authenticated'], 0)
+        mp(permissions.AccessContentsInformation, ['Authenticated'], 0)
+        mp(permissions.ListFolderContents, ['Authenticated'], 0)
+
+        mp(permissions.ListFolderContents, ['Manager'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
+        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
+        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager'], 0)
+        portal.extract_genomic_materials.reindexObject()
+
+        # virus_aliquots
+        mp = portal.virus_aliquots.manage_permission
+
+        # Allow authenticated users to see the contents of the project folder
+        mp(permissions.View, ['Authenticated'], 0)
+        mp(permissions.AccessContentsInformation, ['Authenticated'], 0)
+        mp(permissions.ListFolderContents, ['Authenticated'], 0)
+
+        mp(permissions.ListFolderContents, ['Manager'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
+        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
+        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager'], 0)
+        portal.virus_aliquots.reindexObject()
+
         # lab_hosts
         mp = portal.lab_hosts.manage_permission
 
@@ -269,6 +302,21 @@ class BikaCustomGenerator:
         mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
         mp(permissions.AddPortalContent, ['Manager', 'LabManager'], 0)
         portal.organisms.reindexObject()
+
+        # virus samples
+        mp = portal.virus_samples.manage_permission
+
+        # Allow authenticated users to see the contents of the project folder
+        mp(permissions.View, ['Authenticated'], 0)
+        mp(permissions.AccessContentsInformation, ['Authenticated'], 0)
+        mp(permissions.ListFolderContents, ['Authenticated'], 0)
+
+        mp(permissions.ListFolderContents, ['Manager'], 0)
+        mp(permissions.View, ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
+        mp(permissions.ModifyPortalContent, ['Manager', 'LabManager', 'Owner'], 0)
+        mp('Access contents information', ['Manager', 'LabManager', 'LabClerk', 'Analyst', 'Owner', 'EMS'], 0)
+        mp(permissions.AddPortalContent, ['Manager', 'LabManager'], 0)
+        portal.virus_samples.reindexObject()
 
         # audit logger
         mp = portal.auditlogs.manage_permission
