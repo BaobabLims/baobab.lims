@@ -447,6 +447,9 @@ def setupCustomVarious(context):
               'supplyorders',
               'arimports',
               'bika_setup',
+              'virus_samples',
+              'virus_aliquots',
+              'extract_genomic_materials',
               ]:
         obj = portal[x]
         obj.schema['excludeFromNav'].set(obj, True)

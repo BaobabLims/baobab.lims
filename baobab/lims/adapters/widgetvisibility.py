@@ -104,6 +104,59 @@ class SampleFieldWidgetVisibility(object):
 
         return state
 
+class VirusSampleFieldWidgetVisibility(object):
+    """Forces a set of Sample fields to be invisible depending on
+    if context implement IBiospecimen or IAliquot
+    """
+    implements(IATWidgetVisibility)
+
+    def __init__(self, context):
+        self.context = context
+        self.sort = 10
+        self.random = 4
+        self.hidden_fields = [
+            'ClientReference',
+            'PreparationWorkflow',
+            'ClientSampleID',
+            'SamplingWorkflowEnabled',
+            'Sampler',
+            'Composite',
+            'AdHoc',
+            'EnvironmentalConditions',
+            'ScheduledSamplingSampler',
+            'SamplePoint',
+            'SamplingDeviation',
+            'DisposalDate',
+            'DateSampled',
+            'DateCreated',
+            'DiseaseOntology',
+            'Donor',
+            'SamplingDate',
+            'SampleCondition',
+            'SubjectID',
+            ]
+
+        self.show_fields = [
+            'SampleType',
+            'SampleCondition'
+        ]
+    def __call__(self, context, mode, field, default):
+        state = default if default else 'hidden'
+        field_name = field.getName()
+
+        wftool = self.context.portal_workflow
+        review_state = wftool.getInfoFor(self.context, 'review_state')
+
+        if field_name in self.hidden_fields:
+            field.required = False
+            return 'invisible'
+
+        if field_name in self.show_fields:
+            field.widget.visible['sample_received'] = {'view': 'visible', 'edit': 'visible'}
+            field.widget.visible['sample_due'] = {'view': 'visible', 'edit': 'visible'}
+
+        return state
+
 
 class PriceListWidgetVisibility(object):
     """Forces a set of Sample fields to be invisible depending on
