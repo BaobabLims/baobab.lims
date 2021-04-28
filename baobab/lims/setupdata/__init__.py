@@ -835,6 +835,8 @@ class Device_Readings(WorksheetImporter):
         folder = self.context.freezers
         rows = self.get_rows(3)
         for row in rows:
+            if not row['CurrentReading']:
+                continue
             deviceTitle = row.get('MonitoringDevice', None)
             mon_device = pc(portal_type='MonitoringDevice', Title=deviceTitle)
             dev_obj = mon_device[0].getObject() if mon_device else None

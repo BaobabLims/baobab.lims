@@ -2,248 +2,76 @@ function BaobabFreezerView() {
     var that = this;
 
     this.load = function() {
-        // ------------------------------------------------------------------------
-        //  Entry-point method for AnalysisRequestAddView
-        // ------------------------------------------------------------------------
         temperatureGraph()
 
     };
 
-    // ------------------------------------------------------------------------
-    // PRIVATE FUNCTIONS
-    // ------------------------------------------------------------------------
-
     function temperatureGraph(){
         Highcharts.getJSON(
             window.location.href+'/getGraphData',
-            data => {
-                let detailChart;
-
-                // create the detail chart
-                function createDetail(masterChart) {
-                    // prepare the detail chart
-                    var detailData = [],
-                        detailStart = data[0][0];
-
-                    masterChart.series[0].data.forEach(point => {
-                        if (point.x >= detailStart) {
-                            detailData.push(point.y);
-                        }
-                    });
-
-                    // create a detail chart referenced by a global variable
-                    detailChart = Highcharts.chart('detail-container', {
-                        chart: {
-                            marginBottom: 120,
-                            reflow: false,
-                            marginLeft: 50,
-                            marginRight: 20,
-                            style: {
-                                position: 'absolute'
-                            }
-                        },
-                        credits: {
-                            enabled: false
-                        },
+            function (data) {
+                Highcharts.chart('container', {
+                    chart: {
+                        zoomType: 'x'
+                    },
+                    title: {
+                        text: 'Freezer Temperature over time'
+                    },
+                    xAxis: {
+                        type: 'datetime'
+                    },
+                    yAxis: {
                         title: {
-                            text: 'Freezer Temperature over time',
-                            align: 'left'
-                        },
-                        subtitle: {
-                            text: 'Select an area by dragging across the lower chart',
-                            align: 'left'
-                        },
-                        xAxis: {
-                            type: 'datetime'
-                        },
-                        yAxis: {
-                            title: {
-                                text: '°C'
-                            },
-                            maxZoom: 0.1
-                        },
-                        tooltip: {
-                            formatter: function () {
-                                var point = this.points[0];
-                                return '<b>' + point.series.name + '</b><br/>' + Highcharts.dateFormat('%A %B %e %Y', this.x) + ':<br/>'
-                                    + Highcharts.numberFormat(point.y, 2) + ' °C';
-                            },
-                            shared: true
-                        },
-                        legend: {
-                            enabled: false
-                        },
-                        plotOptions: {
-                            series: {
-                                marker: {
-                                    enabled: false,
-                                    states: {
-                                        hover: {
-                                            enabled: true,
-                                            radius: 3
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        series: [{
-                            name: 'Temperature',
-                            pointStart: detailStart,
-                            pointInterval: 24 * 3600 * 1000,
-                            data: detailData
-                        }],
-
-                        exporting: {
-                            enabled: true
+                            text: 'Temperature (°C)'
                         }
-
-                    }); // return chart
-                }
-
-                // create the master chart
-                function createMaster() {
-                    Highcharts.chart('master-container', {
-                        chart: {
-                            reflow: false,
-                            borderWidth: 0,
-                            backgroundColor: null,
-                            marginLeft: 50,
-                            marginRight: 20,
-                            zoomType: 'x',
-                            events: {
-
-                                // listen to the selection event on the master chart to update the
-                                // extremes of the detail chart
-                                selection: function (event) {
-                                    var extremesObject = event.xAxis[0],
-                                        min = extremesObject.min,
-                                        max = extremesObject.max,
-                                        detailData = [],
-                                        xAxis = this.xAxis[0];
-
-                                    // reverse engineer the last part of the data
-                                    this.series[0].data.forEach(point => {
-                                        if (point.x > min && point.x < max) {
-                                            detailData.push([point.x, point.y]);
-                                        }
-                                    });
-
-                                    // move the plot bands to reflect the new detail span
-                                    xAxis.removePlotBand('mask-before');
-                                    xAxis.addPlotBand({
-                                        id: 'mask-before',
-                                        from: data[0][0],
-                                        to: min,
-                                        color: 'rgba(0, 0, 0, 0.2)'
-                                    });
-
-                                    xAxis.removePlotBand('mask-after');
-                                    xAxis.addPlotBand({
-                                        id: 'mask-after',
-                                        from: max,
-                                        to: data[data.length - 1][0],
-                                        color: 'rgba(0, 0, 0, 0.2)'
-                                    });
-
-
-                                    detailChart.series[0].setData(detailData);
-
-                                    return false;
+                    },
+                    tooltip: {
+                        formatter: function () {
+                            var point = this.points[0];
+                            return '<b>' + point.series.name + '</b><br/>' + Highcharts.dateFormat('%A %B %e %Y', this.x) + ':<br/>' +
+                                Highcharts.numberFormat(point.y, 2) + '°C';
+                        },
+                        shared: true
+                        },
+                    legend: {
+                        enabled: false
+                    },
+                    plotOptions: {
+                        area: {
+                            fillColor: {
+                                linearGradient: {
+                                    x1: 0,
+                                    y1: 0,
+                                    x2: 0,
+                                    y2: 1
+                                },
+                                stops: [
+                                    [0, Highcharts.getOptions().colors[0]],
+                                    [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                                ]
+                            },
+                            marker: {
+                                radius: 2
+                            },
+                            lineWidth: 1,
+                            states: {
+                                hover: {
+                                    lineWidth: 1
                                 }
-                            }
-                        },
-                        title: {
-                            text: null
-                        },
-                        accessibility: {
-                            enabled: false
-                        },
-                        xAxis: {
-                            type: 'datetime',
-                            showLastTickLabel: true,
-                            maxZoom: 14 * 24 * 3600000, // fourteen days
-                            plotBands: [{
-                                id: 'mask-before',
-                                from: data[0][0],
-                                to: data[data.length - 1][0],
-                                color: 'rgba(0, 0, 0, 0.2)'
-                            }],
-                            title: {
-                                text: null
-                            }
-                        },
-                        yAxis: {
-                            gridLineWidth: 1,
-                            crosshair: true,
-                            labels: {
-                                enabled: false
                             },
-                            title: {
-                                text: null
-                            },
-                            min: 0.6,
-                            showFirstLabel: false
-                        },
-                        tooltip: {
-                            formatter: function () {
-                                return false;
-                            }
-                        },
-                        legend: {
-                            enabled: false
-                        },
-                        credits: {
-                            enabled: false
-                        },
-                        plotOptions: {
-                            series: {
-                                fillColor: {
-                                    linearGradient: [0, 0, 0, 70],
-                                    stops: [
-                                        [0, Highcharts.getOptions().colors[0]],
-                                        [1, 'rgba(255,255,255,0)']
-                                    ]
-                                },
-                                lineWidth: 1,
-                                marker: {
-                                    enabled: false
-                                },
-                                shadow: false,
-                                states: {
-                                    hover: {
-                                        lineWidth: 1
-                                    }
-                                },
-                                enableMouseTracking: false
-                            }
-                        },
-
-                        series: [{
-                            type: 'area',
-                            name: 'Temperature',
-                            pointInterval: 24 * 3600 * 1000,
-                            pointStart: data[0][0],
-                            data: data
-                        }],
-
-                        exporting: {
-                            enabled: false
+                            threshold: null
                         }
+                    },
 
-                    }, masterChart => {
-                        createDetail(masterChart);
-                    }); // return chart instance
-                }
-
-                // make the container smaller and add a second container for the master chart
-                const container = document.getElementById('container');
-                container.style.position = 'relative';
-                container.innerHTML += '<div id="detail-container"></div><div id="master-container"></div>';
-
-                // create master and in its callback, create the detail chart
-                createMaster();
+                    series: [{
+                        type: 'area',
+                        name: 'Temperature',
+                        data: data
+                    }]
+                });
             }
         );
+        // End
     }
 
 }

@@ -18,7 +18,7 @@ class FreezerView(BrowserView):
 
     def __call__(self):
 
-        self.location =self.context.getStorageUnit()
+        self.location = self.context.getStorageUnit()
         self.location = self.location and "<a href='%s'>%s</a>" % (
                 self.location.absolute_url(), self.location.Title()) or None
         self.device = self.context.getMonitoringDevice()
@@ -46,7 +46,11 @@ class FreezerTemperatures():
             datetimestamp = obj.getDatetimeRecorded()
             if datetimestamp is None or temperature is None:
                 continue
-            int_date = int(datetimestamp.strftime('%s'))
-            readings.append([int_date, float(temperature)])
 
-        return json.dumps(readings)
+            # convert datetime to plot points on highcharts, highcharts uses
+            # milliseconds
+            milliseconds = datetimestamp.timeTime() * 1000
+            readings.append([milliseconds, float(temperature)])
+
+        sort_readings = sorted(readings, key=lambda x: x[0])
+        return json.dumps(sort_readings)
