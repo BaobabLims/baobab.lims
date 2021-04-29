@@ -797,6 +797,7 @@ class Monitoring_Devices(WorksheetImporter):
             obj.edit(
                 title=title,
                 description=description,
+                MACAddress=row.get('MACAddress', '')
             )
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)

@@ -112,13 +112,15 @@ class BikaCustomGenerator:
         at.setCatalogsByType('LabHost', ['bika_catalog', 'portal_catalog'])
         at.setCatalogsByType('Host', ['bika_catalog', 'portal_catalog'])
         at.setCatalogsByType('HostDisease', ['bika_catalog', 'portal_catalog'])
-        at.setCatalogsByType('Freezer', ['bika_catalog', 'portal_catalog'])
-        at.setCatalogsByType('MonitoringDevice', ['bika_catalog', 'portal_catalog'])
-        at.setCatalogsByType('DeviceReading', ['bika_catalog', 'portal_catalog'])
-        at.setCatalogsByType('DeviceHistory', ['bika_catalog', 'portal_catalog'])
+        at.setCatalogsByType('Freezer', ['bika_catalog'])
+        at.setCatalogsByType('MonitoringDevice', ['bika_catalog'])
+        at.setCatalogsByType('DeviceReading', ['bika_catalog'])
+        at.setCatalogsByType('DeviceHistory', ['bika_catalog'])
 
         addIndex(bc, 'getParentUID', 'FieldIndex')
         addIndex(bc, 'getProjectUID', 'FieldIndex')
+        addIndex(bc, 'getMACAddress', 'FieldIndex')
+        addIndex(bc, 'getMonitoringDeviceUID', 'FieldIndex')
 
         # _______________________________#
         #      BIKA_SETUP_CATALOG        #
