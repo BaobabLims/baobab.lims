@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from AccessControl import ClassSecurityInfo
 from Products.Archetypes.atapi import CalendarWidget
 from Products.Archetypes.public import (
@@ -44,8 +46,12 @@ schema = BikaSchema.copy() + Schema((
             visible={'edit': 'visible', 'view': 'visible'}
         )),
 
+    # Unit defaults degrees because when we get the request from easylogcloud
+    # we ascii and not unicode and python 2 throws an error
+    # please see browser/freezer_monitoring.py 
     StringField(
         'Unit',
+        default="°", 
         widget=StringWidget(
             label=_("Unit"),
             visible={'edit': 'visible', 'view': 'visible'}

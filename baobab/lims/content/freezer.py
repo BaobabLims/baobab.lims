@@ -81,6 +81,8 @@ class Freezer(ATFolder):
             return '{} {} at {}'.format(current_reading, unit, record_date)
         return ''
 
+    def getMonitoringDeviceUID(self):
+        return self.getMonitoringDevice().UID()
 
 schemata.finalizeATCTSchema(schema, folderish=True, moveDiscussion=False)
 registerType(Freezer, config.PROJECTNAME)

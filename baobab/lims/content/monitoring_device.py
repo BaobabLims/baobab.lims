@@ -22,7 +22,9 @@ from baobab.lims import config
 schema = BikaFolderSchema.copy() + Schema((
     StringField(
         'MACAddress',
+        required=1,
         searchable=True,
+        validators=('uniquefieldvalidator',),
         widget=StringWidget(
             label=_("MAC Address"),
             description=_("Monitoring Device MAC Address"),
