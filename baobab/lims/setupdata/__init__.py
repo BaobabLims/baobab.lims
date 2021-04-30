@@ -797,7 +797,7 @@ class Monitoring_Devices(WorksheetImporter):
             obj.edit(
                 title=title,
                 description=description,
-                MACAddress=row.get('MACAddress', '')
+                MACAddress=row.get('MACAddress')
             )
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
@@ -809,13 +809,13 @@ class Freezers(WorksheetImporter):
     def Import(self):
         folder = self.context.freezers
         rows = self.get_rows(3)
-        pc = getToolByName(self.context, 'portal_catalog')
+        pc = getToolByName(self.context, 'bika_catalog')
         for row in rows:
             title = row.get('title', '')
             if not title: continue
             description = row.get('description', '')
             deviceTitle = row.get('MonitoringDevice', '')
-            device = pc(portal_type='MonitoringDevice', Title=deviceTitle)
+            device = pc(portal_type='MonitoringDevice', title=deviceTitle)
             device_obj = device[0].getObject() if device else None
             obj = _createObjectByType('Freezer', folder, tmpID())
             obj.edit(
@@ -832,14 +832,14 @@ class Device_Readings(WorksheetImporter):
     """Add some dummy monitoring devices
     """
     def Import(self):
-        pc = getToolByName(self.context, 'portal_catalog')
+        pc = getToolByName(self.context, 'bika_catalog')
         folder = self.context.freezers
         rows = self.get_rows(3)
         for row in rows:
             if not row['CurrentReading']:
                 continue
             deviceTitle = row.get('MonitoringDevice', None)
-            mon_device = pc(portal_type='MonitoringDevice', Title=deviceTitle)
+            mon_device = pc(portal_type='MonitoringDevice', title=deviceTitle)
             dev_obj = mon_device[0].getObject() if mon_device else None
             if not dev_obj: continue
             # Device reading

@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-#
-# This file is part of Bika LIMS
-#
-# Copyright 2011-2017 by it's authors.
-# Some rights reserved. See LICENSE.txt, AUTHORS.txt.
 
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from Products.ATContentTypes.content import schemata
@@ -13,6 +8,7 @@ from plone.app.folder.folder import ATFolder
 from Products.Archetypes.references import HoldingReference
 from Products.Archetypes.public import Schema
 from Products.CMFPlone.interfaces import IConstrainTypes
+from Products.CMFCore.utils import getToolByName
 from zope.interface import implements
 
 from baobab.lims import bikaMessageFactory as _
@@ -71,13 +67,21 @@ class Freezer(ATFolder):
         renameAfterCreation(self)
 
     def getCurrentTemperature(self):
-        brains = api.content.find(self, sort_on='modified',
-                portal_type='DeviceReading', sort_order='descending')
-        if brains:
-            obj = brains[-1].getObject()
-            current_reading = obj.getCurrentReading()
-            unit = obj.getUnit()
-            record_date = obj.getDatetimeRecorded()
+        bc = getToolByName(self, 'bika_catalog')
+        # Get the last temperature recorded, need a sort on field???
+        brains = bc(portal_type='DeviceReading',
+                    path={'query': "/".join(self.getPhysicalPath())},
+                    sort_order='descending',
+                    )
+
+        if not brains:
+            return ''
+
+        obj = brains[-1].getObject()
+        current_reading = obj.getCurrentReading()
+        unit = obj.getUnit()
+        record_date = obj.getDatetimeRecorded()
+        if obj.getDatetimeRecorded and current_reading:
             return '{} {} at {}'.format(current_reading, unit, record_date)
         return ''
 

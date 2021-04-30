@@ -18,8 +18,3 @@ def add_device_to_freezer(context, review_state='available'):
     devicehistory.setMonitoringDevice(context.getMonitoringDevice())
     devicehistory.setFreezer(context)
     devicehistory.reindexObject()
-    wf_tool = getToolByName(context.getMonitoringDevice(), 'portal_workflow')
-    review_state = wf_tool.getInfoFor(context.getMonitoringDevice(), 'review_state')
-    if review_state == 'available':
-        wf_tool.doActionFor(context.getMonitoringDevice(), 'use')
-        context.getMonitoringDevice().reindexObject(idxs=["review_state", ])

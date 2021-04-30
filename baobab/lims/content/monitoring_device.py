@@ -57,7 +57,7 @@ class MonitoringDevice(ATFolder):
 
         wftool = self.portal_workflow
         review_state = wftool.getInfoFor(self, 'review_state')
-        pc = getToolByName(self, 'portal_catalog')
+        pc = getToolByName(self, 'bika_catalog')
 
         on_freezer = pc(portal_type='Freezer', MonitoringDevice=self)
 
@@ -73,7 +73,7 @@ class MonitoringDevice(ATFolder):
         """
         wftool = self.portal_workflow
         review_state = wftool.getInfoFor(self, 'review_state')
-        pc = getToolByName(self, 'portal_catalog')
+        pc = getToolByName(self, 'bika_catalog')
         on_freezer = pc(portal_type='Freezer', MonitoringDevice=self)
         if review_state in ('used') and not on_freezer:
             return True

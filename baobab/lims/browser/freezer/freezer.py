@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
-from plone import api
+from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from bika.lims.browser import BrowserView
@@ -36,11 +36,13 @@ class FreezerTemperatures():
 
     def __call__(self):
         context = self.context
-        data = api.content.find(context=context, portal_type='DeviceReading')
+        bc = getToolByName(context, 'bika_catalog')
+        brains = bc(portal_type='DeviceReading',
+                  path={'query': "/".join(context.getPhysicalPath())})
         readings = []
 
         # TODO: add columns
-        for reading in data:
+        for reading in brains:
             obj = reading.getObject()
             temperature = obj.getCurrentReading()
             datetimestamp = obj.getDatetimeRecorded()
