@@ -81,7 +81,7 @@ class Freezer(ATFolder):
         current_reading = obj.getCurrentReading()
         unit = obj.getUnit()
         record_date = obj.getDatetimeRecorded()
-        if obj.getDatetimeRecorded and current_reading:
+        if record_date and current_reading:
             return '{} {} at {}'.format(current_reading, unit, record_date)
         return ''
 

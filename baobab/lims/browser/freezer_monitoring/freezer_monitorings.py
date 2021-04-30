@@ -1,9 +1,19 @@
+# -*- coding: utf-8 -*-
+
+import re
 import requests
+from datetime import datetime as dt
+from DateTime import DateTime as DT
 from Products.CMFPlone.utils import _createObjectByType
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.CMFCore.utils import getToolByName
 
+from plone import api as ploneapi
+
 from bika.lims.browser import BrowserView
+from bika.lims.utils import tmpID
+
+from baobab.lims.idserver import renameAfterCreation
 
 
 class FreezerMonitoringView(BrowserView):
@@ -26,10 +36,15 @@ class FreezerMonitoringCron(BrowserView):
         self.request = request
 
     def __call__(self):
-        api_token = ''
-        email = ''
-        password = ''
-        login = "https://apiwww.easylogcloud.com/Users.svc/Login"
+        # Login
+        bc = getToolByName(ploneapi.portal.get(), 'bika_catalog')
+        form = self.request.form
+
+        api_token = form.get('API_TOKEN')
+        email = form.get('email')
+        password = form.get('password')
+        url = "https://apiwww.easylogcloud.com/"
+        login = url + "Users.svc/Login"
         payload = {'APIToken': api_token, 'email': email,
                    'password': password}
         logged_in = requests.get(login, params=payload)
@@ -38,36 +53,70 @@ class FreezerMonitoringCron(BrowserView):
         else:
             return logged_in
 
-        userguid = data['GUID']
-        mac_address = '98:8B:AD:28:04:26'
-        current_readings = "https://apiwww.easylogcloud.com/Devices.svc/CurrentReadings"
-        payload = {'APIToken': api_token, 'userGUID': userguid,
-                   'MAC_ADDRESS': mac_address, 'localTime': 'true'}
-        received_readings = requests.get(current_readings, params=payload)
-        data = received_readings.json()
-        readings = data.get('channels', [])
+        user_guid = data['GUID']
 
-        # Freezer the device is currently on
-        pc = getToolByName(self.context, 'portal_catalog')
-        freezer = pc(portal_type="Freezer", device_uid=device_uid)
-        mon_device = pc(portal_type="MonitoringDevice", uid=device_uid)
+        # AllDevicesSummary to get the sensorUID
+        devices_url = url + 'Devices.svc/AllDevicesSummary'
+        payload = {'APIToken': api_token,
+                   'userGUID': user_guid,
+                   'includeArchived': 'false'}
+        devices = requests.get(devices_url, params=payload)
+        if devices.status_code == 200:
+            devices_data = devices.json()
+        else:
+            return devices
 
+        for device in devices_data:
+            sensor_guid = device['GUID']
+            # Current readings
+            current_readings = url + "Devices.svc/CurrentReadings"
+            payload = {'APIToken': api_token,
+                       'userGUID': user_guid,
+                       'sensorGUID': sensor_guid,
+                       'localTime': 'true'}
+            received_readings = requests.get(current_readings, params=payload)
+            if received_readings.status_code == 200:
+                received_readings_data = received_readings.json()
+            else:
+                # TODO: Log error
+                continue
+
+            mon_device = bc(portal_type="MonitoringDevice",
+                            getMACAddress=device['MACAddress'])
+            if not mon_device:
+                # TODO: Log error
+                continue
+
+            # Freezer the device is currently on
+            device_uid = mon_device[0].UID
+            mon_device_obj = mon_device[0].getObject()
+            freezer = bc(portal_type="Freezer",
+                        getMonitoringDeviceUID=device_uid)
+            if not freezer:
+                # TODO: Log error
+                continue
+
+            freezer_obj = freezer[0].getObject()
+            self.create_freezer_readings(received_readings_data, freezer_obj)
+
+    def create_freezer_readings(self, readings, freezer):
         # Device Reading
-        for reading in readings:
-            freezer_reading = _createObjectByType('DeviceReading', freezer, tmpID())
-            freezer_reading.setCurrentReading(reading[''])
-            freezer_reading.setLabel(reading[''])
-            freezer_reading.setDecimalPlaces(reading[''])
-            freezer_reading.setUnit(reading[''])
-            freezer_reading.unmarkCreationFlag()
-            renameAfterCreation(freezer_reading)
+        # slice out \xb0C on the result because it throws an ascii error
+        # unit defaults to °C so we can avoid the ascii error
+        current_reading = readings['channels'][0]
+        # Date comes back as u'/Date(1619779624000+0000)/'
+        record_date = readings['datetime']
+        record_date = dt.fromtimestamp(int(
+            re.findall(r"\d+", record_date)[0]) / 1000)
 
-            device_reading = _createObjectByType('DeviceReading', mon_device, tmpID())
-            device_reading.setCurrentReading(reading[''])
-            device_reading.setLabel(reading[''])
-            device_reading.setDecimalPlaces(reading[''])
-            device_reading.setUnit(reading[''])
-            device_reading.unmarkCreationFlag()
-            renameAfterCreation(device_reading)
+        freezer_reading = _createObjectByType('DeviceReading',
+                                              freezer,
+                                              tmpID())
+        freezer_reading.setCurrentReading(float(current_reading[0:-2]))
+        freezer_reading.setDatetimeRecorded(DT(record_date))
+        unit = freezer_reading.getUnit() + str(current_reading[-1])
+        freezer_reading.setUnit(unit)
+        freezer_reading.unmarkCreationFlag()
+        renameAfterCreation(freezer_reading)
 
         return 'Done'
