@@ -35,7 +35,8 @@ window.baobab.lims.controllers =  {
     ".portaltype-virussample":
         ['VirusSampleAddView'],
     ".portaltype-sample":
-        ['BaobabSampleView']
+        ['BaobabSampleView'],
+    ".portaltype-freezer": ["BaobabFreezerView"],
 };
 
 /**

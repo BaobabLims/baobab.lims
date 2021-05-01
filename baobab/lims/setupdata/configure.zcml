@@ -124,10 +124,27 @@
           provides="bika.lims.interfaces.ISetupDataImporter"
           for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
 
-
     <adapter
           name="VirusSample"
           factory="baobab.lims.setupdata.VirusSample"
+          provides="bika.lims.interfaces.ISetupDataImporter"
+          for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
+
+    <adapter
+          name="Monitoring_Devices"
+          factory="baobab.lims.setupdata.Monitoring_Devices"
+          provides="bika.lims.interfaces.ISetupDataImporter"
+          for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
+
+    <adapter
+          name="Freezers"
+          factory="baobab.lims.setupdata.Freezers"
+          provides="bika.lims.interfaces.ISetupDataImporter"
+          for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
+
+    <adapter
+          name="Device_Readings"
+          factory="baobab.lims.setupdata.Device_Readings"
           provides="bika.lims.interfaces.ISetupDataImporter"
           for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
 

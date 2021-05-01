@@ -8,6 +8,7 @@ from Products.CMFCore.utils import ContentInit, ToolInit, getToolByName
 from baobab.lims.config import *
 from baobab.lims.permissions import ADD_CONTENT_PERMISSION, ADD_CONTENT_PERMISSIONS
 import logging
+import requests
 logger = logging.getLogger('BAOBAB')
 import pkg_resources
 
@@ -71,6 +72,12 @@ def initialize(context):
     from content.hosts import Hosts
     from content.host_disease import HostDisease
     from content.host_diseases import HostDiseases
+    from content.freezer import Freezer
+    from content.freezers import Freezers
+    from content.monitoring_device import MonitoringDevice
+    from content.monitoring_devices import MonitoringDevices
+    from content.devicereading import DeviceReading
+    from content.devicehistory import DeviceHistory
 
     content_types, constructors, ftis = process_types(
         listTypes(PROJECTNAME),

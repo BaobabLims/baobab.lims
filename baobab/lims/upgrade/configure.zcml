@@ -93,6 +93,14 @@
         sortkey="8"
         profile="baobab.lims:default"/>
 
+  <genericsetup:upgradeStep
+        title="Add Monitoring Device"
+        description="Add Freezer Monitoring Device"
+        source="1700"
+        destination="1.7.1"
+        handler="baobab.lims.upgrade.to1701.upgrade"
+        sortkey="8"
+        profile="baobab.lims:default"/>
 
 
 </configure>

@@ -28,6 +28,8 @@
         <type portal_type="LabHost"/>
         <type portal_type="Host"/>
         <type portal_type="HostDisease"/>
+        <type portal_type="Freezer"/>
+        <type portal_type="MonitoringDevice"/>
 
     </factorytypes>
 </object>

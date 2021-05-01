@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from Acquisition import aq_inner
 from Acquisition import aq_parent
 
@@ -10,4 +12,5 @@ def upgrade(tool):
 
     # Update all tools in which changes have been made
     setup.runImportStepFromProfile('profile-baobab.lims:default', 'controlpanel')
+
     return True

@@ -1,0 +1,69 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+            metal:use-macro="here/main_template/macros/master"
+      i18n:domain="bika">
+
+<head>
+    <metal:block fill-slot="javascript_head_slot"
+            tal:define="portal context/@@plone_portal_state/portal;">
+        <script type="text/javascript"
+                tal:attributes="src python:portal.absolute_url() + '/bika_widgets/datetimewidget.js'"></script>
+        <script type="text/javascript"
+                tal:attributes="src python:portal.absolute_url() + '/bika_widgets/referencewidget.js'"></script>
+
+
+        <script type="text/javascript" charset="utf-8">
+
+
+
+        </script>
+
+        <link rel="stylesheet" type="text/css" media="all" href=""
+                tal:attributes="href string:${portal/absolute_url}/bika_widgets/referencewidget.css"/>
+    </metal:block>
+
+
+    <metal:css fill-slot="style_slot">
+        <tal:css>
+
+        </tal:css>
+    </metal:css>
+
+</head>
+
+<body>
+<metal:title fill-slot="content-title">
+    <h2>
+        <img tal:attributes="src string:${view/portal_url}/++resource++baobab.lims.images/biospecimen_big.png"/>
+        Freezer Monitoring
+    </h2>
+</metal:title>
+    <div metal:fill-slot="content-core"
+     tal:define="
+        portal context/@@plone_portal_state/portal;
+        plone_view context/@@plone;
+        portal_state context/@@plone_portal_state;">
+
+
+        <div id="aliquots_from_sample">
+            <h1>Freezer Monitoring</h1>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    One of three columns
+                </div>
+                <div class="col-sm">
+                    One of three columns
+                </div>
+                <div class="col-sm">
+                    One of three columns
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

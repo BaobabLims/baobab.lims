@@ -1,16 +1,18 @@
-from bika.lims.exportimport.dataimport import SetupDataSetList as SDL
-from bika.lims.exportimport.setupdata import WorksheetImporter
+from Products.Archetypes.event import ObjectInitializedEvent
 from Products.CMFPlone.utils import _createObjectByType
-from bika.lims.interfaces import ISetupDataSetList
+from plone.app.search.browser import quote_chars
 from zope.interface import implements
 from zope.interface import alsoProvides
+from zope.event import notify
+
+from bika.lims.exportimport.dataimport import SetupDataSetList as SDL
+from bika.lims.exportimport.setupdata import WorksheetImporter
+from bika.lims.interfaces import ISetupDataSetList
 from baobab.lims.idserver import renameAfterCreation
 from baobab.lims.interfaces import ISampleStorageLocation, IStockItemStorage
 from baobab.lims.browser.project import *
-
 from baobab.lims.utils.audit_logger import AuditLogger
 from baobab.lims.utils.local_server_time import getLocalServerTime
-from plone.app.search.browser import quote_chars
 
 def get_project_multi_items(context, string_elements, portal_type, portal_catalog):
 
@@ -780,3 +782,83 @@ class VirusSample(SetupImporter):
             return None
 
         return object
+
+
+class Monitoring_Devices(WorksheetImporter):
+    """Add some dummy monitoring devices
+    """
+    def Import(self):
+        folder = self.context.monitoring_devices
+        rows = self.get_rows(3)
+        for row in rows:
+            title = row.get('title', '')
+            if not title: continue
+            description = row.get('description', '')
+            obj = _createObjectByType('MonitoringDevice', folder, tmpID())
+            obj.edit(
+                title=title,
+                description=description,
+                MACAddress=row.get('MACAddress')
+            )
+            obj.unmarkCreationFlag()
+            renameAfterCreation(obj)
+
+
+class Freezers(WorksheetImporter):
+    """Add some dummy monitoring devices
+    """
+    def Import(self):
+        folder = self.context.freezers
+        rows = self.get_rows(3)
+        pc = getToolByName(self.context, 'bika_catalog')
+        for row in rows:
+            title = row.get('title', '')
+            if not title: continue
+            description = row.get('description', '')
+            deviceTitle = row.get('MonitoringDevice', '')
+            device = pc(portal_type='MonitoringDevice', title=deviceTitle)
+            device_obj = device[0].getObject() if device else None
+            obj = _createObjectByType('Freezer', folder, tmpID())
+            obj.edit(
+                title=title,
+                description=description,
+                MonitoringDevice=device_obj,
+            )
+            obj.unmarkCreationFlag()
+            renameAfterCreation(obj)
+            notify(ObjectInitializedEvent(obj))
+
+
+class Device_Readings(WorksheetImporter):
+    """Add some dummy monitoring devices
+    """
+    def Import(self):
+        pc = getToolByName(self.context, 'bika_catalog')
+        folder = self.context.freezers
+        rows = self.get_rows(3)
+        for row in rows:
+            if not row['CurrentReading']:
+                continue
+            deviceTitle = row.get('MonitoringDevice', None)
+            mon_device = pc(portal_type='MonitoringDevice', title=deviceTitle)
+            dev_obj = mon_device[0].getObject() if mon_device else None
+            if not dev_obj: continue
+            # Device reading
+            de_reading = _createObjectByType('DeviceReading', dev_obj, tmpID())
+            de_reading.setCurrentReading(row['CurrentReading'])
+            de_reading.setLabel(row['Label'])
+            de_reading.setUnit(row['Unit'])
+            de_reading.unmarkCreationFlag()
+            renameAfterCreation(de_reading)
+
+            # Freezer reading
+            freezer = pc(portal_type="Freezer", Title=row.get('Freezer', None))
+            fr_obj = freezer[0].getObject() if freezer else None
+            fr_reading = _createObjectByType('DeviceReading', fr_obj, tmpID())
+            fr_reading.setCurrentReading(row['CurrentReading'])
+            fr_reading.setDatetimeRecorded(row['DatetimeRecorded'])
+            fr_reading.setLabel(row['Label'])
+            fr_reading.setUnit(row['Unit'])
+            fr_reading.unmarkCreationFlag()
+            fr_reading.unmarkCreationFlag()
+            renameAfterCreation(fr_reading)

@@ -1,0 +1,42 @@
+[workflow],,,,,,,,,,
+Id:,bika_monitoring_device_workflow,,,,,,,,,
+Title:,Bika Monitoring Device Workflow,,,,,,,,,
+Description:,,,,,,,,,,,,
+Initial state:,available,,,,,,,,,
+Type:,Workflow,,,,,,,,,
+State variable:,review_state,,,,,,,,,
+,,,,,,,,,,
+[State],,,,,,,,,,
+Id:,available,,,,,,,,,
+Title:,Available,,,,,,,,,
+Description:,,,,,,,,,,
+Transitions,use,,,,,,,,,
+Permissions,Acquire,Anonymous,Manager,Owner,Reader,Editor,Contributor,Analyst,LabClerk,LabManager
+View,N,N,Y,Y,N,N,N,Y,Y,Y
+Modify portal content,N,N,Y,N,N,N,N,N,N,Y
+,,,,,,,,,,
+[State],,,,,,,,,,
+Id:,in_use,,,,,,,,,
+Title:,In Use,,,,,,,,,
+Description:,,,,,,,,,,
+Transitions,liberate,,,,,,,,,
+Permissions,Acquire,Anonymous,Manager,Owner,Reader,Editor,Contributor,Analyst,LabClerk,LabManager
+View,N,N,Y,Y,N,N,N,Y,Y,Y
+Modify portal content,N,N,Y,N,N,N,N,N,N,Y
+,,,,,,,,,,
+[Transition],,,,,,,,,,
+Id:,use,,,,,,,,,
+Title:,Use,,,,,,,,,
+Description:,Use,,,,,,,,,
+Target state:,in_use,,,,,,,,,
+Trigger:,User,,,,,,,,,
+Guard expression:,python:here.guard_occupy_transition()==True,,,,,,,,,
+,,,,,,,,,,
+[Transition],,,,,,,,,,
+Id:,liberate,,,,,,,,,
+Title:,Liberate,,,,,,,,,
+Description:,Liberate,,,,,,,,,
+Target state:,available,,,,,,,,,
+Trigger:,User,,,,,,,,,
+Guard expression:,python:here.guard_liberate_transition()==True,,,,,,,,,
+

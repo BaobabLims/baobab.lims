@@ -1,0 +1,118 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:tal="http://xml.zope.org/namespaces/tal"
+	xmlns:metal="http://xml.zope.org/namespaces/metal"
+	xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+	metal:use-macro="here/main_template/macros/master"
+	i18n:domain="baobab">
+
+<head>
+    <metal:css fill-slot="style_slot">
+    <tal:css>
+        <style type="text/css">
+        .highcharts-figure, .highcharts-data-table table {
+            min-width: 310px; 
+            max-width: 800px;
+            margin: 1em auto;
+        }
+
+        #container {
+            height: 400px;
+        }
+
+        #master-container {
+            position: absolute;
+            top: 300px;
+            height: 100px;
+            width: 100%;
+        }
+
+        .highcharts-data-table table {
+            font-family: Verdana, sans-serif;
+            border-collapse: collapse;
+            border: 1px solid #EBEBEB;
+            margin: 10px auto;
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+        .highcharts-data-table caption {
+            padding: 1em 0;
+            font-size: 1.2em;
+            color: #555;
+        }
+        .highcharts-data-table th {
+            font-weight: 600;
+            padding: 0.5em;
+        }
+        .highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {
+            padding: 0.5em;
+        }
+        .highcharts-data-table thead tr, .highcharts-data-table tr:nth-child(even) {
+            background: #f8f8f8;
+        }
+        .highcharts-data-table tr:hover {
+            background: #f1f7ff;
+        }
+
+		</style>
+    </tal:css>
+  </metal:css>
+    <metal:block fill-slot="javascript_head_slot"
+            tal:define="navroot context/@@plone_portal_state/navigation_root_url;
+                        portal context/@@plone_portal_state/portal;
+                        portal_url portal_state/portal_url;">
+
+    </metal:block>
+
+</head>
+
+<body>
+
+<metal:title fill-slot="content-title">
+    <h1>
+        <img tal:condition="view/icon | nothing"
+            src="" tal:attributes="src view/icon"/>
+        <span class="documentFirstHeading" tal:content="view/title" />
+    </h1>
+</metal:title>
+
+<metal:content-description fill-slot="content-description">
+</metal:content-description>
+
+<metal:content-core fill-slot="content-core" tal:define="
+        portal context/@@plone_portal_state/portal;">
+
+    <table class="storage" style="border-collapse: collapse; width: 100%;">
+        <tbody>
+        <tr>
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Title </th>
+            <td tal:content="view/title" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;width:70%"></td>
+        </tr>
+        <tr style="background: #f0f0f2;">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Monitoring Device </th>
+            <td tal:content="structure view/device" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+        <tr>
+            <th i18n:translate="" style="padding-bottom: .2em;border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Temperature </th>
+            <td tal:content="structure view/temperature" style="padding-bottom: .5em;border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+        <tr style="background: #f0f0f2;">
+            <th i18n:translate="" style="padding-bottom: .2em;border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Storage </th>
+            <td tal:content="structure view/location" style="padding-bottom: .5em;border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div id="container"></div>
+
+</metal:content-core>
+
+</body>
+</html>
