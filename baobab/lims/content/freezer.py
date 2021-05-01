@@ -66,18 +66,20 @@ class Freezer(ATFolder):
         from bika.lims.idserver import renameAfterCreation
         renameAfterCreation(self)
 
-    def getCurrentTemperature(self):
+    def getLatestTemperature(self):
         bc = getToolByName(self, 'bika_catalog')
-        # Get the last temperature recorded, need a sort on field???
+        # Get the last temperature recorded
+        limit = 1
         brains = bc(portal_type='DeviceReading',
                     path={'query': "/".join(self.getPhysicalPath())},
-                    sort_order='descending',
-                    )
+                    sort_on='title',
+                    sort_order='ascending',
+                    sort_limit=limit)[:limit]
 
         if not brains:
             return ''
 
-        obj = brains[-1].getObject()
+        obj = brains[0].getObject()
         current_reading = obj.getCurrentReading()
         unit = obj.getUnit()
         record_date = obj.getDatetimeRecorded()

@@ -24,7 +24,7 @@ class FreezerView(BrowserView):
         self.device = self.context.getMonitoringDevice()
         self.device = self.device and "<a href='%s'>%s</a>" % (
                 self.device.absolute_url(), self.device.Title()) or None
-        self.temperature = self.context.getCurrentTemperature()
+        self.temperature = self.context.getLatestTemperature()
 
         return self.template()
 
