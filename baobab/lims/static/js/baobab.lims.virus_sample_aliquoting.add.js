@@ -10,9 +10,23 @@ function VirusSampleAliquotAddView(){
         var VSA = $('#fieldset-virus-sample-aliquot');
 
         $('#archetypes-fieldname-VirusAliquot').hide();
+        addResponseMessage(VSA);
         addAliquotsFromSamplesGroupStructure(VSA);
         addVirusSampleAliquotSaveAndCancelButtons(VSA);
         displaySavedAliquots(VSA);
+        // create_new_sample_group();
+    }
+
+    function addResponseMessage(VSA){
+        var div_response_message = '\
+        <div id="error_message" class="response_message" style="display: none;">\
+            <h1 class="response_header" style="color: red;">Error when creating virus aliquots</h1>\
+            <ul id="error_list" class="response_list" style="color: red;">\
+            </ul>\
+        </div>\
+        ';
+
+        $(VSA).append(div_response_message);
     }
 
     function displaySavedAliquots(VSA){
@@ -81,8 +95,10 @@ function VirusSampleAliquotAddView(){
                 });
 
                 if (sample_count > 0){
-                    $('.div-aliquot-from-sample').remove()
-                    $('.savecancel_virus_sample_aliquot_buttons').remove()
+                    $('.div-aliquot-from-sample').remove();
+                    $('.savecancel_virus_sample_aliquot_buttons').remove();
+                } else {
+                    $('.div-saved-aliquots').remove();
                 }
             },
             error: function (data) {
@@ -109,7 +125,6 @@ function VirusSampleAliquotAddView(){
             event.preventDefault();
             $('.sample_group').last().remove();
         });
-
     }
 
     function addVirusSampleAliquotSaveAndCancelButtons(EGM){
@@ -198,9 +213,17 @@ function VirusSampleAliquotAddView(){
 
             },
             error: function (data) {
+                // console.log('--------------the errors data');
+                // console.log(data);
+                // console.log(data.responseText);
+                var error_response = JSON.parse(data.responseText);
+
                 $("#error_message").css("display", "block");
                 $("#error_message").find('.response_header').css("display", "block");
-                // $(".sample_group").remove();
+                $(".response_li").remove();
+                error_response.error_message.forEach(function(item, index) {
+                    $("#error_list").append('<li class="response_li" style="color: red;">' + item + '</li>');
+                });
             },
         });
     }
@@ -227,15 +250,17 @@ function VirusSampleAliquotAddView(){
                 <div class="sample' + next_sample_group + '_aliquots">\
                     <table id="aliquots_table_' + next_sample_group + '">\
                         <tr>\
-                            <th>Barcode</th>\
-                            <th>Volume</th>\
+                            <th>Barcode<span style="color: red"> *</span></th>\
+                            <th>Volume<span style="color: red"> *</span></th>\
+                            <th>Date<span style="color: red"> *</span></th>\
+                            <th>Time<span style="color: red"> *</span></th>\
+                            <th>Storage</th>\
                         </tr>\
                         <tr class="aliquots_' + next_sample_group + '_rows aliquot_rows aliquots_' + next_sample_group + '_row_1">\
-                            <td><input type="text" id="aliquots_' + next_sample_group + '_barcode_row_1" class="barcode"></td>\
-                            <td><input type="text" id="aliquots_' + next_sample_group + '_volume_row_1" class="volume"></td>\
-                            <td><span id="aliquots_' + next_sample_group + '_unit_row_1" class="unit"></span></td>\
-                            <td><input type="date" id="aliquots_' + next_sample_group + '_datecreated_row_1" class="datecreated"></td>\
-                            <td><input type="time" id="aliquots_' + next_sample_group + '_timecreated_row_1" class="timecreated"></td>\
+                            <td><input type="text" id="aliquots_' + next_sample_group + '_barcode_row_1" class="barcode" required></td>\
+                            <td><input type="text" id="aliquots_' + next_sample_group + '_volume_row_1" class="volume" required></td>\
+                            <td><input type="date" id="aliquots_' + next_sample_group + '_datecreated_row_1" class="datecreated" required></td>\
+                            <td><input type="time" id="aliquots_' + next_sample_group + '_timecreated_row_1" class="timecreated" required></td>\
                             <td><select id="aliquots_' + next_sample_group + '_storage_row_1" class="storage"><option value=0>-- Select Storage --</option></select></td>\
                         </tr>\
                     </table>\
@@ -320,11 +345,10 @@ function VirusSampleAliquotAddView(){
         // create a new row
         var new_row = '\
             <tr class="aliquots_' + sample_group + '_rows aliquot_rows">\
-                <td><input type="text" id="aliquots_' + sample_group + '_barcode_row_' + row_count + '" class="barcode"></td>\
-                <td><input type="text" id="aliquots_' + sample_group + '_volume_row_' + row_count + '" class="volume"></td> \
-                <td><span id="aliquots_' + sample_group + '_unit_row_' + row_count + '" class="unit"></span></td>\
-                <td><input type="date" id="aliquots_' + sample_group + '_datecreated_row_' + row_count + '" class="datecreated"></td>\
-                <td><input type="time" id="aliquots_' + sample_group + '_timecreated_row_' + row_count + '" class="timecreated"></td>\
+                <td><input type="text" id="aliquots_' + sample_group + '_barcode_row_' + row_count + '" class="barcode" required></td>\
+                <td><input type="text" id="aliquots_' + sample_group + '_volume_row_' + row_count + '" class="volume" required></td> \
+                <td><input type="date" id="aliquots_' + sample_group + '_datecreated_row_' + row_count + '" class="datecreated" required></td>\
+                <td><input type="time" id="aliquots_' + sample_group + '_timecreated_row_' + row_count + '" class="timecreated" required></td>\
                 <td><select id="aliquots_' + sample_group + '_storage_row_' + row_count + '" class="storage"><option value=0>-- Select Storage --</option></select></td> \
             </tr>\
             ';
@@ -440,119 +464,119 @@ function VirusSampleAliquotAddView(){
         });
     }
 
-    function create_aliquots(){
-        $("#create_aliquots").on("click", function(e){
-            var aliquots_data = get_aliquots_data();
-            var final_data = JSON.stringify(aliquots_data);
-            var path = window.location.href.split('/viral_genomic_analyses')[0];
-
-            $.ajax({
-                dataType: "json",
-                contentType: 'application/json',
-                url: path + '/ajax_create_aliquots',
-                data: {'sample_aliquots': final_data},
-                success: function (data) {
-
-                    $("#success_message").css("display", "block");
-                    $("#success_message").find('.response_header').css("display", "block");
-                    $(".sample_group").remove();
-
-                    $.each(data, function(key, value) {
-                        $("#success_list").append('<li class="response_li">' + value + '</li>');
-                    });
-
-                },
-                error: function (data) {
-                    $("#error_message").css("display", "block");
-                    $("#error_message").find('.response_header').css("display", "block");
-                    $(".sample_group").remove();
-                },
-            });
-
-            e.preventDefault();
-        });
-    }
-
-
-
-    function addTableHeader(table_header){
-        var extract_table_header_row = '\
-            <tr>\
-                <th>Select Sample</th>\
-                <th>Heat Inactivated</th>\
-                <th>Method</th>\
-                <th>New Sample Barcode</th>\
-                <th>New Sample Volume</th>\
-                <th>New Sample Unit</th>\
-                <th>Kit Used</th>\
-                <th>Kit Number</th>\
-                <th>Notes</th>\
-            </tr>\
-        ';
-
-        $(table_header).append(extract_table_header_row);
-    }
-
-    function appendTableRow(table_body){
-        var extract_rows = $('.extract-rows');
-        var row_count = extract_rows.length + 1;
-        const first_row = 1;
-
-        var table_row = '\
-          <tr class="extract-rows" id="extract_row_' + row_count + '">\
-            <td><select class="extract-row-sample" id="extract_row_sample_' + row_count + '">\
-                <option value=0>-- Select Sample --</option>\
-            </select></td>\
-            <td><input type="checkbox" class="extract-row-heat-inactivated" id="extract_row_heat_inactivated_' + row_count + '" ></td>\
-            <td><select class="extract-row-method" id="extract_row_method_' + row_count + '">\
-                <option value=0>-- Select Method --</option>\
-            </select></td>\
-            <td><input type="text" class="extract-row-newsamplebarcode" id="extract_row_newsamplebarcode' + row_count + '" ></td>\
-            <td><input type="text" class="extract-row-newsamplevolume" id="extract_row_newsamplevolume_' + row_count + '" ></td>\
-            <td><input type="text" class="extract-row-newsampleunit" id="extract_row_newsampleunit_' + row_count + '" ></td>\
-            <td><input type="checkbox" class="extract-row-kitused" id="extract_row_kitused_' + row_count + '" ></td>\
-            <td><input type="text" class="extract-row-kitnumber" id="extract_row_kitnumber_' + row_count + '" ></td>\
-            <td><input type="text" class="extract-row-notes" id="extract_row_notes_' + row_count + '" ></td>\
-          </tr>\
-        ';
+    // function create_aliquots(){
+    //     $("#create_aliquots").on("click", function(e){
+    //         var aliquots_data = get_aliquots_data();
+    //         var final_data = JSON.stringify(aliquots_data);
+    //         var path = window.location.href.split('/viral_genomic_analyses')[0];
+    //
+    //         $.ajax({
+    //             dataType: "json",
+    //             contentType: 'application/json',
+    //             url: path + '/ajax_create_aliquots',
+    //             data: {'sample_aliquots': final_data},
+    //             success: function (data) {
+    //
+    //                 $("#success_message").css("display", "block");
+    //                 $("#success_message").find('.response_header').css("display", "block");
+    //                 $(".sample_group").remove();
+    //
+    //                 $.each(data, function(key, value) {
+    //                     $("#success_list").append('<li class="response_li">' + value + '</li>');
+    //                 });
+    //
+    //             },
+    //             error: function (data) {
+    //                 $("#error_message").css("display", "block");
+    //                 $("#error_message").find('.response_header').css("display", "block");
+    //                 $(".sample_group").remove();
+    //             },
+    //         });
+    //
+    //         e.preventDefault();
+    //     });
+    // }
 
 
-        if (row_count == first_row) {
-            $(table_body).append(table_row);
-        } else {
-            $('.' + 'body-extract-genomic-material' + ' tr:last').after(table_row);
-        }
 
-        populate_dropdowns('extract_row_sample_' + row_count, 'virus_samples');
-        populate_dropdowns('extract_row_method_' + row_count, 'methods');
+    // function addTableHeader(table_header){
+    //     var extract_table_header_row = '\
+    //         <tr>\
+    //             <th>Select Sample</th>\
+    //             <th>Heat Inactivated</th>\
+    //             <th>Method</th>\
+    //             <th>New Sample Barcode</th>\
+    //             <th>New Sample Volume</th>\
+    //             <th>New Sample Unit</th>\
+    //             <th>Kit Used</th>\
+    //             <th>Kit Number</th>\
+    //             <th>Notes</th>\
+    //         </tr>\
+    //     ';
+    //
+    //     $(table_header).append(extract_table_header_row);
+    // }
+    //
+    // function appendTableRow(table_body){
+    //     var extract_rows = $('.extract-rows');
+    //     var row_count = extract_rows.length + 1;
+    //     const first_row = 1;
+    //
+    //     var table_row = '\
+    //       <tr class="extract-rows" id="extract_row_' + row_count + '">\
+    //         <td><select class="extract-row-sample" id="extract_row_sample_' + row_count + '">\
+    //             <option value=0>-- Select Sample --</option>\
+    //         </select></td>\
+    //         <td><input type="checkbox" class="extract-row-heat-inactivated" id="extract_row_heat_inactivated_' + row_count + '" ></td>\
+    //         <td><select class="extract-row-method" id="extract_row_method_' + row_count + '">\
+    //             <option value=0>-- Select Method --</option>\
+    //         </select></td>\
+    //         <td><input type="text" class="extract-row-newsamplebarcode" id="extract_row_newsamplebarcode' + row_count + '" ></td>\
+    //         <td><input type="text" class="extract-row-newsamplevolume" id="extract_row_newsamplevolume_' + row_count + '" ></td>\
+    //         <td><input type="text" class="extract-row-newsampleunit" id="extract_row_newsampleunit_' + row_count + '" ></td>\
+    //         <td><input type="checkbox" class="extract-row-kitused" id="extract_row_kitused_' + row_count + '" ></td>\
+    //         <td><input type="text" class="extract-row-kitnumber" id="extract_row_kitnumber_' + row_count + '" ></td>\
+    //         <td><input type="text" class="extract-row-notes" id="extract_row_notes_' + row_count + '" ></td>\
+    //       </tr>\
+    //     ';
+    //
+    //
+    //     if (row_count == first_row) {
+    //         $(table_body).append(table_row);
+    //     } else {
+    //         $('.' + 'body-extract-genomic-material' + ' tr:last').after(table_row);
+    //     }
+    //
+    //     populate_dropdowns('extract_row_sample_' + row_count, 'virus_samples');
+    //     populate_dropdowns('extract_row_method_' + row_count, 'methods');
+    //
+    // }
 
-    }
-
-    function populate_dropdowns(dropdown_id, populate_type){
-        var path = window.location.href.split('/viral_genomic_analyses')[0];
-        var extract_data = {};
-        extract_data['project_uid'] = $('#Project_uid').val()
-
-        $.ajax({
-             dataType: "json",
-             contentType: 'application/json',
-             url: path + '/ajax_get_' + populate_type,
-             data: extract_data,
-             success: function (data) {
-                 $.each(data, function() {
-                    $.each(this, function(key, value){
-                        $('#' + dropdown_id).append($('<option>').val(key).text(value));
-                    });
-                });
-             },
-             error: function (data) {
-                var error_response = JSON.parse(data.responseText);
-
-                $("#error_message").css("display", "block");
-                $("#error_message").find('.response_header').css("display", "block");
-                $(".response_li").remove();
-                $("#error_list").append('<li class="response_li" style="color: red;">' + error_response.error_message + '</li>');
-            },
-        });
-    }
+    // function populate_dropdowns(dropdown_id, populate_type){
+    //     var path = window.location.href.split('/viral_genomic_analyses')[0];
+    //     var extract_data = {};
+    //     extract_data['project_uid'] = $('#Project_uid').val()
+    //
+    //     $.ajax({
+    //          dataType: "json",
+    //          contentType: 'application/json',
+    //          url: path + '/ajax_get_' + populate_type,
+    //          data: extract_data,
+    //          success: function (data) {
+    //              $.each(data, function() {
+    //                 $.each(this, function(key, value){
+    //                     $('#' + dropdown_id).append($('<option>').val(key).text(value));
+    //                 });
+    //             });
+    //          },
+    //          error: function (data) {
+    //             var error_response = JSON.parse(data.responseText);
+    //
+    //             $("#error_message").css("display", "block");
+    //             $("#error_message").find('.response_header').css("display", "block");
+    //             $(".response_li").remove();
+    //             $("#error_list").append('<li class="response_li" style="color: red;">' + error_response.error_message + '</li>');
+    //         },
+    //     });
+    // }
 }

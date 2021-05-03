@@ -506,12 +506,16 @@ class ViralGenomicAnalysis(BaseContent):
         prepared_aliquots = []
 
         for aliquot in aliquot_rows:
+            date_created = aliquot.getField('DateCreated').get(aliquot)
+            prepared_date_created = ''
+            if date_created:
+                prepared_date_created = date_created.strftime("%Y-%m-%d %H:%M")
             prepared_extract = {
                 "barcode": aliquot.getField('Barcode').get(aliquot),
                 "volume": aliquot.getField('Volume').get(aliquot),
                 "unit": aliquot.getField('Unit').get(aliquot),
                 "sample_type": self.get_sample_type(aliquot),
-                'date_created': aliquot.getField('DateCreated').get(aliquot).strftime("%Y-%m-%d %H:%M"),
+                'date_created': prepared_date_created,
                 # 'time_created': aliquot.getField('DateCreated').get(aliquot).strftime("%H:%M:%S"),
                 # 'date_created': aliquot.getField('DateCreated').get(aliquot),
             }

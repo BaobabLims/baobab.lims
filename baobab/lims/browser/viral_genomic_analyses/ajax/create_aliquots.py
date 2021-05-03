@@ -19,6 +19,7 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
         self.bsc = getToolByName(self.context, 'bika_setup_catalog')
         self.viral_genomic_analysis = []
         self.errors = []
+        self.sample_results = []
 
     def __call__(self):
 
@@ -26,6 +27,8 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
 
         try:
             # print('--------------Aliquot process')
+
+            # raise Exception('-------Test the rules')
 
             if 'sample_aliquots' not in self.request.form:
                 raise Exception('No valid extract genomic material data found')
@@ -37,6 +40,9 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
             viral_genomic_analysis_obj = self.get_content_type(viral_genomic_analysis_uid)
             viral_aliquots = self.create_virus_aliquots(sample_aliquot_rows)
 
+            if self.errors:
+                raise Exception('Errors creating virus aliquots')
+
             # print(viral_genomic_analysis_obj)
             # print(viral_aliquots)
 
@@ -44,7 +50,7 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
             viral_genomic_analysis_obj.reindexObject()
 
         except Exception as e:
-            error_message = json.dumps({'error_message': str(e)})
+            error_message = json.dumps({'error_message': self.errors})
             self.request.RESPONSE.setHeader('Content-Type', 'application/json')
             self.request.RESPONSE.setStatus(500)
             self.request.RESPONSE.write(error_message)
@@ -67,12 +73,12 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
             try:
                 sample = self.get_sample(sample_uid)
                 if not sample:
-                    self.sample_results.append('Sample with uid %s is not found' % sample_uid)
+                    self.errors.append('Sample with uid %s is not found' % sample_uid)
                     continue
                 for aliquot_data in new_aliquots_data:
 
                     if not all(k in aliquot_data for k in ('volume', 'barcode')):
-                        self.sample_results.append('Aliquot for sample %s is missing either barcode or volume' %sample.Title())
+                        self.errors.append('Aliquot for sample %s is missing either barcode or volume' %sample.Title())
                         continue
 
                     try:
@@ -82,7 +88,7 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
 
                         # New aliquot volume too large.  Dont create aliquote.  return a warning.
                         if new_volume < 0:
-                            self.sample_results.append('Aliquot %s volume %s exceed remaining sample volume %s for sample %s'
+                            self.errors.append('Aliquot %s volume %s exceed remaining sample volume %s for sample %s'
                                                        % (aliquot_data['barcode'], aliquot_data['volume'],
                                                           sample.getField('Volume').get(sample), sample.Title()))
                             continue
@@ -106,7 +112,7 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
                             aliquots.append(new_aliquot)
 
                     except Exception as e:
-                        self.sample_results.append("Error creating aliquot with barcode %s and volume %s for sample %s."
+                        self.errors.append("Error creating aliquot with barcode %s and volume %s for sample %s."
                             % (aliquot_data['barcode'], aliquot_data['volume'], sample.Title()))
                         continue
 
@@ -114,7 +120,7 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
                 viral_aliquots.append(virus_aliquot)
 
             except Exception as e:
-                self.sample_results.append('Exception occurred when creating aliquots.  %s' % str(e))
+                self.errors.append('Exception occurred when creating aliquots.  %s' % str(e))
                 continue
 
         return viral_aliquots
@@ -189,42 +195,8 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
             return obj
 
         except Exception as e:
+            self.errors.append(str(e))
             return None
-
-
-    # def process_extract_genomic_materials(self, extract_rows):
-    #
-    #     extract_objs = []
-    #     for row in extract_rows:
-    #         obj = self.create_extract_genomic_material_object(row)
-    #         extract_objs.append(obj)
-    #
-    #     return extract_objs
-    #
-    # def create_extract_genomic_material_object(self, extract_item_data):
-    #
-    #     extract_genomic_materials = self.context.extract_genomic_materials
-    #     obj = _createObjectByType('ExtractGenomicMaterial', extract_genomic_materials, tmpID())
-    #     virus_sample = self.get_content_type(extract_item_data['virus_sample'])
-    #     method = self.get_content_type(extract_item_data['method'])
-    #
-    #     obj.edit(
-    #         title=extract_item_data['new_sample_barcode'],
-    #         VirusSample=virus_sample,
-    #         HeatInactivated=extract_item_data['heat_inactivated'],
-    #         Method=method,
-    #         ExtractionBarcode=extract_item_data['new_sample_barcode'],
-    #         Volume=extract_item_data['new_sample_volume'],
-    #         Unit=extract_item_data['new_sample_unit'],
-    #         WasKitUsed=extract_item_data['kit_used'],
-    #         KitNumber=extract_item_data['kit_number'],
-    #         Notes=extract_item_data['notes'],
-    #     )
-    #
-    #     # obj.unmarkCreationFlag()
-    #     # renameAfterCreation(obj)
-    #
-    #     return obj
 
     def get_content_type(self, content_type_uid, catalog="portal_catalog"):
         try:
@@ -232,6 +204,7 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
             brains = catalog(UID=content_type_uid)
             return brains[0].getObject()
         except Exception as e:
+            self.errors.append(str(e))
             return None
 
     def get_catalog(self, catalog="portal_catalog"):
