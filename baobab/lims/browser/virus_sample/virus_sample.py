@@ -17,6 +17,7 @@ class VirusSampleView(BrowserView):
 
         workflow = getToolByName(self.context, 'portal_workflow')
         reviewState = workflow.getInfoFor(self.context, 'review_state')
+        context = self.context
 
         self.reviewState = reviewState
         self.absolute_url = self.context.absolute_url()
@@ -60,6 +61,10 @@ class VirusSampleView(BrowserView):
         self.instrument_type = self.getObjectTitle(self.context.getInstrumentType())
         self.instrument = self.getObjectTitle(self.context.getInstrument())
         self.sequencing_protocol_name = self.context.getSequencingProtocolName()
+        self.location = context.getField('StorageLocation').get(context)
+        self.location = self.location and "<a href='%s'>%s</a>" % (
+                                 self.location.absolute_url(),
+                                 self.location.Title()) or None
 
         self.icon = self.portal_url + \
                     "/++resource++baobab.lims.images/shipment_big.png"

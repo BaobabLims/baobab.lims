@@ -22,9 +22,6 @@ class VirusSamplesView(BikaListingView):
         self.contentFilter = {
             'portal_type': 'VirusSample',
         }
-        self.context_actions = {_('Add'):
-                                    {'url': 'createObject?type_name=VirusSample',
-                                     'icon': '++resource++bika.lims.images/add.png'}}
         self.title = self.context.translate(_("Virus Samples"))
         self.icon = self.portal_url + \
                     "/++resource++baobab.lims.images/patient_big.png"

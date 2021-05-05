@@ -203,7 +203,6 @@ schema = BikaFolderSchema.copy() + BikaSchema.copy() + Schema((
             size=30,
         )
     ),
-
 ))
 
 schema['title'].widget.visible = True

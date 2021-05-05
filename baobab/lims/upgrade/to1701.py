@@ -23,7 +23,6 @@ def upgrade(tool):
     setup.runImportStepFromProfile('profile-baobab.lims:default',
                                    'jsregistry')
     setup.runImportStepFromProfile('profile-baobab.lims:default', 'actions')
-
     addMonitoringDeviceIndexes(portal)
 
     return True

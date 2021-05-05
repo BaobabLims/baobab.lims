@@ -6,6 +6,7 @@ from Products.Archetypes.atapi import process_types, listTypes
 from Products.CMFCore.utils import ContentInit, ToolInit, getToolByName
 
 from baobab.lims.config import *
+from baobab.lims.validators import *
 from baobab.lims.permissions import ADD_CONTENT_PERMISSION, ADD_CONTENT_PERMISSIONS
 import logging
 import requests
@@ -78,6 +79,10 @@ def initialize(context):
     from content.monitoring_devices import MonitoringDevices
     from content.devicereading import DeviceReading
     from content.devicehistory import DeviceHistory
+    from content.viral_genomic_analysis import ViralGenomicAnalysis
+    from content.viral_genomic_analyses import ViralGenomicAnalyses
+    from content.virus_aliquot import VirusAliquot
+    from content.virus_aliquots import VirusAliquots
 
     content_types, constructors, ftis = process_types(
         listTypes(PROJECTNAME),
