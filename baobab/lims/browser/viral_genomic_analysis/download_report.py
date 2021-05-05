@@ -94,16 +94,7 @@ class DownloadVGAReport(BrowserView):
         lab_address = self.laboratory.getPrintAddress()
 
         if lab_address:
-            # _keys = ['address', 'city', 'state', 'zip', 'country']
-            # print(_keys)
-            # _list = [lab_address.get(v) for v in _keys if lab_address.get(v)]
-            # print(_list)
-            # self.lab_address = "<br/>".join(_list).replace("\n", "<br/>")
-            # self.lab_address = " <br/> ".join(lab_address)
             self.lab_address = lab_address
-            print(self.lab_address)
-            # if self.lab_address.endswith("<br/>"):
-            #     self.lab_address = self.lab_address[:-5]
         else:
             self.lab_address = None
 

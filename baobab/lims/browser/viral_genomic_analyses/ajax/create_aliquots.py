@@ -23,12 +23,7 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
 
     def __call__(self):
 
-        # print(self.request.form)
-
         try:
-            # print('--------------Aliquot process')
-
-            # raise Exception('-------Test the rules')
 
             if 'sample_aliquots' not in self.request.form:
                 raise Exception('No valid extract genomic material data found')
@@ -42,9 +37,6 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
 
             if self.errors:
                 raise Exception('Errors creating virus aliquots')
-
-            # print(viral_genomic_analysis_obj)
-            # print(viral_aliquots)
 
             viral_genomic_analysis_obj.getField('VirusAliquot').set(viral_genomic_analysis_obj, viral_aliquots)
             viral_genomic_analysis_obj.reindexObject()
@@ -208,8 +200,7 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
             return None
 
     def get_catalog(self, catalog="portal_catalog"):
-        if catalog == 'bika_setup_catalog':
-            return getToolByName(self.context, 'bika_setup_catalog')
-
-        if catalog == 'portal_catalog':
-            return getToolByName(self.context, 'portal_catalog')
+        try:
+            return getToolByName(self.context, catalog)
+        except:
+            return None

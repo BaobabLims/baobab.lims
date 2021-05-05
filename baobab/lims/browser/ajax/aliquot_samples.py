@@ -71,7 +71,6 @@ class ajaxGetSampleDetails(BrowserView):
     def __call__(self):
 
         sample = self.get_sample(self.request.form['sample_uid'])
-        print(sample.__dict__)
 
         if sample:
             try:
@@ -148,13 +147,11 @@ class ajaxGetBoxes(BrowserView):
     """
 
     def __init__(self, context, request):
-        print('-------get boxes init')
         super(ajaxGetBoxes, self).__init__(context, request)
         self.context = context
         self.request = request
 
     def __call__(self):
-        print('-------get boxes call')
         rows = []
 
         storage_unit = self.request.form['storage_unit']

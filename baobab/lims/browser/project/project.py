@@ -184,10 +184,6 @@ class ProjectEdit(BrowserView):
                 is_new = False
                 self.perform_project_audit(context, request)
 
-
-            # print('--------------')
-            # print(context.getField('Service').get(context))
-
             context.processForm()
 
             obj_url = context.absolute_url_path()
