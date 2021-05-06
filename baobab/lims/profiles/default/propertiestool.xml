@@ -36,8 +36,9 @@
         <element value="LabHost"/>
         <element value="Host"/>
         <element value="HostDisease"/>
+        <element value="Freezer"/>
+        <element value="MonitoringDevice"/>
         <element value="ViralGenomicAnalysis"/>
-        <element value="ExtractGenomicMaterial"/>
         <element value="VirusAliquot"/>
 
   </property>

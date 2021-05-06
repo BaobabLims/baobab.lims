@@ -174,8 +174,20 @@
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>
 
+    <type type_id="Freezers"/>
+    <type type_id="Freezer">
+        <bound-workflow workflow_id="bika_one_state_workflow"/>
+        <bound-workflow workflow_id="bika_inactive_workflow"/>
+    </type>
+
     <type type_id="ViralGenomicAnalyses">
         <bound-workflow workflow_id="bika_one_state_workflow"/>
+        <bound-workflow workflow_id="bika_inactive_workflow"/>
+    </type>
+
+    <type type_id="MonitoringDevices"/>
+    <type type_id="MonitoringDevice">
+        <bound-workflow workflow_id="bika_monitoring_device_workflow"/>
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>
 
@@ -184,8 +196,12 @@
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>
 
-    <type type_id="ExtractGenomicMaterials"/>
-    <type type_id="ExtractGenomicMaterial">
+    <type type_id="DeviceReading">
+        <bound-workflow workflow_id="bika_one_state_workflow"/>
+        <bound-workflow workflow_id="bika_inactive_workflow"/>
+    </type>
+
+    <type type_id="DeviceHistory">
         <bound-workflow workflow_id="bika_one_state_workflow"/>
         <bound-workflow workflow_id="bika_inactive_workflow"/>
     </type>

@@ -17,6 +17,7 @@ anatomical_materials,AnatomicalMaterials
 lab_hosts,LabHosts
 hosts,Hosts
 host_diseases,HostDiseases
+freezers,Freezers
+monitoring_devices,MonitoringDevices
 viral_genomic_analyses,ViralGenomicAnalyses
-extract_genomic_materials,ExtractGenomicMaterials
 virus_aliquots,VirusAliquots

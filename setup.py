@@ -30,6 +30,7 @@ setup(name='baobab.lims',
           'z3c.relationfield',
           'collective.wtf',
           'plone.formwidget.datetime',
+          'requests',
       ],
       extras_require={
           'test': [

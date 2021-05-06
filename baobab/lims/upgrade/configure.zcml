@@ -94,11 +94,20 @@
         profile="baobab.lims:default"/>
 
   <genericsetup:upgradeStep
+        title="Add Monitoring Device"
+        description="Add Freezer Monitoring Device"
+        source="1700"
+        destination="1.7.1"
+        handler="baobab.lims.upgrade.to1701.upgrade"
+        sortkey="8"
+        profile="baobab.lims:default"/>
+
+  <genericsetup:upgradeStep
         title="Virus Samples folder"
         description="Remove VirusSample from allowed types"
-        source="1700"
-        destination="1.7.0.1"
-        handler="baobab.lims.upgrade.to1701.upgrade"
+        source="1.7.1"
+        destination="1.7.2"
+        handler="baobab.lims.upgrade.to1702.upgrade"
         sortkey="8"
         profile="baobab.lims:default"/>
 

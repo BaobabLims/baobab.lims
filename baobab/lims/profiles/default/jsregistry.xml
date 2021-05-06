@@ -121,7 +121,6 @@
           expression=""
           inline="False"
           insert-after="*"/>
-
   <javascript authenticated="True"
           id="++resource++baobab.lims.js/baobab.lims.viral_genomic_analysis.add.js"
           cacheable="True"
@@ -134,7 +133,7 @@
           insert-after="*"/>
 
   <javascript authenticated="True"
-          id="++resource++baobab.lims.js/baobab.lims.extract_genomic_material.add.js"
+          id="++resource++baobab.lims.js/Highcharts/code/highcharts.js"
           cacheable="True"
           compression="safe"
           conditionalcomment=""
@@ -144,6 +143,61 @@
           inline="False"
           insert-after="*"/>
 
+  <javascript authenticated="True"
+          id="++resource++baobab.lims.js/Highcharts/code/modules/data.js"
+          cacheable="True"
+          compression="safe"
+          conditionalcomment=""
+          cookable="True"
+          enabled="on"
+          expression=""
+          inline="False"
+          insert-after="*"/>
+
+  <javascript authenticated="True"
+          id="++resource++baobab.lims.js/Highcharts/code/modules/exporting.js"
+          cacheable="True"
+          compression="safe"
+          conditionalcomment=""
+          cookable="True"
+          enabled="on"
+          expression=""
+          inline="False"
+          insert-after="*"/>
+
+
+  <javascript authenticated="True"
+          id="++resource++baobab.lims.js/Highcharts/code/modules/export-data.js"
+          cacheable="True"
+          compression="safe"
+          conditionalcomment=""
+          cookable="True"
+          enabled="on"
+          expression=""
+          inline="False"
+          insert-after="*"/>
+
+  <javascript authenticated="True"
+          id="++resource++baobab.lims.js/Highcharts/code/modules/accessibility.js"
+          cacheable="True"
+          compression="safe"
+          conditionalcomment=""
+          cookable="True"
+          enabled="on"
+          expression=""
+          inline="False"
+          insert-after="*"/>
+
+  <javascript authenticated="True"
+          id="++resource++baobab.lims.js/baobab.lims.freezer.js"
+          cacheable="True"
+          compression="safe"
+          conditionalcomment=""
+          cookable="True"
+          enabled="on"
+          expression=""
+          inline="False"
+          insert-after="*"/>
 
   <javascript authenticated="True"
           id="++resource++baobab.lims.js/baobab.lims.virus_sample_aliquoting.add.js"

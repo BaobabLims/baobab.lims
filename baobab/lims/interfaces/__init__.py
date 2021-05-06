@@ -226,19 +226,34 @@ class IHostDiseases(Interface):
     """
     """
 
+class IFreezer(Interface):
+    """
+    """
+
+class IFreezers(Interface):
+    """
+    """
+
+class IMonitoringDevice(Interface):
+    """
+    """
+
+class IMonitoringDevices(Interface):
+    """
+    """
+
+class IDeviceReading(Interface):
+    """
+    """
+
+class IDeviceHistory(Interface):
+    """
+    """
 class IViralGenomicAnalysis(Interface):
     """
     """
 
 class IViralGenomicAnalyses(Interface):
-    """
-    """
-
-class IExtractGenomicMaterial(Interface):
-    """
-    """
-
-class IExtractGenomicMaterials(Interface):
     """
     """
 

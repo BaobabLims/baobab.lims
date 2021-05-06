@@ -40,9 +40,12 @@
     <include package=".lab_hosts"/>
     <include package=".hosts"/>
     <include package=".host_diseases"/>
+    <include package=".freezers"/>
+    <include package=".freezer"/>
+    <include package=".monitoring_devices"/>
+    <include package=".freezer_monitoring"/>
     <include package=".viral_genomic_analyses"/>
     <include package=".viral_genomic_analysis"/>
-    <include package=".extract_genomic_materials"/>
     <include package=".virus_aliquots"/>
 
     <!-- This registration allows additional sticker templates.

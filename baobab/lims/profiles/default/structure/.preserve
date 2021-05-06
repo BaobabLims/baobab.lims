@@ -15,6 +15,7 @@ anatomical_materials
 lab_hosts
 hosts
 host_diseases
+freezers
+monitoring_devices
 viral_genomic_analyses
-extract_genomic_materials
 virus_aliquots

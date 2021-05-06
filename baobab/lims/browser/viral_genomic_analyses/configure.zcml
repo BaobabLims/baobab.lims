@@ -20,13 +20,6 @@
 
     <browser:page
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-      name="ajax_save_extract_genomic_material"
-      class=".ajax.extract_genomic_material.AjaxCreateExtractGenomicMaterial"
-      permission="zope.Public"
-    />
-
-    <browser:page
-      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
       name="ajax_get_virus_samples"
       class=".ajax.get_content_types.AjaxGetVirusSamples"
       permission="zope.Public"

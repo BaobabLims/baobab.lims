@@ -9,6 +9,7 @@ from baobab.lims.config import *
 from baobab.lims.validators import *
 from baobab.lims.permissions import ADD_CONTENT_PERMISSION, ADD_CONTENT_PERMISSIONS
 import logging
+import requests
 logger = logging.getLogger('BAOBAB')
 import pkg_resources
 
@@ -72,10 +73,14 @@ def initialize(context):
     from content.hosts import Hosts
     from content.host_disease import HostDisease
     from content.host_diseases import HostDiseases
+    from content.freezer import Freezer
+    from content.freezers import Freezers
+    from content.monitoring_device import MonitoringDevice
+    from content.monitoring_devices import MonitoringDevices
+    from content.devicereading import DeviceReading
+    from content.devicehistory import DeviceHistory
     from content.viral_genomic_analysis import ViralGenomicAnalysis
     from content.viral_genomic_analyses import ViralGenomicAnalyses
-    from content.extract_genomic_material import ExtractGenomicMaterial
-    from content.extract_genomic_materials import ExtractGenomicMaterials
     from content.virus_aliquot import VirusAliquot
     from content.virus_aliquots import VirusAliquots
 
