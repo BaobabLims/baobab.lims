@@ -22,6 +22,12 @@
       for="bika.lims.interfaces.ISample"
       name="CustomFieldWV"
     />
+    <adapter
+      factory=".widgetvisibility.VirusSampleFieldWidgetVisibility"
+      provides="bika.lims.interfaces.IATWidgetVisibility"
+      for="baobab.lims.interfaces.IVirusSample"
+      name="VirusSampleWV"
+    />
 
     <adapter
       factory=".widgetvisibility.PriceListWidgetVisibility"
@@ -35,6 +41,20 @@
       provides="bika.lims.interfaces.IATWidgetVisibility"
       for="baobab.lims.interfaces.IProduct"
       name="ProductFieldWV"
+    />
+
+    <adapter
+      factory=".widgetvisibility.ViralGenomicAnalysisWidgetVisibility"
+      provides="bika.lims.interfaces.IATWidgetVisibility"
+      for="baobab.lims.interfaces.IViralGenomicAnalysis"
+      name="ViralGenomicAnalysisFieldWV"
+    />
+
+    <adapter
+      factory="bika.lims.adapters.widgetvisibility.WorkflowAwareWidgetVisibility"
+      provides="bika.lims.interfaces.IATWidgetVisibility"
+      for="baobab.lims.interfaces.IViralGenomicAnalysis"
+      name="WorkflowAwareWV"
     />
     
 </configure>

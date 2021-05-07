@@ -38,6 +38,8 @@
         <element value="HostDisease"/>
         <element value="Freezer"/>
         <element value="MonitoringDevice"/>
+        <element value="ViralGenomicAnalysis"/>
+        <element value="VirusAliquot"/>
 
   </property>
 </object>

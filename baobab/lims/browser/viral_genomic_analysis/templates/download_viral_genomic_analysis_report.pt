@@ -1,0 +1,169 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:metal="http://xml.zope.org/namespaces/metal"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="bika"
+    tal:define="portal_url nocall:context/portal_url;
+                portal portal_url/getPortalObject;">
+<head>
+    <style type="text/css" media="all"
+           tal:condition="python:exists('portal/ploneCustom.css')"
+           tal:content="structure string:&lt;!-- @import url($portal_url/ploneCustom.css); --&gt;">
+    </style>
+    <style type="text/css" media="all"
+           tal:condition="python:exists('portal/reports.css')"
+           tal:content="structure string:&lt;!-- @import url($portal_url/reports.css); --&gt;">
+    </style>
+    <style type="text/css">
+
+     td {padding-top:2px;}
+
+     .ars_table td {
+        padding: 0 50px 0 0;
+      }
+
+    </style>
+</head>
+
+<body>
+
+
+
+
+
+
+<table class="headertable" style="width:100%;">
+    <tr>
+
+        <td class="left">
+            <img tal:attributes="src string:${view/portal_url}/logo.png"/>
+            <br/>
+            <!--?<tal:address tal:content="view/lab_address"/>-->
+            <!--?<br tal:condition="view/lab_address"/>-->
+
+            <br tal:content="address" tal:repeat="address view/lab_address" />
+
+            <br /><br />
+            <tal:labemail tal:condition="view/laboratory/getEmailAddress">
+                <a tal:content="view/laboratory/getEmailAddress"
+                   tal:attributes="href string:mailto:${view/laboratory/getEmailAddress}"/>
+            </tal:labemail>
+            <tal:laburl tal:condition="view/laboratory/getLabURL">
+                <br/>
+                <a tal:content="view/laboratory/getLabURL"
+                   tal:attributes="href string:${view/laboratory/getLabURL}"/>
+            </tal:laburl>
+        </td>
+        <td align="right">
+          <table>
+            <tr><td>
+                <tal:x i18n:translate="">Batch ID</tal:x>:
+                </td>
+                    <td>
+                    <span class="documentFirstHeading">
+                      <!--?<span tal:omit-tag="python:True" tal:content="context/getTitle"/>-->
+                    </span>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                <tal:x i18n:translate="">Client</tal:x>:
+                </td>
+                <td>
+                <span tal:condition="nocall:view/client|nothing" omit-tag="python:True">
+                  <span tal:content="view/client/Title"/>
+                </span>
+            </td></tr>
+
+            <tr><td>
+                <tal:x i18n:translate="">Phone</tal:x>:
+            </td><td>
+                <span tal:omit-tag="python:True" tal:content="view/client/getPhone"/>
+            </td></tr>
+
+          </table>
+
+        </td>
+    </tr>
+</table>
+<br/>
+
+
+
+<!--?<table class="storage" style="border-collapse: collapse; width: 100%;">-->
+    <table class="storage" style="width:100%;">
+        <tbody>
+        <tr style="background: #f0f0f2;">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Title </th>
+            <td tal:content="view/title" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;width:70%"></td>
+        </tr>
+
+        <tr tal:condition="view/project">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Project</th>
+            <td tal:content="view/project" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/date_created" style="background: #f0f0f2;">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Date Created</th>
+            <td tal:content="view/date_created" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        </tbody>
+    </table>
+
+
+<div id="div-viral-load-determination">
+
+        <h3>Viral Load Determination</h3>
+        <table class="storage" style="width:100%">
+            <thead>
+                <tr>
+                    <th style="border: 1px solid #cecfd5; padding: 10px 15px;text-align: left;" i18n:translate=''>Sample</th>
+                    <th style="border: 1px solid #cecfd5; padding: 10px 15px;text-align: left;" i18n:translate=''>CT Value</th>
+                    <!--?<th style="border: 1px solid #cecfd5; padding: 10px 15px;text-align: left;" i18n:translate=''>Kit Lot #</th>-->
+                    <th style="border: 1px solid #cecfd5; padding: 10px 15px;text-align: left;" i18n:translate=''>Result</th>
+                    <!--?<th style="border: 1px solid #cecfd5; padding: 10px 15px;text-align: left;" i18n:translate=''>Verification</th>-->
+                    <!--?<th style='text-align:left;' i18n:translate=''>Notes</th>-->
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr tal:repeat="viral_load view/prepared_viral_loads">
+                    <td style="border: 1px solid #cecfd5; padding: 10px 15px;text-align: left;" tal:content="viral_load/sample"></td>
+                    <td style="border: 1px solid #cecfd5; padding: 10px 15px;text-align: left;" tal:content="viral_load/ct_value"></td>
+                    <!--?<td style="border: 1px solid #cecfd5; padding: 10px 15px;text-align: left;" tal:content="viral_load/kit_number"></td>-->
+                    <td style="border: 1px solid #cecfd5; padding: 10px 15px;text-align: left;" tal:content="viral_load/result"></td>
+                    <!--?<td style="border: 1px solid #cecfd5; padding: 10px 15px;text-align: left;" tal:content="viral_load/verification"></td>-->
+                    <!--?<td  style='text-align:left;' tal:content="viral_load/notes"></td>-->
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+
+<div id="footerContent">
+  <table>
+  <tr><td>
+      <tal:x i18n:translate="">Print date:</tal:x>
+      <span tal:content="view/now"/>
+  </td><td align="right">
+        <span>Page:</span>
+        <pdf:pagenumber/>
+  </td></tr>
+  </table>
+</div>
+
+
+
+
+</body>
+
+</html>

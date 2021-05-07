@@ -121,6 +121,16 @@
           expression=""
           inline="False"
           insert-after="*"/>
+  <javascript authenticated="True"
+          id="++resource++baobab.lims.js/baobab.lims.viral_genomic_analysis.add.js"
+          cacheable="True"
+          compression="safe"
+          conditionalcomment=""
+          cookable="True"
+          enabled="on"
+          expression=""
+          inline="False"
+          insert-after="*"/>
 
   <javascript authenticated="True"
           id="++resource++baobab.lims.js/Highcharts/code/highcharts.js"
@@ -178,9 +188,19 @@
           inline="False"
           insert-after="*"/>
 
-
   <javascript authenticated="True"
           id="++resource++baobab.lims.js/baobab.lims.freezer.js"
+          cacheable="True"
+          compression="safe"
+          conditionalcomment=""
+          cookable="True"
+          enabled="on"
+          expression=""
+          inline="False"
+          insert-after="*"/>
+
+  <javascript authenticated="True"
+          id="++resource++baobab.lims.js/baobab.lims.virus_sample_aliquoting.add.js"
           cacheable="True"
           compression="safe"
           conditionalcomment=""

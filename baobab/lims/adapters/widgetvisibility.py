@@ -17,6 +17,7 @@ where the widget.visible flag is used to control adapters in bika.lims.
 from zope.interface import implements
 
 from bika.lims.interfaces import IATWidgetVisibility
+from plone import api
 
 class ARFieldWidgetVisibility(object):
     """Forces a set of AnalysisRequest fields to be invisible depending on
@@ -103,6 +104,59 @@ class SampleFieldWidgetVisibility(object):
 
         return state
 
+class VirusSampleFieldWidgetVisibility(object):
+    """Forces a set of Sample fields to be invisible depending on
+    if context implement IBiospecimen or IAliquot
+    """
+    implements(IATWidgetVisibility)
+
+    def __init__(self, context):
+        self.context = context
+        self.sort = 10
+        self.random = 4
+        self.hidden_fields = [
+            'ClientReference',
+            'PreparationWorkflow',
+            'ClientSampleID',
+            'SamplingWorkflowEnabled',
+            'Sampler',
+            'Composite',
+            'AdHoc',
+            'EnvironmentalConditions',
+            'ScheduledSamplingSampler',
+            'SamplePoint',
+            'SamplingDeviation',
+            'DisposalDate',
+            'DateSampled',
+            'DateCreated',
+            'DiseaseOntology',
+            'Donor',
+            'SamplingDate',
+            'SampleCondition',
+            'SubjectID',
+            ]
+
+        self.show_fields = [
+            'SampleType',
+            'SampleCondition'
+        ]
+    def __call__(self, context, mode, field, default):
+        state = default if default else 'hidden'
+        field_name = field.getName()
+
+        wftool = self.context.portal_workflow
+        review_state = wftool.getInfoFor(self.context, 'review_state')
+
+        if field_name in self.hidden_fields:
+            field.required = False
+            return 'invisible'
+
+        if field_name in self.show_fields:
+            field.widget.visible['sample_received'] = {'view': 'visible', 'edit': 'visible'}
+            field.widget.visible['sample_due'] = {'view': 'visible', 'edit': 'visible'}
+
+        return state
+
 
 class PriceListWidgetVisibility(object):
     """Forces a set of Sample fields to be invisible depending on
@@ -150,3 +204,37 @@ class ProductWidgetVisibility(object):
             return 'invisible'
 
         return state
+
+
+class ViralGenomicAnalysisWidgetVisibility(object):
+    """Forces a set of ViralGenomicAnalysis fields to be invisible depending on
+    if context implement IBiospecimen or IAliquot
+    """
+    implements(IATWidgetVisibility)
+
+    def __init__(self, context):
+        self.context = context
+
+    def __call__(self, context, mode, field, default):
+        state = default if default else 'hidden'
+        field_name = field.getName()
+        wftool = self.context.portal_workflow
+        review_state = wftool.getInfoFor(self.context, 'review_state')
+
+        if field_name == 'ViralLoadDetermination':
+            if self.user_can_verify_vld():
+                field.widget.columns['Verification'].visible = True
+            else:
+                field.widget.columns['Verification'].visible = False
+
+        return state
+
+    def user_can_verify_vld(self):
+        user = api.user.get_current()
+        allowed_roles = ['LabManager', 'Manager']
+
+        for role in user.getRoles():
+            if role in allowed_roles:
+                return True
+
+        return False

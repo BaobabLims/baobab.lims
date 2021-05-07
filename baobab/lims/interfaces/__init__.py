@@ -249,3 +249,18 @@ class IDeviceReading(Interface):
 class IDeviceHistory(Interface):
     """
     """
+class IViralGenomicAnalysis(Interface):
+    """
+    """
+
+class IViralGenomicAnalyses(Interface):
+    """
+    """
+
+class IVirusAliquot(Interface):
+    """
+    """
+
+class IVirusAliquots(Interface):
+    """
+    """

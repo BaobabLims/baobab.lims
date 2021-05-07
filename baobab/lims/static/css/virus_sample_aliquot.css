@@ -1,0 +1,21 @@
+/*div#archetypes-fieldname-Quantity.info-volume{
+    border: 1px solid red;
+    background-color: #fdc;
+    padding: 0.5em;
+    margin: 1em 0;
+}
+
+div.err-vol{
+    color: #893939;
+}*/
+
+#archetypes-fieldname-Kits{
+    border: 1px solid #cfcfcf;
+    background-color: #efefef;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+#archetypes-fieldname-Kits select{
+    width: 150px;
+}

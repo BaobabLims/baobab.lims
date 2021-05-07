@@ -1,5 +1,7 @@
 from Products.CMFCore.utils import getToolByName
 from bika.lims.utils import to_utf8
+from baobab.lims.utils.retrieve_objects import *
+from baobab.lims.extenders.sample import Sample
 
 class LabDataExporter(object):
     """ This class packages all the samples info into a list of dictionaries and then returns it.
@@ -67,6 +69,8 @@ class ProjectsExporter(object):
 
         pc = getToolByName(self.context, 'portal_catalog')
         project_brains = pc(portal_type="Project")
+        print('----------------projects')
+        print(project_brains)
         if project_brains:
             list_of_projects.append(['Title', 'Description', 'StudyType', 'EthicsFormLink', 'AgeHigh', 'AgeLow',
                                      'NumParticipants', 'Biospecimen_Types', 'Client', 'Client_ID',
@@ -127,34 +131,37 @@ class SamplesExporter(object):
                             'Date_Created', 'SampleID_field',
                             'Sample_ID', 'UID', 'Parent_UID', 'URL_path'])
         for brain in brains:
-            sample = brain.getObject()
+            try:
+                sample = brain.getObject()
 
-            row = []
-            row.append(sample.Title())
-            project = sample.aq_parent
-            row.append(project.Title())
-            row.append(sample.getSampleType().Title())
-            storage = sample.getField('StorageLocation').get(sample)
-            if storage:
-                row.append(storage.getHierarchy())
-            else:
-                row.append('')
-            row.append(sample.getSamplingDate().strftime("%Y-%m-%d %H:%M") if sample.getSamplingDate() else '')
-            row.append(sample.getField('SubjectID').get(sample))
-            row.append(sample.getField('Barcode').get(sample))
-            row.append(sample.getField('Volume').get(sample))
-            row.append(sample.getField('Unit').get(sample))
+                row = []
+                row.append(sample.Title())
+                project = sample.aq_parent
+                row.append(project.Title())
+                row.append(sample.getSampleType().Title())
+                storage = sample.getField('StorageLocation').get(sample)
+                if storage:
+                    row.append(storage.getHierarchy())
+                else:
+                    row.append('')
+                row.append(sample.getSamplingDate().strftime("%Y-%m-%d %H:%M") if sample.getSamplingDate() else '')
+                row.append(sample.getField('SubjectID').get(sample))
+                row.append(sample.getField('Barcode').get(sample))
+                row.append(sample.getField('Volume').get(sample))
+                row.append(sample.getField('Unit').get(sample))
 
-            row.append(sample.getSampleState())
-            row.append(sample.getField('DateCreated').get(sample).strftime("%Y-%m-%d %H:%M") if sample.getField('DateCreated').get(sample) else '')
-            row.append(sample.getField('SampleID').get(sample))
+                row.append(sample.getSampleState())
+                row.append(sample.getField('DateCreated').get(sample).strftime("%Y-%m-%d %H:%M") if sample.getField('DateCreated').get(sample) else '')
+                row.append(sample.getField('SampleID').get(sample))
 
-            row.append(sample.getId() if sample.getId() else '')
-            row.append(sample.UID())
-            row.append(sample.aq_parent.UID() if sample.aq_parent.UID() else '')
-            row.append(brain.getPath() if brain.getPath() else '')
+                row.append(sample.getId() if sample.getId() else '')
+                row.append(sample.UID())
+                row.append(sample.aq_parent.UID() if sample.aq_parent.UID() else '')
+                row.append(brain.getPath() if brain.getPath() else '')
 
-            samples.append(row)
+                samples.append(row)
+            except:
+                pass
         return samples
 
 
@@ -186,7 +193,7 @@ class VirusSamplesExporter(object):
 
             row = []
             row.append(virus_sample.Title())
-            project = virus_sample.aq_parent
+            project = virus_sample.getField('Project').get(virus_sample)
             row.append(project.Title())
             row.append(virus_sample.getSampleType().Title())
             # disease_ontology = virus_sample.getField('DiseaseOntology').get(virus_sample)
@@ -405,3 +412,237 @@ class SampleShipmentExporter(object):
 
                 sample_shipments.append(row)
         return sample_shipments
+
+class ViralGenomicAnalysisExporter(object):
+    """ This class packages all the samples info into a list of dictionaries and then returns it.
+        Returns all the samples except Aliquots (Samples with Parent Samples/LinkedSample)
+    """
+    def __init__(self, context):
+        self.context = context
+
+    def export(self):
+        vgas = []
+        pc = getToolByName(self.context, 'portal_catalog')
+        brains = pc(portal_type="ViralGenomicAnalysis")
+
+        if brains:
+            vgas.append(['Title', 'Description', 'Project', 'Date_Created', 'WillExtract',
+                                     'WillAliquot', 'WillQuantify','WillViralLoadDetermine',
+                                     'WillLibraryPrep', 'VGA_ID', 'UID', 'Parent_UID', 'URL_path'])
+
+        for brain in brains:
+            vga = brain.getObject()
+            if vga:
+                row = []
+                row.append(vga.Title())
+                row.append(str(vga.Description()).rstrip())
+                project = vga.getProject()
+                if project:
+                    row.append(project.Title())
+                else:
+                    row.append('')
+                row.append(vga.getField('DateCreated').get(vga).strftime("%Y-%m-%d %H:%M") if vga.getField('DateCreated').get(vga) else '')
+                row.append(str(vga.getField('WillExtract').get(vga)) if vga.getField('WillExtract') else '')
+                row.append(str(vga.getField('WillAliquot').get(vga)) if vga.getField('WillAliquot') else '')
+                row.append(str(vga.getField('WillQuantify').get(vga)) if vga.getField('WillQuantify') else '')
+                row.append(str(vga.getField('WillViralLoadDetermine').get(vga)) if vga.getField('WillViralLoadDetermine') else '')
+                row.append(str(vga.getField('WillLibraryPrep').get(vga)) if vga.getField('WillLibraryPrep') else '')
+
+                row.append(vga.getId() if vga.getId() else '')
+                row.append(vga.UID())
+                row.append(vga.aq_parent.UID() if vga.aq_parent.UID() else '')
+                row.append(brain.getPath() if brain.getPath() else '')
+
+                vgas.append(row)
+        return vgas
+
+
+class ExtractGenomicMaterialExporter(object):
+    """ This class packages all the samples info into a list of dictionaries and then returns it.
+        Returns all the samples except Aliquots (Samples with Parent Samples/LinkedSample)
+    """
+    def __init__(self, context):
+        self.context = context
+
+    def export(self):
+        egms = []
+        pc = getToolByName(self.context, 'portal_catalog')
+        brains = pc(portal_type="ViralGenomicAnalysis")
+
+        if brains:
+            egms.append(['VGA', 'Title', 'Extraction_Barcode', 'Virus_Sample',
+                                     'Heat_Inactivated', 'Method', 'Extraction_Barcode','Volume',
+                                     'Unit', 'Was_Kit_Used', 'Kit_Number', 'Notes',])
+
+        for brain in brains:
+            vga = brain.getObject()
+            extract_genomic_materials = vga.getExtractGenomicMaterial()
+
+            for egm in extract_genomic_materials:
+
+                if egm:
+                    row = []
+                    row.append(vga.Title())
+                    row.append(str(egm['ExtractionBarcode'] if 'ExtractionBarcode' in egm else ''))
+                    virus_sample = get_object_from_uid(self.context, egm['VirusSample'])
+                    try:
+                        row.append(virus_sample.Title())
+                    except:
+                        row.append('')
+                    row.append(str(egm['HeatInactivated'] if 'HeatInactivated' in egm else ''))
+                    method = get_object_from_uid(self.context, egm['Method'])
+                    try:
+                        row.append(method.Title())
+                    except:
+                        row.append('')
+                    row.append(str(egm['ExtractionBarcode'] if 'ExtractionBarcode' in egm else ''))
+                    row.append(str(egm['Volume'] if 'Volume' in egm else ''))
+                    row.append(str(egm['Unit'] if 'Unit' in egm else ''))
+                    row.append(str(egm['WasKitUsed'] if 'WasKitUsed' in egm else ''))
+                    row.append(str(egm['KitNumber'] if 'KitNumber' in egm else ''))
+                    row.append(str(egm['Notes'] if 'Notes' in egm else ''))
+
+                    # row.append(egm.getId() if egm.getId() else '')
+                    # row.append(egm.UID())
+                    # row.append(egm.aq_parent.UID() if egm.aq_parent.UID() else '')
+                    # row.append(brain.getPath() if brain.getPath() else '')
+
+                    egms.append(row)
+        return egms
+
+
+class GenomeQuantificationExporter(object):
+    """ This class packages all the samples info into a list of dictionaries and then returns it.
+        Returns all the samples except Aliquots (Samples with Parent Samples/LinkedSample)
+    """
+    def __init__(self, context):
+        self.context = context
+
+    def export(self):
+        gqs = []
+        pc = getToolByName(self.context, 'portal_catalog')
+        brains = pc(portal_type="ViralGenomicAnalysis")
+
+        if brains:
+            gqs.append(['VGA', 'Virus_Sample', 'Fluorimeter_Conc_(ng/ul)',
+                        'Nanometer_Conc_(ng/ul)', 'Nanometer Ratio_(260/280)',])
+
+        for brain in brains:
+            vga = brain.getObject()
+            genome_quantifications = vga.getGenomeQuantification()
+
+            for gq in genome_quantifications:
+
+                if gq:
+                    row = []
+                    row.append(vga.Title())
+                    virus_sample = get_object_from_uid(self.context, gq['VirusSampleRNAorDNA'])
+                    try:
+                        row.append(virus_sample.Title())
+                    except:
+                        row.append('')
+                    row.append(str(gq['FluorimeterConc'] if 'FluorimeterConc' in gq else ''))
+                    row.append(str(gq['NanometerQuantity'] if 'NanometerQuantity' in gq else ''))
+                    row.append(str(gq['NanometerRatio'] if 'NanometerRatio' in gq else ''))
+
+                    # row.append(egm.getId() if egm.getId() else '')
+                    # row.append(egm.UID())
+                    # row.append(egm.aq_parent.UID() if egm.aq_parent.UID() else '')
+                    # row.append(brain.getPath() if brain.getPath() else '')
+
+                    gqs.append(row)
+        return gqs
+
+
+class ViralLoadDeterminationExporter(object):
+    """ This class packages all the samples info into a list of dictionaries and then returns it.
+        Returns all the samples except Aliquots (Samples with Parent Samples/LinkedSample)
+    """
+    def __init__(self, context):
+        self.context = context
+
+    def export(self):
+        vlds = []
+        pc = getToolByName(self.context, 'portal_catalog')
+        brains = pc(portal_type="ViralGenomicAnalysis")
+
+        if brains:
+            vlds.append(['VGA', 'Virus_Sample', 'ctValue', 'Kit_Number',
+                         'result', 'Verification', 'AddToReport', 'Notes',])
+
+        for brain in brains:
+            vga = brain.getObject()
+            viral_load_determinations = vga.getViralLoadDetermination()
+
+            for vld in viral_load_determinations:
+
+                if vld:
+
+                    row = []
+                    row.append(vga.Title())
+                    virus_sample = get_object_from_uid(self.context, vld['VirusSampleRNAorDNA'])
+                    try:
+                        row.append(virus_sample.Title())
+                    except:
+                        row.append('')
+                    row.append(str(vld['ctValue'] if 'ctValue' in vld else ''))
+                    row.append(str(vld['KitNumber'] if 'KitNumber' in vld else ''))
+                    row.append(str(vld['Result'] if 'Result' in vld else ''))
+                    row.append(str(vld['Verification'] if 'Verification' in vld else ''))
+                    row.append(str(vld['AddToReport'] if 'AddToReport' in vld else ''))
+                    row.append(str(vld['Notes'] if 'Notes' in vld else ''))
+
+                    # row.append(egm.getId() if egm.getId() else '')
+                    # row.append(egm.UID())
+                    # row.append(egm.aq_parent.UID() if egm.aq_parent.UID() else '')
+                    # row.append(brain.getPath() if brain.getPath() else '')
+
+                    vlds.append(row)
+        return vlds
+
+
+class SequenceLibraryPrepExporter(object):
+    """ This class packages all the samples info into a list of dictionaries and then returns it.
+        Returns all the samples except Aliquots (Samples with Parent Samples/LinkedSample)
+    """
+    def __init__(self, context):
+        self.context = context
+
+    def export(self):
+        vlds = []
+        pc = getToolByName(self.context, 'portal_catalog')
+        brains = pc(portal_type="ViralGenomicAnalysis")
+
+        if brains:
+            vlds.append(['VGA', 'Virus_sample', 'Method', 'Kit_Number', 'Notes',])
+
+        for brain in brains:
+            vga = brain.getObject()
+            sequence_library_preps = vga.getSequencingLibraryPrep()
+
+            for slp in sequence_library_preps:
+
+                if slp:
+                    row = []
+                    row.append(vga.Title())
+
+                    virus_sample = get_object_from_uid(self.context, slp['VirusSampleRNAorDNA'])
+                    try:
+                        row.append(virus_sample.Title())
+                    except:
+                        row.append('')
+                    method = get_object_from_uid(self.context, slp['Method'])
+                    try:
+                        row.append(method.Title())
+                    except:
+                        row.append('')
+                    row.append(str(slp['KitNumber'] if 'KitNumber' in slp else ''))
+                    row.append(str(slp['Notes'] if 'Notes' in slp else ''))
+
+                    # row.append(egm.getId() if egm.getId() else '')
+                    # row.append(egm.UID())
+                    # row.append(egm.aq_parent.UID() if egm.aq_parent.UID() else '')
+                    # row.append(brain.getPath() if brain.getPath() else '')
+
+                    vlds.append(row)
+        return vlds

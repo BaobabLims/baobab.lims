@@ -19,3 +19,5 @@ hosts,Hosts
 host_diseases,HostDiseases
 freezers,Freezers
 monitoring_devices,MonitoringDevices
+viral_genomic_analyses,ViralGenomicAnalyses
+virus_aliquots,VirusAliquots

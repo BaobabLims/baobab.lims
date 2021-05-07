@@ -30,6 +30,8 @@
         <type portal_type="HostDisease"/>
         <type portal_type="Freezer"/>
         <type portal_type="MonitoringDevice"/>
+        <type portal_type="ViralGenomicAnalysis"/>
+        <type portal_type="VirusAliquot"/>
 
     </factorytypes>
 </object>

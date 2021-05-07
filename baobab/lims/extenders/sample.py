@@ -285,6 +285,8 @@ class SampleSchemaExtender(object):
         ExtStringField(
             'Unit',
             default="ml",
+            read_permission=permissions.View,
+            write_permission=permissions.ModifyPortalContent,
             widget=StringWidget(
                 label=_("Unit"),
                 visible={'edit': 'visible',
@@ -443,6 +445,27 @@ class SampleSchemaModifier(object):
                              'sample_received': {'view': 'invisible', 'edit': 'invisible'},
                              'expired': {'view': 'invisible', 'edit': 'invisible'},
                              'disposed': {'view': 'invisible', 'edit': 'invisible'},
+                             }
+
+        if ISample.providedBy(self.context):
+            show_fields = ('DiseaseOntology', 'Donor', 'SamplingDate',
+                    'SampleCondition', 'SubjectID')
+            for fn in show_fields:
+                if fn in schema:
+                    schema[fn].widget.render_own_label = False,
+                    schema[fn].widget.visible={'edit': 'visible',
+                             'view': 'visible',
+                             'header_table': 'visible',
+                             'sample_registered': {
+                                 'view': 'visible', 'edit': 'visible'},
+                             'sample_due': {
+                                 'view': 'visible', 'edit': 'visible'},
+                             'sampled': {'view': 'visible', 'edit': 'visible'},
+                             'sample_received': {
+                                 'view': 'visible', 'edit': 'visible'},
+                             'expired': {'view': 'visible', 'edit': 'visible'},
+                             'disposed': {
+                                 'view': 'visible', 'edit': 'visible'},
                              }
         return schema
 

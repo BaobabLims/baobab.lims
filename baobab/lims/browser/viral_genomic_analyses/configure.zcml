@@ -1,0 +1,56 @@
+<configure
+        xmlns="http://namespaces.zope.org/zope"
+        xmlns:browser="http://namespaces.zope.org/browser"
+        i18n_domain="baobab.lims">
+
+    <browser:page
+        for="baobab.lims.interfaces.IViralGenomicAnalyses"
+        name="folder_view"
+        class=".viral_genomic_analyses.ViralGenomicAnalysesView"
+        permission="zope2.View"
+        layer="bika.lims.interfaces.IBikaLIMS"
+    />
+
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="ajax_save_viral_genomic_analysis"
+      class=".ajax.viral_genomic_analysis.AjaxCreateViralGenomicAnalysis"
+      permission="zope.Public"
+    />
+
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="ajax_get_virus_samples"
+      class=".ajax.get_content_types.AjaxGetVirusSamples"
+      permission="zope.Public"
+    />
+
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="ajax_get_methods"
+      class=".ajax.get_content_types.AjaxGetMethods"
+      permission="zope.Public"
+    />
+
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="ajax_create_virus_aliquots"
+      class=".ajax.create_aliquots.AjaxCreateVirusSampleAliquots"
+      permission="zope.Public"
+    />
+
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="ajax_retrieve_saved_aliquots"
+      class=".ajax.retrieve_aliquots.AjaxRetrieveSavedAliquots"
+      permission="zope.Public"
+    />
+
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="ajax_retrieve_tab_display_info"
+      class=".ajax.retrieve_tab_display_info.AjaxRetrieveTabDisplayInfo"
+      permission="zope.Public"
+    />
+
+</configure>
