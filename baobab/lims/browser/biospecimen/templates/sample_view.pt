@@ -103,6 +103,12 @@
             <td tal:content="view/volume" style="padding-bottom: .5em;border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
+        <tr>
+            <th i18n:translate="" style="padding-bottom: .2em;border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Geo Location </th>
+            <td tal:content="view/geo_loc" style="padding-bottom: .5em;border: 1px solid #cecfd5;
+                                                       padding: 10px 15px;"></td>
+        </tr>
         </tbody>
     </table>
 

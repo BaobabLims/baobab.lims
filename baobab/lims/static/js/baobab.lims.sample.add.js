@@ -23,6 +23,22 @@ function BaobabSampleView() {
                 console.log(data);
             })
         })
+        $('#archetypes-fieldname-GeoLocCountry').change(function() {
+            var geo_loc_country = $('#GeoLocCountry');
+            var dropdown = $('#GeoLocState');
+            $(dropdown).empty();
+            populate_dropdowns(dropdown, 'states', {'country': geo_loc_country.val()});
+        });
+        $('#archetypes-fieldname-GeoLocState').change(function() {
+            var geo_loc_country = $('#GeoLocCountry');
+            var geo_loc_state = $('#GeoLocState');
+            var dropdown = $('#GeoLocDistrict');
+            $(dropdown).empty();
+            populate_dropdowns(
+                dropdown, 'getDistricts',
+                {'country': geo_loc_country.val(),
+                 'state': geo_loc_state.val()});
+        });
 
     };
 
@@ -45,5 +61,31 @@ function BaobabSampleView() {
         options.force_all = "false";
         $(element).combogrid(options);
         $(element).attr("search_query", "{}");
+    }
+
+    function populate_dropdowns(dropdown, populate_type, data){
+        var url_path = portal_url + '/ajax_get_' + populate_type;
+        if (populate_type == 'getDistricts'){
+            var url_path = portal_url + '/'+ populate_type;
+        }
+
+         $.ajax({
+             dataType: "json",
+             contentType: 'application/json',
+             data: data,
+             url: url_path,
+             success: function (data) {
+                 $(dropdown).empty();
+                 $(dropdown).append($('<option>').val('').text(''));
+                 $.each(data, function() {
+                    $.each(this, function(key, value){
+                        $(dropdown).append($('<option>').val(key).text(value));
+                    });
+                });
+             },
+             error: function (jqXHR, textStatus, errorThrown) {
+
+             }
+         });
     }
 }

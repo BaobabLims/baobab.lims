@@ -50,22 +50,24 @@
                                     <td class="nowrap" tal:attributes="arnum arnum">
                                         <div class="field">
                                             <tal:ifLabel tal:condition="widget/render_own_label | nothing">
-                                                <label class="formQuestion"
-                                                       tal:attributes="for python:fieldName">
-                                                    <span tal:replace="python:widget.Label(here)"
-                                                          i18n:translate="" />
-                                                    <span class="required"
-                                                          tal:condition="field/required"
-                                                          title="Required"
-                                                          i18n:attributes="title title_required;">&nbsp;</span>
-                                                    <span class="formHelp"
-                                                         tal:define="description python:widget.Description(here)"
-                                                         tal:content="structure description"
-                                                         tal:attributes="id string:${fieldName}_help"
-                                                         i18n:translate="">
-                                                      Help
-                                                    </span>
-                                                </label>
+                                                <tal:ifSelectLabel tal:condition="python: widget.macro != 'widgets/selection'">
+                                                    <label class="formQuestion"
+                                                           tal:attributes="for python:fieldName">
+                                                        <span tal:replace="python:widget.Label(here)"
+                                                              i18n:translate="" />
+                                                        <span class="required"
+                                                              tal:condition="field/required"
+                                                              title="Required"
+                                                              i18n:attributes="title title_required;">&nbsp;</span>
+                                                        <span class="formHelp"
+                                                             tal:define="description python:widget.Description(here)"
+                                                             tal:content="structure description"
+                                                             tal:attributes="id string:${fieldName}_help"
+                                                             i18n:translate="">
+                                                          Help
+                                                        </span>
+                                                    </label>
+                                                </tal:ifSelectLabel>
                                             </tal:ifLabel>
                                             <metal:field
                                                     use-macro="python:context.widget(fieldName, mode='edit')" />

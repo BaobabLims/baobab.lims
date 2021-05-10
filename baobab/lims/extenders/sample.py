@@ -10,6 +10,7 @@ from bika.lims.interfaces import ISample
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from bika.lims.browser.widgets import DateTimeWidget
 from bika.lims.content.sample import Sample as BaseSample
+from bika.lims.locales import COUNTRIES, STATES, DISTRICTS
 from bika.lims.workflow import doActionFor
 
 from baobab.lims import bikaMessageFactory as _
@@ -405,6 +406,78 @@ class SampleSchemaExtender(object):
                 render_own_label=False,
             )
         ),
+        ExtStringField(
+            'GeoLocCountry',
+            schemata='Sample Collection and Processing',
+            default="",
+            read_permission=permissions.View,
+            write_permission=permissions.ModifyPortalContent,
+            vocabulary='getCountries',
+            widget=SelectionWidget(
+                format='select',
+                label=_("Country Geo Location"),
+                description=_("The country of origin of sample"),
+                visible={'edit': 'visible',
+                         'view': 'visible',
+                         'header_table': 'visible',
+                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         'sample_due': {'view': 'visible', 'edit': 'visible'},
+                         'sampled': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'visible'},
+                         'expired': {'view': 'visible', 'edit': 'invisible'},
+                         'disposed': {'view': 'visible', 'edit': 'invisible'},
+                         },
+                render_own_label=True,
+            )
+        ),
+        ExtStringField(
+            'GeoLocState',
+            schemata='Sample Collection and Processing',
+            default="",
+            vocabulary='getStates',
+            read_permission=permissions.View,
+            write_permission=permissions.ModifyPortalContent,
+            widget=SelectionWidget(
+                format='select',
+                label=_("State/Province Geo Location"),
+                description=_("State/province/region of origin of the sample"),
+                visible={'edit': 'visible',
+                         'view': 'visible',
+                         'header_table': 'visible',
+                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         'sample_due': {'view': 'visible', 'edit': 'visible'},
+                         'sampled': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'visible'},
+                         'expired': {'view': 'visible', 'edit': 'invisible'},
+                         'disposed': {'view': 'visible', 'edit': 'invisible'},
+                         },
+                render_own_label=True,
+            )
+        ),
+        ExtStringField(
+            'GeoLocDistrict',
+            schemata='Sample Collection and Processing',
+            default="",
+            vocabulary='getDistricts',
+            read_permission=permissions.View,
+            write_permission=permissions.ModifyPortalContent,
+            widget=SelectionWidget(
+                format='select',
+                label=_("District Geo Location"),
+                description=_("District of origin of the sample"),
+                visible={'edit': 'visible',
+                         'view': 'visible',
+                         'header_table': 'visible',
+                         'sample_registered': {'view': 'visible', 'edit': 'visible'},
+                         'sample_due': {'view': 'visible', 'edit': 'visible'},
+                         'sampled': {'view': 'visible', 'edit': 'invisible'},
+                         'sample_received': {'view': 'visible', 'edit': 'visible'},
+                         'expired': {'view': 'visible', 'edit': 'invisible'},
+                         'disposed': {'view': 'visible', 'edit': 'invisible'},
+                         },
+                render_own_label=True,
+            )
+        ),
     ]
 
     def __init__(self, context):
@@ -541,6 +614,21 @@ class Sample(BaseSample):
 
             self.getField('ReservedLocation').set(self, None)
             self.reindexObject()
+
+    def getCountries(self):
+        items = [('', '')] + [(x['Country'], x['Country']) for x in COUNTRIES]
+        items.sort(lambda x, y: cmp(x[1], y[1]))
+        return items
+
+    def getStates(self):
+        items = [('', '')] + [(x[2], x[2]) for x in STATES]
+        items.sort(lambda x, y: cmp(x[1], y[1]))
+        return items
+
+    def getDistricts(self):
+        items = [('', '')] + [(x[2], x[2]) for x in DISTRICTS]
+        items.sort(lambda x, y: cmp(x[1], y[1]))
+        return items
 
 from Products.Archetypes import atapi
 from bika.lims.config import PROJECTNAME
