@@ -15,14 +15,12 @@ function VirusSampleAddView(){
         $('#archetypes-fieldname-GeoLocCountry').change(function() {
             var geo_loc_country = $('#GeoLocCountry');
             var dropdown = $('#GeoLocState');
-            $(dropdown).empty();
             populate_dropdowns(dropdown, 'states', {'country': geo_loc_country.val()});
         });
         $('#archetypes-fieldname-GeoLocState').change(function() {
             var geo_loc_country = $('#GeoLocCountry');
             var geo_loc_state = $('#GeoLocState');
             var dropdown = $('#GeoLocDistrict');
-            $(dropdown).empty();
             populate_dropdowns(
                 dropdown, 'getDistricts',
                 {'country': geo_loc_country.val(),

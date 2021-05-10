@@ -132,7 +132,6 @@ class EditView(BrowserView):
                 sample = context
                 self.perform_sample_audit(sample, request)
 
-            import pdb; pdb.set_trace()
             sample.getField('Project').set(sample, request.form['Project_uid'])
             sample.getField('AllowSharing').set(sample, request.form['AllowSharing'])
             sample.getField('Kit').set(sample, request.form['Kit_uid'])
