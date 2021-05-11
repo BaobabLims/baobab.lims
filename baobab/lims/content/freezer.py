@@ -72,8 +72,8 @@ class Freezer(ATFolder):
         limit = 1
         brains = bc(portal_type='DeviceReading',
                     path={'query': "/".join(self.getPhysicalPath())},
-                    sort_on='title',
-                    sort_order='ascending',
+                    sort_on='getDatetimeRecorded',
+                    sort_order='descending',
                     sort_limit=limit)[:limit]
 
         if not brains:

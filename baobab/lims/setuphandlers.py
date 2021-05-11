@@ -125,6 +125,7 @@ class BikaCustomGenerator:
         addIndex(bc, 'getProjectUID', 'FieldIndex')
         addIndex(bc, 'getMACAddress', 'FieldIndex')
         addIndex(bc, 'getMonitoringDeviceUID', 'FieldIndex')
+        addIndex(bc, 'getDatetimeRecorded', 'FieldIndex')
 
         # _______________________________#
         #      BIKA_SETUP_CATALOG        #

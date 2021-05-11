@@ -111,5 +111,14 @@
         sortkey="8"
         profile="baobab.lims:default"/>
 
+  <genericsetup:upgradeStep
+        title="Add getDatetimeRecorded index"
+        description="Fixes query for getLatestTemperature on freezer"
+        source="1.7.2"
+        destination="1.7.2.1"
+        handler="baobab.lims.upgrade.to17021.upgrade"
+        sortkey="8"
+        profile="baobab.lims:default"/>
+
 
 </configure>
