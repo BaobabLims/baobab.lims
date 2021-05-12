@@ -15,6 +15,7 @@ from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from bika.lims.browser.widgets import DateTimeWidget
 from bika.lims.browser.fields import AddressField
 from bika.lims.browser.widgets import AddressWidget
+from bika.lims.locales import COUNTRIES,STATES,DISTRICTS
 from Products.CMFCore.utils import getToolByName
 # from Products.CMFPlone.utils import safe_unicode
 
@@ -98,6 +99,36 @@ SampleReceivedDate = DateTimeField(
     )
 )
 
+GeoLocCountry = StringField(
+    'GeoLocCountry',
+    schemata='Sample Collection and Processing',
+    default="",
+    read_permission=permissions.View,
+    write_permission=permissions.ModifyPortalContent,
+    vocabulary='getCountries',
+    widget=SelectionWidget(
+        format='select',
+        label=_("Country Geo Location"),
+        description=_("The country of origin of sample"),
+        visible={'edit': 'visible', 'view': 'visible'},
+        # render_own_label=True,
+    )
+)
+
+GeoLocState = StringField(
+    'GeoLocState',
+    schemata='Sample Collection and Processing',
+    read_permission=permissions.View,
+    write_permission=permissions.ModifyPortalContent,
+    # vocabulary='getStates',
+    widget=SelectionWidget(
+        format='select',
+        label=_("State/Province Geo Location"),
+        description=_("State/province/region of origin of the sample"),
+        visible={'edit': 'visible', 'view': 'visible'},
+        # render_own_label=True,
+    )
+)
 
 Organism = ReferenceField(
     'Organism',
@@ -430,6 +461,8 @@ schema = Sample.schema.copy() + Schema((
     SampleCollectedBy,
     SampleCollectionDate,
     SampleReceivedDate,
+    GeoLocCountry,
+    GeoLocState,
     Organism,
     Isolate,
     PurposeOfSampling,
@@ -484,6 +517,10 @@ class VirusSample(Sample):
         items.sort(lambda x, y: cmp(x[1], y[1]))
         return DisplayList(items)
 
+    def getCountries(self):
+        items = [('', '')] + [(x['Country'], x['Country']) for x in COUNTRIES]
+        items.sort(lambda x, y: cmp(x[1], y[1]))
+        return items
 
     def getPurposeOfSamplings(self):
         return [

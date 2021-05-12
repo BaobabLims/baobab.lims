@@ -37,10 +37,8 @@ class VirusSampleView(BrowserView):
         self.sample_collection_date = self.context.getSampleCollectionDate()
         self.sample_received_date = self.context.getSampleReceivedDate()
         # PhysicalAddress,
-        geo_country = self.context.GeoLocCountry
-        geo_state = self.context.GeoLocState
-        geo_district = self.context.GeoLocDistrict
-        self.geo_loc = '%s, %s, %s' % (geo_country, geo_state, geo_district)
+        self.geo_loc_country = self.context.getGeoLocCountry()
+        self.geo_loc_state = self.context.getGeoLocState()
         self.organism = self.getObjectTitle(self.context.getOrganism())
         self.isolate = self.context.getIsolate()
         self.purpose_of_sampling = self.context.getPurposeOfSampling()

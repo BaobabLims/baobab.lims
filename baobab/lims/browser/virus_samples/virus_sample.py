@@ -1,8 +1,8 @@
-import json
 from Products.ATContentTypes.lib import constraintypes
 from Products.CMFCore.utils import getToolByName
 from bika.lims.browser import BrowserView
 from bika.lims.locales import COUNTRIES,STATES,DISTRICTS
+import json
 
 class ajaxGetStates(BrowserView):
     """ Drug vocabulary source for jquery combo dropdown box
@@ -32,39 +32,6 @@ class ajaxGetStates(BrowserView):
             states = []
 
         return json.dumps(states)
-
-
-class ajaxGetDistrics(BrowserView):
-    """
-    """
-
-    def __init__(self, context, request):
-        super(ajaxGetDistrics, self).__init__(context, request)
-        self.context = context
-        self.request = request
-
-    def __call__(self, country, state):
-        items = []
-        if not country or not state:
-            country = self.request.form['country']
-            state = self.request.form['state']
-        if not country or not state:
-            return items
-        # get ISO code for country
-        iso = [c for c in COUNTRIES if c['Country'] == country or c['ISO'] == country]
-        if not iso:
-            return items
-        iso = iso[0]['ISO']
-        # get NUMBER of the state for lookup
-        snr = [s for s in STATES if s[0] == iso and s[2] == state]
-        if not snr:
-            return items
-        snr = snr[0][1]
-        items = [x for x in DISTRICTS if x[0] == iso and x[1] == snr]
-        items.sort(lambda x,y: cmp(x[2], y[2]))
-        items = [{x[2]: x[2]} for x in items]
-        return json.dumps(items)
-
 
 class ajaxGetInstruments(BrowserView):
     """ Drug vocabulary source for jquery combo dropdown box
