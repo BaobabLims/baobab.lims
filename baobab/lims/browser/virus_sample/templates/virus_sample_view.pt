@@ -57,7 +57,7 @@
             <td tal:content="view/sample_type" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
-        <tr tal:condition="view/volume" style="background: #f0f0f2;">
+        <tr tal:condition="view/volume">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Volume</th>
             <td tal:content="view/volume" style="border: 1px solid #cecfd5;
@@ -96,7 +96,7 @@
                                                padding: 10px 15px;"></td>
         </tr>
 
-        <tr tal:condition="view/bio_sample_accenssion" style="background: #f0f0f2;">
+        <tr tal:condition="view/bio_sample_accenssion">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Bio Sample Accenssion</th>
             <td tal:content="view/bio_sample_accenssion" style="border: 1px solid #cecfd5;
@@ -110,7 +110,7 @@
                                                padding: 10px 15px;"></td>
         </tr>
 
-        <tr tal:condition="view/sample_collected_by" style="background: #f0f0f2;">
+        <tr tal:condition="view/sample_collected_by">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Sample Collected By</th>
             <td tal:content="view/sample_collected_by" style="border: 1px solid #cecfd5;
@@ -124,24 +124,31 @@
                                                padding: 10px 15px;"></td>
         </tr>
 
-        <tr tal:condition="view/sample_received_date" style="background: #f0f0f2;">
+        <tr tal:condition="view/sample_received_date">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Sample Received Date</th>
             <td tal:content="view/sample_received_date" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
 
-        <tr tal:condition="view/geo_loc">
+        <tr tal:condition="view/geo_loc_country">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Geo Loc Country</th>
-            <td tal:content="view/geo_loc" style="border: 1px solid #cecfd5;
+            <td tal:content="view/geo_loc_country" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
 
-        <tr tal:condition="view/organism" style="background: #f0f0f2;">
+        <tr tal:condition="view/organism">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Organism</th>
             <td tal:content="view/organism" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+
+        <tr tal:condition="view/geo_loc_state">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Geo Loc State</th>
+            <td tal:content="view/geo_loc_state" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;"></td>
         </tr>
 
@@ -152,7 +159,7 @@
                                                padding: 10px 15px;"></td>
         </tr>
 
-        <tr tal:condition="view/purpose_of_sampling" style="background: #f0f0f2;">
+        <tr tal:condition="view/purpose_of_sampling">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Purpose of Sampling</th>
             <td tal:content="view/purpose_of_sampling" style="border: 1px solid #cecfd5;
@@ -166,7 +173,7 @@
                                                padding: 10px 15px;"></td>
         </tr>
 
-        <tr tal:condition="view/collection_protocol" style="background: #f0f0f2;">
+        <tr tal:condition="view/collection_protocol">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Collection Protocol</th>
             <td tal:content="view/collection_protocol" style="border: 1px solid #cecfd5;
@@ -187,7 +194,7 @@
                                                padding: 10px 15px;"></td>
         </tr>
 
-        <tr tal:condition="view/passage_number" style="background: #f0f0f2;">
+        <tr tal:condition="view/passage_number">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Passage Number</th>
             <td tal:content="view/passage_number" style="border: 1px solid #cecfd5;
@@ -201,7 +208,7 @@
                                                padding: 10px 15px;"></td>
         </tr>
 
-        <tr tal:condition="view/host_subject_id" style="background: #f0f0f2;">
+        <tr tal:condition="view/host_subject_id">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Host Subject ID</th>
             <td tal:content="view/host_subject_id" style="border: 1px solid #cecfd5;
@@ -215,7 +222,7 @@
                                                padding: 10px 15px;"></td>
         </tr>
 
-        <tr tal:condition="view/host_disease" style="background: #f0f0f2;">
+        <tr tal:condition="view/host_disease">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Host Disease</th>
             <td tal:content="view/host_disease" style="border: 1px solid #cecfd5;
@@ -229,7 +236,7 @@
                                                padding: 10px 15px;"></td>
         </tr>
 
-        <tr tal:condition="view/host_age" style="background: #f0f0f2;">
+        <tr tal:condition="view/host_age">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Host Age</th>
             <td tal:content="view/host_age" style="border: 1px solid #cecfd5;
@@ -243,7 +250,7 @@
                                                padding: 10px 15px;"></td>
         </tr>
 
-        <tr tal:condition="view/exposure_country" style="background: #f0f0f2;">
+        <tr tal:condition="view/exposure_country">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Exposure Country</th>
             <td tal:content="view/exposure_country" style="border: 1px solid #cecfd5;
@@ -257,7 +264,7 @@
                                                padding: 10px 15px;"></td>
         </tr>
 
-        <tr tal:condition="view/library_id" style="background: #f0f0f2;">
+        <tr tal:condition="view/library_id">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Library ID</th>
             <td tal:content="view/library_id" style="border: 1px solid #cecfd5;

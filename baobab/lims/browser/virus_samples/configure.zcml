@@ -20,13 +20,6 @@
 
     <browser:page
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-      name="getDistricts"
-      class=".virus_sample.ajaxGetDistrics"
-      permission="zope.Public"
-    />
-
-    <browser:page
-      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
       name="ajax_get_instruments"
       class=".virus_sample.ajaxGetInstruments"
       permission="zope.Public"

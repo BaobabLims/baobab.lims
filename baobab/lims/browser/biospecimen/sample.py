@@ -100,10 +100,6 @@ class SampleView(BrowserView):
         self.subjectID = context.getField('SubjectID').get(context)
         self.barcode = context.getField('Barcode').get(context)
         self.volume = context.getField('Volume').get(context) + " " + context.getField('Unit').get(context)
-        geo_country = context.getField('GeoLocCountry').get(context)
-        geo_state = context.getField('GeoLocState').get(context)
-        geo_district = context.getField('GeoLocDistrict').get(context)
-        self.geo_loc = '%s, %s, %s' % (geo_country, geo_state, geo_district)
 
         return self.template()
 
@@ -141,9 +137,6 @@ class EditView(BrowserView):
             sample.getField('Volume').set(sample, request.form['Volume'])
             sample.getField('Unit').set(sample, request.form['Unit'])
             sample.getField('LinkedSample').set(sample, request.form['LinkedSample_uid'])
-            sample.getField('GeoLocCountry').set(sample, request.form['GeoLocCountry'])
-            sample.getField('GeoLocState').set(sample, request.form['GeoLocState'])
-            sample.getField('GeoLocDistrict').set(sample, request.form['GeoLocDistrict'])
 
             sample.edit(
                 SampleType=request.form['SampleType_uid']
@@ -212,8 +205,7 @@ class EditView(BrowserView):
         mode = mode if mode else 'edit'
         schema = self.context.Schema()
         hide_fields = ('DiseaseOntology', 'Donor', 'SamplingDate',
-                'SampleCondition', 'SubjectID', 'GeoLocCountry',
-                'GeoLocState', 'GeoLocDistrict')
+                'SampleCondition', 'SubjectID')
         for fn in hide_fields:
             if fn in schema:
                 schema[fn].widget.render_own_label = False,

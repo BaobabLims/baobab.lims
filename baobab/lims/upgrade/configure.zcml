@@ -120,5 +120,14 @@
         sortkey="8"
         profile="baobab.lims:default"/>
 
+  <genericsetup:upgradeStep
+        title="Revert Geolocation changes"
+        description="Revert Geolocation changes and update the js"
+        source="1.7.2.1"
+        destination="1.7.2.2"
+        handler="baobab.lims.upgrade.to17022.upgrade"
+        sortkey="8"
+        profile="baobab.lims:default"/>
+
 
 </configure>

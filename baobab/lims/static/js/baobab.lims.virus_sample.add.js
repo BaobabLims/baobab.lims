@@ -14,19 +14,9 @@ function VirusSampleAddView(){
 
         $('#archetypes-fieldname-GeoLocCountry').change(function() {
             var geo_loc_country = $('#GeoLocCountry');
-            var dropdown = $('#GeoLocState');
-            populate_dropdowns(dropdown, 'states', {'country': geo_loc_country.val()});
-        });
-        $('#archetypes-fieldname-GeoLocState').change(function() {
-            var geo_loc_country = $('#GeoLocCountry');
             var geo_loc_state = $('#GeoLocState');
-            var dropdown = $('#GeoLocDistrict');
-            populate_dropdowns(
-                dropdown, 'getDistricts',
-                {'country': geo_loc_country.val(),
-                 'state': geo_loc_state.val()});
+            populate_dropdowns(geo_loc_state, 'states', {'country': geo_loc_country.val()});
         });
-
 
         $('#archetypes-fieldname-InstrumentType').find('select').change(function() {
             var dropdown = this;
@@ -50,9 +40,6 @@ function VirusSampleAddView(){
 
     function populate_dropdowns(dropdown, populate_type, data){
         var url_path = portal_url + '/ajax_get_' + populate_type;
-        if (populate_type == 'getDistricts'){
-            var url_path = portal_url + '/'+ populate_type;
-        }
 
          $.ajax({
              dataType: "json",
