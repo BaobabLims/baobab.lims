@@ -1,4 +1,4 @@
-from bika.lims import api
+from bika.lims import api as bika_lims_api
 from baobab.lims import logger
 from baobab.lims.jsonapi import config
 
@@ -9,6 +9,7 @@ from bika.lims.jsonapi.api import fail, make_items_for, find_target_container, g
 from bika.lims.jsonapi.api import create_object as bika_create_object
 from bika.lims.jsonapi import request as req
 from bika.lims.jsonapi import underscore as u
+from bika.lims.jsonapi import api as bika_json_api
 from baobab.lims.utils.create_biospecimen import create_sample as create_smp
 from baobab.lims.utils.create_sample_type import create_sample_type as create_smp_type
 
@@ -19,6 +20,14 @@ from AccessControl import Unauthorized
 from zope.dottedname.resolve import resolve
 from zope.interface import alsoProvides
 from plone import api
+
+from Products.CMFPlone.PloneBatch import Batch
+from bika.lims.jsonapi.interfaces import IBatch
+from bika.lims.jsonapi.interfaces import IInfo
+
+from Products.CMFCore.utils import getToolByName
+from baobab.lims.interfaces import ISharableSample
+
 
 _marker = object()
 
@@ -96,10 +105,118 @@ def get_object_by_record(record):
     # TODO: import get_object_by_record from bika and call it if else
     return None
 
+# GET BATCHED
+def get_batched(context, portal_type=None, uid=None, endpoint=None, **kw):
+    """Get batched results
+    """
+    pm = getToolByName(context, 'portal_membership')
+    roles = pm.getAuthenticatedMember().getRoles()
+    if 'EMS' in roles or uid == "allowSharing":
+        uid = None
+        if portal_type == 'Sample':
+            kw['object_provides'] = ISharableSample.__identifier__
+            req.get_request().form["catalog"] = "portal_catalog"
+        else:
+            raise Unauthorized("You don't have access permission to {}".format(portal_type))
+
+    # TODO: ------
+    # fetch the catalog results
+    results = get_search_results(portal_type=portal_type, uid=uid, **kw)
+
+    # fetch the batch params from the request
+    size = req.get_batch_size()
+    start = req.get_batch_start()
+
+    # check for existing complete flag
+    complete = req.get_complete(default=_marker)
+    if complete is _marker:
+        # if the uid is given, get the complete information set
+        complete = uid and True or False
+
+    # return a batched record
+    return get_batch(results, size, start, endpoint=endpoint,
+                     complete=complete)
+
+def get_search_results(portal_type=None, uid=None, **kw):
+    """Search the catalog and return the results
+
+    :returns: Catalog search results
+    :rtype: iterable
+    """
+
+    # If we have an UID, return the object immediately
+    if uid is not None:
+        logger.info("UID '%s' found, returning the object immediately" % uid)
+        return u.to_list(get_object_by_uid(uid))
+
+    # allow to search search for the Plone Site with portal_type
+    include_portal = False
+    if u.to_string(portal_type) == "Plone Site":
+        include_portal = True
+
+    # The request may contain a list of portal_types, e.g.
+    # `?portal_type=Document&portal_type=Plone Site`
+    if "Plone Site" in u.to_list(req.get("portal_type")):
+        include_portal = True
+
+    # Build and execute a catalog query
+    results = search(portal_type=portal_type, uid=uid, **kw)
+
+    if include_portal:
+        results = list(results) + u.to_list(get_portal())
+
+    return results
+
+def is_folderish(brain_or_object):
+    return bika_lims_api.is_folderish(brain_or_object)
+
+def get_portal():
+    """Proxy to bika.lims.api.get_portal
+    """
+    return bika_lims_api.get_portal()
+
+def get_parent(brain_or_object):
+    return bika_lims_api.get_parent(brain_or_object)
+
+def get_portal_type(brain_or_object):
+    return bika_lims_api.get_portal_type(brain_or_object)
+
+def get_object_by_uid(uid, default=None):
+    """Proxy to bika.lims.api.get_object_by_uid
+    """
+    return bika_lims_api.get_object_by_uid(uid, default)
+
+def get_contents(brain_or_object, depth=1):
+    return bika_lims_api.get_contents(brain_or_object, depth)
+
+def get_id(brain_or_object):
+    """Proxy to bika.lims.api.get_id
+    """
+    return bika_lims_api.get_id(brain_or_object)
+
+def get_uid(brain_or_object):
+    """Proxy to bika.lims.api.get_uid
+    """
+    return bika_lims_api.get_uid(brain_or_object)
 
 def resource_to_portal_type(resource):
     return bika_resource_to_portal_type(resource)
 
+def portal_type_to_resource(portal_type):
+    return bika_json_api.portal_type_to_resource(portal_type)
+
+def get_workflow_info(brain_or_object, endpoint=None):
+    return bika_lims_api.get_workflow_info(brain_or_object, endpoint)
+
+def get_endpoint(brain_or_object, default=DEFAULT_ENDPOINT):
+    return bika_json_api.get_endpoint(brain_or_object, default)
+
+def get_url(brain_or_object):
+    return bika_lims_api.get_url(brain_or_object)
+
+
+def is_root(brain_or_object):
+    return bika_json_api.is_root(brain_or_object)
 
 def url_for(endpoint, default=DEFAULT_ENDPOINT, **values):
     return bika_url_for(endpoint, default=DEFAULT_ENDPOINT, **values)
@@ -563,3 +680,189 @@ def is_creation_allowed(portal_type):
     """
     allowed_portal_types = config.ALLOWED_PORTAL_TYPES_TO_CREATE
     return portal_type in allowed_portal_types
+
+# -----------------------------------------------------------------------------
+#   Batching Helpers
+# -----------------------------------------------------------------------------
+
+def get_batch(sequence, size, start=0, endpoint=None, complete=False):
+    """ create a batched result record out of a sequence (catalog brains)
+    """
+
+    batch = make_batch(sequence, size, start)
+
+    return {
+        "pagesize": batch.get_pagesize(),
+        "next": batch.make_next_url(),
+        "previous": batch.make_prev_url(),
+        "page": batch.get_pagenumber(),
+        "pages": batch.get_numpages(),
+        "count": batch.get_sequence_length(),
+        "items": make_items_for([b for b in batch.get_batch()],
+                                endpoint, complete=complete),
+    }
+
+def make_batch(sequence, size=25, start=0):
+    """Make a batch of the given size from the sequence
+    """
+    # we call an adapter here to allow backwards compatibility hooks
+    return IBatch(Batch(sequence, size, start))
+
+# Make the return items suitable for json return.  That is what the below functions are for.
+
+def make_items_for(brains_or_objects, endpoint=None, complete=False):
+    """Generate API compatible data items for the given list of brains/objects
+
+    :param brains_or_objects: List of objects or brains
+    :type brains_or_objects: list/Products.ZCatalog.Lazy.LazyMap
+    :param endpoint: The named URL endpoint for the root of the items
+    :type endpoint: str/unicode
+    :param complete: Flag to wake up the object and fetch all data
+    :type complete: bool
+    :returns: A list of extracted data items
+    :rtype: list
+    """
+
+    # check if the user wants to include children
+    include_children = req.get_children(False)
+
+    def extract_data(brain_or_object):
+        info = get_info(brain_or_object, endpoint=endpoint, complete=complete)
+        if include_children and is_folderish(brain_or_object):
+            info.update(get_children_info(brain_or_object, complete=complete))
+        return info
+
+    return map(extract_data, brains_or_objects)
+
+def get_info(brain_or_object, endpoint=None, complete=False):
+    """Extract the data from the catalog brain or object
+
+    :param brain_or_object: A single catalog brain or content object
+    :type brain_or_object: ATContentType/DexterityContentType/CatalogBrain
+    :param endpoint: The named URL endpoint for the root of the items
+    :type endpoint: str/unicode
+    :param complete: Flag to wake up the object and fetch all data
+    :type complete: bool
+    :returns: Data mapping for the object/catalog brain
+    :rtype: dict
+    """
+
+    # extract the data from the initial object with the proper adapter
+    info = IInfo(brain_or_object).to_dict()
+
+    # update with url info (always included)
+    url_info = get_url_info(brain_or_object, endpoint)
+    info.update(url_info)
+
+    # include the parent url info
+    parent = get_parent_info(brain_or_object)
+    info.update(parent)
+
+    # add the complete data of the object if requested
+    # -> requires to wake up the object if it is a catalog brain
+    if complete:
+        # ensure we have a full content object
+        obj = bika_json_api.get_object(brain_or_object)
+        # get the compatible adapter
+        adapter = IInfo(obj)
+        # update the data set with the complete information
+        info.update(adapter.to_dict())
+
+        # update the data set with the workflow information
+        # -> only possible if `?complete=yes&workflow=yes`
+        if req.get_workflow(False):
+            info.update(get_workflow_info(obj))
+
+        # # add sharing data if the user requested it
+        # # -> only possible if `?complete=yes`
+        # if req.get_sharing(False):
+        #     sharing = get_sharing_info(obj)
+        #     info.update({"sharing": sharing})
+
+    return info
+#
+# def get_url_info(brain_or_object, endpoint=None):
+#     return bika_lims_api.get_url_info(brain_or_object, endpoint)
+
+
+def get_url_info(brain_or_object, endpoint=None):
+    """Generate url information for the content object/catalog brain
+
+    :param brain_or_object: A single catalog brain or content object
+    :type brain_or_object: ATContentType/DexterityContentType/CatalogBrain
+    :param endpoint: The named URL endpoint for the root of the items
+    :type endpoint: str/unicode
+    :returns: URL information mapping
+    :rtype: dict
+    """
+
+    # If no endpoint was given, guess the endpoint by portal type
+    if endpoint is None:
+        endpoint = get_endpoint(brain_or_object)
+
+    uid = get_uid(brain_or_object)
+    portal_type = get_portal_type(brain_or_object)
+    resource = portal_type_to_resource(portal_type)
+
+    return {
+        "uid": uid,
+        "url": get_url(brain_or_object),
+        "api_url": url_for(endpoint, resource=resource, uid=uid),
+    }
+
+
+def get_parent_info(brain_or_object, endpoint=None):
+    """Generate url information for the parent object
+
+    :param brain_or_object: A single catalog brain or content object
+    :type brain_or_object: ATContentType/DexterityContentType/CatalogBrain
+    :param endpoint: The named URL endpoint for the root of the items
+    :type endpoint: str/unicode
+    :returns: URL information mapping
+    :rtype: dict
+    """
+
+    # special case for the portal object
+    if is_root(brain_or_object):
+        return {}
+
+    # get the parent object
+    parent = get_parent(brain_or_object)
+    portal_type = get_portal_type(parent)
+    resource = portal_type_to_resource(portal_type)
+
+    # fall back if no endpoint specified
+    if endpoint is None:
+        endpoint = get_endpoint(parent)
+
+    return {
+        "parent_id": get_id(parent),
+        "parent_uid": get_uid(parent),
+        "parent_url": url_for(endpoint, resource=resource, uid=get_uid(parent))
+    }
+
+
+def get_children_info(brain_or_object, complete=False):
+    """Generate data items of the contained contents
+
+    :param brain_or_object: A single catalog brain or content object
+    :type brain_or_object: ATContentType/DexterityContentType/CatalogBrain
+    :param complete: Flag to wake up the object and fetch all data
+    :type complete: bool
+    :returns: info mapping of contained content items
+    :rtype: list
+    """
+
+    # fetch the contents (if folderish)
+    children = get_contents(brain_or_object)
+
+    def extract_data(brain_or_object):
+        return get_info(brain_or_object, complete=complete)
+    items = map(extract_data, children)
+
+    return {
+        "children_count": len(items),
+        "children": items
+    }
+
+
