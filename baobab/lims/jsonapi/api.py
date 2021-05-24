@@ -27,6 +27,7 @@ from bika.lims.jsonapi.interfaces import IInfo
 
 from Products.CMFCore.utils import getToolByName
 from baobab.lims.interfaces import ISharableSample
+from baobab.lims.jsonapi.modified_portal_types.portal_modifier import ModifierFactory
 
 
 _marker = object()
@@ -105,10 +106,17 @@ def get_object_by_record(record):
     # TODO: import get_object_by_record from bika and call it if else
     return None
 
+
 # GET BATCHED
-def get_batched(context, portal_type=None, uid=None, endpoint=None, **kw):
+def get_batched(context, portal_type=None, uid=None, endpoint=None, extra_parameters={}, **kw):
     """Get batched results
     """
+    # print('--------------inside get batched')
+    # print(kw)
+    # print(portal_type)
+    # print(uid)
+    # print(endpoint)
+
     pm = getToolByName(context, 'portal_membership')
     roles = pm.getAuthenticatedMember().getRoles()
     if 'EMS' in roles or uid == "allowSharing":
@@ -119,9 +127,13 @@ def get_batched(context, portal_type=None, uid=None, endpoint=None, **kw):
         else:
             raise Unauthorized("You don't have access permission to {}".format(portal_type))
 
+    # if portal_type == ''
+
     # TODO: ------
     # fetch the catalog results
     results = get_search_results(portal_type=portal_type, uid=uid, **kw)
+    # print('-------------results')
+    # print(results)
 
     # fetch the batch params from the request
     size = req.get_batch_size()
@@ -134,8 +146,12 @@ def get_batched(context, portal_type=None, uid=None, endpoint=None, **kw):
         complete = uid and True or False
 
     # return a batched record
-    return get_batch(results, size, start, endpoint=endpoint,
+    batched_results = get_batch(results, size, start, endpoint=endpoint,
                      complete=complete)
+    # print('-------------batched results')
+    # print(batched_results)
+    # print('-------------just before return')
+    return batched_results
 
 def get_search_results(portal_type=None, uid=None, **kw):
     """Search the catalog and return the results
@@ -708,8 +724,8 @@ def make_batch(sequence, size=25, start=0):
     # we call an adapter here to allow backwards compatibility hooks
     return IBatch(Batch(sequence, size, start))
 
-# Make the return items suitable for json return.  That is what the below functions are for.
 
+# Make the return items suitable for json return.  That is what the below functions are for.
 def make_items_for(brains_or_objects, endpoint=None, complete=False):
     """Generate API compatible data items for the given list of brains/objects
 
@@ -730,7 +746,12 @@ def make_items_for(brains_or_objects, endpoint=None, complete=False):
         info = get_info(brain_or_object, endpoint=endpoint, complete=complete)
         if include_children and is_folderish(brain_or_object):
             info.update(get_children_info(brain_or_object, complete=complete))
+        info = modify_object_info(info)
+        print('---------------Info list')
+        print(info)
         return info
+
+    # TODO Add some new code in here to filter
 
     return map(extract_data, brains_or_objects)
 
@@ -749,6 +770,7 @@ def get_info(brain_or_object, endpoint=None, complete=False):
 
     # extract the data from the initial object with the proper adapter
     info = IInfo(brain_or_object).to_dict()
+    # print(info)
 
     # update with url info (always included)
     url_info = get_url_info(brain_or_object, endpoint)
@@ -760,7 +782,9 @@ def get_info(brain_or_object, endpoint=None, complete=False):
 
     # add the complete data of the object if requested
     # -> requires to wake up the object if it is a catalog brain
-    if complete:
+
+    complete_types = ['VirusSample']
+    if complete or info['portal_type'] in complete_types:
         # ensure we have a full content object
         obj = bika_json_api.get_object(brain_or_object)
         # get the compatible adapter
@@ -780,10 +804,15 @@ def get_info(brain_or_object, endpoint=None, complete=False):
         #     info.update({"sharing": sharing})
 
     return info
-#
-# def get_url_info(brain_or_object, endpoint=None):
-#     return bika_lims_api.get_url_info(brain_or_object, endpoint)
 
+def modify_object_info(info):
+    try:
+        modifier_factory = ModifierFactory()
+        object_modifier = modifier_factory.get_portal_type_modifier(info['portal_type'])
+        info = object_modifier.modify_return_type(info)
+        return info
+    except Exception as e:
+        return info
 
 def get_url_info(brain_or_object, endpoint=None):
     """Generate url information for the content object/catalog brain

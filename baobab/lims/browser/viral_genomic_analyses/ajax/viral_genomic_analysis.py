@@ -14,7 +14,6 @@ from bika.lims.utils import tmpID
 class AjaxCreateViralGenomicAnalysis(BrowserView):
 
     def __init__(self, context, request):
-        print('--------------init')
         super(AjaxCreateViralGenomicAnalysis, self).__init__(context, request)
         self.context = context
         self.request = request

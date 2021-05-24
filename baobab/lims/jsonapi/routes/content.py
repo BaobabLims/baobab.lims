@@ -5,6 +5,7 @@ from bika.lims.jsonapi import api as bika_api
 from baobab.lims.jsonapi.routes import add_route
 from bika.lims.jsonapi.exceptions import APIError
 from baobab.lims.jsonapi.api_discovery import ApiDiscovery
+import datetime
 
 ACTIONS = "create,update,delete"
 ACTION = "discover"
@@ -17,16 +18,31 @@ ACTION = "discover"
 # /<resource (portal_type)>/<uid>
 @add_route("/<string:resource>/<string(maxlength=32):uid>",
            "baobab.lims.jsonapi.get", methods=["GET"])
+# @add_route("/<string:resource>?<string(maxlength=32):uid>",
+#            "baobab.lims.jsonapi.get", methods=["GET"])
 def get(context, request, resource=None, uid=None):
     """GET
     """
+    extra_parameters = {}
+    if 'last_received_date' in request.form:
+        # print('---------------------request')
+        # print(request.form['date'])
+        extra_parameters['last_received_date'] = request.form['last_received_date']
+
+    # print(datetime.datetime.now().strftime("%Y%m%d%H%M"))
     if bika_api.is_uid(resource):
         return bika_api.get_record(resource)
 
     portal_type = api.resource_to_portal_type(resource)
     if portal_type is None:
         raise APIError(404, "Not Found")
-    return api.get_batched(context, portal_type=portal_type, uid=uid, endpoint="baobab.lims.jsonapi.get")
+    return api.get_batched(
+        context,
+        portal_type=portal_type,
+        uid=uid,
+        endpoint="baobab.lims.jsonapi.get",
+        extra_parameters = extra_parameters
+    )
 
 # API discovery
 @add_route("/discover",
@@ -100,4 +116,3 @@ def action(context, request, action=None, resource=None, uid=None):
         "items": items,
         "url": api.url_for("baobab.lims.jsonapi.action", action=action),
     }
-

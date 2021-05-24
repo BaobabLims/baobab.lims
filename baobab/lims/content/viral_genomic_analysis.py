@@ -499,7 +499,6 @@ class ViralGenomicAnalysis(BaseContent):
             prepared_aliquot_list = self.get_prepared_aliquots(virus_aliquot.getAliquotSample())
             virus_aliquots_dict[parent_sample] = prepared_aliquot_list
 
-        print(virus_aliquots_dict)
         return virus_aliquots_dict
 
     def get_prepared_aliquots(self, aliquot_rows):
