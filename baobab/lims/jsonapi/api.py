@@ -111,11 +111,6 @@ def get_object_by_record(record):
 def get_batched(context, portal_type=None, uid=None, endpoint=None, extra_parameters={}, **kw):
     """Get batched results
     """
-    # print('--------------inside get batched')
-    # print(kw)
-    # print(portal_type)
-    # print(uid)
-    # print(endpoint)
 
     pm = getToolByName(context, 'portal_membership')
     roles = pm.getAuthenticatedMember().getRoles()
@@ -127,13 +122,9 @@ def get_batched(context, portal_type=None, uid=None, endpoint=None, extra_parame
         else:
             raise Unauthorized("You don't have access permission to {}".format(portal_type))
 
-    # if portal_type == ''
-
     # TODO: ------
     # fetch the catalog results
     results = get_search_results(portal_type=portal_type, uid=uid, **kw)
-    # print('-------------results')
-    # print(results)
 
     # fetch the batch params from the request
     size = req.get_batch_size()
@@ -146,12 +137,32 @@ def get_batched(context, portal_type=None, uid=None, endpoint=None, extra_parame
         complete = uid and True or False
 
     # return a batched record
-    batched_results = get_batch(results, size, start, endpoint=endpoint,
+    if portal_type == 'VirusSample':
+        default_date = None
+        batched_results = get_virus_sample_batch(
+            results,
+            size,
+            start,
+            endpoint=endpoint,
+            complete=complete,
+            date_modified=extra_parameters.get('last_received_date', default_date),
+            # date_modified=extra_parameters.get('last_received_date', None),
+        )
+    else:
+        batched_results = get_batch(results, size, start, endpoint=endpoint,
                      complete=complete)
-    # print('-------------batched results')
-    # print(batched_results)
-    # print('-------------just before return')
+
     return batched_results
+
+# def get_virus_sample_date_filtered(virus_samples, date_modified):
+#     try:
+#         modifier_factory = ModifierFactory()
+#         object_modifier = modifier_factory.get_portal_type_modifier(info['portal_type'])
+#         info = object_modifier.modify_return_type(info)
+#         return info
+#     except Exception as e:
+#         return info
+
 
 def get_search_results(portal_type=None, uid=None, **kw):
     """Search the catalog and return the results
@@ -706,7 +717,26 @@ def get_batch(sequence, size, start=0, endpoint=None, complete=False):
     """
 
     batch = make_batch(sequence, size, start)
+    return get_itemized_batch(batch, endpoint, complete)
 
+
+def get_virus_sample_batch(sequence, size, start=0, endpoint=None, complete=False, date_modified=None):
+
+    modifier_factory = ModifierFactory()
+    object_modifier = modifier_factory.get_portal_type_modifier('VirusSample')
+
+    batch = object_modifier.get_batch_on_datetime(sequence, date_modified)
+    return get_itemized_batch(batch, endpoint, complete)
+
+
+def make_batch(sequence, size=25, start=0):
+    """Make a batch of the given size from the sequence
+    """
+    # we call an adapter here to allow backwards compatibility hooks
+    return IBatch(Batch(sequence, size, start))
+
+
+def get_itemized_batch(batch, endpoint=None, complete=False):
     return {
         "pagesize": batch.get_pagesize(),
         "next": batch.make_next_url(),
@@ -717,12 +747,6 @@ def get_batch(sequence, size, start=0, endpoint=None, complete=False):
         "items": make_items_for([b for b in batch.get_batch()],
                                 endpoint, complete=complete),
     }
-
-def make_batch(sequence, size=25, start=0):
-    """Make a batch of the given size from the sequence
-    """
-    # we call an adapter here to allow backwards compatibility hooks
-    return IBatch(Batch(sequence, size, start))
 
 
 # Make the return items suitable for json return.  That is what the below functions are for.
@@ -747,8 +771,6 @@ def make_items_for(brains_or_objects, endpoint=None, complete=False):
         if include_children and is_folderish(brain_or_object):
             info.update(get_children_info(brain_or_object, complete=complete))
         info = modify_object_info(info)
-        print('---------------Info list')
-        print(info)
         return info
 
     # TODO Add some new code in here to filter
@@ -770,7 +792,6 @@ def get_info(brain_or_object, endpoint=None, complete=False):
 
     # extract the data from the initial object with the proper adapter
     info = IInfo(brain_or_object).to_dict()
-    # print(info)
 
     # update with url info (always included)
     url_info = get_url_info(brain_or_object, endpoint)
@@ -804,6 +825,7 @@ def get_info(brain_or_object, endpoint=None, complete=False):
         #     info.update({"sharing": sharing})
 
     return info
+
 
 def modify_object_info(info):
     try:
@@ -893,5 +915,3 @@ def get_children_info(brain_or_object, complete=False):
         "children_count": len(items),
         "children": items
     }
-
-

@@ -25,11 +25,8 @@ def get(context, request, resource=None, uid=None):
     """
     extra_parameters = {}
     if 'last_received_date' in request.form:
-        # print('---------------------request')
-        # print(request.form['date'])
         extra_parameters['last_received_date'] = request.form['last_received_date']
 
-    # print(datetime.datetime.now().strftime("%Y%m%d%H%M"))
     if bika_api.is_uid(resource):
         return bika_api.get_record(resource)
 
@@ -41,7 +38,7 @@ def get(context, request, resource=None, uid=None):
         portal_type=portal_type,
         uid=uid,
         endpoint="baobab.lims.jsonapi.get",
-        extra_parameters = extra_parameters
+        extra_parameters=extra_parameters
     )
 
 # API discovery
