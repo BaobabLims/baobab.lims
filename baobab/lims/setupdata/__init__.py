@@ -13,6 +13,7 @@ from baobab.lims.interfaces import ISampleStorageLocation, IStockItemStorage
 from baobab.lims.browser.project import *
 from baobab.lims.utils.audit_logger import AuditLogger
 from baobab.lims.utils.local_server_time import getLocalServerTime
+from bika.lims.locales import COUNTRIES,STATES,DISTRICTS
 
 def get_project_multi_items(context, string_elements, portal_type, portal_catalog):
 
@@ -734,7 +735,8 @@ class VirusSample(SetupImporter):
             SampleCollectedBy=row.get('SampleCollectedBy'),
             SampleCollectionDate=row.get('SampleCollectionDate'),
             SampleReceivedDate=row.get('SampleReceivedDate'),
-            GeoLocDate=row.get('GeoLocDate'),
+            # GeoLocDate=row.get('GeoLocDate'),
+            GeoLocCountry=row.get('GeoLocCountry'),
             GeoLocState=row.get('GeoLocState'),
             Organism=organism,
             Isolate=row.get('Isolate'),
@@ -783,6 +785,22 @@ class VirusSample(SetupImporter):
 
         return object
 
+
+    def is_country_state_valid(self, country=None, state=None):
+        try:
+            # if only one item is passed in then assume its valid if the name is english
+            if country:
+
+                iso = [c for c in COUNTRIES if c['Country'] == country or c['ISO'] == country]
+
+                if iso:
+                    iso = iso[0]['ISO']
+                    items = [x for x in STATES if x[0] == iso]
+                    items.sort(lambda x, y: cmp(x[2], y[2]))
+                    states = [{x[2]: x[2]} for x in items]
+
+        except Exception as e:
+            return False
 
 class Monitoring_Devices(WorksheetImporter):
     """Add some dummy monitoring devices

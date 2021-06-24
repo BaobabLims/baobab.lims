@@ -9,13 +9,17 @@ from Products.CMFPlone.PloneBatch import Batch
 class ModifiedVirusSample:
 
     def modify_return_type(self, info):
+        info['disease_title'] = ''
+        try:
+            virus_sample = self.get_object_by_uid(info['uid'])
+            info['baobab_modified_at'] = self.get_iso_date(virus_sample.getField('modification_date').get(virus_sample))
+            info['baobab_created_at'] = self.get_iso_date(virus_sample.getField('creation_date').get(virus_sample))
 
-        virus_sample = self.get_object_by_uid(info['uid'])
-        disease = info['HostDisease']
-        disease_uid = disease['uid']
-        info['disease_title'] = self.get_disease_title(disease_uid)
-        info['baobab_modified_at'] = self.get_iso_date(virus_sample.getField('modification_date').get(virus_sample))
-        info['baobab_created_at'] = self.get_iso_date(virus_sample.getField('creation_date').get(virus_sample))
+            disease = info['HostDisease']
+            disease_uid = disease['uid']
+            info['disease_title'] = self.get_disease_title(disease_uid)
+        except:
+            pass
 
         return info
 

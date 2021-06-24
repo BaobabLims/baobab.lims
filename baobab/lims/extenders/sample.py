@@ -224,6 +224,7 @@ class SampleSchemaExtender(object):
         ),
         ExtStringField(
             'SubjectID',
+            required=0,
             searchable=True,
             widget=StringWidget(
                 label=_("Subject ID"),
