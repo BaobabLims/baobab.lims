@@ -131,13 +131,14 @@ class EditView(BrowserView):
 
         project_uid = form.get('Project_uid', '')
         project = uc(UID=project_uid)[0].getObject()
-        biospecimen_type = form.get('BiospecimenType', None)
+        # biospecimen_type = form.get('BiospecimenType', None)
 
         samples_gen = SampleGeneration(form, project)
 
         samples = []
         for i in range(num_samples):
-            sample = samples_gen.create_sample(None, sample_type, context, biospecimen_type)
+            # sample = samples_gen.create_sample(None, sample_type, context, biospecimen_type)
+            sample = samples_gen.create_sample(None, sample_type, context)
             samples.append(sample)
 
         location_uid = form.get('StorageLocation_uid', '')
