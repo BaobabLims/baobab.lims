@@ -22,6 +22,9 @@ class VirusSamplesView(BikaListingView):
         self.contentFilter = {
             'portal_type': 'VirusSample',
         }
+        self.context_actions = {_('Add'):
+                                    {'url': 'createObject?type_name=VirusSample',
+                                     'icon': '++resource++bika.lims.images/add.png'}}
         self.title = self.context.translate(_("Virus Samples"))
         self.icon = self.portal_url + \
                     "/++resource++baobab.lims.images/patient_big.png"
@@ -36,8 +39,8 @@ class VirusSamplesView(BikaListingView):
             self.request.set('disable_border', 1)
 
         self.columns = {
-            'Title': {
-                'title': _('Title'),
+            'Barcode': {
+                'title': _('Barcode'),
                 # 'input_width': '10'
             },
             'Project': {
@@ -73,7 +76,7 @@ class VirusSamplesView(BikaListingView):
                 },
                 'transitions': [{'id': 'deactivate'}],
                 'columns': [
-                    'Title',
+                    'Barcode',
                     'Project',
                     'Volume',
                     'Unit',
@@ -102,11 +105,11 @@ class VirusSamplesView(BikaListingView):
                 continue
             obj = items[x]['obj']
 
-            items[x]['Title'] = obj.Title()
+            items[x]['Barcode'] = obj.getField('Barcode').get(obj)
 
-            items[x]['replace']['Title'] = "<a href='%s'>%s</a>" % \
+            items[x]['replace']['Barcode'] = "<a href='%s'>%s</a>" % \
                                                    (items[x]['url'],
-                                                    items[x]['Title'])
+                                                    items[x]['Barcode'])
             project = obj.getField('Project').get(obj)
             if project and hasattr(project, 'title'):
                 items[x]['Project'] = project.title

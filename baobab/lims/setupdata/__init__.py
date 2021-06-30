@@ -673,12 +673,13 @@ class VirusSample(SetupImporter):
     """
 
     def Import(self):
+        self._existing_virus_samples = self.getExistingBarcodes('VirusSample')
 
         rows = self.get_rows(3)
         for row in rows:
 
             try:
-                if self.isExistingTitle('VirusSample', row.get('title')):
+                if row.get('Barcode') in self._existing_virus_samples:
                     continue
 
                 self.create_virus_sample(row)
@@ -702,7 +703,6 @@ class VirusSample(SetupImporter):
         instrument = self.getObject('Instrument', row.get('Instrument'))
         host_age = row.get('HostAge', '')
 
-
         try:
             volume = str(row.get('Volume'))
             float_volume = str(float(volume))
@@ -718,19 +718,21 @@ class VirusSample(SetupImporter):
         # storage_location = st_loc_list and st_loc_list[0].getObject() or None
 
         obj.edit(
-            title=row.get('title'),
-            Barcode=row.get('Barcode'),
+            # title=row.get('title'),
             Project=project,
             SampleType=sample_type,
             StorageLocation=storage_location,
-            Volume=float_volume,
-            Unit=row.get('Unit'),
-            AnatomicalMaterial=anatomical_material,
             AllowSharing=row.get('AllowSharing'),
             WillReturnFromShipment=row.get('WillReturnFromShipment'),
+            Barcode=row.get('Barcode'),
+            Volume=float_volume,
+            Unit=row.get('Unit'),
+            AnatomicalSiteTerm=row.get('AnatomicalSiteTerm'),
+            AnatomicalSiteDescription=row.get('AnatomicalSiteDescription'),
             # Repository Accession Numbers
             BioSampleAccession=row.get('BioSampleAccession'),
             # Sample Collector and Processing
+            SpecimenCollectorSampleID=row.get('SpecimenCollectorSampleID'),
             SampleCollectedBy=row.get('SampleCollectedBy'),
             SampleCollectionDate=row.get('SampleCollectionDate'),
             SampleReceivedDate=row.get('SampleReceivedDate'),
@@ -746,6 +748,7 @@ class VirusSample(SetupImporter):
             LabHost=lab_host,
             PassageNumber=row.get('PassageNumber'),
             PassageMethod=row.get('PassageMethod'),
+            AnatomicalMaterial=anatomical_material,
             # Host Information
             HostSubjectID=row.get('HostSubjectID'),
             Host=host,
@@ -768,6 +771,21 @@ class VirusSample(SetupImporter):
 
         from baobab.lims.subscribers.sample import ObjectInitializedEventHandler
         ObjectInitializedEventHandler(obj, None)
+
+    def getExistingBarcodes(self, obj_type='VirusSample'):
+        existing_virus_samples = []
+        pc = getToolByName(self.context, 'portal_catalog')
+        brains = pc(portal_type=obj_type,)
+
+        for brain in brains:
+            try:
+                virus_sample = brain.getObject()
+                barcode = virus_sample.getField('Barcode').get(virus_sample)
+                existing_virus_samples.append(barcode)
+            except:
+                continue
+
+        return existing_virus_samples
 
     def getObject(self, obj_type, obj_title):
         if not obj_title:

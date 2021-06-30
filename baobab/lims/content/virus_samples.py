@@ -13,6 +13,5 @@ class VirusSamples(ATFolder):
     displayContentsTab = False
     schema = schema
 
-
 schemata.finalizeATCTSchema(schema, folderish=True, moveDiscussion=False)
 atapi.registerType(VirusSamples, PROJECTNAME)

@@ -23,10 +23,10 @@ class VirusSampleView(BrowserView):
         self.absolute_url = self.context.absolute_url()
         self.id = self.context.getId()
         self.virus_sample_uid = self.context.UID()
-        self.title = self.context.Title()
-        self.project = self.context.aq_parent.Title()
+        self.barcode = self.context.Barcode
+        self.project = self.context.getProject().Title()
         self.sample_type = self.context.getSampleType().Title()
-        self.volume = "%s %s" % (self.context.Volume, self.context.Unit)
+        self.volume = "%s %s" % (self.context.getField('Volume').get(self.context), self.context.Unit)
         self.anatomical_material = self.getObjectTitle(self.context.getAnatomicalMaterial())
         self.allow_sharing = self.context.AllowSharing
         self.will_return = self.context.WillReturnFromShipment
