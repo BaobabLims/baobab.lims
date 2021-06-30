@@ -607,9 +607,18 @@ class ViralGenomicAnalysis(BaseContent):
             return items
 
         brains = pc(portal_type="VirusSample", getProjectUID=project_uid)
-        if not brains:
-            return items
-        return [('', '')] + [(c.UID, c.Title) for c in brains]
+        # if not brains:
+        #     return items
+        # # return [('', '')] + [(c.UID, c.Title) for c in brains]
+        # return [('', '')] + [(c.UID, c.getField('Barcode').get(c)) for c in brains]
+
+        for brain in brains:
+            try:
+                virus_sample = brain.getObject()
+                items.append((virus_sample.UID(), virus_sample.getField('Barcode').get(virus_sample)))
+            except:
+                continue
+        return items
 
     def Vocabulary_VirusSample_by_ProjectUID(self, project_uid=None):
         return DisplayList(self.getVirusSamplesByProjectUID())

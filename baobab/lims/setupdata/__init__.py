@@ -769,8 +769,8 @@ class VirusSample(SetupImporter):
         obj.unmarkCreationFlag()
         renameAfterCreation(obj)
 
-        from baobab.lims.subscribers.sample import ObjectInitializedEventHandler
-        ObjectInitializedEventHandler(obj, None)
+        # from baobab.lims.subscribers.virus_sample import ObjectInitializedEventHandler
+        # ObjectInitializedEventHandler(obj, None)
 
     def getExistingBarcodes(self, obj_type='VirusSample'):
         existing_virus_samples = []
