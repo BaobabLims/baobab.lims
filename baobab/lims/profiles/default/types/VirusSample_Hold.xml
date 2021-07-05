@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<object name="VirusSample"
+        meta_type="Factory-based Type Information with dynamic views"
+        xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+        i18n:domain="plone">
+        <!--purge="True">-->
+ <property name="title" i18n:translate="">Virus Sample</property>
+ <property name="description"></property>
+ <property name="content_icon">++resource++baobab.lims.images/biospecimen.png</property>
+ <property name="content_meta_type">VirusSample</property>
+ <property name="product">baobab.lims</property>
+ <property name="factory">addVirusSample</property>
+ <property name="add_view_expr"></property>
+ <property name="link_target"></property>
+ <property name="global_allow">False</property>
+ <property name="filter_content_types">True</property>
+ <property name="allow_discussion">False</property>
+ <property name="default_view_fallback">False</property>
+
+ <alias from="(Default)" to="base_view"/>
+ <alias from="view" to="base_view"/>
+ <alias from="edit" to="base_edit"/>
+
+ <action title="View"
+         action_id="view"
+         category="object"
+         condition_expr=""
+         icon_expr=""
+         link_target=""
+         url_expr="string:${object_url}/"
+         i18n:attributes="title"
+         i18n:domain="plone"
+         visible="True">
+  <permission value="View"/>
+ </action>
+
+ <action title="Edit"
+         action_id="edit"
+         category="object"
+         condition_expr=""
+         icon_expr=""
+         link_target=""
+         url_expr="string:${object_url}/edit"
+         i18n:attributes="title"
+         i18n:domain="plone"
+         visible="True">
+  <permission value="BIKA: Edit Sample"/>
+ </action>
+
+<action title="Aliquots"
+        action_id="aliquots"
+        category="object"
+        icon_expr=""
+        link_target=""
+        url_expr="string:${object_url}/aliquots"
+        i18n:attributes="title"
+        i18n:domain="plone"
+        visible="True">
+    <permission value="View"/>
+</action>
+
+ <action title="Sample Partitions"
+         action_id="partitions"
+         category="object"
+         condition_expr="python:context.bika_setup.getShowPartitions()"
+         icon_expr=""
+         link_target=""
+         url_expr="string:${object_url}/partitions"
+         i18n:attributes="title"
+         i18n:domain="plone"
+         visible="True">
+   <permission value="BIKA: Manage Samples"/>
+ </action>
+
+ <action title="Analyses"
+         action_id="analyses"
+         category="object"
+         icon_expr=""
+         link_target=""
+         url_expr="string:${object_url}/analyses"
+         i18n:attributes="title"
+         i18n:domain="plone"
+         visible="True">
+   <permission value="BIKA: Manage Samples"/>
+ </action>
+
+ <action title="Log"
+         action_id="log"
+         category="object"
+         condition_expr=""
+         url_expr="string:${object_url}/log"
+         i18n:attributes="title"
+         visible="True">
+     <permission value="BIKA: View Log Tab"/>
+ </action>
+
+<action title="Large Sticker"
+        action_id="sticker_large"
+        category="document_actions"
+        condition_expr="python: context.portal_workflow.getInfoFor(context, 'review_state') in ['sample_due', 'sample_received']"
+        icon_expr="string:${object_url}/++resource++bika.lims.images/sticker_large.png"
+        link_target=""
+        url_expr="string:${object_url}/sticker?autoprint=1&amp;template=baobab:Code_128_1x72mm_b.pt"
+        i18n:attributes="title"
+        visible="True">
+   <permission value="View"/>
+</action>
+
+<action title="Small Sticker"
+        action_id="sticker_small"
+        category="document_actions"
+        condition_expr="python: context.portal_workflow.getInfoFor(context, 'review_state') in ['sample_received']"
+        icon_expr="string:${object_url}/++resource++bika.lims.images/sticker_small.png"
+        link_target=""
+        url_expr="string:${object_url}/sticker?autoprint=1&amp;size=small"
+        i18n:attributes="title"
+        visible="True">
+   <permission value="View"/>
+</action>
+
+<action title="Stickers preview"
+        action_id="sticker_preview"
+        category="document_actions"
+        condition_expr="python: context.portal_workflow.getInfoFor(context, 'review_state') in ['sample_received']"
+        icon_expr="string:${object_url}/++resource++bika.lims.images/sticker_preview.png"
+        link_target="Stickers preview"
+        url_expr="string:${object_url}/sticker"
+        i18n:attributes="title"
+        visible="True">
+    <permission value="View"/>
+</action>
+
+</object>

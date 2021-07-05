@@ -468,7 +468,7 @@ def setupCustomVarious(context):
               'supplyorders',
               'arimports',
               'bika_setup',
-              'virus_samples',
+              # 'virus_samples',
               'virus_aliquots',
               ]:
         obj = portal[x]
@@ -515,5 +515,6 @@ def setupCustomVarious(context):
                           'analysisrequests',
                           'pricelists',
                           'invoices',
+                          'virus_samples',
                           'donors']):
         portal.moveObjectsToTop([item])

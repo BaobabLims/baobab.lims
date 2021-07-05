@@ -45,7 +45,8 @@ ParentBiospecimen = ReferenceField(
     'ParentBiospecimen',
     vocabulary_display_path_bound=sys.maxsize,
     multiValue=1,
-    allowed_types=('Sample', 'VirusSample'),
+    # allowed_types=('Sample', 'VirusSample'),
+    allowed_types=('Sample',),
     relationship='SampleSample',
     referenceClass=HoldingReference,
     mode="rw",
@@ -67,20 +68,20 @@ ParentBiospecimen = ReferenceField(
     )
 )
 
-BiospecimenType = StringField(
-    'BiospecimenType',
-    required=True,
-    read_permission=permissions.View,
-    write_permission=permissions.ModifyPortalContent,
-    vocabulary='getBiospecimenTypes',
-    widget=SelectionWidget(
-        format='select',
-        label=_("Human or Virus"),
-        description=_("""Indicate whether you are collecting a sample for human
-             process or for virus process."""),
-        render_own_label=True,
-    )
-)
+# BiospecimenType = StringField(
+#     'BiospecimenType',
+#     required=True,
+#     read_permission=permissions.View,
+#     write_permission=permissions.ModifyPortalContent,
+#     vocabulary='getBiospecimenTypes',
+#     widget=SelectionWidget(
+#         format='select',
+#         label=_("Human or Virus"),
+#         description=_("""Indicate whether you are collecting a sample for human
+#              process or for virus process."""),
+#         render_own_label=True,
+#     )
+# )
 
 NumberBiospecimens = IntegerField('Quantity',
     required=True,
@@ -148,7 +149,7 @@ schema = BikaSchema.copy() + Schema((
     BatchId,
     Project,
     ParentBiospecimen,
-    BiospecimenType,
+    # BiospecimenType,
     NumberBiospecimens,
     Location,
     DateCreation
@@ -171,12 +172,12 @@ class SampleBatch(BaseContent):
         from bika.lims.idserver import renameAfterCreation
         renameAfterCreation(self)
 
-    def getBiospecimenTypes(self):
-        biospecimen_types = [
-                ('Sample', 'Human Sample'), ('VirusSample','Virus Sample')]
-        result = []
-        for r in biospecimen_types:
-            result.append((r[0], r[1]))
-        return DisplayList(result)
+    # def getBiospecimenTypes(self):
+    #     biospecimen_types = [
+    #             ('Sample', 'Human Sample'), ('VirusSample','Virus Sample')]
+    #     result = []
+    #     for r in biospecimen_types:
+    #         result.append((r[0], r[1]))
+    #     return DisplayList(result)
 
 registerType(SampleBatch, PROJECTNAME)

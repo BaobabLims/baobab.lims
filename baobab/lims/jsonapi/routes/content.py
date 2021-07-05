@@ -23,11 +23,10 @@ def get(context, request, resource=None, uid=None):
     if bika_api.is_uid(resource):
         return bika_api.get_record(resource)
 
-    portal_type = bika_api.resource_to_portal_type(resource)
+    portal_type = api.resource_to_portal_type(resource)
     if portal_type is None:
         raise APIError(404, "Not Found")
-    return bika_api.get_batched(context, portal_type=portal_type, uid=uid, endpoint="baobab.lims.jsonapi.get")
-
+    return api.get_batched(context, portal_type=portal_type, uid=uid, endpoint="baobab.lims.jsonapi.get")
 
 # API discovery
 @add_route("/discover",

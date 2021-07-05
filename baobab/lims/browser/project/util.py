@@ -17,13 +17,11 @@ class SampleGeneration:
         self.form = form
         self.project = project
 
-    def create_sample(self, kit, sample_type, batch=None, sample=None):
+    def create_sample(self, kit, sample_type, batch=None):
         """Create sample as biospecimen or aliquot
             """
-        if sample is None:
-            sample = _createObjectByType('Sample', self.project, tmpID())
-        else:
-            sample = _createObjectByType(sample, self.project, tmpID())
+        sample = _createObjectByType('Sample', self.project, tmpID())
+
         sample.setSampleType(sample_type)
         field = sample.getField('DateCreated')
         if self.form.get('DateCreated', ''):
