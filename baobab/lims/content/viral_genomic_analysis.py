@@ -17,7 +17,7 @@ from zope.interface import implements
 from baobab.lims import bikaMessageFactory as _
 from baobab.lims import config
 from baobab.lims.interfaces import IViralGenomicAnalysis
-from baobab.lims.utils.create_biospecimen import create_sample as create_smp
+from baobab.lims.utils.create_biospecimen import create_sample as create_smp, create_virus_sample
 from bika.lims.content.bikaschema import BikaSchema
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from bika.lims.browser.widgets import DateTimeWidget
@@ -186,7 +186,8 @@ ExtractGenomicMaterial = DataGridField(
             'VirusSample': SelectColumn(
                 'Virus Sample', 
                 col_description='Virus Sample(s) of the selected Project',
-                vocabulary='Vocabulary_VirusSample_by_ProjectUID',
+                # vocabulary='Vocabulary_VirusSample_by_ProjectUID',
+                vocabulary='Vocabulary_VirusSample_by_ProjectUID_and_RNADNA',
                 ),
             'Method': SelectColumn('Method', vocabulary='Vocabulary_Method'),
             'SampleType': SelectColumn('SampleType',
@@ -483,7 +484,8 @@ class ViralGenomicAnalysis(BaseContent):
                     "LinkedSample": virus_sample,
                     "DateCreated": DateTime,
                 }
-                create_smp(self.getProject(), None, values)
+                # create_smp(self.getProject(), None, values)
+                create_virus_sample(self.getProject(), values)
             if aline:
                 # atlease 1 sample was created
                 self.getField('ExtractGenomicMaterial').set(self, value)
@@ -595,11 +597,13 @@ class ViralGenomicAnalysis(BaseContent):
         vocabulary.catalog = 'bika_catalog'
         return vocabulary(allow_blank=True, portal_type='VirusSample')
 
-    def getVirusSamplesByProjectUID(self, project_uid=None):
-        # TODO: which catalog?
+    def getVirusSamplesByProjectUID(self, project_uid=None, rna_dna=False):
         pc = getToolByName(self, 'portal_catalog')
-        # TODO: Add getProjectUID index or column instead,
-        # so that self.getProjectUID will be available
+
+        rna_dna_sample_types = []
+        if rna_dna:
+            rna_dna_sample_types = self.getRNAorDNASampleTypes()
+
         items = [('','')]
         if not project_uid:
             project_uid = self.getProjectUID()
@@ -607,15 +611,12 @@ class ViralGenomicAnalysis(BaseContent):
             return items
 
         brains = pc(portal_type="VirusSample", getProjectUID=project_uid)
-        # if not brains:
-        #     return items
-        # # return [('', '')] + [(c.UID, c.Title) for c in brains]
-        # return [('', '')] + [(c.UID, c.getField('Barcode').get(c)) for c in brains]
 
         for brain in brains:
             try:
                 virus_sample = brain.getObject()
-                items.append((virus_sample.UID(), virus_sample.getField('Barcode').get(virus_sample)))
+                if virus_sample.getSampleType() not in rna_dna_sample_types:
+                    items.append((virus_sample.UID(), virus_sample.getField('Barcode').get(virus_sample)))
             except:
                 continue
         return items
@@ -623,6 +624,8 @@ class ViralGenomicAnalysis(BaseContent):
     def Vocabulary_VirusSample_by_ProjectUID(self, project_uid=None):
         return DisplayList(self.getVirusSamplesByProjectUID())
 
+    def Vocabulary_VirusSample_by_ProjectUID_and_RNADNA(self, project_uid=None):
+        return DisplayList(self.getVirusSamplesByProjectUID(rna_dna=True))
 
     def Vocabulary_VLD_Sample_RNA_or_DNA(self):
         pc = getToolByName(self, 'portal_catalog')
