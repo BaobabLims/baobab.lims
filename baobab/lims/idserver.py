@@ -9,7 +9,8 @@ import transaction
 def generateUniqueId(context):
     """Id generation specific to Baoabab lims (overriding Bika lims)
     """
-    if context.portal_type in ["Sample", "VirusSample"]:
+    if context.portal_type in ["Sample"]:
+    # if context.portal_type in ["Sample", "VirusSample"]:
         barcode = context.getField('Barcode')
         barcode_value = barcode.get(context)
         if barcode_value:

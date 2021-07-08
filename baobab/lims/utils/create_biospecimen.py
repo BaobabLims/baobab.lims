@@ -68,9 +68,5 @@ def create_virus_sample(context, values):
     )
 
     obj.unmarkCreationFlag()
-    renameAfterCreation(obj)
-
-    # from baobab.lims.subscribers.sample import ObjectInitializedEventHandler
-    # ObjectInitializedEventHandler(obj, None)
 
     return obj

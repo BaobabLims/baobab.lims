@@ -18,7 +18,7 @@ from bika.lims.browser.widgets import AddressWidget
 from bika.lims.locales import COUNTRIES,STATES,DISTRICTS
 from Products.CMFCore.utils import getToolByName
 from Products.Archetypes.public import BaseContent
-# from Products.CMFPlone.utils import safe_unicode
+from Products.CMFPlone.utils import safe_unicode
 
 import sys
 
@@ -36,6 +36,25 @@ Project = ReferenceField(
         showOn=True,
         description=_("Select the project of the sample."),
     )
+)
+
+ParentSample = ReferenceField(
+    'ParentSample',
+    allowed_types=('VirusSample'),
+    relationship='SampleSample',
+    referenceClass=HoldingReference,
+    widget=bika_ReferenceWidget(
+        label=_("Parent Biospecimen"),
+        description=_("Create an Aliquot of the virus sample selected."),
+        visible={'edit': 'visible',
+                 'view': 'visible',
+                 },
+        showOn=True,
+        render_own_label=False,
+        base_query={
+            'cancellation_state': 'active',
+        },
+    ),
 )
 
 Kit = ReferenceField(
@@ -221,6 +240,22 @@ SampleCollectionDate = DateTimeField(
         description=_("The date on which the sample was collection."),
         visible={'edit': 'visible', 'view': 'visible'}
     )
+)
+
+DateCreated = DateTimeField(
+    'DateCreated',
+    mode="rw",
+    read_permission=permissions.View,
+    write_permission=permissions.ModifyPortalContent,
+    widget=DateTimeWidget(
+        label=_("Date Created"),
+        description=_("Define when the sample has been created."),
+        show_time=True,
+        visible={'edit': 'visible',
+                 'view': 'visible',
+                 },
+        # render_own_label=False,
+    ),
 )
 
 SampleReceivedDate = DateTimeField(
@@ -610,6 +645,7 @@ SequencingProtocolName = StringField(
 schema = BikaSchema.copy() + Schema((
     Project,
     Kit,
+    ParentSample,
     SampleType,
     StorageLocation,
     AllowSharing,
@@ -621,6 +657,7 @@ schema = BikaSchema.copy() + Schema((
     AnatomicalSiteDescription,
     BioSampleAccession,
     SpecimenCollectorSampleID,
+    DateCreated,
     SampleCollectedBy,
     SampleCollectionDate,
     SampleReceivedDate,
@@ -665,6 +702,10 @@ class VirusSample(BaseContent):
         # from baobab.lims.idserver import renameAfterCreation
         from bika.lims.idserver import renameAfterCreation
         renameAfterCreation(self)
+
+    def title(self):
+        # return safe_unicode(self.getField('Barcode').get(self)).encode('utf-8')
+        return self.getField('Barcode').get(self)
 
     def getInstruments(self):
         bsc = getToolByName(self, 'bika_setup_catalog')
