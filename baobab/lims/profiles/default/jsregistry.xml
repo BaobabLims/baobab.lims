@@ -177,27 +177,27 @@
           inline="False"
           insert-after="*"/>
 
-  <javascript authenticated="True"
-          id="++resource++baobab.lims.js/Highcharts/code/modules/accessibility.js"
-          cacheable="True"
-          compression="safe"
-          conditionalcomment=""
-          cookable="True"
-          enabled="on"
-          expression=""
-          inline="False"
-          insert-after="*"/>
+  <!--<javascript authenticated="True"-->
+          <!--id="++resource++baobab.lims.js/Highcharts/code/modules/accessibility.js"-->
+          <!--cacheable="True"-->
+          <!--compression="safe"-->
+          <!--conditionalcomment=""-->
+          <!--cookable="True"-->
+          <!--enabled="on"-->
+          <!--expression=""-->
+          <!--inline="False"-->
+          <!--insert-after="*"/>-->
 
-  <javascript authenticated="True"
-          id="++resource++baobab.lims.js/baobab.lims.freezer.js"
-          cacheable="True"
-          compression="safe"
-          conditionalcomment=""
-          cookable="True"
-          enabled="on"
-          expression=""
-          inline="False"
-          insert-after="*"/>
+  <!--<javascript authenticated="True"-->
+          <!--id="++resource++baobab.lims.js/baobab.lims.freezer.js"-->
+          <!--cacheable="True"-->
+          <!--compression="safe"-->
+          <!--conditionalcomment=""-->
+          <!--cookable="True"-->
+          <!--enabled="on"-->
+          <!--expression=""-->
+          <!--inline="False"-->
+          <!--insert-after="*"/>-->
 
   <javascript authenticated="True"
           id="++resource++baobab.lims.js/baobab.lims.virus_sample_aliquoting.add.js"

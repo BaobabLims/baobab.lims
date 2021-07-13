@@ -15,7 +15,7 @@ from Products.CMFPlone.utils import safe_unicode
 
 ParentSample = ReferenceField(
     'ParentSample',
-    allowed_types=('Sample',),
+    allowed_types=('VirusSample',),
     relationship='VirusAliquotVirusSample',
     referenceClass=HoldingReference,
     widget=bika_ReferenceWidget(
@@ -30,7 +30,7 @@ ParentSample = ReferenceField(
 AliquotSample = ReferenceField(
     'AliquotSample',
     multiValued=1,
-    allowed_types=('Sample',),
+    allowed_types=('VirusSample',),
     relationship='VirusAliquotAliquotSample',
     referenceClass=HoldingReference,
     widget=bika_ReferenceWidget(
