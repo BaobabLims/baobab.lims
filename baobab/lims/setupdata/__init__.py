@@ -375,6 +375,7 @@ class Biospecimens(WorksheetImporter):
             Unit=row.get('Unit'),
             LinkedSample=linked_sample,
             DateCreated=row.get('DateCreated'),
+            SamplingDate=row.get('SamplingDate'),
             AnatomicalSiteTerm=row.get('AnatomicalSiteTerm'),
             AnatomicalSiteDescription=row.get('AnatomicalSiteDescription'),
 
