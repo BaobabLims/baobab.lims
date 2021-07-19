@@ -28,4 +28,10 @@
         handler=".freezer.ObjectInitializedEventHandler"
     />
 
+    <subscriber
+        for="baobab.lims.interfaces.IVirusSample
+             Products.Archetypes.interfaces.IObjectInitializedEvent"
+        handler=".virus_sample.ObjectInitializedEventHandler"
+    />
+
 </configure>

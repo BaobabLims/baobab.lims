@@ -9,8 +9,9 @@ def get_object_from_title(context, portal_type, object_title, catalog='portal_ca
         return None
     catalog = get_catalog(context, catalog)
     try:
-        return catalog(portal_type=portal_type, Title=object_title)[0].getObject()
-    except:
+        brains = catalog(portal_type=portal_type, Title=str(object_title))
+        return brains[0].getObject()
+    except Exception as e:
         return None
 
 

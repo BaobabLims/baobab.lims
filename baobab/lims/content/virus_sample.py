@@ -19,6 +19,7 @@ from bika.lims.locales import COUNTRIES,STATES,DISTRICTS
 from Products.CMFCore.utils import getToolByName
 from Products.Archetypes.public import BaseContent
 from Products.CMFPlone.utils import safe_unicode
+from bika.lims.workflow import doActionFor
 
 import sys
 
@@ -89,7 +90,7 @@ SampleType = ReferenceField(
 StorageLocation = ReferenceField(
     'StorageLocation',
     allowed_types=('StoragePosition',),
-    relationship='VirusSampleStorageLocation',
+    relationship='ItemStorageLocation',
     widget=bika_ReferenceWidget(
         label=_("Storage Location"),
         description=_("Location where item is kept"),
@@ -706,6 +707,16 @@ class VirusSample(BaseContent):
     def title(self):
         # return safe_unicode(self.getField('Barcode').get(self)).encode('utf-8')
         return self.getField('Barcode').get(self)
+
+    def update_box_status(self, location):
+        box = location.aq_parent
+        state = self.portal_workflow.getInfoFor(box, 'review_state')
+        free_pos = box.get_free_positions()
+        if not free_pos and state == 'available':
+            doActionFor(box, 'occupy')
+        elif free_pos and state == 'occupied':
+            doActionFor(box, 'liberate')
+
 
     def getInstruments(self):
         bsc = getToolByName(self, 'bika_setup_catalog')
