@@ -86,11 +86,17 @@ class BaobabWorksheetImporter(WorksheetImporter):
 
     def is_storage_location_available(self, storage_location):
         workflow = getToolByName(self.context, 'portal_workflow')
+        print('----------------storage location')
+        print(storage_location)
+        print(storage_location.available())
+        reviewState = str
         reviewState = workflow.getInfoFor(storage_location, 'review_state')
 
         if reviewState == 'occupied':
             return False
         return True
+
+        # return True
 
 
 class Products(WorksheetImporter):
@@ -379,9 +385,9 @@ class Biospecimens(BaobabWorksheetImporter):
             except ExcelSheetError as e:
                 self._errors.append(str(e))
                 continue
-            # except Exception as e:
-            #     self._errors.append(str(e))
-            #     continue
+            except Exception as e:
+                self._errors.append(str(e))
+                continue
 
     def create_biospecimen(self, row):
 
@@ -401,7 +407,8 @@ class Biospecimens(BaobabWorksheetImporter):
         sample_donor = get_object_from_title(self.context, 'SampleDonor', row.get('SampleDonor', ''), 'bika_catalog')
         disease_ontology = get_object_from_title(self.context, 'DiseaseOntology', row.get('DiseaseOntology', ''), 'bika_catalog')
         storage_location = get_object_from_title(self.context, 'StoragePosition', row.get('StorageLocation', ''))
-        if not self.is_storage_location_available(storage_location):
+
+        if storage_location and not storage_location.available():
             raise ExcelSheetError('Barcode: %s.  Storage location is already in use by another sample.' % barcode)
 
         volume = str(row.get('Volume'))
@@ -458,7 +465,7 @@ class Biospecimens(BaobabWorksheetImporter):
             except:
                 continue
 
-        return existing_virus_samples
+        return existing_samples
 
 
 class Storage(WorksheetImporter):
@@ -747,6 +754,8 @@ class VirusSample(BaobabWorksheetImporter):
     """
 
     def Import(self):
+
+        self._errors = []
         self._existing_virus_samples = self.getExistingBarcodes('VirusSample')
 
         rows = self.get_rows(3)
@@ -756,8 +765,11 @@ class VirusSample(BaobabWorksheetImporter):
                     continue
 
                 self.create_virus_sample(row)
+            except ExcelSheetError as e:
+                self._errors.append(str(e))
+                continue
             except Exception as e:
-                self._errors.append()
+                self._errors.append(str(e))
                 continue
 
     def create_virus_sample(self, row):
@@ -773,18 +785,20 @@ class VirusSample(BaobabWorksheetImporter):
         sample_type = self.getObject('SampleType', row.get('SampleType'))
         if not sample_type:
             raise ExcelSheetError('Barcode: %s .A valid Sample Type must be provided.' % barcode)
-        storage_location = self.getObject('StoragePosition', row.get('StorageLocation'))
-        if not self.is_storage_location_available(storage_location):
-            raise ExcelSheetError('Barcode: %s.  Storage location is already in use by another sample.' % barcode)
 
-        anatomical_material = self.getObject('AnatomicalMaterial', row.get('AnatomicalMaterial'))
-        organism = self.getObject('Organism', row.get('Organism'))
-        collection_device = self.getObject('CollectionDevice', row.get('CollectionDevice'))
-        host = self.getObject('Host', row.get('Host'))
-        host_disease = self.getObject('HostDisease', row.get('HostDisease'))
-        lab_host = self.getObject('LabHost', row.get('LabHost'))
-        instrument_type = self.getObject('InstrumentType', row.get('InstrumentType'))
-        instrument = self.getObject('Instrument', row.get('Instrument'))
+        storage_location = get_object_from_title(self.context, 'StoragePosition', row.get('StorageLocation', ''))
+        if storage_location:
+            if not storage_location.available():
+                raise ExcelSheetError('Barcode: %s.  Storage location is already in use by another sample.' % barcode)
+
+        anatomical_material = get_object_from_title(self.context, 'AnatomicalMaterial', row.get('AnatomicalMaterial', ''))
+        organism = get_object_from_title(self.context, 'Organism', row.get('Organism', ''))
+        collection_device = get_object_from_title(self.context, 'CollectionDevice', row.get('CollectionDevice', ''))
+        host = get_object_from_title(self.context, 'Host', row.get('Host', ''))
+        host_disease = get_object_from_title(self.context, 'HostDisease', row.get('HostDisease', ''))
+        lab_host = get_object_from_title(self.context, 'LabHost', row.get('LabHost', ''))
+        instrument_type = get_object_from_title(self.context, 'InstrumentType', row.get('InstrumentType', ''))
+        instrument = get_object_from_title(self.context, 'Instrument', row.get('Instrument'))
         host_age = row.get('HostAge', '')
 
         try:
@@ -856,8 +870,8 @@ class VirusSample(BaobabWorksheetImporter):
         if barcode not in self._existing_virus_samples:
             self._existing_virus_samples.append(barcode)
 
-        # from baobab.lims.subscribers.virus_sample import ObjectInitializedEventHandler
-        # ObjectInitializedEventHandler(obj, None)
+        from baobab.lims.subscribers.virus_sample import ObjectInitializedEventHandler
+        ObjectInitializedEventHandler(obj, None)
 
     def getExistingBarcodes(self, obj_type='VirusSample'):
         existing_virus_samples = []
