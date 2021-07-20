@@ -50,7 +50,6 @@
                                     <td class="nowrap" tal:attributes="arnum arnum">
                                         <div class="field">
                                             <tal:ifLabel tal:condition="widget/render_own_label | nothing">
-                                                <tal:ifNotSelectionWidget tal:condition="python: widget.macro != 'widgets/selection'">
                                                     <label class="formQuestion"
                                                            tal:attributes="for python:fieldName">
                                                         <span tal:replace="python:widget.Label(here)"
@@ -67,7 +66,6 @@
                                                           Help
                                                         </span>
                                                     </label>
-                                                </tal:ifNotSelectionWidget>
                                             </tal:ifLabel>
                                             <metal:field
                                                     use-macro="python:context.widget(fieldName, mode='edit')" />

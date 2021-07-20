@@ -283,19 +283,21 @@ function VirusSampleAliquotAddView(){
 
     function get_samples(select_id){
         var path = window.location.href.split('/viral_genomic_analyses')[0];
+        var project_uid = $('#Project_uid').val()
 
-         $.ajax({
-             dataType: "json",
-             contentType: 'application/json',
-             url: path + '/ajax_get_samples',
-             success: function (data) {
-                 $.each(data, function() {
+        $.ajax({
+            dataType: "json",
+            contentType: 'application/json',
+            data: {'project_uid': project_uid},
+            url: path + '/ajax_get_virus_samples',
+            success: function (data) {
+                $.each(data, function() {
                     $.each(this, function(key, value){
                         $('#' + select_id).append($('<option>').val(key).text(value));
                     });
                 });
-             }
-         });
+            }
+        });
     }
 
     function get_storage_units(select_id){

@@ -9,6 +9,8 @@ from bika.lims.workflow import doActionFor
 
 import json
 
+from baobab.lims.utils.retrieve_objects import get_object_from_uid
+
 class AjaxCreateVirusSampleAliquots(BrowserView):
 
     def __init__(self, context, request):
@@ -59,38 +61,39 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
         aliquots_data = aliquot_rows
         viral_aliquots = []
 
-        for sample_uid, new_aliquots_data in aliquots_data.iteritems():
+        for virus_sample_uid, new_aliquots_data in aliquots_data.iteritems():
             aliquots = []
 
             try:
-                sample = self.get_sample(sample_uid)
-                if not sample:
-                    self.errors.append('Sample with uid %s is not found' % sample_uid)
+                virus_sample = get_object_from_uid(self.context, virus_sample_uid)
+                if not virus_sample:
+                    self.errors.append('Sample with uid %s is not found' % virus_sample_uid)
                     continue
                 for aliquot_data in new_aliquots_data:
 
                     if not all(k in aliquot_data for k in ('volume', 'barcode')):
-                        self.errors.append('Aliquot for sample %s is missing either barcode or volume' %sample.Title())
+                        self.errors.append('Aliquot for sample %s is missing either barcode or volume' % virus_sample.getField('Barcode').get(virus_sample))
                         continue
 
                     try:
                         storage_brains = self.pc(portal_type='StoragePosition', UID=aliquot_data['storage'])
                         storage_location = storage_brains and storage_brains[0].getObject() or None
-                        new_volume = float(str(sample.getField('Volume').get(sample))) - float(aliquot_data['volume'])
+                        new_volume = float(str(virus_sample.getField('Volume').get(virus_sample))) - float(aliquot_data['volume'])
 
                         # New aliquot volume too large.  Dont create aliquote.  return a warning.
                         if new_volume < 0:
                             self.errors.append('Aliquot %s volume %s exceed remaining sample volume %s for sample %s'
                                                        % (aliquot_data['barcode'], aliquot_data['volume'],
-                                                          sample.getField('Volume').get(sample), sample.Title()))
+                                                          virus_sample.getField('Volume').get(virus_sample),
+                                                          virus_sample.getField('Barcode').get(virus_sample)))
                             continue
 
-                        new_aliquot = self.create_aliquot(sample, aliquot_data)
+                        new_aliquot = self.create_aliquot(virus_sample, aliquot_data)
                         if new_aliquot:
 
                             # Subtract the new aliquot volume from the parent sample volume
-                            sample.getField('Volume').set(sample, str(new_volume))
-                            sample.reindexObject()
+                            virus_sample.getField('Volume').set(virus_sample, str(new_volume))
+                            virus_sample.reindexObject()
 
                             # Set the storage location for the new aliquot
                             new_aliquot.edit(
@@ -105,10 +108,11 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
 
                     except Exception as e:
                         self.errors.append("Error creating aliquot with barcode %s and volume %s for sample %s."
-                            % (aliquot_data['barcode'], aliquot_data['volume'], sample.Title()))
+                            % (aliquot_data['barcode'], aliquot_data['volume'],
+                               virus_sample.getField('Barcode').get(virus_sample)))
                         continue
 
-                virus_aliquot = self.create_virus_aliquot(sample, aliquots)
+                virus_aliquot = self.create_virus_aliquot(virus_sample, aliquots)
                 viral_aliquots.append(virus_aliquot)
 
             except Exception as e:
@@ -116,14 +120,6 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
                 continue
 
         return viral_aliquots
-
-    def get_sample(self, sample_uid):
-        # pc = getToolByName(self.context, 'portal_catalog')
-        try:
-            brains = self.pc(UID=sample_uid)
-            return brains[0].getObject()
-        except Exception as e:
-            return None
 
     def create_virus_aliquot(self, parent_sample, aliquots):
 
@@ -148,11 +144,12 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
     def create_aliquot(self, parent_sample,  aliquot):
 
         try:
-            parent_project = parent_sample.aq_parent
+            # parent_project = parent_sample.aq_parent
+            folder = self.context.virus_samples
             unit = parent_sample.getField('Unit').get(parent_sample)
             sample_type = parent_sample.getField('SampleType').get(parent_sample)
-
-            obj = _createObjectByType('Sample', parent_project, tmpID())
+            project = parent_sample.getProject()
+            obj = _createObjectByType('VirusSample', folder, tmpID())
 
             # Only change date created if a valid date created was send from client
             # If date created is there and time create is there as well create a date time object
@@ -166,27 +163,29 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
             obj.edit(
                 title=aliquot['barcode'],
                 description='',
-                Project=parent_project,
-                DiseaseOntology=parent_sample.getField('DiseaseOntology').get(parent_sample),
-                Donor=parent_sample.getField('Donor').get(parent_sample),
+                # Project=parent_sample.getField('Project').get(parent_sample),
+                Project=project,
+                # DiseaseOntology=parent_sample.getField('DiseaseOntology').get(parent_sample),
+                # Donor=parent_sample.getField('Donor').get(parent_sample),
                 SampleType=sample_type,
-                SubjectID=parent_sample.getField('SubjectID').get(parent_sample),
+                # SubjectID=parent_sample.getField('SubjectID').get(parent_sample),
                 Barcode=aliquot['barcode'],
                 DateCreated=date_time_created,
                 Volume=aliquot['volume'],
                 Unit=unit,
-                SamplingDate=parent_sample.getField('SamplingDate').get(parent_sample),
-                LinkedSample=parent_sample
+                SampleCollectionDate=parent_sample.getField('SampleCollectionDate').get(parent_sample),
+                ParentSample=parent_sample
             )
 
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
 
-            from baobab.lims.subscribers.sample import ObjectInitializedEventHandler
-            ObjectInitializedEventHandler(obj, None)
+            # from baobab.lims.subscribers.sample import ObjectInitializedEventHandler
+            # ObjectInitializedEventHandler(obj, None)
             return obj
 
         except Exception as e:
+            print('--------- %s' % str(e))
             self.errors.append(str(e))
             return None
 

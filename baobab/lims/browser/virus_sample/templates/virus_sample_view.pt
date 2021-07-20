@@ -1,9 +1,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:tal="http://xml.zope.org/namespaces/tal"
-	xmlns:metal="http://xml.zope.org/namespaces/metal"
-	xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-	metal:use-macro="here/main_template/macros/master"
-	i18n:domain="baobab">
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+            metal:use-macro="here/main_template/macros/master"
+      i18n:domain="bika">
 
 <head>
     <style>
@@ -16,7 +15,7 @@
     <h1>
         <img tal:condition="view/icon | nothing"
             src="" tal:attributes="src view/icon"/>
-        <span class="documentFirstHeading" tal:content="view/title" />
+        <span class="documentFirstHeading" tal:content="view/barcode" />
     </h1>
     <hr/>
 </metal:title>
@@ -39,8 +38,8 @@
         <tbody>
         <tr>
             <th i18n:translate="" style="border: 1px solid #cecfd5;
-                                         padding: 10px 15px;text-align: left;">Title </th>
-            <td tal:content="view/title" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Barcode </th>
+            <td tal:content="view/barcode" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;width:70%"></td>
         </tr>
 
@@ -69,12 +68,6 @@
             <td tal:content="structure view/location" style="padding-bottom: .5em;border: 1px solid #cecfd5;
                                                        padding: 10px 15px;"></td>
         </tr>
-        <!--?<tr tal:condition="view/unit" style="background: #f0f0f2;">-->
-            <!--?<th i18n:translate="" style="border: 1px solid #cecfd5;-->
-                                         <!--?padding: 10px 15px;text-align: left;">Unit</th>-->
-            <!--?<td tal:content="view/unit" style="border: 1px solid #cecfd5;-->
-                                               <!--?padding: 10px 15px;"></td>-->
-        <!--?</tr>-->
 
         <tr tal:condition="view/anatomical_material" style="background: #f0f0f2;">
             <th i18n:translate="" style="border: 1px solid #cecfd5;

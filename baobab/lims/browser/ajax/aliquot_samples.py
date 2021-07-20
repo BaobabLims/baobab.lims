@@ -59,6 +59,29 @@ class ajaxGetSamples(BrowserView):
 
         return json.dumps(rows)
 
+# class ajaxGetVirusSamples(BrowserView):
+#     """ Drug vocabulary source for jquery combo dropdown box
+#     """
+#
+#     def __init__(self, context, request):
+#         super(ajaxGetSamples, self).__init__(context, request)
+#         self.context = context
+#         self.request = request
+#
+#     def __call__(self):
+#         # plone.protect.CheckAuthenticator(self.request)
+#         rows = []
+#
+#         pc = getToolByName(self.context, 'portal_catalog')
+#         brains = pc(portal_type="VirusSample")
+#
+#         for sample in brains:
+#             rows.append({
+#                 sample.UID: sample.Title
+#             })
+#
+#         return json.dumps(rows)
+
 
 class ajaxGetSampleDetails(BrowserView):
 

@@ -128,7 +128,7 @@
                     </td>
                      <td class="">
                          <span>
-                             <div tal:content="python: context.Vocabulary_Sample().getValue(extract['VirusSample'])">
+                             <div tal:content="python: context.Vocabulary_VirusSample().getValue(extract['VirusSample'])">
                                  Virus Sample Title
                              </div>
                          </span>
@@ -213,7 +213,7 @@
                     <th style='text-align:left;' i18n:translate=''>Volume</th>
                     <th style='text-align:left;' i18n:translate=''>Unit</th>
                     <th style='text-align:left;' i18n:translate=''>Sample Type</th>
-                    <th style='text-align:left;' i18n:translate=''>Date Created</th>
+                    <th style='text-align:left;' i18n:translate=''>Created Date</th>
                     <!--?<th style='text-align:left;' i18n:translate=''>Time Created</th>-->
                 </tr>
             </thead>
@@ -248,7 +248,7 @@
                 <tr class="even" tal:repeat="genome python: context.getGenomeQuantification()">
                      <td class="">
                          <span>
-                             <div tal:content="python: context.Vocabulary_VLD_Sample_RNA_or_DNA().getValue(genome['VirusSampleRNAorDNA'])">
+                             <div tal:content="python: context.Vocabulary_VirusSample().getValue(genome['VirusSampleRNAorDNA'])">
                                  Virus Sample Title
                              </div>
                          </span>
@@ -307,7 +307,7 @@
           <tbody>
               <tr class="even" tal:repeat="vload python: context.getViralLoadDetermination()">
                    <td class="">
-                       <span><div tal:content="python: context.Vocabulary_VLD_Sample_RNA_or_DNA().getValue(vload['VirusSampleRNAorDNA'])">Virus Sample</div></span>
+                       <span><div tal:content="python: context.Vocabulary_VirusSample().getValue(vload['VirusSampleRNAorDNA'])">Virus Sample</div></span>
                   </td>
                    <td class="">
                        <span><div tal:content="vload/ctValue">ctValue</div></span>
@@ -349,7 +349,8 @@
                 <tr tal:repeat="extract python:context.getSequencingLibraryPrep()">
                      <td class="">
                          <span>
-                             <div tal:content="python: context.Vocabulary_VLD_Sample_RNA_or_DNA().getValue(extract['VirusSampleRNAorDNA'])">
+                             <!--?<div tal:content="python: context.Vocabulary_VLD_Sample_RNA_or_DNA().getValue(extract['VirusSampleRNAorDNA'])">-->
+                             <div tal:content="python: context.Vocabulary_VirusSample().getValue(extract['VirusSampleRNAorDNA'])">
                                  Virus Sample Title
                              </div>
                          </span>

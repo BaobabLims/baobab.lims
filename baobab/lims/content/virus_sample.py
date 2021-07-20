@@ -5,11 +5,11 @@ from Products.CMFCore import permissions
 from Products.CMFPlone.interfaces import IConstrainTypes
 from zope.interface import implements
 
-from baobab.lims.extenders.sample import Sample
+# from baobab.lims.extenders.sample import Sample
 from baobab.lims import bikaMessageFactory as _
 from baobab.lims import config
 from baobab.lims.interfaces import IVirusSample
-from bika.lims.interfaces import ISample, ISamplePrepWorkflow
+# from bika.lims.interfaces import ISample, ISamplePrepWorkflow
 from bika.lims.content.bikaschema import BikaSchema
 from bika.lims.browser.widgets import ReferenceWidget as bika_ReferenceWidget
 from bika.lims.browser.widgets import DateTimeWidget
@@ -17,26 +17,186 @@ from bika.lims.browser.fields import AddressField
 from bika.lims.browser.widgets import AddressWidget
 from bika.lims.locales import COUNTRIES,STATES,DISTRICTS
 from Products.CMFCore.utils import getToolByName
-# from Products.CMFPlone.utils import safe_unicode
+from Products.Archetypes.public import BaseContent
+from Products.CMFPlone.utils import safe_unicode
+from bika.lims.workflow import doActionFor
 
 import sys
 
-AnatomicalMaterial = ReferenceField(
-    'AnatomicalMaterial',
+Project = ReferenceField(
+    'Project',
     # schemata='Baobab Data',
-    allowed_types=('AnatomicalMaterial',),
-    relationship='VirusSampleAnatomicalMaterial',
+    required=True,
+    allowed_types=('Project',),
+    relationship='VirusSampleProject',
     referenceClass=HoldingReference,
     widget=bika_ReferenceWidget(
-        label=_("Anatomical Material"),
+        label=_("Project"),
         visible={'edit': 'visible', 'view': 'visible'},
         size=30,
         showOn=True,
-        description=_("Select the Anatomical Material."),
+        description=_("Select the project of the sample."),
     )
 )
 
-#
+ParentSample = ReferenceField(
+    'ParentSample',
+    allowed_types=('VirusSample'),
+    relationship='SampleSample',
+    referenceClass=HoldingReference,
+    widget=bika_ReferenceWidget(
+        label=_("Parent Biospecimen"),
+        description=_("Create an Aliquot of the virus sample selected."),
+        visible={'edit': 'visible',
+                 'view': 'visible',
+                 },
+        showOn=True,
+        render_own_label=False,
+        base_query={
+            'cancellation_state': 'active',
+        },
+    ),
+)
+
+Kit = ReferenceField(
+    'Kit',
+    allowed_types=('Kit',),
+    relationship='VirusSampleKit',
+    referenceClass=HoldingReference,
+    widget=bika_ReferenceWidget(
+        label=_("Kit"),
+        visible={'edit': 'visible', 'view': 'visible'},
+        size=30,
+        showOn=True,
+        description=_("Select the Kit."),
+    )
+)
+
+SampleType = ReferenceField(
+    'SampleType',
+    required=True,
+    allowed_types=('SampleType',),
+    relationship='VirusSampleSampleType',
+    referenceClass=HoldingReference,
+    widget=bika_ReferenceWidget(
+        label=_("Sample Type"),
+        visible={'edit': 'visible', 'view': 'visible'},
+        size=30,
+        showOn=True,
+        description=_("Select the specimen type."),
+    )
+)
+
+StorageLocation = ReferenceField(
+    'StorageLocation',
+    allowed_types=('StoragePosition',),
+    relationship='ItemStorageLocation',
+    widget=bika_ReferenceWidget(
+        label=_("Storage Location"),
+        description=_("Location where item is kept"),
+        size=40,
+        visible={'edit': 'visible',
+                 'view': 'visible',
+                 },
+        catalog_name='portal_catalog',
+        base_query={'inactive_state': 'active',
+                    'review_state': 'available',
+                    },
+        colModel=[{'columnName': 'UID', 'hidden': True},
+                  {'columnName': 'Title', 'width': '50', 'label': _('Title')}
+                  ],
+    )
+)
+
+AllowSharing = BooleanField(
+    'AllowSharing',
+    # schemata='Baobab Data',
+    default=False,
+    # write_permission = ManageClients,
+    widget=BooleanWidget(
+        label=_("Allow Sharing"),
+        description=_("Check to allow researchers to share sample freely."),
+        visible={'edit': 'visible',
+                 'view': 'visible',
+                 'header_table': 'visible',
+                 },
+    ),
+)
+
+WillReturnFromShipment = BooleanField(
+    'WillReturnFromShipment',
+    default=False,
+    widget=BooleanWidget(
+        label=_("Will Return From Shipment"),
+        description=_("Indicates if sample will return if shipped."),
+        visible={'edit': 'visible',
+                 'view': 'visible',
+                 },
+    ),
+)
+
+Barcode = StringField(
+    'Barcode',
+    required=True,
+    widget=StringWidget(
+        label=_("Barcode"),
+        description="Virus Sample Barcode",
+        visible={'edit': 'visible', 'view': 'visible'},
+    )
+)
+
+Volume = FixedPointField(
+    'Volume',
+    required=1,
+    default="0.00",
+    widget=DecimalWidget(
+        label=_("Volume"),
+        size=15,
+        description=_("The volume of the biospecimen taken from the subject."),
+        visible={'edit': 'visible',
+                 'view': 'visible',
+                 },
+    )
+)
+
+Unit = StringField(
+    'Unit',
+    # schemata='Baobab Data',
+    default="ml",
+    widget=StringWidget(
+        label=_("Unit"),
+        visible={'edit': 'visible',
+                 'view': 'visible',
+                 },
+    )
+)
+
+AnatomicalSiteTerm = StringField(
+    'AnatomicalSiteTerm',
+    searchable=True,
+    widget=StringWidget(
+        label=_("Anatomical site term"),
+        description=_('The ICD-O-3 topography code for describing the anatomical source of '
+                      'the sampled material'),
+        visible={'edit': 'visible',
+                 'view': 'visible',
+                 },
+        render_own_label=False,
+    )
+)
+
+AnatomicalSiteDescription = StringField(
+    'AnatomicalSiteDescription',
+    widget=TextAreaWidget(
+        label=_("Anatomical site description"),
+        description=_('The anatomical position of the body where the solid sample was taken from'),
+        visible={'edit': 'visible',
+                 'view': 'visible',
+                },
+        render_own_label=False,
+    )
+)
+
 BioSampleAccession = StringField(
     'BioSampleAccession',
     schemata='Repository Accession Numbers',
@@ -47,7 +207,6 @@ BioSampleAccession = StringField(
     )
 )
 
-#
 SpecimenCollectorSampleID = StringField(
     'SpecimenCollectorSampleID',
     required=True,
@@ -82,6 +241,22 @@ SampleCollectionDate = DateTimeField(
         description=_("The date on which the sample was collection."),
         visible={'edit': 'visible', 'view': 'visible'}
     )
+)
+
+DateCreated = DateTimeField(
+    'DateCreated',
+    mode="rw",
+    read_permission=permissions.View,
+    write_permission=permissions.ModifyPortalContent,
+    widget=DateTimeWidget(
+        label=_("Date Created"),
+        description=_("Define when the sample has been created."),
+        show_time=True,
+        visible={'edit': 'visible',
+                 'view': 'visible',
+                 },
+        # render_own_label=False,
+    ),
 )
 
 SampleReceivedDate = DateTimeField(
@@ -132,18 +307,18 @@ GeoLocState = StringField(
 
 Organism = ReferenceField(
     'Organism',
-    schemata = "Sample Collection and Processing",
-    required = True,
-    vocabulary_display_path_bound = sys.maxint,
-    # vocabulary = 'getInstruments',
-    allowed_types = ('Organism',),
-    relationship = 'VirusSampleOrganism',
-    referenceClass = HoldingReference,
-    widget = ReferenceWidget(
-        checkbox_bound = 0,
+    schemata='Sample Collection and Processing',
+    required=True,
+    allowed_types=('Organism',),
+    relationship='VirusSampleOrganism',
+    referenceClass=HoldingReference,
+    widget=bika_ReferenceWidget(
         label=_("Organism"),
-        description=_("Taxonomic name of the organism"),
-    ),
+        visible={'edit': 'visible', 'view': 'visible'},
+        size=30,
+        showOn=True,
+        description=_("Taxonomic name of Organism."),
+    )
 )
 
 Isolate = StringField(
@@ -189,7 +364,6 @@ CollectionDevice = ReferenceField(
         description=_("Select the Collection Device."),
     )
 )
-
 
 CollectionProtocol = StringField(
     'CollectionProtocol',
@@ -274,6 +448,21 @@ PassageMethod = TextField(
         description=_("Description of how the organism was passaged."),
         visible={'edit': 'visible', 'view': 'visible',},
         # render_own_label=True,
+    )
+)
+
+AnatomicalMaterial = ReferenceField(
+    'AnatomicalMaterial',
+    schemata='Sample Collection and Processing',
+    allowed_types=('AnatomicalMaterial',),
+    relationship='VirusSampleAnatomicalMaterial',
+    referenceClass=HoldingReference,
+    widget=bika_ReferenceWidget(
+        label=_("Anatomical Material"),
+        visible={'edit': 'visible', 'view': 'visible'},
+        size=30,
+        showOn=True,
+        description=_("Select the Anatomical Material."),
     )
 )
 
@@ -413,7 +602,7 @@ LibraryID = StringField(
 InstrumentType = ReferenceField(
     'InstrumentType',
     schemata = "Sequencing",
-    required = 0,
+    required = True,
     vocabulary_display_path_bound = sys.maxint,
     vocabulary = 'getInstrumentTypes',
     allowed_types = ('InstrumentType',),
@@ -454,10 +643,22 @@ SequencingProtocolName = StringField(
     )
 )
 
-schema = Sample.schema.copy() + Schema((
-    AnatomicalMaterial,
+schema = BikaSchema.copy() + Schema((
+    Project,
+    Kit,
+    ParentSample,
+    SampleType,
+    StorageLocation,
+    AllowSharing,
+    WillReturnFromShipment,
+    Barcode,
+    Volume,
+    Unit,
+    AnatomicalSiteTerm,
+    AnatomicalSiteDescription,
     BioSampleAccession,
     SpecimenCollectorSampleID,
+    DateCreated,
     SampleCollectedBy,
     SampleCollectionDate,
     SampleReceivedDate,
@@ -472,6 +673,7 @@ schema = Sample.schema.copy() + Schema((
     LabHost,
     PassageNumber,
     PassageMethod,
+    AnatomicalMaterial,
     HostSubjectID,
     Host,
     HostDisease,
@@ -490,17 +692,31 @@ schema['title'].widget.visible = False
 schema['description'].widget.visible = {'view': 'invisible', 'edit': 'invisible'}
 schema['SampleType'].widget.render_own_label = False
 
-
-class VirusSample(Sample):
+class VirusSample(BaseContent):
     security = ClassSecurityInfo()
-    implements(IVirusSample, ISample, ISamplePrepWorkflow)
+    implements(IVirusSample, IConstrainTypes)
     displayContentsTab = False
     schema = schema
     _at_rename_after_creation = True
 
     def _renameAfterCreation(self, check_auto_id=False):
-        from baobab.lims.idserver import renameAfterCreation
+        # from baobab.lims.idserver import renameAfterCreation
+        from bika.lims.idserver import renameAfterCreation
         renameAfterCreation(self)
+
+    def title(self):
+        # return safe_unicode(self.getField('Barcode').get(self)).encode('utf-8')
+        return self.getField('Barcode').get(self)
+
+    def update_box_status(self, location):
+        box = location.aq_parent
+        state = self.portal_workflow.getInfoFor(box, 'review_state')
+        free_pos = box.get_free_positions()
+        if not free_pos and state == 'available':
+            doActionFor(box, 'occupy')
+        elif free_pos and state == 'occupied':
+            doActionFor(box, 'liberate')
+
 
     def getInstruments(self):
         bsc = getToolByName(self, 'bika_setup_catalog')
