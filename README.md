@@ -46,7 +46,38 @@ _Baobab_ is a common name given to nine tree species in different countries in t
 
 Baobab LIMS written in Plone, a python framework known for its robustness, and inherits some modules from Bika LIMS.
 
-# QuickStart with Docker
+## Installation using docker-compose
+
+This is the recommended installation method. It uses [Docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/) which handles the details of installing dependencies for you. On your Linux command line, run:
+
+```sh
+$ git clone https://github.com/BaobabLims/baobab.lims.git
+$ cd baobab.lims
+$ docker-compose up -d
+```
+
+## Running using Docker
+
+This is a quick way to get a Baobab LIMS site up and running. **NOTE**: using this installation method, the "volumes" where you store data will not be preserved, so this method is only recommended for testing or development. If you want to use Baobab LIMS long term, we recommend using the `docker-compose` method described above.
+
+[![Docker Repository on Quay](https://quay.io/repository/baobab-lims/baobab-lims/status "Docker Repository on Quay")](https://quay.io/repository/baobab-lims/baobab-lims)
+
+```sh
+docker run -p 8080:8080 quay.io/baobab-lims/baobab-lims
+```
+
+**Access Baobab LIMS on [http://localhost:8080](http://localhost:8080):**
+
+The first time you run Baobab LIMS, install the Baobab package by going to [http://localhost:8080] and following these instuctions.
+
+- Click on **`Install a Baobab distribution`**.
+- Check **`Baobab LIMS`** option, then click **`Install`** the form.
+- Authentication: **`admin:adminsecret`**
+- Go to [http://localhost:8080/manage_main] and select the `acl_users` item
+- Click the `users` item
+- Click on the `Password` link (next to the `admin` username) to set the admin user password
+
+# Demo with Play with Docker
 
 <a href="http://play-with-docker.com?stack=https://raw.githubusercontent.com/BaobabLims/baobab.lims/master/stack.yml">
   <img src="https://img.shields.io/badge/Try%20in%20-PWD-blue?style=for-the-badge" />
@@ -58,33 +89,7 @@ Play with Docker will give you 4 hours to try Baobab LIMS in the cloud.
 
 **Authentication: `admin:adminsecret`**
 
-## Using [`Docker`](https://docs.docker.com/install/)
-
-[![Docker Repository on Quay](https://quay.io/repository/baobab-lims/baobab-lims/status "Docker Repository on Quay")](https://quay.io/repository/baobab-lims/baobab-lims)
-
-Kindly install docker using instructions from [here](https://www.docker.com/community-edition) and run the following command:
-
-```sh
-docker run -p 8080:8080 quay.io/baobab-lims/baobab-lims
-```
-
-## Using [`docker-compose`](https://docs.docker.com/install/):
-
-```sh
-$ pip install docker-compose
-...
-$ git clone https://github.com/BaobabLims/baobab.lims.git
-$ cd baobab.lims
-$ docker-compose up -d
-```
-
-**Access Baobab LIMS on [localhost:8080](http://localhost:8080):**
-
-- Click on **`Install a Baobab distribution`**.
-- Check **`Baobab LIMS`** option, then click **`Install`** the form.
-- Authentication: **`admin:adminsecret`**
-
-# Standalone Installation
+# Manual Installation
 
 Baobab LIMS Standalone [installation](https://github.com/hocinebendou/baobab.lims/wiki/Installation)
 
