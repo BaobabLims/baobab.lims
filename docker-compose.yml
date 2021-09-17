@@ -1,4 +1,4 @@
-version: "2"
+version: "2.4"
 services:
   baobab_lims:
     restart: always
@@ -6,3 +6,8 @@ services:
     container_name: baobab_lims
     ports:
       - "8080:8080"
+    volumes:
+      - baobab
+
+volumes:
+  baobab:
