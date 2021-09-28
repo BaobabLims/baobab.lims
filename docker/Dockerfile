@@ -14,7 +14,7 @@ RUN apt-get update \
 USER plone
 
 # Clone baobablims repositories 
-RUN git clone https://github.com/BaobabLims/baobab.lims.git \
+RUN git clone --branch upgrading_plone https://github.com/BaobabLims/baobab.lims.git \
     && git clone https://github.com/BaobabLims/bika.lims.git \
     && git clone https://github.com/BaobabLims/graphite.theme.git
 
