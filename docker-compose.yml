@@ -2,7 +2,7 @@ version: "2.4"
 services:
   baobab_lims:
     restart: always
-    image: quay.io/baobab-lims/baobab-lims
+    image: baobab.lims
     container_name: baobab_lims
     ports:
       - "8080:8080"
