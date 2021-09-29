@@ -7,20 +7,43 @@
 #    bin/buildout
 
 [buildout]
+#newest = false
+allow-picked-versions = true
+show-picked-verisions = true
 index = https://pypi.python.org/simple/
-extends = https://dist.plone.org/release/4.3.11/versions.cfg
+extends = http://dist.plone.org/release/4.3.11/versions.cfg
+extensions +=
+    mr.developer
+
+sources = sources
+auto-checkout = *
+
 versions = versions
-
-develop =
-    bika.lims
-    baobab.lims
-    graphite.theme
-
-var-dir=/data
+develop =   
+    .
+#    ../bika.lims
 
 zeoserver-address = 8100
-zeoclient-address = 8080
+zeoclient-address = 9090
 user = admin:adminsecret
+
+[sources]
+bika.lims = git https://github.com/BaobabLims/bika.lims.git
+graphite.theme = git https://github.com/BaobabLims/graphite.theme.git
+
+[instance]
+recipe = plone.recipe.zope2instance
+var = var
+blob-storage = var/blobstorage
+http-address = ${buildout:zeoclient-address}
+user = ${buildout:user}
+resources = ${buildout:directory}/resources
+locales = ${buildout:directory}/locales
+eggs = ${buildout:eggs}
+event-log = var/instance-event.log
+z2-log    = var/instance-Z2.log
+pid-file  = var/instance.pid
+lock-file = var/instance.lock
 
 parts =
     lxml
@@ -30,38 +53,25 @@ parts =
     robot
     i18ndude
     update_translations
-    precompile
 
 eggs =
-    bika.lims
     baobab.lims
-    graphite.theme
     i18ndude
     lxml
-    
-[precompile]
-recipe = plone.recipe.precompiler
-eggs = ${buildout:eggs}
-compile-mo-files = true
 
 [lxml]
 recipe = z3c.recipe.staticlxml
-egg = lxml
+egg = lxml #==2.3.6
 force = false
 static-build = true
-
-[instance]
-recipe = plone.recipe.zope2instance
-http-address = ${buildout:zeoclient-address}
-user = ${buildout:user}
-resources = ${buildout:directory}/resources
-locales = ${buildout:directory}/locales
-eggs = ${buildout:eggs}
 
 [test]
 recipe = zc.recipe.testrunner
 defaults = ['--auto-color', '--auto-progress']
-eggs = baobab.lims [test]
+eggs = 
+    bika.lims [test]
+    baobab.lims [test]
+
 
 [robot]
 recipe = zc.recipe.egg
@@ -132,38 +142,5 @@ input = inline:
 mode = 755
 
 [versions]
-zc.buildout = 2.12.2
-setuptools = 18.7.1
-
-# The following part definition lists the versions picked:
-Pillow = 5.3.0
-buildout.wheel = 0.2.0
-plone.recipe.command = 1.1
-plone.recipe.precompiler = 0.6
-collective.recipe.backup = 4.0.1
-Unidecode = 0.04.16
-
-MarkupSafe = 1.0
-bobtemplates.plone = 3.5.1
-mr.bob = 0.1.2
-regex = 2018.8.29
-
-# Required by:
-# bobtemplates.plone==3.5.1
-case-conversion = 2.1.0
-
-# Required by:
-# bobtemplates.plone==3.5.1
-python-slugify = 1.2.6
-
-Products.DocFinderTab = 1.0.5
-collective.checkdocs = 0.2
-zest.pocompile = 1.4
-
-# Required by:
-# bobtemplates.plone==3.5.1
-# zest.releaser==6.15.0
-colorama = 0.4.0
-xlsxwriter = 2.0.0
-werkzeug = 1.0.1
-plone.recipe.zope2instance = 4.4.1
+zc.buildout = 
+setuptools = 
