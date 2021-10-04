@@ -29,12 +29,12 @@ Plone dependencies
 Download Plone 4.3 Unified Installer
 ------------------------------------
 
-The Baobab LIMS is implemented and tested with Plone 4.3.11, a version released in 2016-09-12. You can download Plone 4.3.x by visiting the `Plone`_ site. Select and click on the Unified installer of your choice or use ``wget`` command line in your terminal with the path to the Plone version to install. Only Plone 4.3.11 can be used.
+The Baobab LIMS is implemented and tested with Plone 4.3.19, a version released in 2016-09-12. You can download Plone 4.3.x by visiting the `Plone`_ site. Select and click on the Unified installer of your choice or use ``wget`` command line in your terminal with the path to the Plone version to install. Only Plone 4.3.19 can be used.
 
 .. _Plone: https://plone.org/download
 
 
-    ``$ wget --no-check-certificate https://launchpad.net/plone/4.3/4.3.11/+download/Plone-4.3.11-r1-UnifiedInstaller.tgz``
+    ``$ wget --no-check-certificate https://launchpad.net/plone/4.3/4.3.19/+download/Plone-4.3.19-r1-UnifiedInstaller.tgz``
 
 If the download has been done from the Plone site, the installer would be located in the  ``~/Downloads`` directory. If the second option used i.e, the wget command line, the installer should be downloaded into the current directory.
 
@@ -43,11 +43,11 @@ Install Ploner
 
 To continue the installation, in the terminal, change directory to the folder containing the downloaded file then run the following command line to unpack the archive file.
 
-    ``$ tar -xf Plone-4.3.11-r1-UnifiedInstaller.tgz``
+    ``$ tar -xf Plone-4.3.19-r1-UnifiedInstaller.tgz``
 
 Change to the extracted folder in the terminal.
 
-    ``$ cd Plone-4.3.11-r1-UnifiedInstaller``
+    ``$ cd Plone-4.3.19-r1-UnifiedInstaller``
 
 Run the following command to install Plone
     
