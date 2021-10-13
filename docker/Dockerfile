@@ -1,4 +1,4 @@
-FROM plone:4.3.11
+FROM plone:4.3.19
 
 LABEL MAINTAINERS="support@baobablims.org"
 

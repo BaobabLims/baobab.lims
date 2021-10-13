@@ -2,7 +2,7 @@
 FROM nginx:1.15
 
 # Author / Maintainer
-LABEL MAINTAINERS="thoba@sanbi.ac.za"
+LABEL MAINTAINERS="support@baobablims.org"
 
 RUN rm /etc/nginx/nginx.conf
 
