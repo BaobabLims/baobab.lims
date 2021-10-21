@@ -20,6 +20,7 @@ RUN addgroup -g 500 plone \
  && mkdir -p /plone/instance /data/filestorage /data/blobstorage
 
 COPY buildout.cfg /plone/instance/
+COPY baobab-lims-buildout.cfg /plone/instance/
 
 RUN apk add --no-cache --virtual .build-deps \
     gcc \
@@ -31,6 +32,8 @@ RUN apk add --no-cache --virtual .build-deps \
     libxslt-dev \
     pcre-dev \
     bash \
+    sudo \
+    su-exec \
     libjpeg-turbo \
  && apk add git \
  && apk add --no-cache git make bash \
@@ -55,6 +58,7 @@ RUN apk add --no-cache --virtual .build-deps \
  && apk add --no-cache --virtual .run-deps \
     su-exec \
     bash \
+    openssh \
     git \
     #bzip-devel \
     rsync \
@@ -63,13 +67,15 @@ RUN apk add --no-cache --virtual .build-deps \
     libjpeg-turbo \
  && rm -rf /plone/buildout-cache/downloads/*
 
-VOLUME /data
 
+
+VOLUME /data
 COPY docker-initialize.py docker-entrypoint.sh /
 
 EXPOSE 8080
 WORKDIR /plone/instance
 
+RUN mkdir -p var/log/
 RUN touch /plone/instance/var/log/instance.log
 
 HEALTHCHECK --interval=1m --timeout=5s --start-period=1m \

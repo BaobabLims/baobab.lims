@@ -9,13 +9,14 @@ class Environment(object):
     def __init__(self, env=os.environ,
                  zope_conf="/plone/instance/parts/instance/etc/zope.conf",
                  custom_conf="/plone/instance/custom.cfg",
+                 zeopack_conf="/plone/instance/bin/zeopack",
                  zeoserver_conf="/plone/instance/parts/zeoserver/etc/zeo.conf",
                  cors_conf="/plone/instance/parts/instance/etc/package-includes/999-additional-overrides.zcml"
                  ):
         self.env = env
         self.zope_conf = zope_conf
         self.custom_conf = custom_conf
-        #self.zeopack_conf = zeopack_conf
+        self.zeopack_conf = zeopack_conf
         self.zeoserver_conf = zeoserver_conf
         self.cors_conf = cors_conf
 
