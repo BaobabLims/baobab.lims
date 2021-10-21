@@ -67,16 +67,18 @@ RUN apk add --no-cache --virtual .build-deps \
     libjpeg-turbo \
  && rm -rf /plone/buildout-cache/downloads/*
 
-
-
 VOLUME /data
 COPY docker-initialize.py docker-entrypoint.sh /
 
 EXPOSE 8080
 WORKDIR /plone/instance
 
+RUN git clone https://github.com/BaobabLims/baobab.lims.git src/baobab.lims
+RUN git clone https://github.com/BaobabLims/bika.lims.git src/bika.lims
+RUN git clone https://github.com/BaobabLims/graphite.theme.git src/graphite.theme
+
 RUN mkdir -p var/log/
-RUN touch /plone/instance/var/log/instance.log
+RUN touch var/log/instance.log
 
 HEALTHCHECK --interval=1m --timeout=5s --start-period=1m \
   CMD nc -z -w5 127.0.0.1 8080 || exit 1
