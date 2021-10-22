@@ -1,0 +1,41 @@
+--- buildout.cfg.orig	2021-10-22 09:22:11.844077947 +0000
++++ buildout.cfg	2021-10-22 09:27:19.250769001 +0000
+@@ -71,6 +71,9 @@
+ eggs =
+     Plone
+     Pillow
++    bika.lims
++    baobab.lims
++    graphite.theme
+ 
+ ############################################
+ # ZCML Slugs
+@@ -92,8 +95,12 @@
+ #
+ # Provide the *paths* to the eggs you are developing here:
+ develop =
++    src/bika.lims
++    src/baobab.lims
++    src/graphite.theme
+ #    src/my.package
+ 
++
+ ############################################
+ # var Directory
+ # -------------
+@@ -172,9 +179,13 @@
+ # config files.
+ #
+ [versions]
+-zc.buildout = 2.5.3
+-setuptools = 27.3.0
++zc.buildout =
++setuptools =
+ Pillow = 5.1.0
++cssselect2 = 0.2.2
++soupsieve = 1.9.5
++xlsxwriter = 2.0.0
++werkzeug = 1.0.1
+ 
+ buildout.sanitycheck = 1.0.2
+ collective.recipe.backup = 4.0
