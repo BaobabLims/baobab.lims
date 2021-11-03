@@ -50,8 +50,6 @@ class AjaxGetVirusSamples(BrowserView):
             brains = portal_catalog(portal_type='VirusSample', inactive_state='active')
 
             rna_dna_sample_types = getRNAorDNASampleTypes(self.context)
-            print('----------------------rna dna sample types')
-            print(rna_dna_sample_types)
 
             for brain in brains:
                 virus_sample = brain.getObject()

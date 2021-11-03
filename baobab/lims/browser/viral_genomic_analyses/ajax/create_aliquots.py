@@ -185,7 +185,6 @@ class AjaxCreateVirusSampleAliquots(BrowserView):
             return obj
 
         except Exception as e:
-            print('--------- %s' % str(e))
             self.errors.append(str(e))
             return None
 

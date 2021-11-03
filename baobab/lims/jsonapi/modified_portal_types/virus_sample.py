@@ -10,6 +10,8 @@ class ModifiedVirusSample:
 
     def modify_return_type(self, info):
         info['disease_title'] = ''
+        info['LocationTitle'] = ''
+        info['SampleTypeTitle'] = ''
         try:
             virus_sample = self.get_object_by_uid(info['uid'])
             info['baobab_modified_at'] = self.get_iso_date(virus_sample.getField('modification_date').get(virus_sample))
@@ -17,17 +19,27 @@ class ModifiedVirusSample:
 
             disease = info['HostDisease']
             disease_uid = disease['uid']
-            info['disease_title'] = self.get_disease_title(disease_uid)
+            info['disease_title'] = self.get_title_from_uid(disease_uid)
+            info['LocationTitle'] = self.get_object_title(virus_sample.getStorageLocation())
+            info['SampleTypeTitle'] = self.get_object_title(virus_sample.getSampleType())
+
         except:
             pass
 
         return info
 
-    def get_disease_title(self, uid):
+    def get_title_from_uid(self, uid):
 
         try:
             obj = self.get_object_by_uid(uid)
             return obj.Title()
+        except Exception as e:
+            return ''
+
+    def get_object_title(self, object):
+
+        try:
+            return object.Title()
         except Exception as e:
             return ''
 

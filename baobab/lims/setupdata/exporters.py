@@ -69,8 +69,6 @@ class ProjectsExporter(object):
 
         pc = getToolByName(self.context, 'portal_catalog')
         project_brains = pc(portal_type="Project")
-        print('----------------projects')
-        print(project_brains)
         if project_brains:
             list_of_projects.append(['Title', 'Description', 'StudyType', 'EthicsFormLink', 'AgeHigh', 'AgeLow',
                                      'NumParticipants', 'Biospecimen_Types', 'Client', 'Client_ID',

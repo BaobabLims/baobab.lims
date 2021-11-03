@@ -87,10 +87,7 @@ class BaobabWorksheetImporter(WorksheetImporter):
 
     def is_storage_location_available(self, storage_location):
         workflow = getToolByName(self.context, 'portal_workflow')
-        print('----------------storage location')
-        print(storage_location)
-        print(storage_location.available())
-        reviewState = str
+        # reviewState = str
         reviewState = workflow.getInfoFor(storage_location, 'review_state')
 
         if reviewState == 'occupied':

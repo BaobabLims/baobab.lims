@@ -137,7 +137,6 @@ class AjaxRetrieveSavedAliquots(BrowserView):
             return obj
 
         except Exception as e:
-            print(str(e))
             pass
 
     def create_aliquot(self, parent_sample,  aliquot):
