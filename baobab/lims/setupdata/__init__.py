@@ -261,6 +261,7 @@ class Donor(WorksheetImporter):
                 SampleDonorID=sample_donor_id,
                 SelectedProject=project,
                 InfoLink=info_link,
+                Sex=sex,
                 Age=age,
                 AgeUnit=age_unit
             )
