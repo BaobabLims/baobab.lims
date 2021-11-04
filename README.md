@@ -91,6 +91,10 @@ Play with Docker will give you 4 hours to try Baobab LIMS in the cloud.
 
 # Manual Installation
 
+**New installation instructions (Recommended installation instructions)**
+Baobab LIMS Standalone [installation](https://github.com/BaobabLims/baobab.lims/wiki/Baobab-Lims-Manual-Installation-using-Miniconda)
+
+**Old installation instructions (Don't use these instructions.  They will be removed at a later date.)**
 Baobab LIMS Standalone [installation](https://github.com/hocinebendou/baobab.lims/wiki/Installation)
 
 # Further Documentation
