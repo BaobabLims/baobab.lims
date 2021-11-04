@@ -1,5 +1,5 @@
---- buildout.cfg.orig	2021-10-22 09:22:11.844077947 +0000
-+++ buildout.cfg	2021-10-22 09:27:19.250769001 +0000
+--- buildout.cfg.orig	2021-11-04 09:09:34.000000000 +0000
++++ buildout.cfg	2021-11-04 13:47:52.997847601 +0000
 @@ -71,6 +71,9 @@
  eggs =
      Plone
@@ -10,7 +10,7 @@
  
  ############################################
  # ZCML Slugs
-@@ -92,8 +95,12 @@
+@@ -92,6 +95,9 @@
  #
  # Provide the *paths* to the eggs you are developing here:
  develop =
@@ -19,18 +19,15 @@
 +    src/graphite.theme
  #    src/my.package
  
-+
  ############################################
- # var Directory
- # -------------
-@@ -172,9 +179,13 @@
+@@ -172,10 +178,15 @@
  # config files.
  #
  [versions]
 -zc.buildout = 2.5.3
 -setuptools = 27.3.0
-+zc.buildout =
-+setuptools =
++zc.buildout = 
++setuptools = 
  Pillow = 5.1.0
 +cssselect2 = 0.2.2
 +soupsieve = 1.9.5
@@ -39,3 +36,5 @@
  
  buildout.sanitycheck = 1.0.2
  collective.recipe.backup = 4.0
+ plone.recipe.unifiedinstaller = 4.3.2
++Products.DCWorkflow = 2.2.4
