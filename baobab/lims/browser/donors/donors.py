@@ -96,8 +96,10 @@ class DonorsView(BikaListingView):
             if not items[x].has_key('obj'):
                 continue
             obj = items[x]['obj']
+            print('----------------')
+            print(obj.__dict__)
 
-            items[x]['SampleDonorID'] = obj.getId()
+            # items[x]['SampleDonorID'] = obj.getId()
 
             items[x]['replace']['SampleDonorID'] = "<a href='%s'>%s</a>" % \
                                                    (items[x]['url'],
