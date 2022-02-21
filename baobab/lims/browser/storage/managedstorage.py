@@ -171,13 +171,15 @@ class StoragePositionsView(BikaListingView):
             return item
         obj = item['obj']
 
-        item['id'] = obj.getHierarchy()
+        # item['id'] = obj.getHierarchy()
+        item['id'] = obj.Title()
 
         storage_titles = [s['title'] for s in obj.getStorageTypes()]
         item['StorageTypes'] = ','.join(storage_titles)
 
         si = obj.getStoredItem()
-        item['StoredItem'] = si.Title() if si else ''
+        item['StoredItem'] = si.getField('Barcode').get(si) if si else ''
+        # item['StoredItem'] = si.Title() if si else ''
 
         return item
 

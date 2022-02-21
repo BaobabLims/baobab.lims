@@ -13,6 +13,8 @@ from baobab.lims.interfaces import ISampleStorageLocation, IStockItemStorage
 from baobab.lims.browser.project import *
 from baobab.lims.utils.audit_logger import AuditLogger
 from baobab.lims.utils.local_server_time import getLocalServerTime
+from baobab.lims.utils.retrieve_objects import get_object_from_title
+from bika.lims import logger
 
 def get_project_multi_items(context, string_elements, portal_type, portal_catalog):
 
@@ -38,6 +40,63 @@ class SetupDataSetList(SDL):
 
     def __call__(self):
         return SDL.__call__(self, projectname="baobab.lims")
+
+
+class ExcelSheetError(Exception):
+    pass
+
+
+class BaobabWorksheetImporter(WorksheetImporter):
+
+    """Use this as a base, for normal tabular data sheet imports.
+    """
+
+    def __call__(self, lsd, workbook, dataset_project, dataset_name):
+        self.lsd = lsd
+        self.context = lsd.context
+        self.workbook = workbook
+        self.sheetname = self.__class__.__name__.replace("_", " ")
+        if self.sheetname not in workbook.sheetnames:
+            logger.error("Sheet '{0}' not found".format(self.sheetname))
+            return
+        self.worksheet = workbook.get_sheet_by_name(self.sheetname)
+        self.dataset_project = dataset_project
+        self.dataset_name = dataset_name
+        if self.worksheet:
+            logger.info("Loading {0}.{1}: {2}".format(
+                self.dataset_project, self.dataset_name, self.sheetname))
+            try:
+                self.Import()
+                for error in self._errors:
+                    self.context.plone_utils.addPortalMessage(str(error), 'error')
+
+            except IOError:
+                # The importer must omit the files not found inside the server filesystem (bika/lims/setupdata/test/
+                # if the file is loaded from 'select existing file' or bika/lims/setupdata/uploaded if it's loaded from
+                # 'Load from file') and finishes the import without errors. https://jira.bikalabs.com/browse/LIMS-1624
+                warning = "Error while loading attached file from %s. The file will not be uploaded into the system."
+                logger.warning(warning, self.sheetname)
+                # self.context.plone_utils.addPortalMessage("Error while loading some attached files. "
+                #                                           "The files weren't uploaded into the system.")
+                # self.context.plone_utils.addPortalMessage("Another deliberate test.")
+                # self.context.plone_utils.addPortalMessage("Third deliberate test.")
+        else:
+            logger.info("No records found: '{0}'".format(self.sheetname))
+
+
+    def is_storage_location_available(self, storage_location):
+        workflow = getToolByName(self.context, 'portal_workflow')
+        print('----------------storage location')
+        print(storage_location)
+        print(storage_location.available())
+        reviewState = str
+        reviewState = workflow.getInfoFor(storage_location, 'review_state')
+
+        if reviewState == 'occupied':
+            return False
+        return True
+
+        # return True
 
 
 class Products(WorksheetImporter):
@@ -261,6 +320,7 @@ class Donor(WorksheetImporter):
                 SampleDonorID=sample_donor_id,
                 SelectedProject=project,
                 InfoLink=info_link,
+                Sex=sex,
                 Age=age,
                 AgeUnit=age_unit
             )
@@ -308,62 +368,65 @@ class Projects(WorksheetImporter):
             count += 1
         audit_logger.perform_simple_audit(None, '%s %s' % ('Project', str(count)))
 
-class Biospecimens(WorksheetImporter):
+class Biospecimens(BaobabWorksheetImporter):
     """ Import biospecimens
     """
 
     def Import(self):
 
+        self._errors = []
+        self._existing_samples = self.getExistingBarcodes()
+
         rows = self.get_rows(3)
+        count = 0
         for row in rows:
             try:
+                count += 1
                 self.create_biospecimen(row)
-            except:
+            except ExcelSheetError as e:
+                self._errors.append(str(e))
+                continue
+            except Exception as e:
+                self._errors.append(str(e))
                 continue
 
     def create_biospecimen(self, row):
-        pc = getToolByName(self.context, 'portal_catalog')
-        bc = getToolByName(self.context, 'bika_catalog')
-
-        # get the project
-        project_list = pc(portal_type="Project", Title=row.get('Project'))
-        project = project_list and project_list[0].getObject() or None
-        if not project: raise
-
-        sampletype_list = pc(portal_type="SampleType", Title=row.get('SampleType'))
-        sample_type = sampletype_list and sampletype_list[0].getObject() or None
-        if not sample_type: raise
-
-        linked_sample_list = pc(portal_type="Sample", Title=row.get('LinkedSample', ''))
-        linked_sample = linked_sample_list and linked_sample_list[0].getObject() or None
-
-        sample_donor_list = bc(portal_type="SampleDonor", SampleDonorID=row.get('SampleDonor', ''))
-        sample_donor = sample_donor_list and sample_donor_list[0].getObject() or None
-
-        disease_ontology_list = bc(portal_type="DiseaseOntology", Title=row.get('DiseaseOntology', ''))
-        disease_ontology = disease_ontology_list and disease_ontology_list[0].getObject() or None
 
         barcode = row.get('Barcode')
         if not barcode:
-            raise
+            raise ExcelSheetError('Missing barcode.  Please provide a valid barcode.')
 
+        sample_project = get_object_from_title(self.context, 'Project', row.get('Project', ''))
+        if not sample_project:
+            raise ExcelSheetError('Barcode: %s .A valid project must be provided.' % barcode)
+
+        sample_type = get_object_from_title(self.context, 'SampleType', row.get('SampleType', ''))
+        if not sample_type:
+            raise ExcelSheetError('Barcode: %s .A valid Sample Type must be provided.' % barcode)
+
+        linked_sample = get_object_from_title(self.context, 'Sample', row.get('LinkedSample', ''))
+        sample_donor = get_object_from_title(self.context, 'SampleDonor', row.get('SampleDonor', ''), 'bika_catalog')
+        disease_ontology = get_object_from_title(self.context, 'DiseaseOntology', row.get('DiseaseOntology', ''), 'bika_catalog')
+        storage_location = get_object_from_title(self.context, 'StoragePosition', row.get('StorageLocation', ''))
+
+        if storage_location and not storage_location.available():
+            raise ExcelSheetError('Barcode: %s.  Storage location is already in use by another sample.' % barcode)
+
+        volume = str(row.get('Volume'))
         try:
-            volume = str(row.get('Volume'))
             float_volume = float(volume)
-            if not float_volume:
-                raise
         except:
-            raise
+            raise ExcelSheetError('Barcode: %s.  Please specify a valid volume.  Volume can be zero.')
 
-        obj = _createObjectByType('Sample', project, tmpID())
+        obj = _createObjectByType('Sample', sample_project, tmpID())
 
-        st_loc_list = pc(portal_type='StoragePosition', Title=row.get('StorageLocation'))
-        storage_location = st_loc_list and st_loc_list[0].getObject() or None
+        # st_loc_list = pc(portal_type='StoragePosition', Title=row.get('StorageLocation'))
+        # storage_location = st_loc_list and st_loc_list[0].getObject() or None
 
         obj.edit(
             title=row.get('title'),
             description=row.get('description'),
-            Project=project,
+            Project=sample_project,
             DiseaseOntology=disease_ontology,
             AllowSharing=row.get('AllowSharing'),
             Donor=sample_donor,
@@ -372,20 +435,38 @@ class Biospecimens(WorksheetImporter):
             SubjectID=row.get('SubjectID'),
             Barcode=barcode,
             Volume=volume,
+            # Volume=float_volume,
             Unit=row.get('Unit'),
             LinkedSample=linked_sample,
             DateCreated=row.get('DateCreated'),
             SamplingDate=row.get('SamplingDate'),
             AnatomicalSiteTerm=row.get('AnatomicalSiteTerm'),
             AnatomicalSiteDescription=row.get('AnatomicalSiteDescription'),
-
         )
 
         obj.unmarkCreationFlag()
         renameAfterCreation(obj)
 
+        if barcode not in self._existing_samples:
+            self._existing_samples.append(barcode)
+
         from baobab.lims.subscribers.sample import ObjectInitializedEventHandler
         ObjectInitializedEventHandler(obj, None)
+
+    def getExistingBarcodes(self, obj_type='Sample'):
+        existing_samples = []
+        pc = getToolByName(self.context, 'portal_catalog')
+        brains = pc(portal_type=obj_type,)
+
+        for brain in brains:
+            try:
+                sample = brain.getObject()
+                barcode = sample.getField('Barcode').get(sample)
+                existing_samples.append(barcode)
+            except:
+                continue
+
+        return existing_samples
 
 
 class Storage(WorksheetImporter):
@@ -669,39 +750,56 @@ class Organism(SetupImporter):
             obj.unmarkCreationFlag()
             renameAfterCreation(obj)
 
-class VirusSample(SetupImporter):
+class VirusSample(BaobabWorksheetImporter):
     """ Import biospecimens
     """
 
     def Import(self):
+
+        self._errors = []
         self._existing_virus_samples = self.getExistingBarcodes('VirusSample')
 
         rows = self.get_rows(3)
         for row in rows:
-
             try:
                 if row.get('Barcode') in self._existing_virus_samples:
                     continue
 
                 self.create_virus_sample(row)
+            except ExcelSheetError as e:
+                self._errors.append(str(e))
+                continue
             except Exception as e:
+                self._errors.append(str(e))
                 continue
 
     def create_virus_sample(self, row):
 
         folder = self.context.virus_samples
+        barcode = row.get('Barcode')
+        if not barcode:
+            raise ExcelSheetError('No valid Barcode has been supplied')
 
         project = self.getObject('Project', row.get('Project'))
+        if not project:
+            raise ExcelSheetError('Barcode: %s .A valid project must be provided.' % barcode)
         sample_type = self.getObject('SampleType', row.get('SampleType'))
-        storage_location = self.getObject('StoragePosition', row.get('StorageLocation'))
-        anatomical_material = self.getObject('AnatomicalMaterial', row.get('AnatomicalMaterial'))
-        organism = self.getObject('Organism', row.get('Organism'))
-        collection_device = self.getObject('CollectionDevice', row.get('CollectionDevice'))
-        host = self.getObject('Host', row.get('Host'))
-        host_disease = self.getObject('HostDisease', row.get('HostDisease'))
-        lab_host = self.getObject('LabHost', row.get('LabHost'))
-        instrument_type = self.getObject('InstrumentType', row.get('InstrumentType'))
-        instrument = self.getObject('Instrument', row.get('Instrument'))
+        if not sample_type:
+            raise ExcelSheetError('Barcode: %s .A valid Sample Type must be provided.' % barcode)
+
+        storage_location = get_object_from_title(self.context, 'StoragePosition', row.get('StorageLocation', ''))
+        if storage_location:
+            if not storage_location.available():
+                raise ExcelSheetError('Barcode: %s.  Storage location is already in use by another sample.' % barcode)
+
+        anatomical_material = get_object_from_title(self.context, 'AnatomicalMaterial', row.get('AnatomicalMaterial', ''))
+        organism = get_object_from_title(self.context, 'Organism', row.get('Organism', ''))
+        collection_device = get_object_from_title(self.context, 'CollectionDevice', row.get('CollectionDevice', ''))
+        host = get_object_from_title(self.context, 'Host', row.get('Host', ''))
+        host_disease = get_object_from_title(self.context, 'HostDisease', row.get('HostDisease', ''))
+        lab_host = get_object_from_title(self.context, 'LabHost', row.get('LabHost', ''))
+        instrument_type = get_object_from_title(self.context, 'InstrumentType', row.get('InstrumentType', ''))
+        instrument = get_object_from_title(self.context, 'Instrument', row.get('Instrument'))
         host_age = row.get('HostAge', '')
 
         try:
@@ -770,8 +868,11 @@ class VirusSample(SetupImporter):
         obj.unmarkCreationFlag()
         renameAfterCreation(obj)
 
-        # from baobab.lims.subscribers.virus_sample import ObjectInitializedEventHandler
-        # ObjectInitializedEventHandler(obj, None)
+        if barcode not in self._existing_virus_samples:
+            self._existing_virus_samples.append(barcode)
+
+        from baobab.lims.subscribers.virus_sample import ObjectInitializedEventHandler
+        ObjectInitializedEventHandler(obj, None)
 
     def getExistingBarcodes(self, obj_type='VirusSample'):
         existing_virus_samples = []

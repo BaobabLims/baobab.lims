@@ -3,6 +3,18 @@ from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import _createObjectByType
 from baobab.lims.idserver import renameAfterCreation
 
+
+def get_object_from_title(context, portal_type, object_title, catalog='portal_catalog'):
+    if not object_title:
+        return None
+    catalog = get_catalog(context, catalog)
+    try:
+        brains = catalog(portal_type=portal_type, Title=str(object_title))
+        return brains[0].getObject()
+    except Exception as e:
+        return None
+
+
 def get_object_from_uid(context, object_uid, catalog='portal_catalog'):
     catalog = get_catalog(context, catalog)
     try:
