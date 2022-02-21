@@ -35,6 +35,13 @@
             <td tal:content="view/title" style="border: 1px solid #cecfd5;
                                                padding: 10px 15px;width:70%"></td>
         </tr>
+        <tr tal:condition="view/description">
+            <th i18n:translate="" style="border: 1px solid #cecfd5;
+                                         padding: 10px 15px;text-align: left;">Description</th>
+            <td tal:content="view/description" style="border: 1px solid #cecfd5;
+                                               padding: 10px 15px;"></td>
+        </tr>
+        
         <tr style="background: #f0f0f2;">
             <th i18n:translate="" style="border: 1px solid #cecfd5;
                                          padding: 10px 15px;text-align: left;">Parent Biospecimen </th>

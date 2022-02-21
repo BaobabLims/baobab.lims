@@ -60,6 +60,8 @@ class SampleView(BrowserView):
         # __Collect general data__ #
         self.id = context.getId()
         self.title = context.Title()
+        self.description = context.Description()
+        
         self.icon = self.portal_url + "/++resource++baobab.lims.images/" \
                                     + "biospecimen_big.png"
         parent = context.getField('LinkedSample').get(context)
@@ -100,6 +102,7 @@ class SampleView(BrowserView):
         self.subjectID = context.getField('SubjectID').get(context)
         self.barcode = context.getField('Barcode').get(context)
         self.volume = context.getField('Volume').get(context) + " " + context.getField('Unit').get(context)
+
 
         return self.template()
 
